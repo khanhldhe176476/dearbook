@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page Curl Effect Test</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1e293b, #334155, #1e293b);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      overflow: hidden;
+    }
+
+    .scene {
+      width: 100vw;
+      height: 100vh;
+      perspective: 2500px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .book {
+      width: 700px;
+      height: 900px;
+      transform-style: preserve-3d;
+      transform: rotateX(-10deg) rotateY(-25deg) scale(0.85);
+      position: relative;
+    }
+
+    .book-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+    }
+
+    .page {
+      position: absolute;
+      width: 350px;
+      height: 900px;
+      background: white;
+      box-shadow: 5px 5px 30px rgba(0,0,0,0.3);
+      overflow: hidden;
+      transform-style: preserve-3d;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .page-content {
+      width: 100%;
+      height: 100%;
+      padding: 40px;
+      background: linear-gradient(135deg, #fef3c7 0%, #fce7f3 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      color: #333;
+      text-align: center;
+      position: relative;
+    }
+
+    .page-left {
+      left: 0;
+      border-radius: 0 6px 6px 0;
+      transform-origin: right center;
+    }
+
+    .page-right {
+      right: 0;
+      border-radius: 6px 0 0 6px;
+      transform-origin: left center;
+    }
+
+    .page.curling {
+      transition: none !important;
+    }
+
+    /* Corner curl indicator */
+    .curl-corner {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: all;
+      cursor: grab;
+    }
+
+    .curl-corner:hover {
+      opacity: 1;
+    }
+
+    .curl-corner.active {
+      cursor: grabbing !important;
+    }
+
+    .corner-bottom-right {
+      bottom: 0;
+      right: 0;
+      background: linear-gradient(225deg, transparent 0%, transparent 50%, rgba(0,0,0,0.08) 100%);
+      border-radius: 0 0 0 80px;
+    }
+
+    .corner-bottom-left {
+      bottom: 0;
+      left: 0;
+      background: linear-gradient(135deg, transparent 0%, transparent 50%, rgba(0,0,0,0.08) 100%);
+      border-radius: 0 0 80px 0;
+    }
+
+    .corner-icon {
+      position: absolute;
+      bottom: 10px;
+      font-size: 20px;
+      color: rgba(0,0,0,0.3);
+    }
+
+    .corner-bottom-right .corner-icon {
+      right: 10px;
+    }
+
+    .corner-bottom-left .corner-icon {
+      left: 10px;
+    }
+
+    .spine {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%) translateZ(-25px);
+      width: 50px;
+      height: 900px;
+      background: linear-gradient(to right, #4b5563, #374151, #4b5563);
+      border-radius: 6px 0 0 6px;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .spine-text {
+      writing-mode: vertical-rl;
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .center-shadow {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 900px;
+      background: linear-gradient(to right, rgba(0,0,0,0.2), transparent, rgba(0,0,0,0.2));
+      filter: blur(2px);
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .status {
+      position: fixed;
+      top: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(20px);
+      padding: 16px 32px;
+      border-radius: 30px;
+      border: 1px solid rgba(255,255,255,0.1);
+      text-align: center;
+    }
+
+    .instructions {
+      position: fixed;
+      bottom: 40px;
+      left: 40px;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(20px);
+      padding: 20px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+      max-width: 300px;
+    }
+
+    .instructions h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #fbbf24;
+    }
+
+    .instructions p {
+      font-size: 13px;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 6px;
+    }
+
+    .page-number {
+      position: absolute;
+      bottom: 20px;
+      font-size: 14px;
+      color: rgba(0,0,0,0.5);
+    }
+
+    .page-left .page-number {
+      left: 20px;
+    }
+
+    .page-right .page-number {
+      right: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="status">
+    <div style="font-size: 18px; font-weight: 700; margin-bottom: 4px;">📖 Page Curl Effect Demo</div>
+    <div style="font-size: 13px; color: rgba(255,255,255,0.7);">Hover over page corners and drag to flip</div>
+  </div>
+
+  <div class="scene">
+    <div class="book" id="book">
+      <div class="book-container">
+        <!-- Spine -->
+        <div class="spine">
+          <div class="spine-text">MY STORY</div>
+        </div>
+
+        <!-- Left Page -->
+        <div class="page page-left" id="pageLeft">
+          <div class="page-content">
+            <h2 style="font-size: 48px; margin-bottom: 20px; font-weight: 700; color: #ec4899;">Chapter 1</h2>
+            <p style="font-size: 18px; line-height: 1.8; color: #64748b;">
+              Once upon a time, in a land far away...
+            </p>
+            <div class="page-number">1</div>
+          </div>
+          
+          <!-- Curl Corner Indicator -->
+          <div class="curl-corner corner-bottom-left" data-side="left">
+            <div class="corner-icon">◄</div>
+          </div>
+        </div>
+
+        <!-- Right Page -->
+        <div class="page page-right" id="pageRight">
+          <div class="page-content">
+            <h2 style="font-size: 48px; margin-bottom: 20px; font-weight: 700; color: #8b5cf6;">Chapter 2</h2>
+            <p style="font-size: 18px; line-height: 1.8; color: #64748b;">
+              The adventure begins here...
+            </p>
+            <div class="page-number">2</div>
+          </div>
+          
+          <!-- Curl Corner Indicator -->
+          <div class="curl-corner corner-bottom-right" data-side="right">
+            <div class="corner-icon">►</div>
+          </div>
+        </div>
+
+        <!-- Center Shadow -->
+        <div class="center-shadow"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="instructions">
+    <h3>💡 How to Use</h3>
+    <p>1. <strong>Hover</strong> over bottom corners of pages</p>
+    <p>2. <strong>Click and drag</strong> the corner to curl page</p>
+    <p>3. <strong>Drag far enough</strong> (>50%) to flip page</p>
+    <p>4. <strong>Release</strong> to complete or snap back</p>
+  </div>
+
+  <script>
+    const pageLeft = document.getElementById('pageLeft');
+    const pageRight = document.getElementById('pageRight');
+    const cornerLeft = document.querySelector('.corner-bottom-left');
+    const cornerRight = document.querySelector('.corner-bottom-right');
+
+    let isCurling = false;
+    let currentSide = null;
+    let startX = 0;
+    let curlAmount = 0;
+
+    // Left page curl
+    cornerLeft.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
+      isCurling = true;
+      currentSide = 'left';
+      startX = e.clientX;
+      pageLeft.classList.add('curling');
+      cornerLeft.classList.add('active');
+      document.body.style.cursor = 'grabbing';
+    });
+
+    // Right page curl
+    cornerRight.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
+      isCurling = true;
+      currentSide = 'right';
+      startX = e.clientX;
+      pageRight.classList.add('curling');
+      cornerRight.classList.add('active');
+      document.body.style.cursor = 'grabbing';
+    });
+
+    // Mouse move - calculate curl
+    document.addEventListener('mousemove', (e) => {
+      if (!isCurling) return;
+
+      const dragDistance = currentSide === 'right' 
+        ? (startX - e.clientX) 
+        : (e.clientX - startX);
+      
+      const maxDrag = 280; // 80% of page width
+      curlAmount = Math.max(0, Math.min(1, dragDistance / maxDrag));
+
+      const angle = curlAmount * 180;
+
+      if (currentSide === 'right') {
+        pageRight.style.transform = `rotateY(${angle}deg)`;
+      } else {
+        pageLeft.style.transform = `rotateY(-${angle}deg)`;
+      }
+    });
+
+    // Mouse up - complete or reset
+    document.addEventListener('mouseup', () => {
+      if (!isCurling) return;
+
+      if (curlAmount > 0.5) {
+        // Complete the flip
+        const angle = 180;
+        if (currentSide === 'right') {
+          pageRight.style.transition = 'transform 0.3s ease-out';
+          pageRight.style.transform = `rotateY(${angle}deg)`;
+          
+          setTimeout(() => {
+            alert('Page flipped forward! (In real app, this would change pages)');
+            resetPage();
+          }, 300);
+        } else {
+          pageLeft.style.transition = 'transform 0.3s ease-out';
+          pageLeft.style.transform = `rotateY(-${angle}deg)`;
+          
+          setTimeout(() => {
+            alert('Page flipped backward! (In real app, this would change pages)');
+            resetPage();
+          }, 300);
+        }
+      } else {
+        // Snap back
+        resetPage();
+      }
+
+      isCurling = false;
+      currentSide = null;
+      curlAmount = 0;
+      cornerLeft.classList.remove('active');
+      cornerRight.classList.remove('active');
+      document.body.style.cursor = 'default';
+    });
+
+    function resetPage() {
+      pageLeft.style.transition = 'transform 0.3s ease-out';
+      pageRight.style.transition = 'transform 0.3s ease-out';
+      pageLeft.style.transform = 'rotateY(0deg)';
+      pageRight.style.transform = 'rotateY(0deg)';
+      
+      setTimeout(() => {
+        pageLeft.classList.remove('curling');
+        pageRight.classList.remove('curling');
+        pageLeft.style.transition = '';
+        pageRight.style.transition = '';
+      }, 300);
+    }
+
+    console.log('✅ Page Curl Test Ready!');
+    console.log('• Hover over page corners');
+    console.log('• Drag corners to curl pages');
+  </script>
+</body>
+</html>

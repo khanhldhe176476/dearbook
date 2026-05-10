@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlipBook Reader Demo</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #e5e7eb, #d1d5db, #e5e7eb);
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Toolbar */
+    .toolbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 100;
+    }
+
+    .toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .toolbar-center {
+      display: flex;
+      gap: 4px;
+    }
+
+    .toolbar-right {
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .tool-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      font-size: 20px;
+    }
+
+    .tool-btn:hover {
+      background: rgba(0,0,0,0.05);
+      transform: scale(1.05);
+    }
+
+    .tool-btn.teal:hover { background: rgba(20, 184, 166, 0.1); }
+    .tool-btn.red:hover { background: rgba(239, 68, 68, 0.1); }
+    .tool-btn.blue:hover { background: rgba(59, 130, 246, 0.1); }
+    .tool-btn.orange:hover { background: rgba(249, 115, 22, 0.1); }
+    .tool-btn.purple:hover { background: rgba(168, 85, 247, 0.1); }
+    .tool-btn.green:hover { background: rgba(34, 197, 94, 0.1); }
+
+    .divider {
+      width: 1px;
+      height: 32px;
+      background: #d1d5db;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1f2937;
+    }
+
+    /* Book Container */
+    .scene {
+      width: 100vw;
+      height: calc(100vh - 64px);
+      margin-top: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 2000px;
+      padding: 40px;
+    }
+
+    .book-spread {
+      position: relative;
+      width: 1000px;
+      height: 700px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      transform-style: preserve-3d;
+      transition: transform 0.3s ease-out;
+    }
+
+    .page {
+      position: absolute;
+      top: 0;
+      width: 500px;
+      height: 700px;
+      background: white;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .page.curling {
+      transition: none !important;
+    }
+
+    .page-left {
+      left: 0;
+      border-radius: 8px 0 0 8px;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      transform-origin: right center;
+    }
+
+    .page-right {
+      right: 0;
+      border-radius: 0 8px 8px 0;
+      box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+      transform-origin: left center;
+    }
+
+    .page-content {
+      width: 100%;
+      height: 100%;
+      padding: 60px;
+      position: relative;
+    }
+
+    .center-spine {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 100%;
+      background: linear-gradient(to right, rgba(0,0,0,0.1), transparent, rgba(0,0,0,0.1));
+      filter: blur(1px);
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Curl Corner */
+    .curl-corner {
+      position: absolute;
+      bottom: 0;
+      width: 100px;
+      height: 100px;
+      cursor: grab;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .curl-corner:hover {
+      opacity: 1;
+    }
+
+    .curl-corner.active {
+      cursor: grabbing !important;
+    }
+
+    .curl-corner-left {
+      left: 0;
+      background: linear-gradient(135deg, transparent 0%, transparent 60%, rgba(0,0,0,0.03) 100%);
+    }
+
+    .curl-corner-right {
+      right: 0;
+      background: linear-gradient(225deg, transparent 0%, transparent 60%, rgba(0,0,0,0.03) 100%);
+    }
+
+    .curl-icon {
+      position: absolute;
+      bottom: 12px;
+      font-size: 20px;
+      color: rgba(0,0,0,0.3);
+    }
+
+    .curl-corner-left .curl-icon {
+      left: 12px;
+    }
+
+    .curl-corner-right .curl-icon {
+      right: 12px;
+    }
+
+    /* Navigation */
+    .nav-arrow {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.95);
+      border: none;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      z-index: 50;
+      font-size: 28px;
+      color: #374151;
+    }
+
+    .nav-arrow:hover:not(:disabled) {
+      background: white;
+      transform: translateY(-50%) scale(1.1);
+      box-shadow: 0 6px 30px rgba(0,0,0,0.3);
+    }
+
+    .nav-arrow:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .nav-arrow.left {
+      left: 24px;
+    }
+
+    .nav-arrow.right {
+      right: 24px;
+    }
+
+    /* Page Indicator */
+    .page-indicator {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 30px;
+      padding: 10px 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      font-size: 14px;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    /* Sample Content Styles */
+    .index-section {
+      margin-top: 60px;
+    }
+
+    .section-title {
+      font-size: 36px;
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 10px;
+    }
+
+    .chapter-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .chapter-item {
+      text-align: center;
+    }
+
+    .chapter-num {
+      font-size: 48px;
+      font-weight: 700;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
+
+    .chapter-name {
+      font-size: 14px;
+      color: #9ca3af;
+    }
+
+    .intro-section {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .intro-title {
+      font-size: 48px;
+      font-weight: 700;
+      color: #1f2937;
+    }
+
+    .intro-text {
+      font-size: 15px;
+      line-height: 1.8;
+      color: #4b5563;
+    }
+
+    .venice-image {
+      width: 100%;
+      height: 180px;
+      border-radius: 8px;
+      object-fit: cover;
+      margin-bottom: 20px;
+    }
+
+    .video-placeholder {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(135deg, #1f2937, #374151);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 60px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .video-placeholder::after {
+      content: '▶';
+      font-size: 60px;
+    }
+
+    .cc-icon {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 3px solid #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <button class="tool-btn" onclick="alert('Close')">✕</button>
+      <div class="divider"></div>
+      <div class="title">Venice Travel Guide</div>
+    </div>
+
+    <div class="toolbar-center">
+      <button class="tool-btn teal" title="Home">🏠</button>
+      <button class="tool-btn red" title="Share">📤</button>
+      <button class="tool-btn blue" title="Print">🖨️</button>
+      <button class="tool-btn" title="Download">⬇️</button>
+      <button class="tool-btn orange" title="Bookmark">🔖</button>
+      <button class="tool-btn purple" title="TOC">☰</button>
+      <button class="tool-btn green" onclick="zoomIn()">🔍+</button>
+      <button class="tool-btn" onclick="zoomOut()">🔍-</button>
+      <button class="tool-btn" title="Fullscreen">⛶</button>
+    </div>
+
+    <div class="toolbar-right">
+      Page <strong id="currentPage">1</strong> of <strong>10</strong>
+    </div>
+  </div>
+
+  <!-- Scene -->
+  <div class="scene">
+    <div class="book-spread" id="bookSpread">
+      <!-- Left Page -->
+      <div class="page page-left" id="pageLeft">
+        <div class="page-content">
+          <img src="https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=800&h=300&fit=crop" 
+               alt="Venice" class="venice-image">
+          
+          <div class="index-section">
+            <div class="section-title">Index</div>
+            <div class="chapter-list">
+              <div class="chapter-item">
+                <div class="chapter-num">02</div>
+                <div class="chapter-name">Introduction</div>
+              </div>
+              <div class="chapter-item">
+                <div class="chapter-num">03</div>
+                <div class="chapter-name">Started</div>
+              </div>
+              <div class="chapter-item">
+                <div class="chapter-num">04</div>
+                <div class="chapter-name">What to see</div>
+              </div>
+            </div>
+            
+            <ul style="margin-top: 30px; color: #6b7280; font-size: 14px; line-height: 2;">
+              <li>> Bridge of sighs</li>
+              <li>> Canals</li>
+              <li>> Rialto bridge</li>
+              <li>> St Mark's Basilica</li>
+              <li>> St. Mark's Clocktower</li>
+              <li>> Doge's Palace</li>
+            </ul>
+          </div>
+
+          <div class="cc-icon">CC</div>
+        </div>
+
+        <!-- Curl Corner -->
+        <div class="curl-corner curl-corner-left" id="curlLeft">
+          <div class="curl-icon">◄</div>
+        </div>
+      </div>
+
+      <!-- Right Page -->
+      <div class="page page-right" id="pageRight">
+        <div class="page-content">
+          <div class="intro-section">
+            <div class="intro-title">Introduction</div>
+            
+            <div class="video-placeholder"></div>
+
+            <div class="intro-text">
+              Venice is a city in northeastern Italy and the capital of the Veneto region. 
+              It is situated on a group of 118 small islands that are separated by canals and 
+              linked by over 400 bridges. The islands are located in the shallow Venetian Lagoon, 
+              an enclosed bay that lies between the mouths of the Po and the Piave rivers.
+            </div>
+
+            <div class="intro-text">
+              In 2020, 258,685 people resided in the Comune di Venezia, of whom around 55,000 
+              live in the historical city of Venice (centro storico). Together with Padua and 
+              Treviso, the city is included in the Padua-Treviso-Venice Metropolitan Area, which 
+              is considered a statistical metropolitan area.
+            </div>
+          </div>
+        </div>
+
+        <!-- Curl Corner -->
+        <div class="curl-corner curl-corner-right" id="curlRight">
+          <div class="curl-icon">►</div>
+        </div>
+      </div>
+
+      <!-- Center Spine -->
+      <div class="center-spine"></div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <button class="nav-arrow left" id="prevBtn" onclick="prevPage()">‹</button>
+  <button class="nav-arrow right" id="nextBtn" onclick="nextPage()">›</button>
+
+  <!-- Page Indicator -->
+  <div class="page-indicator">
+    <span id="spreadInfo">Spread 1 / 5</span>
+  </div>
+
+  <script>
+    let currentSpread = 1;
+    const totalSpreads = 5;
+    let isCurling = false;
+    let curlSide = null;
+    let curlAmount = 0;
+    let startX = 0;
+    let zoom = 1;
+
+    const pageLeft = document.getElementById('pageLeft');
+    const pageRight = document.getElementById('pageRight');
+    const curlLeft = document.getElementById('curlLeft');
+    const curlRight = document.getElementById('curlRight');
+    const bookSpread = document.getElementById('bookSpread');
+
+    // Curl Left
+    curlLeft.addEventListener('mousedown', (e) => {
+      if (currentSpread === 1) return;
+      e.stopPropagation();
+      isCurling = true;
+      curlSide = 'left';
+      startX = e.clientX;
+      pageLeft.classList.add('curling');
+      curlLeft.classList.add('active');
+      document.body.style.cursor = 'grabbing';
+    });
+
+    // Curl Right
+    curlRight.addEventListener('mousedown', (e) => {
+      if (currentSpread === totalSpreads) return;
+      e.stopPropagation();
+      isCurling = true;
+      curlSide = 'right';
+      startX = e.clientX;
+      pageRight.classList.add('curling');
+      curlRight.classList.add('active');
+      document.body.style.cursor = 'grabbing';
+    });
+
+    // Mouse move
+    document.addEventListener('mousemove', (e) => {
+      if (!isCurling) return;
+
+      const deltaX = curlSide === 'right' ? (startX - e.clientX) : (e.clientX - startX);
+      const maxDrag = 300;
+      curlAmount = Math.max(0, Math.min(1, deltaX / maxDrag));
+
+      const angle = curlAmount * 160;
+
+      if (curlSide === 'right') {
+        pageRight.style.transform = `rotateY(${angle}deg)`;
+      } else {
+        pageLeft.style.transform = `rotateY(-${angle}deg)`;
+      }
+    });
+
+    // Mouse up
+    document.addEventListener('mouseup', () => {
+      if (!isCurling) return;
+
+      if (curlAmount > 0.4) {
+        // Complete flip
+        if (curlSide === 'right' && currentSpread < totalSpreads) {
+          currentSpread++;
+          updatePages();
+        } else if (curlSide === 'left' && currentSpread > 1) {
+          currentSpread--;
+          updatePages();
+        }
+      }
+
+      resetCurl();
+    });
+
+    function resetCurl() {
+      pageLeft.style.transition = 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+      pageRight.style.transition = 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+      pageLeft.style.transform = 'rotateY(0deg)';
+      pageRight.style.transform = 'rotateY(0deg)';
+      
+      setTimeout(() => {
+        pageLeft.classList.remove('curling');
+        pageRight.classList.remove('curling');
+        pageLeft.style.transition = '';
+        pageRight.style.transition = '';
+      }, 400);
+
+      isCurling = false;
+      curlSide = null;
+      curlAmount = 0;
+      curlLeft.classList.remove('active');
+      curlRight.classList.remove('active');
+      document.body.style.cursor = 'default';
+    }
+
+    function prevPage() {
+      if (currentSpread > 1) {
+        currentSpread--;
+        updatePages();
+      }
+    }
+
+    function nextPage() {
+      if (currentSpread < totalSpreads) {
+        currentSpread++;
+        updatePages();
+      }
+    }
+
+    function updatePages() {
+      document.getElementById('currentPage').textContent = currentSpread * 2;
+      document.getElementById('spreadInfo').textContent = `Spread ${currentSpread} / ${totalSpreads}`;
+      
+      document.getElementById('prevBtn').disabled = currentSpread === 1;
+      document.getElementById('nextBtn').disabled = currentSpread === totalSpreads;
+
+      // Show/hide curl corners
+      curlLeft.style.display = currentSpread === 1 ? 'none' : 'block';
+      curlRight.style.display = currentSpread === totalSpreads ? 'none' : 'block';
+    }
+
+    function zoomIn() {
+      zoom = Math.min(1.5, zoom + 0.1);
+      bookSpread.style.transform = `scale(${zoom})`;
+    }
+
+    function zoomOut() {
+      zoom = Math.max(0.7, zoom - 0.1);
+      bookSpread.style.transform = `scale(${zoom})`;
+    }
+
+    updatePages();
+    console.log('✅ FlipBook Reader Ready!');
+  </script>
+</body>
+</html>
