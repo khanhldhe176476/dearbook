@@ -4,6 +4,7 @@ import { LoginScreen } from './components/LoginScreen';
 import { MyBooksLibraryPortfolio } from './components/MyBooksLibraryPortfolio';
 import { GuidedBookBuilder } from './components/GuidedBookBuilder';
 import { OrderFlow } from './components/OrderFlow';
+import { PageElement, EditorPage as BookPage } from './types/editor';
 
 export interface User {
   email: string;
@@ -34,36 +35,12 @@ export interface CharacterData {
   accessories?: string[];
 }
 
+// PageData is still used for the builder's local state before conversion
 export interface PageData {
   id: string;
   templatePageId: string;
   texts: { [key: string]: string };
   images: { [key: string]: string };
-}
-
-// BookPage interface for templates
-export interface BookPage {
-  id: string;
-  backgroundColor?: string;
-  backgroundImage?: string;
-  elements: PageElement[];
-}
-
-export interface PageElement {
-  id: string;
-  type: 'text' | 'image' | 'sticker';
-  content?: string;
-  src?: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  fontSize?: number;
-  fontFamily?: string;
-  color?: string;
-  fontWeight?: string;
-  textAlign?: string;
-  fontStyle?: string;
 }
 
 export type AppScreen = 'home' | 'login' | 'library' | 'builder' | 'order';
