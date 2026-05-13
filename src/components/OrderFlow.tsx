@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { ArrowLeft, Package, CreditCard, CheckCircle, MapPin, Phone, Mail, User } from 'lucide-react';
+import { ArrowLeft, Package, CreditCard, CheckCircle, MapPin, Phone, Mail, User, Loader2 } from 'lucide-react';
 import { BookData, User as UserData } from '../App';
+import { orderApi } from '../lib/orderApi';
+import { toast } from 'sonner@2.0.3';
 
 interface OrderFlowProps {
   user: UserData;
@@ -21,6 +23,11 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
     notes: '',
   });
   const [paymentMethod, setPaymentMethod] = useState<'bank' | 'cod'>('bank');
+  const [loading, setLoading] = useState(false);
+  const [orderId, setOrderId] = useState<string | null>(null);
+
+  // Simulation: Generate a consistent UUID from email for API calls
+  const userId = '00000000-0000-0000-0000-000000000000'; // Placeholder
 
   const basePrice = 500000;
   const additionalPages = Math.max(0, (book.pages?.length || 0) - 10);
@@ -33,11 +40,31 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
     setStep('payment');
   };
 
-  const handlePaymentSubmit = () => {
-    // Mock payment processing
-    setTimeout(() => {
+  const handlePaymentSubmit = async () => {
+    try {
+      setLoading(true);
+      
+      const orderData = {
+        userBookId: book.id,
+        recipientName: shippingInfo.fullName,
+        phone: shippingInfo.phone,
+        address: shippingInfo.address,
+        city: shippingInfo.city,
+        paymentMethod: paymentMethod.toUpperCase(),
+      };
+
+      const response = await orderApi.placeOrder(userId, orderData);
+      setOrderId(response.id);
       setStep('confirmation');
-    }, 1500);
+      toast.success('🎉 Đặt hàng thành công!');
+    } catch (err) {
+      console.error('Failed to place order:', err);
+      toast.error('❌ Đặt hàng thất bại. Vui lòng thử lại.');
+      // Mock fallback for UI testing if API fails and we want to see the success screen anyway
+      // setStep('confirmation'); 
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleComplete = () => {
@@ -286,12 +313,14 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                   </button>
                   <button
                     onClick={handlePaymentSubmit}
-                    className="flex-1 py-4 px-6 rounded-2xl font-bold transition-all hover:-translate-y-0.5"
+                    disabled={loading}
+                    className="flex-1 py-4 px-6 rounded-2xl font-bold transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2"
                     style={{ background: '#3A2E28', color: '#EDE9E3', boxShadow: '0 6px 20px rgba(58,46,40,0.22)' }}
-                    onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = '#1C1715')}
-                    onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#3A2E28')}
+                    onMouseEnter={e => !loading && ((e.currentTarget as HTMLElement).style.background = '#1C1715')}
+                    onMouseLeave={e => !loading && ((e.currentTarget as HTMLElement).style.background = '#3A2E28')}
                   >
-                    Xác nhận đặt hàng
+                    {loading && <Loader2 className="w-5 h-5 animate-spin" />}
+                    {loading ? 'Đang xử lý...' : 'Xác nhận đặt hàng'}
                   </button>
                 </div>
               </div>
@@ -320,7 +349,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                   >
                     <p className="font-semibold text-sm" style={{ color: '#3A2E28' }}>📦 Thông tin đơn hàng:</p>
                     <div className="space-y-1 text-sm" style={{ color: '#7A6F66' }}>
-                      <p>• Mã đơn: #BK{Date.now()}</p>
+                      <p>• Mã đơn: #{orderId || `BK${Date.now()}`}</p>
                       <p>• Thời gian giao hàng: 5-7 ngày làm việc</p>
                       <p>• Người nhận: {shippingInfo.fullName}</p>
                       <p>• SĐT: {shippingInfo.phone}</p>

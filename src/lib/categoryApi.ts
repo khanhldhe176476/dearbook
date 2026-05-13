@@ -1,13 +1,12 @@
-import { apiGet } from "./api";
+import { apiGet } from './api';
 
-export type BookCategory = {
+export interface Category {
   id: string;
   name: string;
   slug: string;
-  description: string;
-  sortOrder: number;
-};
-
-export function getCategories() {
-  return apiGet<BookCategory[]>("/api/public/categories");
+  description?: string;
 }
+
+export const categoryApi = {
+  getCategories: () => apiGet<Category[]>('/api/public/categories'),
+};

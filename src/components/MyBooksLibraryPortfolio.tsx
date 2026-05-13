@@ -7,6 +7,8 @@ import { FlipBookReader } from './FlipBookReader';
 import { DeleteConfirmDialog } from './DeleteConfirmDialog';
 import { templateBooks } from '../data/templateBooks';
 import { toast } from 'sonner@2.0.3';
+import { bookApi, UserBook } from '../lib/bookApi';
+import { Loader2 } from 'lucide-react';
 
 interface MyBooksLibraryPortfolioProps {
   user: User;
@@ -33,29 +35,57 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
     bookId: '',
     bookTitle: '',
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Simulation: Generate a consistent UUID from email for API calls
+  const userId = '00000000-0000-0000-0000-000000000000'; // Placeholder
 
   useEffect(() => {
     loadBooks();
   }, []);
 
-  const loadBooks = () => {
-    const savedBooks = JSON.parse(localStorage.getItem('dearbook_books') || '[]');
+  const loadBooks = async () => {
+    setLoading(true);
+    const localBooks = JSON.parse(localStorage.getItem('dearbook_books') || '[]');
     
-    // Migrate old books: add default theme if missing
-    const migratedBooks = savedBooks.map((book: BookData) => {
-      if (!book.theme) {
-        console.log(`⚠️ Book "${book.title}" missing theme, adding default: love`);
-        return { ...book, theme: 'love' };
-      }
-      return book;
-    });
-    
-    // Save migrated books back
-    if (JSON.stringify(savedBooks) !== JSON.stringify(migratedBooks)) {
-      localStorage.setItem('dearbook_books', JSON.stringify(migratedBooks));
+    try {
+      // Try to fetch from API
+      const apiBooks = await bookApi.getMyBooks(userId);
+      
+      // Map API books to BookData format
+      const mappedApiBooks: BookData[] = apiBooks.map(b => {
+        const localMatch = localBooks.find((l: BookData) => l.id === b.id);
+        return {
+          id: b.id,
+          title: b.title,
+          status: b.status.toLowerCase() as any,
+          updatedAt: b.updatedAt,
+          createdAt: b.updatedAt, // Fallback
+          theme: (localMatch?.theme || 'love') as any,
+          templateId: b.templateId,
+          pages: localMatch?.pages || [],
+          character: localMatch?.character
+        };
+      });
+
+      // Merge with local books that are not on API (e.g. newly created locally)
+      const mergedBooks = [...mappedApiBooks];
+      localBooks.forEach((l: BookData) => {
+        if (!mergedBooks.find(m => m.id === l.id)) {
+          mergedBooks.push(l);
+        }
+      });
+
+      setBooks(mergedBooks);
+      setError(null);
+    } catch (err) {
+      console.error('Failed to fetch books from API:', err);
+      setError('Không thể kết nối với máy chủ. Đang hiển thị sách từ bộ nhớ cục bộ.');
+      setBooks(localBooks);
+    } finally {
+      setLoading(false);
     }
-    
-    setBooks(migratedBooks);
   };
 
   const handleDuplicate = (book: BookData) => {
@@ -273,12 +303,16 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
           <h2 className="text-3xl sm:text-4xl font-bold mb-3" style={{ color: '#3A2E28' }}>
             Xin chào, {user.name}! 👋
           </h2>
-          <p className="text-lg" style={{ color: '#7A6F66' }}>
-            {books.length > 0 
-              ? `Bạn đang có ${books.length} cuốn sách`
-              : 'Bắt đầu tạo cuốn sách đầu tiên của bạn'
-            }
-          </p>
+          <div className="flex items-center gap-4">
+            <p className="text-lg" style={{ color: '#7A6F66' }}>
+              {books.length > 0 
+                ? `Bạn đang có ${books.length} cuốn sách`
+                : 'Bắt đầu tạo cuốn sách đầu tiên của bạn'
+              }
+            </p>
+            {loading && <Loader2 className="w-5 h-5 animate-spin" style={{ color: '#9B9088' }} />}
+          </div>
+          {error && <p className="text-xs mt-1 italic" style={{ color: '#9B9088' }}>{error}</p>}
         </div>
 
         {/* Create New Button */}

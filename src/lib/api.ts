@@ -23,26 +23,37 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
   return response.text() as T;
 }
 
-export function apiGet<T>(path: string) {
-  return request<T>(path);
+export function apiGet<T>(path: string, options?: RequestInit) {
+  return request<T>(path, options);
 }
 
-export function apiPost<T>(path: string, body: unknown) {
+export function apiPost<T>(path: string, body: unknown, options?: RequestInit) {
   return request<T>(path, {
+    ...options,
     method: "POST",
     body: JSON.stringify(body),
+    headers: {
+      "Content-Type": "application/json",
+      ...(options?.headers || {}),
+    },
   });
 }
 
-export function apiPut<T>(path: string, body: unknown) {
+export function apiPut<T>(path: string, body: unknown, options?: RequestInit) {
   return request<T>(path, {
+    ...options,
     method: "PUT",
     body: JSON.stringify(body),
+    headers: {
+      "Content-Type": "application/json",
+      ...(options?.headers || {}),
+    },
   });
 }
 
-export function apiDelete<T>(path: string) {
+export function apiDelete<T>(path: string, options?: RequestInit) {
   return request<T>(path, {
+    ...options,
     method: "DELETE",
   });
 }
