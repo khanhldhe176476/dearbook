@@ -3,25 +3,9 @@ import { ArrowLeft, Eye, Check, Layout, Loader2 } from 'lucide-react';
 import { PageData, BookData } from '../../App';
 import { templates as realTemplates } from '../../data/templates';
 import { FlipBookReader } from '../FlipBookReader';
-import { templateApi, Template } from '../../lib/templateApi';
+import { fetchActiveBookTemplates, BookTemplateUI } from '../../lib/supabaseTemplateApi';
 
-interface Template {
-  id: string;
-  name: string;
-  description: string;
-  style: 'minimal' | 'romantic' | 'playful' | 'elegant';
-  pageCount: number;
-  preview: string;
-  pages: TemplatePageDef[];
-}
 
-interface TemplatePageDef {
-  id: string;
-  layout: string;
-  textFields: string[];
-  imageFields: string[];
-  defaultTexts: { [key: string]: string };
-}
 
 interface Step2TemplateSelectionProps {
   theme: 'love' | 'family' | 'birthday' | 'friendship';
@@ -37,44 +21,46 @@ export function Step2TemplateSelection({
   onBack,
 }: Step2TemplateSelectionProps) {
   const [previewTemplate, setPreviewTemplate] = useState<any>(null);
-  const [apiTemplates, setApiTemplates] = useState<Template[]>([]);
+  const [apiTemplates, setApiTemplates] = useState<BookTemplateUI[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchTemplates = async () => {
+    const loadTemplates = async () => {
       try {
         setLoading(true);
-        const data = await templateApi.getTemplates();
-        setApiTemplates(data);
         setError(null);
+        const data = await fetchActiveBookTemplates();
+        console.log('🎨 Step2 - Supabase templates loaded:', data);
+        setApiTemplates(data);
       } catch (err) {
-        console.error('Failed to fetch templates:', err);
-        setError('Không thể tải mẫu sách từ máy chủ. Đang sử dụng dữ liệu dự phòng.');
+        console.error('❌ Step2 - Failed to fetch from Supabase:', err);
+        setError('Không thể tải mẫu từ Supabase. Đang dùng dữ liệu dự phòng.');
       } finally {
         setLoading(false);
       }
     };
-    fetchTemplates();
+    loadTemplates();
   }, []);
 
   // Filter mock templates by theme
   const filteredMockTemplates = realTemplates.filter(t => t.theme === theme);
   
-  // Map API templates to UI format, fallback to mock
+  // Map Supabase templates to UI format, fallback to mock data nếu Supabase trống
   const templates = apiTemplates.length > 0
     ? apiTemplates.map(t => {
-        // Try to find matching mock template for detailed pages/data
-        const mockMatch = realTemplates.find(m => m.id === t.id || m.name === t.name);
+        // Tìm mock template cùng id/name để lấy pages (vì Supabase chưa lưu pages chi tiết)
+        const mockMatch = realTemplates.find(m => m.id === t.id || m.name === t.title);
         return {
           id: t.id,
-          name: t.name,
+          name: t.title,            // name <- Supabase.name
           description: t.description || `${mockMatch?.pages.length || 10} trang thiết kế cao cấp`,
           style: 'romantic' as const,
           pageCount: mockMatch?.pages.length || 10,
-          preview: t.coverImageUrl || mockMatch?.thumbnail || '',
+          preview: t.coverImageUrl || mockMatch?.thumbnail || '', // cover_image_url
+          price: t.price,
           badge: mockMatch?.badge,
-          realTemplate: mockMatch || t
+          realTemplate: mockMatch || { id: t.id, pages: [], cover: undefined }
         };
       })
     : filteredMockTemplates.map(t => ({
@@ -84,6 +70,7 @@ export function Step2TemplateSelection({
         style: 'romantic' as const,
         pageCount: t.pages.length,
         preview: t.thumbnail,
+        price: 0,
         badge: t.badge,
         realTemplate: t
       }));

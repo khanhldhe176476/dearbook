@@ -1,14 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
-import { BookHeart, Plus, Search, Edit, Copy, Trash2, Clock, FileText, Grid3x3, Rows3, Calendar, Star, Filter, Box, Sparkles } from 'lucide-react';
+import { BookHeart, Plus, Search, Edit, Copy, Trash2, Clock, FileText, Grid3x3, Rows3, Calendar, Star, Filter, Box, Sparkles, AlertCircle } from 'lucide-react';
 import { BookData, User } from '../App';
 import { GoogleUserProfile } from './GoogleUserProfile';
 import { Test3DButton } from './Test3DButton';
 import { FlipBookReader } from './FlipBookReader';
 import { DeleteConfirmDialog } from './DeleteConfirmDialog';
-import { templateBooks } from '../data/templateBooks';
 import { toast } from 'sonner@2.0.3';
-import { bookApi, UserBook } from '../lib/bookApi';
+import { bookApi } from '../lib/bookApi';
 import { Loader2 } from 'lucide-react';
+import { fetchActiveBookTemplates, BookTemplateUI } from '../lib/supabaseTemplateApi';
 
 interface MyBooksLibraryPortfolioProps {
   user: User;
@@ -38,12 +38,33 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // --- Supabase: Sách mẫu tham khảo ---
+  const [templateList, setTemplateList] = useState<BookTemplateUI[]>([]);
+  const [templateLoading, setTemplateLoading] = useState(true);
+  const [templateError, setTemplateError] = useState<string | null>(null);
+
   // Simulation: Generate a consistent UUID from email for API calls
   const userId = '00000000-0000-0000-0000-000000000000'; // Placeholder
 
   useEffect(() => {
     loadBooks();
+    loadSupabaseTemplates();
   }, []);
+
+  const loadSupabaseTemplates = async () => {
+    try {
+      setTemplateLoading(true);
+      setTemplateError(null);
+      const data = await fetchActiveBookTemplates();
+      console.log('📚 MyBooksLibrary - Supabase templates:', data);
+      setTemplateList(data);
+    } catch (err) {
+      console.error('❌ MyBooksLibrary - Supabase template fetch failed:', err);
+      setTemplateError('Không thể tải danh sách mẫu từ Supabase.');
+    } finally {
+      setTemplateLoading(false);
+    }
+  };
 
   const loadBooks = async () => {
     setLoading(true);
@@ -409,97 +430,90 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
             </div>
           </div>
 
+          {/* Loading */}
+          {templateLoading && (
+            <div className="flex items-center justify-center gap-3 py-12 rounded-2xl border" style={{ background: '#FAFAF8', borderColor: '#DDD8D0' }}>
+              <Loader2 className="w-6 h-6 animate-spin" style={{ color: '#7A6F66' }} />
+              <span className="text-sm" style={{ color: '#7A6F66' }}>Đang tải mẫu sách từ Supabase...</span>
+            </div>
+          )}
+
+          {/* Error */}
+          {!templateLoading && templateError && (
+            <div className="flex items-center gap-3 p-4 rounded-2xl border mb-4" style={{ background: '#FFF5F5', borderColor: '#FCA5A5' }}>
+              <AlertCircle className="w-5 h-5 flex-shrink-0" style={{ color: '#DC2626' }} />
+              <p className="text-sm" style={{ color: '#DC2626' }}>{templateError}</p>
+            </div>
+          )}
+
+          {/* Grid - chỉ render khi không loading */}
+          {!templateLoading && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {templateBooks.map((book) => {
-              const firstImage = book.pages.find(page => 
-                page.elements.some(el => el.type === 'image')
-              )?.elements.find(el => el.type === 'image');
-              const firstText = book.pages[0]?.elements.find(el => 
-                el.type === 'text' && 
-                el.content && 
-                el.content.length > 30 &&
-                !el.content.includes('Lần Đầu') &&
-                !el.content.includes('Lời Cảm') &&
-                !el.content.includes('Người Bạn') &&
-                !el.content.includes('Nhớ Em') &&
-                !el.content.includes('Ngày Con')
-              );
-              const td = themeData[book.theme];
-              return (
-                <div
-                  key={book.id}
-                  className="group rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all border flex flex-col hover:-translate-y-0.5"
-                  style={{ background: '#FFFFFF', borderColor: '#DDD8D0' }}
-                >
-                  <div className="relative h-56 overflow-hidden flex-shrink-0" style={{ background: '#EDE9E3' }}>
-                    {firstImage && 'url' in firstImage ? (
-                      <img 
-                        src={firstImage.url} 
-                        alt={book.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                    ) : (
-                      <div className={`w-full h-full flex items-center justify-center bg-gradient-to-br ${td.color}`}>
-                        <span className="text-6xl opacity-60">
-                          {book.theme === 'love' && '💕'}
-                          {book.theme === 'family' && '👨‍👩‍👧'}
-                          {book.theme === 'birthday' && '🎂'}
-                          {book.theme === 'friendship' && '🤝'}
-                        </span>
-                      </div>
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                    <div className="absolute top-3 right-3 px-3 py-1 text-white text-xs font-bold rounded-full shadow-lg" style={{ background: '#3A2E28' }}>
-                      MẪU
+            {templateList.map((tmpl) => (
+              <div
+                key={tmpl.id}
+                className="group rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all border flex flex-col hover:-translate-y-0.5"
+                style={{ background: '#FFFFFF', borderColor: '#DDD8D0' }}
+              >
+                {/* Cover Image */}
+                <div className="relative h-56 overflow-hidden flex-shrink-0" style={{ background: '#EDE9E3' }}>
+                  {tmpl.coverImageUrl ? (
+                    <img
+                      src={tmpl.coverImageUrl}
+                      alt={tmpl.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).style.display = 'none';
+                      }}
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-amber-200 to-rose-300">
+                      <span className="text-6xl opacity-60">📖</span>
                     </div>
-                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-semibold shadow-lg" style={{ background: 'rgba(250,250,248,0.92)', color: '#3A2E28' }}>
-                      {book.theme === 'love' && '💕 Tình yêu'}
-                      {book.theme === 'family' && '👨‍👩‍👧 Gia đình'}
-                      {book.theme === 'birthday' && '🎂 Sinh nhật'}
-                      {book.theme === 'friendship' && '🤝 Tình bạn'}
-                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                  <div className="absolute top-3 right-3 px-3 py-1 text-white text-xs font-bold rounded-full shadow-lg" style={{ background: '#3A2E28' }}>
+                    MẪU
                   </div>
-                  <div className="p-5 flex flex-col flex-grow">
-                    <h4 className="font-bold text-xl mb-2 line-clamp-1" style={{ color: '#3A2E28' }}>{book.title}</h4>
-                    <div className="h-16 mb-4">
-                      {firstText && 'content' in firstText && (
-                        <p className="text-sm line-clamp-3 leading-relaxed" style={{ color: '#7A6F66' }}>
-                          {firstText.content.split('\n').find(line => line.trim().length > 20)?.trim() || firstText.content.substring(0, 120)}
-                        </p>
-                      )}
+                  {tmpl.price > 0 && (
+                    <div className="absolute bottom-3 left-3 px-3 py-1 rounded-full text-xs font-semibold shadow-lg" style={{ background: 'rgba(250,250,248,0.92)', color: '#3A2E28' }}>
+                      {tmpl.price.toLocaleString('vi-VN')}₫
                     </div>
-                    <div className="flex items-center gap-2 text-xs mb-4" style={{ color: '#9B9088' }}>
-                      <FileText className="w-4 h-4" />
-                      <span>{book.pages.length} trang</span>
-                      <span style={{ color: '#C8C2BA' }}>•</span>
-                      <span>Nội dung đầy đủ</span>
-                    </div>
-                    <div className="flex gap-2 mt-auto">
-                      <button
-                        onClick={() => setShow3DBook(book)}
-                        className="flex-1 px-4 py-3 rounded-xl text-sm font-bold transition-all flex items-center justify-center"
-                        style={{ background: '#3A2E28', color: '#FAFAF8' }}
-                        onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = '#1C1715')}
-                        onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#3A2E28')}
-                      >
-                        Xem mẫu
-                      </button>
-                      <button
-                        onClick={() => handleDuplicate(book)}
-                        className="px-4 py-3 rounded-xl transition-all flex items-center justify-center"
-                        style={{ background: '#EDE9E3', color: '#5A5049' }}
-                        onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = '#DDD8D0')}
-                        onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#EDE9E3')}
-                        title="Sử dụng mẫu này"
-                      >
-                        <Copy className="w-4 h-4" />
-                      </button>
-                    </div>
+                  )}
+                </div>
+
+                {/* Info */}
+                <div className="p-5 flex flex-col flex-grow">
+                  <h4 className="font-bold text-xl mb-2 line-clamp-1" style={{ color: '#3A2E28' }}>{tmpl.title}</h4>
+                  <div className="h-16 mb-4">
+                    {tmpl.description && (
+                      <p className="text-sm line-clamp-3 leading-relaxed" style={{ color: '#7A6F66' }}>
+                        {tmpl.description}
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2 text-xs mb-4" style={{ color: '#9B9088' }}>
+                    <FileText className="w-4 h-4" />
+                    <span>Mẫu chuyên nghiệp</span>
+                    <span style={{ color: '#C8C2BA' }}>•</span>
+                    <span>Nội dung đầy đủ</span>
+                  </div>
+                  <div className="flex gap-2 mt-auto">
+                    <button
+                      onClick={() => onCreateNew()}
+                      className="flex-1 px-4 py-3 rounded-xl text-sm font-bold transition-all flex items-center justify-center"
+                      style={{ background: '#3A2E28', color: '#FAFAF8' }}
+                      onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = '#1C1715')}
+                      onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#3A2E28')}
+                    >
+                      Dùng mẫu này
+                    </button>
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
+          )} {/* end !templateLoading */}
         </div>
 
         {/* User's Books Section */}

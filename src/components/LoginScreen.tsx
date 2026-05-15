@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { BookHeart, Mail, Lock, User, Sparkles, Heart, Users, Cake } from 'lucide-react';
+import { BookHeart, Mail, Lock, User, Sparkles, Heart, Users, Cake, Loader2 } from 'lucide-react';
 
 interface LoginScreenProps {
-  onLogin: (email: string, password: string, name?: string, picture?: string) => void;
+  onLogin: (email: string, password: string, isSignup: boolean, name?: string) => Promise<void> | void;
 }
 
 export function LoginScreen({ onLogin }: LoginScreenProps) {
@@ -10,11 +10,17 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
   const [email,    setEmail]    = useState('');
   const [password, setPassword] = useState('');
   const [name,     setName]     = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (email && password) {
-      onLogin(email, password, isSignup ? name : undefined);
+      try {
+        setIsLoading(true);
+        await onLogin(email, password, isSignup, isSignup ? name : undefined);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -212,16 +218,24 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
 
               <button
                 type="submit"
-                className="w-full py-3 px-6 rounded-xl font-semibold mt-2 transition-all duration-200 hover:-translate-y-0.5"
+                disabled={isLoading}
+                className="w-full py-3 px-6 rounded-xl font-semibold mt-2 transition-all duration-200 hover:-translate-y-0.5 disabled:opacity-70 disabled:hover:translate-y-0 flex items-center justify-center gap-2"
                 style={{
                   background: '#3A2E28',
                   color: '#FAFAF8',
                   boxShadow: '0 4px 16px rgba(60,46,40,0.22)',
                 }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#1C1715'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = '#3A2E28'; }}
+                onMouseEnter={e => { if (!isLoading) (e.currentTarget as HTMLElement).style.background = '#1C1715'; }}
+                onMouseLeave={e => { if (!isLoading) (e.currentTarget as HTMLElement).style.background = '#3A2E28'; }}
               >
-                {isSignup ? 'Đăng ký' : 'Đăng nhập'}
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <span>Đang xử lý...</span>
+                  </>
+                ) : (
+                  isSignup ? 'Đăng ký' : 'Đăng nhập'
+                )}
               </button>
             </form>
 
