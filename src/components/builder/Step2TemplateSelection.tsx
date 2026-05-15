@@ -1,8 +1,9 @@
-import { useState } from 'react';
-import { ArrowLeft, Eye, Check, Layout } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ArrowLeft, Eye, Check, Layout, Loader2 } from 'lucide-react';
 import { PageData, BookData } from '../../App';
 import { templates as realTemplates } from '../../data/templates';
 import { FlipBookReader } from '../FlipBookReader';
+import { templateApi } from '../../lib/templateApi';
 
 interface Template {
   id: string;
@@ -36,21 +37,56 @@ export function Step2TemplateSelection({
   onBack,
 }: Step2TemplateSelectionProps) {
   const [previewTemplate, setPreviewTemplate] = useState<any>(null);
+  const [apiTemplates, setApiTemplates] = useState<Template[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Filter templates by theme
-  const filteredTemplates = realTemplates.filter(t => t.theme === theme);
+  useEffect(() => {
+    const fetchTemplates = async () => {
+      try {
+        setLoading(true);
+        const data = await templateApi.getTemplates();
+        setApiTemplates(data);
+        setError(null);
+      } catch (err) {
+        console.error('Failed to fetch templates:', err);
+        setError('Không thể tải mẫu sách từ máy chủ. Đang sử dụng dữ liệu dự phòng.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTemplates();
+  }, []);
+
+  // Filter mock templates by theme
+  const filteredMockTemplates = realTemplates.filter(t => t.theme === theme);
   
-  // Map real templates to UI format
-  const templates = filteredTemplates.map(t => ({
-    id: t.id,
-    name: t.name,
-    description: `${t.pages.length} trang với nội dung ${t.theme === 'love' ? 'lãng mạn' : t.theme === 'family' ? 'gia đình' : t.theme === 'birthday' ? 'sinh nhật' : 'bạn bè'}`,
-    style: 'romantic' as const,
-    pageCount: t.pages.length,
-    preview: t.thumbnail,
-    badge: t.badge,
-    realTemplate: t
-  }));
+  // Map API templates to UI format, fallback to mock
+  const templates = apiTemplates.length > 0
+    ? apiTemplates.map(t => {
+        // Try to find matching mock template for detailed pages/data
+        const mockMatch = realTemplates.find(m => m.id === t.id || m.name === t.name);
+        return {
+          id: t.id,
+          name: t.name,
+          description: t.description || `${mockMatch?.pages.length || 10} trang thiết kế cao cấp`,
+          style: 'romantic' as const,
+          pageCount: mockMatch?.pages.length || 10,
+          preview: t.coverImageUrl || mockMatch?.thumbnail || '',
+          badge: mockMatch?.badge,
+          realTemplate: mockMatch || t
+        };
+      })
+    : filteredMockTemplates.map(t => ({
+        id: t.id,
+        name: t.name,
+        description: `${t.pages.length} trang với nội dung ${t.theme === 'love' ? 'lãng mạn' : t.theme === 'family' ? 'gia đình' : t.theme === 'birthday' ? 'sinh nhật' : 'bạn bè'}`,
+        style: 'romantic' as const,
+        pageCount: t.pages.length,
+        preview: t.thumbnail,
+        badge: t.badge,
+        realTemplate: t
+      }));
 
   const handleSelectTemplate = (template: any) => {
     // Convert real template pages to PageData format
@@ -85,9 +121,18 @@ export function Step2TemplateSelection({
         <h2 className="text-3xl sm:text-4xl font-bold mb-3" style={{ color: '#3A2E28' }}>
           Chọn phong cách thiết kế
         </h2>
-        <p className="text-base" style={{ color: '#7A6F66' }}>
-          Mỗi mẫu có bố cục và số trang khác nhau. Bạn có thể tùy chỉnh nội dung sau.
-        </p>
+        {loading ? (
+          <div className="flex items-center justify-center gap-2 text-sm" style={{ color: '#7A6F66' }}>
+            <Loader2 className="w-4 h-4 animate-spin" />
+            Đang tải mẫu sách...
+          </div>
+        ) : error ? (
+          <p className="text-xs italic" style={{ color: '#9B9088' }}>{error}</p>
+        ) : (
+          <p className="text-base" style={{ color: '#7A6F66' }}>
+            Mỗi mẫu có bố cục và số trang khác nhau. Bạn có thể tùy chỉnh nội dung sau.
+          </p>
+        )}
       </div>
 
       {/* Template Grid */}

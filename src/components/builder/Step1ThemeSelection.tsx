@@ -1,4 +1,6 @@
-import { Heart, Users, Cake, Sparkles, Check } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Heart, Users, Cake, Sparkles, Check, Loader2 } from 'lucide-react';
+import { categoryApi, Category } from '../../lib/categoryApi';
 
 interface Step1ThemeSelectionProps {
   selectedTheme?: 'love' | 'family' | 'birthday' | 'friendship';
@@ -45,6 +47,42 @@ const themes = [
 ];
 
 export function Step1ThemeSelection({ selectedTheme, onSelect }: Step1ThemeSelectionProps) {
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setLoading(true);
+        const data = await categoryApi.getCategories();
+        setCategories(data);
+        setError(null);
+      } catch (err) {
+        console.error('Failed to fetch categories:', err);
+        setError('Không thể tải danh mục từ máy chủ. Đang sử dụng dữ liệu dự phòng.');
+        // Fallback is handled by using 'themes' if 'categories' is empty or combining them
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  // Map API categories to UI format, fallback to mock if API fails or is empty
+  const displayThemes = categories.length > 0 
+    ? categories.map(cat => {
+        const mockTheme = themes.find(t => t.id === cat.slug) || themes[0];
+        return {
+          ...mockTheme,
+          id: cat.slug as any, // Using slug as ID to maintain compatibility with existing logic
+          name: cat.name,
+          description: cat.description || mockTheme.description,
+          apiId: cat.id
+        };
+      })
+    : themes;
+
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -52,14 +90,23 @@ export function Step1ThemeSelection({ selectedTheme, onSelect }: Step1ThemeSelec
         <h2 className="text-3xl sm:text-4xl font-bold mb-3" style={{ color: '#3A2E28' }}>
           Cuốn sách này dành cho ai?
         </h2>
-        <p className="text-base" style={{ color: '#7A6F66' }}>
-          Chọn chủ đề phù hợp để chúng tôi gợi ý nội dung phù hợp nhất
-        </p>
+        {loading ? (
+          <div className="flex items-center justify-center gap-2 text-sm" style={{ color: '#7A6F66' }}>
+            <Loader2 className="w-4 h-4 animate-spin" />
+            Đang tải chủ đề...
+          </div>
+        ) : error ? (
+          <p className="text-xs italic" style={{ color: '#9B9088' }}>{error}</p>
+        ) : (
+          <p className="text-base" style={{ color: '#7A6F66' }}>
+            Chọn chủ đề phù hợp để chúng tôi gợi ý nội dung phù hợp nhất
+          </p>
+        )}
       </div>
 
       {/* Theme Cards */}
       <div className="grid sm:grid-cols-2 gap-5 max-w-4xl mx-auto">
-        {themes.map((theme) => {
+        {displayThemes.map((theme) => {
           const Icon = theme.icon;
           const isSelected = selectedTheme === theme.id;
 

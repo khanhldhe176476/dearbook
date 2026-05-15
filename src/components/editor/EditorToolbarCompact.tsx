@@ -17,7 +17,9 @@ import {
   PanelRightClose,
   PanelRightOpen,
   PanelLeftClose,
-  PanelLeftOpen
+  PanelLeftOpen,
+  Send,
+  FileText
 } from 'lucide-react';
 
 interface EditorToolbarCompactProps {
@@ -38,6 +40,7 @@ interface EditorToolbarCompactProps {
   onToggleGrid: () => void;
   onPreview?: () => void;
   onExport: () => void;
+  onSaveOrder?: () => void;
   onToggleLeftPanel: () => void;
   onToggleRightPanel: () => void;
   onAddText?: () => void;
@@ -65,6 +68,7 @@ export function EditorToolbarCompact({
   onToggleGrid,
   onPreview,
   onExport,
+  onSaveOrder,
   onToggleLeftPanel,
   onToggleRightPanel,
   onAddText,
@@ -229,11 +233,21 @@ export function EditorToolbarCompact({
 
             <button
               onClick={onExport}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-lg hover:shadow-lg transition-all text-sm font-medium"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-all text-sm font-medium"
             >
-              <Download className="w-4 h-4" />
-              <span className="hidden sm:inline">Xuất</span>
+              <FileText className="w-4 h-4" />
+              <span className="hidden sm:inline">Xuất PDF</span>
             </button>
+
+            {onSaveOrder && (
+              <button
+                onClick={onSaveOrder}
+                className="flex items-center gap-1.5 px-4 py-1.5 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-lg hover:shadow-lg transition-all text-sm font-bold shadow-md transform hover:scale-[1.02] active:scale-95"
+              >
+                <Send className="w-4 h-4" />
+                <span>Gửi cho Admin</span>
+              </button>
+            )}
 
             <button
               onClick={onToggleRightPanel}

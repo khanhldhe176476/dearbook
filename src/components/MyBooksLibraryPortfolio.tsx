@@ -5,8 +5,10 @@ import { GoogleUserProfile } from './GoogleUserProfile';
 import { Test3DButton } from './Test3DButton';
 import { FlipBookReader } from './FlipBookReader';
 import { DeleteConfirmDialog } from './DeleteConfirmDialog';
-import { templateBooks } from '../data/templateBooks';
+import { useBookTemplates } from '../hooks/useBookTemplates';
 import { toast } from 'sonner@2.0.3';
+import { bookApi, UserBook } from '../lib/bookApi';
+import { Loader2 } from 'lucide-react';
 
 interface MyBooksLibraryPortfolioProps {
   user: User;
@@ -20,6 +22,8 @@ type ViewMode = 'grid' | 'masonry' | 'list';
 type SortBy = 'recent' | 'oldest' | 'name' | 'theme';
 
 export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBook, onBackToHome }: MyBooksLibraryPortfolioProps) {
+  // ── Supabase: book_templates ────────────────────────────────────────────
+  const { templates: supabaseTemplates, loading: templatesLoading, error: templatesError } = useBookTemplates();
   const [books, setBooks] = useState<BookData[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<ViewMode>('masonry');
@@ -33,29 +37,57 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
     bookId: '',
     bookTitle: '',
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Simulation: Generate a consistent UUID from email for API calls
+  const userId = '00000000-0000-0000-0000-000000000000'; // Placeholder
 
   useEffect(() => {
     loadBooks();
   }, []);
 
-  const loadBooks = () => {
-    const savedBooks = JSON.parse(localStorage.getItem('dearbook_books') || '[]');
+  const loadBooks = async () => {
+    setLoading(true);
+    const localBooks = JSON.parse(localStorage.getItem('dearbook_books') || '[]');
     
-    // Migrate old books: add default theme if missing
-    const migratedBooks = savedBooks.map((book: BookData) => {
-      if (!book.theme) {
-        console.log(`⚠️ Book "${book.title}" missing theme, adding default: love`);
-        return { ...book, theme: 'love' };
-      }
-      return book;
-    });
-    
-    // Save migrated books back
-    if (JSON.stringify(savedBooks) !== JSON.stringify(migratedBooks)) {
-      localStorage.setItem('dearbook_books', JSON.stringify(migratedBooks));
+    try {
+      // Try to fetch from API
+      const apiBooks = await bookApi.getMyBooks(userId);
+      
+      // Map API books to BookData format
+      const mappedApiBooks: BookData[] = apiBooks.map(b => {
+        const localMatch = localBooks.find((l: BookData) => l.id === b.id);
+        return {
+          id: b.id,
+          title: b.title,
+          status: b.status.toLowerCase() as any,
+          updatedAt: b.updatedAt,
+          createdAt: b.updatedAt, // Fallback
+          theme: (localMatch?.theme || 'love') as any,
+          templateId: b.templateId,
+          pages: localMatch?.pages || [],
+          character: localMatch?.character
+        };
+      });
+
+      // Merge with local books that are not on API (e.g. newly created locally)
+      const mergedBooks = [...mappedApiBooks];
+      localBooks.forEach((l: BookData) => {
+        if (!mergedBooks.find(m => m.id === l.id)) {
+          mergedBooks.push(l);
+        }
+      });
+
+      setBooks(mergedBooks);
+      setError(null);
+    } catch (err) {
+      console.error('Failed to fetch books from API:', err);
+      setError('Không thể kết nối với máy chủ. Đang hiển thị sách từ bộ nhớ cục bộ.');
+      setBooks(localBooks);
+    } finally {
+      setLoading(false);
     }
-    
-    setBooks(migratedBooks);
   };
 
   const handleDuplicate = (book: BookData) => {
@@ -273,12 +305,16 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
           <h2 className="text-3xl sm:text-4xl font-bold mb-3" style={{ color: '#3A2E28' }}>
             Xin chào, {user.name}! 👋
           </h2>
-          <p className="text-lg" style={{ color: '#7A6F66' }}>
-            {books.length > 0 
-              ? `Bạn đang có ${books.length} cuốn sách`
-              : 'Bắt đầu tạo cuốn sách đầu tiên của bạn'
-            }
-          </p>
+          <div className="flex items-center gap-4">
+            <p className="text-lg" style={{ color: '#7A6F66' }}>
+              {books.length > 0 
+                ? `Bạn đang có ${books.length} cuốn sách`
+                : 'Bắt đầu tạo cuốn sách đầu tiên của bạn'
+              }
+            </p>
+            {loading && <Loader2 className="w-5 h-5 animate-spin" style={{ color: '#9B9088' }} />}
+          </div>
+          {error && <p className="text-xs mt-1 italic" style={{ color: '#9B9088' }}>{error}</p>}
         </div>
 
         {/* Create New Button */}
@@ -363,7 +399,7 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
           </div>
         </div>
 
-        {/* Template Books Section */}
+        {/* Template Books Section — dữ liệu từ Supabase bảng book_templates */}
         <div className="mb-12">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: '#3A2E28' }}>
@@ -373,99 +409,114 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
               <h3 className="text-2xl font-bold" style={{ color: '#3A2E28' }}>Sách Mẫu Tham Khảo</h3>
               <p className="text-sm" style={{ color: '#7A6F66' }}>Các mẫu sách đã được thiết kế sẵn nội dung chuyên nghiệp</p>
             </div>
+            {templatesLoading && <Loader2 className="w-5 h-5 animate-spin ml-2" style={{ color: '#9B9088' }} />}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {templateBooks.map((book) => {
-              const firstImage = book.pages.find(page => 
-                page.elements.some(el => el.type === 'image')
-              )?.elements.find(el => el.type === 'image');
-              const firstText = book.pages[0]?.elements.find(el => 
-                el.type === 'text' && 
-                el.content && 
-                el.content.length > 30 &&
-                !el.content.includes('Lần Đầu') &&
-                !el.content.includes('Lời Cảm') &&
-                !el.content.includes('Người Bạn') &&
-                !el.content.includes('Nhớ Em') &&
-                !el.content.includes('Ngày Con')
-              );
-              const td = themeData[book.theme];
-              return (
-                <div
-                  key={book.id}
-                  className="group rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all border flex flex-col hover:-translate-y-0.5"
-                  style={{ background: '#FFFFFF', borderColor: '#DDD8D0' }}
-                >
-                  <div className="relative h-56 overflow-hidden flex-shrink-0" style={{ background: '#EDE9E3' }}>
-                    {firstImage && 'url' in firstImage ? (
-                      <img 
-                        src={firstImage.url} 
-                        alt={book.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                    ) : (
-                      <div className={`w-full h-full flex items-center justify-center bg-gradient-to-br ${td.color}`}>
-                        <span className="text-6xl opacity-60">
-                          {book.theme === 'love' && '💕'}
-                          {book.theme === 'family' && '👨‍👩‍👧'}
-                          {book.theme === 'birthday' && '🎂'}
-                          {book.theme === 'friendship' && '🤝'}
-                        </span>
-                      </div>
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                    <div className="absolute top-3 right-3 px-3 py-1 text-white text-xs font-bold rounded-full shadow-lg" style={{ background: '#3A2E28' }}>
-                      MẪU
-                    </div>
-                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-semibold shadow-lg" style={{ background: 'rgba(250,250,248,0.92)', color: '#3A2E28' }}>
-                      {book.theme === 'love' && '💕 Tình yêu'}
-                      {book.theme === 'family' && '👨‍👩‍👧 Gia đình'}
-                      {book.theme === 'birthday' && '🎂 Sinh nhật'}
-                      {book.theme === 'friendship' && '🤝 Tình bạn'}
-                    </div>
-                  </div>
-                  <div className="p-5 flex flex-col flex-grow">
-                    <h4 className="font-bold text-xl mb-2 line-clamp-1" style={{ color: '#3A2E28' }}>{book.title}</h4>
-                    <div className="h-16 mb-4">
-                      {firstText && 'content' in firstText && (
-                        <p className="text-sm line-clamp-3 leading-relaxed" style={{ color: '#7A6F66' }}>
-                          {firstText.content.split('\n').find(line => line.trim().length > 20)?.trim() || firstText.content.substring(0, 120)}
-                        </p>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2 text-xs mb-4" style={{ color: '#9B9088' }}>
-                      <FileText className="w-4 h-4" />
-                      <span>{book.pages.length} trang</span>
-                      <span style={{ color: '#C8C2BA' }}>•</span>
-                      <span>Nội dung đầy đủ</span>
-                    </div>
-                    <div className="flex gap-2 mt-auto">
-                      <button
-                        onClick={() => setShow3DBook(book)}
-                        className="flex-1 px-4 py-3 rounded-xl text-sm font-bold transition-all flex items-center justify-center"
-                        style={{ background: '#3A2E28', color: '#FAFAF8' }}
-                        onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = '#1C1715')}
-                        onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#3A2E28')}
-                      >
-                        Xem mẫu
-                      </button>
-                      <button
-                        onClick={() => handleDuplicate(book)}
-                        className="px-4 py-3 rounded-xl transition-all flex items-center justify-center"
-                        style={{ background: '#EDE9E3', color: '#5A5049' }}
-                        onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = '#DDD8D0')}
-                        onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#EDE9E3')}
-                        title="Sử dụng mẫu này"
-                      >
-                        <Copy className="w-4 h-4" />
-                      </button>
-                    </div>
+          {/* Skeleton loading */}
+          {templatesLoading && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="rounded-2xl overflow-hidden border animate-pulse" style={{ background: '#F5F2EE', borderColor: '#DDD8D0' }}>
+                  <div className="h-56" style={{ background: '#EDE9E3' }} />
+                  <div className="p-5 space-y-3">
+                    <div className="h-5 rounded-lg" style={{ background: '#DDD8D0', width: '60%' }} />
+                    <div className="h-4 rounded-lg" style={{ background: '#EDE9E3', width: '90%' }} />
+                    <div className="h-4 rounded-lg" style={{ background: '#EDE9E3', width: '75%' }} />
                   </div>
                 </div>
-              );
-            })}
-          </div>
+              ))}
+            </div>
+          )}
+
+          {/* Error state */}
+          {!templatesLoading && templatesError && (
+            <div className="rounded-2xl p-6 text-center border" style={{ background: '#FFF5F5', borderColor: '#FECACA' }}>
+              <p className="text-sm font-medium mb-1" style={{ color: '#B91C1C' }}>⚠️ Không thể tải mẫu sách từ Supabase</p>
+              <p className="text-xs" style={{ color: '#9B9088' }}>{templatesError}</p>
+            </div>
+          )}
+
+          {/* Empty state */}
+          {!templatesLoading && !templatesError && supabaseTemplates.length === 0 && (
+            <div className="rounded-2xl p-8 text-center border" style={{ background: '#F5F2EE', borderColor: '#DDD8D0' }}>
+              <p className="text-sm" style={{ color: '#9B9088' }}>Chưa có mẫu sách nào. Vui lòng thêm dữ liệu vào bảng <code>book_templates</code> trên Supabase.</p>
+            </div>
+          )}
+
+          {/* Supabase data — field mapping: name, description, cover_image_url, price, theme */}
+          {!templatesLoading && !templatesError && supabaseTemplates.length > 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {supabaseTemplates.map((tpl) => {
+                const themeKey = (tpl.theme || 'love') as keyof typeof themeData;
+                const td = themeData[themeKey] ?? themeData['love'];
+                return (
+                  <div
+                    key={tpl.id}
+                    className="group rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all border flex flex-col hover:-translate-y-0.5"
+                    style={{ background: '#FFFFFF', borderColor: '#DDD8D0' }}
+                  >
+                    {/* Ảnh bìa — field: cover_image_url */}
+                    <div className="relative h-56 overflow-hidden flex-shrink-0" style={{ background: '#EDE9E3' }}>
+                      {tpl.cover_image_url ? (
+                        <img
+                          src={tpl.cover_image_url}
+                          alt={tpl.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      ) : (
+                        <div className={`w-full h-full flex items-center justify-center bg-gradient-to-br ${td.color}`}>
+                          <span className="text-6xl opacity-60">{td.emoji}</span>
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                      <div className="absolute top-3 right-3 px-3 py-1 text-white text-xs font-bold rounded-full shadow-lg" style={{ background: '#3A2E28' }}>
+                        MẪU
+                      </div>
+                      <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-semibold shadow-lg" style={{ background: 'rgba(250,250,248,0.92)', color: '#3A2E28' }}>
+                        {td.emoji} {td.name}
+                      </div>
+                      {/* Giá — field: price */}
+                      {tpl.price != null && (
+                        <div className="absolute bottom-3 right-3 px-3 py-1 rounded-full text-xs font-bold shadow-lg" style={{ background: 'rgba(250,250,248,0.92)', color: '#3A2E28' }}>
+                          {tpl.price.toLocaleString('vi-VN')}đ
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="p-5 flex flex-col flex-grow">
+                      {/* Tiêu đề — field: name */}
+                      <h4 className="font-bold text-xl mb-2 line-clamp-1" style={{ color: '#3A2E28' }}>{tpl.name}</h4>
+                      {/* Mô tả — field: description */}
+                      <div className="h-16 mb-4">
+                        {tpl.description && (
+                          <p className="text-sm line-clamp-3 leading-relaxed" style={{ color: '#7A6F66' }}>
+                            {tpl.description}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2 text-xs mb-4" style={{ color: '#9B9088' }}>
+                        <FileText className="w-4 h-4" />
+                        <span>{tpl.page_count ?? '—'} trang</span>
+                        <span style={{ color: '#C8C2BA' }}>•</span>
+                        <span>Nội dung đầy đủ</span>
+                      </div>
+                      <div className="flex gap-2 mt-auto">
+                        <button
+                          onClick={() => onCreateNew()}
+                          className="flex-1 px-4 py-3 rounded-xl text-sm font-bold transition-all flex items-center justify-center"
+                          style={{ background: '#3A2E28', color: '#FAFAF8' }}
+                          onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = '#1C1715')}
+                          onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#3A2E28')}
+                        >
+                          Dùng mẫu này
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* User's Books Section */}

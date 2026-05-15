@@ -363,8 +363,172 @@ export const backgroundPatterns = [
   }
 ];
 
+// Text combinations (Canva-like text presets)
+export const textCombinations = [
+  {
+    id: 'tc-classic-title',
+    name: 'Tiêu đề Cổ điển',
+    elements: [
+      { type: 'text', content: 'KỶ NIỆM', fontFamily: 'Playfair Display', fontSize: 48, fontWeight: 'bold', y: 0 },
+      { type: 'text', content: 'Những năm tháng tuyệt vời nhất', fontFamily: 'Poppins', fontSize: 18, fontWeight: 'normal', y: 60 }
+    ]
+  },
+  {
+    id: 'tc-romantic-love',
+    name: 'Tình yêu Lãng mạn',
+    elements: [
+      { type: 'text', content: 'Gửi người thương', fontFamily: 'Dancing Script', fontSize: 56, fontWeight: 'bold', color: '#FF69B4', y: 0 },
+      { type: 'text', content: 'Mãi mãi bên nhau', fontFamily: 'Poppins', fontSize: 20, fontWeight: 'normal', y: 70 }
+    ]
+  },
+  {
+    id: 'tc-modern-minimal',
+    name: 'Hiện đại Tối giản',
+    elements: [
+      { type: 'text', content: 'OUR STORY', fontFamily: 'Inter', fontSize: 42, fontWeight: '900', letterSpacing: 5, y: 0 },
+      { type: 'text', content: 'EST. 2024', fontFamily: 'Inter', fontSize: 14, fontWeight: 'light', letterSpacing: 8, y: 55 }
+    ]
+  },
+  {
+    id: 'tc-birthday-fun',
+    name: 'Sinh nhật Vui vẻ',
+    elements: [
+      { type: 'text', content: 'Happy Birthday!', fontFamily: 'Fredoka', fontSize: 48, fontWeight: 'bold', color: '#FF9800', y: 0 },
+      { type: 'text', content: 'Chúc mừng tuổi mới rạng rỡ', fontFamily: 'Nunito', fontSize: 18, fontWeight: 'normal', y: 60 }
+    ]
+  },
+  {
+    id: 'tc-family-warm',
+    name: 'Gia đình Ấm áp',
+    elements: [
+      { type: 'text', content: 'Hạnh Phúc', fontFamily: 'Lora', fontSize: 36, fontStyle: 'italic', fontWeight: 'bold', y: 0 },
+      { type: 'text', content: 'Là được ở bên nhau', fontFamily: 'Poppins', fontSize: 16, fontWeight: 'normal', y: 45 }
+    ]
+  },
+  {
+    id: 'tc-love-forever',
+    name: 'Tình yêu Vĩnh cửu',
+    elements: [
+      { type: 'text', content: 'Forever', fontFamily: 'Great Vibes', fontSize: 64, fontWeight: 'bold', color: '#880E4F', y: 0 },
+      { type: 'text', content: '& Always Together', fontFamily: 'Montserrat', fontSize: 16, fontWeight: '300', letterSpacing: 4, y: 70 }
+    ]
+  },
+  {
+    id: 'tc-friend-trip',
+    name: 'Chuyến đi Kỷ lục',
+    elements: [
+      { type: 'text', content: 'THE JOURNEY', fontFamily: 'Oswald', fontSize: 40, fontWeight: 'bold', color: '#00796B', y: 0 },
+      { type: 'text', content: 'Exploring the world with you', fontFamily: 'Poppins', fontSize: 14, fontWeight: 'light', y: 55 }
+    ]
+  },
+  {
+    id: 'tc-modern-quote',
+    name: 'Trích dẫn Hiện đại',
+    elements: [
+      { type: 'text', content: '"', fontFamily: 'Playfair Display', fontSize: 80, fontWeight: 'bold', color: '#E0E0E0', y: -20, x: -10 },
+      { type: 'text', content: 'Cứ đam mê, cứ dại khờ', fontFamily: 'Poppins', fontSize: 24, fontWeight: '600', fontStyle: 'italic', y: 30 }
+    ]
+  }
+];
+
+// Page Templates (Layouts)
+export const pageTemplates = [
+  {
+    id: 'pt-full-image',
+    name: 'Ảnh toàn trang',
+    thumbnail: 'https://images.unsplash.com/photo-1626233563542-148409467765?w=200&h=300&fit=crop',
+    elements: [
+      { id: 'full-img', type: 'image', x: 0, y: 0, width: 400, height: 600, src: 'https://images.unsplash.com/photo-1626233563542-148409467765', objectFit: 'cover' }
+    ]
+  },
+  {
+    id: 'pt-hero-text',
+    name: 'Tiêu đề lớn',
+    thumbnail: 'https://images.unsplash.com/photo-1767455281523-8caf432d2ecc?w=200&h=300&fit=crop',
+    elements: [
+      { id: 'bg-shape', type: 'shape', x: 0, y: 0, width: 400, height: 600, fill: '#F5F2EE', shape: 'square' },
+      { id: 'title', type: 'text', x: 40, y: 100, width: 320, height: 100, content: 'TIÊU ĐỀ CHÍNH', fontSize: 42, fontFamily: 'Playfair Display', fontWeight: 'bold', textAlign: 'center' },
+      { id: 'divider', type: 'shape', x: 150, y: 220, width: 100, height: 2, fill: '#3A2E28', shape: 'rectangle' },
+      { id: 'body', type: 'text', x: 40, y: 260, width: 320, height: 200, content: 'Bắt đầu câu chuyện của bạn tại đây với những dòng chữ đầy cảm xúc...', fontSize: 18, fontFamily: 'Poppins', textAlign: 'center' }
+    ]
+  },
+  {
+    id: 'pt-photo-grid',
+    name: 'Bộ sưu tập',
+    thumbnail: 'https://images.unsplash.com/photo-1759976910127-33085ece44b3?w=200&h=300&fit=crop',
+    elements: [
+      { id: 'img-1', type: 'image', x: 20, y: 20, width: 170, height: 170, src: 'https://images.unsplash.com/photo-1766808984213-4293f91d6a6f', objectFit: 'cover' },
+      { id: 'img-2', type: 'image', x: 210, y: 20, width: 170, height: 170, src: 'https://images.unsplash.com/photo-1638297166240-866903a7190c', objectFit: 'cover' },
+      { id: 'img-3', type: 'image', x: 20, y: 210, width: 360, height: 250, src: 'https://images.unsplash.com/photo-1764751024389-857d08396423', objectFit: 'cover' },
+      { id: 'caption', type: 'text', x: 40, y: 480, width: 320, height: 60, content: 'Những khoảnh khắc đáng nhớ cùng nhau', fontSize: 16, fontFamily: 'Poppins', fontStyle: 'italic', textAlign: 'center' }
+    ]
+  },
+  {
+    id: 'pt-love-message',
+    name: 'Thư tình',
+    thumbnail: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=200&h=300&fit=crop',
+    elements: [
+      { id: 'bg-color', type: 'shape', x: 0, y: 0, width: 400, height: 600, fill: '#FFF5F5', shape: 'square' },
+      { id: 'heart-decor', type: 'sticker', x: 175, y: 40, width: 50, height: 50, emoji: '💖' },
+      { id: 'message', type: 'text', x: 50, y: 120, width: 300, height: 400, content: 'Gửi người em yêu nhất,\n\nCảm ơn anh đã luôn ở bên cạnh em, che chở và yêu thương em vô điều kiện. Cuốn sách này là minh chứng cho hành trình tuyệt vời mà chúng ta đã cùng đi qua...', fontSize: 20, fontFamily: 'Dancing Script', lineHeight: 1.8 }
+    ]
+  },
+  {
+    id: 'pt-love-floral',
+    name: 'Hoa Tình Yêu',
+    thumbnail: 'https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=200&h=300&fit=crop',
+    elements: [
+      { id: 'bg-img', type: 'image', x: 0, y: 0, width: 400, height: 600, src: 'https://images.unsplash.com/photo-1490750967868-88aa4486c946', objectFit: 'cover', opacity: 0.3 },
+      { id: 'title', type: 'text', x: 20, y: 250, width: 360, content: 'Nơi Tình Yêu Bắt Đầu', fontSize: 36, fontFamily: 'Dancing Script', color: '#D81B60', textAlign: 'center' },
+      { id: 'date', type: 'text', x: 20, y: 310, width: 360, content: 'Since 20.10.2020', fontSize: 16, fontFamily: 'Poppins', color: '#333', textAlign: 'center' }
+    ]
+  },
+  {
+    id: 'pt-family-polaroid',
+    name: 'Gia Đình Polaroid',
+    thumbnail: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?w=200&h=300&fit=crop',
+    elements: [
+      { id: 'bg', type: 'shape', x: 0, y: 0, width: 400, height: 600, fill: '#F8F9FA', shape: 'square' },
+      { id: 'frame-1', type: 'image', x: 50, y: 50, width: 300, height: 350, src: 'https://images.unsplash.com/photo-1511895426328-dc8714191300', objectFit: 'cover', border: '15px solid white' },
+      { id: 'caption', type: 'text', x: 50, y: 420, width: 300, content: 'Gia đình là tất cả ❤️', fontSize: 24, fontFamily: 'Lora', textAlign: 'center' }
+    ]
+  },
+  {
+    id: 'pt-birthday-party',
+    name: 'Tiệc Sinh Nhật',
+    thumbnail: 'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=200&h=300&fit=crop',
+    elements: [
+      { id: 'bg-color', type: 'shape', x: 0, y: 0, width: 400, height: 600, fill: '#FFF3E0', shape: 'square' },
+      { id: 'balloon-1', type: 'sticker', x: 30, y: 30, width: 60, height: 60, emoji: '🎈' },
+      { id: 'balloon-2', type: 'sticker', x: 310, y: 50, width: 60, height: 60, emoji: '🎈' },
+      { id: 'cake', type: 'sticker', x: 150, y: 480, width: 100, height: 100, emoji: '🎂' },
+      { id: 'title', type: 'text', x: 50, y: 150, width: 300, content: 'HAPPY BIRTHDAY', fontSize: 48, fontFamily: 'Fredoka', color: '#F57C00', textAlign: 'center', fontWeight: 'bold' }
+    ]
+  },
+  {
+    id: 'pt-friend-adventures',
+    name: 'Hành trình Bạn thân',
+    thumbnail: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=200&h=300&fit=crop',
+    elements: [
+      { id: 'img-main', type: 'image', x: 0, y: 0, width: 400, height: 400, src: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac', objectFit: 'cover' },
+      { id: 'text-bg', type: 'shape', x: 0, y: 400, width: 400, height: 200, fill: '#004D40', shape: 'square' },
+      { id: 'quote', type: 'text', x: 40, y: 440, width: 320, content: '“Bạn thân là người hiểu ta ngay cả khi ta chưa nói nửa lời.”', fontSize: 18, fontFamily: 'Montserrat', color: '#E0F2F1', textAlign: 'center', fontWeight: '300' }
+    ]
+  },
+  {
+    id: 'pt-minimal-focus',
+    name: 'Tối Giản',
+    thumbnail: 'https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?w=200&h=300&fit=crop',
+    elements: [
+      { id: 'main-img', type: 'image', x: 40, y: 80, width: 320, height: 320, src: 'https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85', objectFit: 'cover' },
+      { id: 'title', type: 'text', x: 40, y: 430, width: 320, content: 'Tĩnh Lặng', fontSize: 24, fontFamily: 'Inter', letterSpacing: 10, textAlign: 'center' }
+    ]
+  }
+];
+
 // Helper function
 function adjustBrightness(color: string, percent: number): string {
+  if (color.startsWith('rgba')) return color;
   const num = parseInt(color.replace('#', ''), 16);
   const amt = Math.round(2.55 * percent);
   const R = (num >> 16) + amt;

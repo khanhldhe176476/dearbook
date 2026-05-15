@@ -1,39 +1,28 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Search, Heart, Sparkles, Camera, Flower, Gift, Image as ImageIcon, Type, Shapes, Frame, Palette, Layout } from 'lucide-react';
-import { stickerCategories, iconCategories, shapes, frames, AssetItem, colorPalettes, backgroundPatterns } from '../../data/editorAssets';
-import { pageTemplates } from '../../data/pageTemplates';
+import { stickerCategories, iconCategories, shapes, frames, AssetItem, textCombinations, pageTemplates } from '../../data/editorAssets';
 import * as LucideIcons from 'lucide-react';
 
 interface AssetLibraryProps {
   onAddElement: (type: 'text' | 'image' | 'shape' | 'sticker' | 'icon' | 'frame', data: any) => void;
-  onApplyTemplate?: (template: any) => void;
-  onUpdateBackground?: (background: string, isImage?: boolean) => void;
-  activeTab?: TabType;
+  onApplyTemplate: (template: any) => void;
+  onAddTextCombination: (combination: any) => void;
 }
 
-type TabType = 'templates' | 'stickers' | 'icons' | 'shapes' | 'frames' | 'images' | 'styles' | 'text';
+type TabType = 'templates' | 'stickers' | 'icons' | 'shapes' | 'frames' | 'images';
 
-export function AssetLibrary({ onAddElement, onApplyTemplate, onUpdateBackground, activeTab: externalActiveTab }: AssetLibraryProps) {
-  const [activeTab, setActiveTab] = useState<TabType>(externalActiveTab || 'templates');
-
-  // Sync with external tab changes
-  useEffect(() => {
-    if (externalActiveTab) {
-      setActiveTab(externalActiveTab);
-    }
-  }, [externalActiveTab]);
+export function AssetLibrary({ onAddElement, onApplyTemplate, onAddTextCombination }: AssetLibraryProps) {
+  const [activeTab, setActiveTab] = useState<TabType>('templates');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   const tabs = [
     { id: 'templates' as TabType, label: 'Mẫu', icon: Layout },
-    { id: 'text' as TabType, label: 'Văn bản', icon: Type },
     { id: 'stickers' as TabType, label: 'Sticker', icon: Sparkles },
     { id: 'icons' as TabType, label: 'Icon', icon: Heart },
     { id: 'shapes' as TabType, label: 'Hình', icon: Shapes },
     { id: 'frames' as TabType, label: 'Khung', icon: Frame },
     { id: 'images' as TabType, label: 'Ảnh', icon: ImageIcon },
-    { id: 'styles' as TabType, label: 'Phong cách', icon: Palette },
   ];
 
   const handleAddSticker = (emoji: string) => {
@@ -117,24 +106,72 @@ export function AssetLibrary({ onAddElement, onApplyTemplate, onUpdateBackground
       return matchesSearch;
     });
   };
-
   const renderTemplatesTab = () => {
+    const filteredTemplates = pageTemplates.filter(t => 
+      searchQuery === '' || t.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    const filteredTextCombinations = textCombinations.filter(tc =>
+      searchQuery === '' || tc.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     return (
-      <div className="grid grid-cols-1 gap-4">
-        <p className="text-xs text-gray-500 mb-2">💡 Chọn một mẫu để thay đổi bố cục trang nhanh chóng.</p>
-        {pageTemplates.map(template => (
-          <button
-            key={template.id}
-            onClick={() => onApplyTemplate?.(template)}
-            className="group relative aspect-[3/4] rounded-xl overflow-hidden border-2 border-transparent hover:border-rose-500 transition-all shadow-sm hover:shadow-md"
-          >
-            <img src={template.thumbnail} alt={template.name} className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-3 text-left">
-              <h4 className="text-white text-sm font-bold">{template.name}</h4>
-              <p className="text-white/80 text-[10px] line-clamp-1">{template.description}</p>
+      <div className="space-y-8 pb-10">
+        {/* Text Combinations Section */}
+        {filteredTextCombinations.length > 0 && (
+          <section className="space-y-3">
+            <h4 className="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wider">
+              <Type className="w-3.5 h-3.5" />
+              Tổ hợp chữ nghệ thuật
+            </h4>
+            <div className="grid grid-cols-1 gap-2">
+              {filteredTextCombinations.map(tc => (
+                <button
+                  key={tc.id}
+                  onClick={() => onAddTextCombination(tc)}
+                  className="w-full p-3 text-left bg-gray-50 hover:bg-rose-50 rounded-xl border border-gray-100 hover:border-rose-200 transition-all group shadow-sm hover:shadow-md"
+                >
+                  <div className="text-sm font-bold text-gray-800 mb-1" style={{ fontFamily: tc.elements[0].fontFamily }}>
+                    {tc.name}
+                  </div>
+                  <div className="text-[11px] text-gray-500 line-clamp-1 opacity-70">
+                    {tc.elements.map(el => el.content).join(' • ')}
+                  </div>
+                </button>
+              ))}
             </div>
-          </button>
-        ))}
+          </section>
+        )}
+
+        {/* Page Templates Section */}
+        {filteredTemplates.length > 0 && (
+          <section className="space-y-3">
+            <h4 className="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wider">
+              <Layout className="w-3.5 h-3.5" />
+              Mẫu trang thiết kế
+            </h4>
+            <div className="grid grid-cols-2 gap-4">
+              {filteredTemplates.map(template => (
+                <button
+                  key={template.id}
+                  onClick={() => onApplyTemplate(template)}
+                  className="group relative aspect-[3/4] rounded-xl overflow-hidden border-2 border-gray-100 hover:border-rose-500 transition-all hover:shadow-xl transform hover:-translate-y-1"
+                >
+                  <img src={template.thumbnail} alt={template.name} className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
+                    <span className="text-xs text-white font-bold leading-tight">{template.name}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </section>
+        )}
+        
+        {filteredTemplates.length === 0 && filteredTextCombinations.length === 0 && (
+          <div className="text-center py-10 opacity-40">
+            <Search className="w-10 h-10 mx-auto mb-2" />
+            <p className="text-sm">Không tìm thấy mẫu nào phù hợp</p>
+          </div>
+        )}
       </div>
     );
   };
@@ -146,6 +183,7 @@ export function AssetLibrary({ onAddElement, onApplyTemplate, onUpdateBackground
 
     return (
       <div className="space-y-4">
+        {/* Category Filter */}
         <div className="flex gap-2 flex-wrap">
           <button
             onClick={() => setSelectedCategory('all')}
@@ -172,6 +210,7 @@ export function AssetLibrary({ onAddElement, onApplyTemplate, onUpdateBackground
           ))}
         </div>
 
+        {/* Sticker Grid */}
         <div className="space-y-3">
           {categories.map(category => {
             const filtered = filterItems(category.items);
@@ -368,122 +407,33 @@ export function AssetLibrary({ onAddElement, onApplyTemplate, onUpdateBackground
     );
   };
 
-  const renderStylesTab = () => {
-    return (
-      <div className="space-y-6">
-        <div>
-          <h4 className="text-sm font-semibold text-gray-700 mb-3">🎨 Bảng màu</h4>
-          <div className="space-y-3">
-            {Object.entries(colorPalettes).map(([key, palette]) => (
-              <div key={key} className="space-y-1">
-                <span className="text-[10px] text-gray-500 uppercase">{palette.name}</span>
-                <div className="flex gap-1">
-                  {palette.colors.map(color => (
-                    <button
-                      key={color}
-                      onClick={() => onUpdateBackground?.(color)}
-                      className="w-8 h-8 rounded-md transition-all hover:scale-110 shadow-sm"
-                      style={{ backgroundColor: color }}
-                      title={color}
-                    />
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="border-t pt-4">
-          <h4 className="text-sm font-semibold text-gray-700 mb-3">✨ Họa tiết nền</h4>
-          <div className="grid grid-cols-2 gap-2">
-            {backgroundPatterns.map(pattern => (
-              <button
-                key={pattern.id}
-                onClick={() => {
-                  // Apply pattern - this is a bit tricky as it returns a style object
-                  // For now we'll just use a default color with the pattern
-                  const style = pattern.style('#F5F2EE');
-                  onUpdateBackground?.(style.background as string);
-                }}
-                className="p-3 rounded-lg border bg-white hover:bg-rose-50 transition-all text-xs text-gray-600 font-medium text-left flex flex-col gap-2"
-              >
-                <div 
-                  className="w-full h-10 rounded border" 
-                  style={pattern.style('#F5F2EE') as any}
-                />
-                {pattern.name}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const renderTextTab = () => {
-    return (
-      <div className="space-y-6 p-2">
-        <h4 className="text-sm font-semibold text-gray-700">Thêm văn bản</h4>
-        <div className="space-y-3">
-          <button
-            onClick={() => onAddElement('text', { content: 'Thêm tiêu đề', fontSize: 40, fontWeight: 'bold' })}
-            className="w-full text-left px-4 py-4 bg-gray-50 hover:bg-rose-50 rounded-xl transition-all group"
-          >
-            <span className="text-2xl font-bold text-gray-900 group-hover:text-rose-600">Thêm tiêu đề</span>
-          </button>
-          <button
-            onClick={() => onAddElement('text', { content: 'Thêm tiêu đề phụ', fontSize: 24, fontWeight: 'semibold' })}
-            className="w-full text-left px-4 py-3 bg-gray-50 hover:bg-rose-50 rounded-xl transition-all group"
-          >
-            <span className="text-lg font-semibold text-gray-800 group-hover:text-rose-600">Thêm tiêu đề phụ</span>
-          </button>
-          <button
-            onClick={() => onAddElement('text', { content: 'Thêm nội dung văn bản', fontSize: 16, fontWeight: 'normal' })}
-            className="w-full text-left px-4 py-2 bg-gray-50 hover:bg-rose-50 rounded-xl transition-all group"
-          >
-            <span className="text-base text-gray-700 group-hover:text-rose-600">Thêm nội dung văn bản</span>
-          </button>
-        </div>
-
-        <div className="pt-6 border-t">
-          <h4 className="text-sm font-semibold text-gray-700 mb-3">Phông chữ nghệ thuật</h4>
-          <div className="grid grid-cols-1 gap-3">
-            {[
-              { name: 'Love Story', font: 'Dancing Script', color: '#E11D48' },
-              { name: 'Modern Clean', font: 'Inter', color: '#1F2937' },
-              { name: 'Classic Serif', font: 'Playfair Display', color: '#3A2E28' },
-            ].map((style, idx) => (
-              <button
-                key={idx}
-                onClick={() => onAddElement('text', { content: style.name, fontFamily: style.font, color: style.color, fontSize: 32 })}
-                className="w-full p-4 border rounded-xl hover:border-rose-500 hover:bg-rose-50 transition-all text-center"
-                style={{ fontFamily: style.font, color: style.color }}
-              >
-                {style.name}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div className="h-full flex flex-col bg-white">
-      <div className="p-4 border-b space-y-3">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+      {/* Header with Add Text button */}
+      <div className="p-4 border-b space-y-4 bg-gray-50/50">
+        <button
+          onClick={handleAddText}
+          className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-xl hover:shadow-lg transition-all font-bold shadow-md transform hover:scale-[1.02] active:scale-95"
+        >
+          <Type className="w-5 h-5" />
+          <span>Thêm văn bản rỗng</span>
+        </button>
+
+        {/* Search */}
+        <div className="relative group">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-rose-500 transition-colors" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Tìm kiếm..."
-            className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none text-sm"
+            placeholder="Tìm kiếm mẫu, sticker..."
+            className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 outline-none text-sm transition-all shadow-sm"
           />
         </div>
       </div>
 
-      <div className="flex border-b overflow-x-auto no-scrollbar">
+      {/* Tabs */}
+      <div className="flex border-b overflow-x-auto">
         {tabs.map(tab => {
           const Icon = tab.icon;
           return (
@@ -494,19 +444,20 @@ export function AssetLibrary({ onAddElement, onApplyTemplate, onUpdateBackground
                 setSelectedCategory('all');
                 setSearchQuery('');
               }}
-              className={`flex-1 min-w-[70px] flex flex-col items-center justify-center gap-1 px-1 py-3 text-[10px] font-medium transition-all ${
+              className={`flex-1 min-w-[80px] flex items-center justify-center gap-2 px-3 py-3 text-sm font-medium transition-all ${
                 activeTab === tab.id
                   ? 'text-rose-600 border-b-2 border-rose-600 bg-rose-50'
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
               }`}
             >
               <Icon className="w-4 h-4" />
-              <span>{tab.label}</span>
+              <span className="hidden sm:inline">{tab.label}</span>
             </button>
           );
         })}
       </div>
 
+      {/* Content */}
       <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
         {activeTab === 'templates' && renderTemplatesTab()}
         {activeTab === 'stickers' && renderStickerTab()}
@@ -514,8 +465,6 @@ export function AssetLibrary({ onAddElement, onApplyTemplate, onUpdateBackground
         {activeTab === 'shapes' && renderShapesTab()}
         {activeTab === 'frames' && renderFramesTab()}
         {activeTab === 'images' && renderImagesTab()}
-        {activeTab === 'styles' && renderStylesTab()}
-        {activeTab === 'text' && renderTextTab()}
       </div>
     </div>
   );

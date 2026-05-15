@@ -4647,3 +4647,36 @@ button, a, input, select, textarea {
     transform: translate3d(var(--tw-enter-translate-x, 0), var(--tw-enter-translate-y, 0), 0) scale3d(var(--tw-enter-scale, 1), var(--tw-enter-scale, 1), var(--tw-enter-scale, 1)) rotate(var(--tw-enter-rotate, 0));
   }
 }
+
+/* Print Styles for PDF Export */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printable-canvas, #printable-canvas * {
+    visibility: visible;
+  }
+  #printable-canvas {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+  }
+  /* Hide UI elements specifically */
+  .no-print, 
+  nav, 
+  header, 
+  footer, 
+  button, 
+  .sidebar,
+  .Toolbar,
+  [class*="Toolbar"],
+  [class*="Sidebar"],
+  [class*="Filmstrip"] {
+    display: none !important;
+  }
+}

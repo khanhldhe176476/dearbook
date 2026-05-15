@@ -11,6 +11,7 @@ interface UseUndoRedoReturn<T> {
   setState: (newState: T | ((prev: T) => T)) => void;
   undo: () => void;
   redo: () => void;
+  reset: (newState: T) => void;
   canUndo: boolean;
   canRedo: boolean;
   clearHistory: () => void;
@@ -86,6 +87,15 @@ export function useUndoRedo<T>({
     }
   }, [currentIndex, history.length]);
 
+  const reset = useCallback((newState: T) => {
+    isInternalChange.current = true;
+    setHistory([newState]);
+    setCurrentIndex(0);
+    setTimeout(() => {
+      isInternalChange.current = false;
+    }, 0);
+  }, []);
+
   const clearHistory = useCallback(() => {
     setHistory([state]);
     setCurrentIndex(0);
@@ -122,6 +132,7 @@ export function useUndoRedo<T>({
     setState,
     undo,
     redo,
+    reset,
     canUndo: currentIndex > 0,
     canRedo: currentIndex < history.length - 1,
     clearHistory,

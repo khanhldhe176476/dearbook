@@ -1,7 +1,5 @@
-node_modules
-build
-dist
+node_modules/
+build/
+dist/
 .env
-.env.local
-.DS_Store
-.vscode
+.env.local

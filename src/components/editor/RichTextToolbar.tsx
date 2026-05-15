@@ -9,6 +9,7 @@ import {
   AlignJustify,
   Type,
   Palette,
+  Sparkles,
 } from 'lucide-react';
 
 interface RichTextToolbarProps {
@@ -26,6 +27,8 @@ interface RichTextToolbarProps {
   onTextDecorationChange: (value: string) => void;
   onTextAlignChange: (value: string) => void;
   onColorChange: (value: string) => void;
+  textShadow?: string;
+  onTextShadowChange: (value: string) => void;
 }
 
 const FONT_FAMILIES = [
@@ -61,8 +64,11 @@ export function RichTextToolbar({
   onTextDecorationChange,
   onTextAlignChange,
   onColorChange,
+  textShadow = 'none',
+  onTextShadowChange,
 }: RichTextToolbarProps) {
   const [showColorPicker, setShowColorPicker] = useState(false);
+  const [showEffects, setShowEffects] = useState(false);
 
   const toggleBold = () => {
     onFontWeightChange(fontWeight === 'bold' ? 'normal' : 'bold');
