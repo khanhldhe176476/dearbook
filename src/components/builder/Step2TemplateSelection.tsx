@@ -46,9 +46,8 @@ export function Step2TemplateSelection({
   // Filter mock templates by theme
   const filteredMockTemplates = realTemplates.filter(t => t.theme === theme);
   
-  // Map Supabase templates to UI format, fallback to mock data nếu Supabase trống
-  const templates = apiTemplates.length > 0
-    ? apiTemplates.map(t => {
+  // Map Supabase templates to UI format
+  const mappedApiTemplates = apiTemplates.map(t => {
         // Tìm mock template cùng id/name để lấy pages (vì Supabase chưa lưu pages chi tiết)
         const mockMatch = realTemplates.find(m => m.id === t.id || m.name === t.title);
         return {
@@ -62,8 +61,9 @@ export function Step2TemplateSelection({
           badge: mockMatch?.badge,
           realTemplate: mockMatch || { id: t.id, pages: [], cover: undefined }
         };
-      })
-    : filteredMockTemplates.map(t => ({
+      });
+
+  const mappedMockTemplates = filteredMockTemplates.map(t => ({
         id: t.id,
         name: t.name,
         description: `${t.pages.length} trang với nội dung ${t.theme === 'love' ? 'lãng mạn' : t.theme === 'family' ? 'gia đình' : t.theme === 'birthday' ? 'sinh nhật' : 'bạn bè'}`,
@@ -74,6 +74,12 @@ export function Step2TemplateSelection({
         badge: t.badge,
         realTemplate: t
       }));
+
+  // Đẩy các template đã thiết kế lại vào chung với template từ API
+  const apiTemplateIds = new Set(mappedApiTemplates.map(t => t.id));
+  const uniqueMockTemplates = mappedMockTemplates.filter(t => !apiTemplateIds.has(t.id));
+  
+  const templates = [...mappedApiTemplates, ...uniqueMockTemplates];
 
   const handleSelectTemplate = (template: any) => {
     // Convert real template pages to PageData format

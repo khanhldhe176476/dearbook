@@ -9,6 +9,7 @@ import { toast } from 'sonner@2.0.3';
 import { bookApi } from '../lib/bookApi';
 import { Loader2 } from 'lucide-react';
 import { fetchActiveBookTemplates, BookTemplateUI } from '../lib/supabaseTemplateApi';
+import { sampleBooks } from '../data/sampleBooks';
 
 interface MyBooksLibraryPortfolioProps {
   user: User;
@@ -57,10 +58,32 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
       setTemplateError(null);
       const data = await fetchActiveBookTemplates();
       console.log('📚 MyBooksLibrary - Supabase templates:', data);
-      setTemplateList(data);
+      
+      const mappedSampleBooks: BookTemplateUI[] = sampleBooks.map(book => ({
+        id: book.id,
+        title: book.title || 'Sách Mẫu',
+        description: `${book.pageCount || book.pages?.length || 10} trang mẫu chuyên nghiệp với chủ đề ${book.theme === 'love' ? 'tình yêu' : book.theme === 'family' ? 'gia đình' : book.theme === 'birthday' ? 'sinh nhật' : 'bạn bè'}`,
+        coverImageUrl: (book as any).coverPage?.backgroundImage || (book as any).pages?.[0]?.backgroundImage || '',
+        price: 0,
+      }));
+
+      const apiIds = new Set(data.map(d => d.id));
+      const uniqueSampleBooks = mappedSampleBooks.filter(s => !apiIds.has(s.id));
+
+      setTemplateList([...data, ...uniqueSampleBooks]);
     } catch (err) {
       console.error('❌ MyBooksLibrary - Supabase template fetch failed:', err);
-      setTemplateError('Không thể tải danh sách mẫu từ Supabase.');
+      setTemplateError('Không thể tải danh sách mẫu từ Supabase. Đang hiển thị mẫu dự phòng.');
+      
+      const mappedSampleBooks: BookTemplateUI[] = sampleBooks.map(book => ({
+        id: book.id,
+        title: book.title || 'Sách Mẫu',
+        description: `${book.pageCount || book.pages?.length || 10} trang mẫu chuyên nghiệp với chủ đề ${book.theme === 'love' ? 'tình yêu' : book.theme === 'family' ? 'gia đình' : book.theme === 'birthday' ? 'sinh nhật' : 'bạn bè'}`,
+        coverImageUrl: (book as any).coverPage?.backgroundImage || (book as any).pages?.[0]?.backgroundImage || '',
+        price: 0,
+      }));
+      
+      setTemplateList(mappedSampleBooks);
     } finally {
       setTemplateLoading(false);
     }
