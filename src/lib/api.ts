@@ -1,7 +1,5 @@
-// Sử dụng biến môi trường nếu có, nếu không thì dùng relative path (rỗng) khi chạy chung host
-const API_BASE_URL = import.meta.env.VITE_API_URL !== undefined 
-  ? import.meta.env.VITE_API_URL 
-  : (import.meta.env.PROD ? "" : "https://dearbook-backend-docker.onrender.com");
+// Sử dụng biến môi trường nếu có, nếu không thì dùng absolute path của backend
+const API_BASE_URL = import.meta.env.VITE_API_URL || "https://dearbook-backend-docker.onrender.com";
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${path}`, {
