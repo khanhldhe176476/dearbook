@@ -8,7 +8,6 @@ import { PageElement, EditorPage as BookPage } from './types/editor';
 import { profileApi } from './lib/profileApi';
 import { bookApi } from './lib/bookApi';
 import { toast } from 'sonner@2.0.3';
-import { signInWithEmail, signUpWithEmail, getCurrentSession, signOut } from './lib/authApi';
 
 export interface User {
   email: string;
@@ -56,69 +55,58 @@ function App() {
 
   // Check for existing session
   useEffect(() => {
-    const initSession = async () => {
-      try {
-        const sessionUser = await getCurrentSession();
-        if (sessionUser) {
-          const userData = {
-            email: sessionUser.email,
-            name: sessionUser.fullName,
-            picture: sessionUser.avatarUrl,
-          };
-          setUser(userData);
-          localStorage.setItem('dearbook_user', JSON.stringify(userData));
-          setCurrentScreen('library');
-        } else {
-          // Fallback to local storage if no session
-          const savedUser = localStorage.getItem('dearbook_user');
-          if (savedUser) {
-            setUser(JSON.parse(savedUser));
-            setCurrentScreen('library');
-          }
-        }
-      } catch (e) {
-        console.error('Session check error:', e);
-      }
-    };
-    initSession();
+    const savedUser = localStorage.getItem('dearbook_user');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+      setCurrentScreen('library');
+    }
   }, []);
 
-  const handleLogin = async (email: string, password: string, isSignup: boolean, name?: string) => {
+  const handleLogin = async (email: string, password: string, name?: string, picture?: string) => {
+    // Simulation: Generate a consistent UUID from email for API calls
+    const userId = '00000000-0000-0000-0000-000000000000'; // Placeholder
+    
     try {
-      let authUser;
-      if (isSignup) {
-        if (!name) {
-          toast.error('Vui lòng nhập họ và tên');
-          return;
-        }
-        authUser = await signUpWithEmail(email, password, name);
-        toast.success('Đăng ký thành công!');
-      } else {
-        authUser = await signInWithEmail(email, password);
-        toast.success('Đăng nhập thành công!');
+      // Try to sync with backend
+      let profile;
+      try {
+        profile = await profileApi.getMyProfile(userId);
+      } catch (e) {
+        // If not found, create new
+        profile = await profileApi.updateProfile({
+          id: userId,
+          email,
+          fullName: name || email.split('@')[0],
+          avatarUrl: picture
+        });
       }
 
-      const userData = {
-        email: authUser.email,
-        name: authUser.fullName,
-        picture: authUser.avatarUrl,
+      const userData = { 
+        email: profile?.email || email, 
+        name: profile?.fullName || name || email.split('@')[0],
+        picture: profile?.avatarUrl || picture 
       };
       
       setUser(userData);
       localStorage.setItem('dearbook_user', JSON.stringify(userData));
       setCurrentScreen('library');
-    } catch (err: any) {
-      console.error('Auth error:', err);
-      toast.error(err.message || 'Có lỗi xảy ra. Vui lòng thử lại.');
+      toast.success('Đăng nhập thành công!');
+    } catch (err) {
+      console.error('Login failed, using local fallback:', err);
+      // Fallback to local authentication
+      const userData = { 
+        email, 
+        name: name || email.split('@')[0],
+        picture 
+      };
+      setUser(userData);
+      localStorage.setItem('dearbook_user', JSON.stringify(userData));
+      setCurrentScreen('library');
+      toast.success('Đăng nhập (ngoại tuyến)');
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      await signOut();
-    } catch (e) {
-      console.error('Signout error:', e);
-    }
+  const handleLogout = () => {
     setUser(null);
     setCurrentBook(null);
     localStorage.removeItem('dearbook_user');

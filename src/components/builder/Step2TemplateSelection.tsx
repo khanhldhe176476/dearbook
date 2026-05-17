@@ -3,9 +3,25 @@ import { ArrowLeft, Eye, Check, Layout, Loader2 } from 'lucide-react';
 import { PageData, BookData } from '../../App';
 import { templates as realTemplates } from '../../data/templates';
 import { FlipBookReader } from '../FlipBookReader';
-import { fetchActiveBookTemplates, BookTemplateUI } from '../../lib/supabaseTemplateApi';
+import { templateApi } from '../../lib/templateApi';
 
+interface Template {
+  id: string;
+  name: string;
+  description: string;
+  style: 'minimal' | 'romantic' | 'playful' | 'elegant';
+  pageCount: number;
+  preview: string;
+  pages: TemplatePageDef[];
+}
 
+interface TemplatePageDef {
+  id: string;
+  layout: string;
+  textFields: string[];
+  imageFields: string[];
+  defaultTexts: { [key: string]: string };
+}
 
 interface Step2TemplateSelectionProps {
   theme: 'love' | 'family' | 'birthday' | 'friendship';
@@ -21,65 +37,56 @@ export function Step2TemplateSelection({
   onBack,
 }: Step2TemplateSelectionProps) {
   const [previewTemplate, setPreviewTemplate] = useState<any>(null);
-  const [apiTemplates, setApiTemplates] = useState<BookTemplateUI[]>([]);
+  const [apiTemplates, setApiTemplates] = useState<Template[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadTemplates = async () => {
+    const fetchTemplates = async () => {
       try {
         setLoading(true);
-        setError(null);
-        const data = await fetchActiveBookTemplates();
-        console.log('🎨 Step2 - Supabase templates loaded:', data);
+        const data = await templateApi.getTemplates();
         setApiTemplates(data);
+        setError(null);
       } catch (err) {
-        console.error('❌ Step2 - Failed to fetch from Supabase:', err);
-        setError('Không thể tải mẫu từ Supabase. Đang dùng dữ liệu dự phòng.');
+        console.error('Failed to fetch templates:', err);
+        setError('Không thể tải mẫu sách từ máy chủ. Đang sử dụng dữ liệu dự phòng.');
       } finally {
         setLoading(false);
       }
     };
-    loadTemplates();
+    fetchTemplates();
   }, []);
 
   // Filter mock templates by theme
   const filteredMockTemplates = realTemplates.filter(t => t.theme === theme);
   
-  // Map Supabase templates to UI format
-  const mappedApiTemplates = apiTemplates.map(t => {
-        // Tìm mock template cùng id/name để lấy pages (vì Supabase chưa lưu pages chi tiết)
-        const mockMatch = realTemplates.find(m => m.id === t.id || m.name === t.title);
+  // Map API templates to UI format, fallback to mock
+  const templates = apiTemplates.length > 0
+    ? apiTemplates.map(t => {
+        // Try to find matching mock template for detailed pages/data
+        const mockMatch = realTemplates.find(m => m.id === t.id || m.name === t.name);
         return {
           id: t.id,
-          name: t.title,            // name <- Supabase.name
+          name: t.name,
           description: t.description || `${mockMatch?.pages.length || 10} trang thiết kế cao cấp`,
           style: 'romantic' as const,
           pageCount: mockMatch?.pages.length || 10,
-          preview: t.coverImageUrl || mockMatch?.thumbnail || '', // cover_image_url
-          price: t.price,
+          preview: t.coverImageUrl || mockMatch?.thumbnail || '',
           badge: mockMatch?.badge,
-          realTemplate: mockMatch || { id: t.id, pages: [], cover: undefined }
+          realTemplate: mockMatch || t
         };
-      });
-
-  const mappedMockTemplates = filteredMockTemplates.map(t => ({
+      })
+    : filteredMockTemplates.map(t => ({
         id: t.id,
         name: t.name,
         description: `${t.pages.length} trang với nội dung ${t.theme === 'love' ? 'lãng mạn' : t.theme === 'family' ? 'gia đình' : t.theme === 'birthday' ? 'sinh nhật' : 'bạn bè'}`,
         style: 'romantic' as const,
         pageCount: t.pages.length,
         preview: t.thumbnail,
-        price: 0,
         badge: t.badge,
         realTemplate: t
       }));
-
-  // Đẩy các template đã thiết kế lại vào chung với template từ API
-  const apiTemplateIds = new Set(mappedApiTemplates.map(t => t.id));
-  const uniqueMockTemplates = mappedMockTemplates.filter(t => !apiTemplateIds.has(t.id));
-  
-  const templates = [...mappedApiTemplates, ...uniqueMockTemplates];
 
   const handleSelectTemplate = (template: any) => {
     // Convert real template pages to PageData format
