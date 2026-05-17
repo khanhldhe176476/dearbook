@@ -4,6 +4,7 @@ import { BookData, User, CharacterData, PageData } from '../App';
 import { Step1ThemeSelection } from './builder/Step1ThemeSelection';
 import { Step2TemplateSelection } from './builder/Step2TemplateSelection';
 import { Step4PageEditorAdvanced } from './builder/Step4PageEditorAdvanced';
+import { YouthArchiveEditor } from './builder/YouthArchiveEditor';
 import { Book3DPreviewPanel } from './builder/Book3DPreviewPanel';
 import { BeginnerTutorial } from './BeginnerTutorial';
 import { HelpPanel } from './HelpPanel';
@@ -28,6 +29,7 @@ export function GuidedBookBuilder({
   onLogout,
 }: GuidedBookBuilderProps) {
   const [currentStep, setCurrentStep] = useState<Step>(1);
+  const [useAdvancedEditor, setUseAdvancedEditor] = useState(false);
   const [bookData, setBookData] = useState<Partial<BookData>>(
     initialBook || {
       id: `book-${Date.now()}`,
@@ -249,22 +251,45 @@ export function GuidedBookBuilder({
               bookData.theme &&
               bookData.templateId &&
               bookData.pages && (
-                <Step4PageEditorAdvanced
-                  theme={bookData.theme}
-                  templateId={bookData.templateId}
-                  pages={bookData.pages}
-                  character={bookData.character}
-                  title={bookData.title}
-                  onChange={(pages, title) => {
-                    const updated = { ...bookData, pages, title };
-                    setBookData(updated);
-                    if (bookData.id) {
-                      onSave(updated as BookData);
-                    }
-                  }}
-                  onBack={() => setCurrentStep(2)}
-                  onFinish={handleFinish}
-                />
+                bookData.templateId === 'youth-archive-memories' && !useAdvancedEditor ? (
+                  <YouthArchiveEditor
+                    book={bookData as BookData}
+                    pages={bookData.pages}
+                    onChange={(pages, title) => {
+                      const updated = { ...bookData, pages, title };
+                      setBookData(updated);
+                      if (bookData.id) {
+                        onSave(updated as BookData);
+                      }
+                    }}
+                    onBack={() => setCurrentStep(2)}
+                    onFinish={handleFinish}
+                    onAdvancedEdit={() => setUseAdvancedEditor(true)}
+                  />
+                ) : (
+                  <Step4PageEditorAdvanced
+                    theme={bookData.theme}
+                    templateId={bookData.templateId}
+                    pages={bookData.pages}
+                    character={bookData.character}
+                    title={bookData.title}
+                    onChange={(pages, title) => {
+                      const updated = { ...bookData, pages, title };
+                      setBookData(updated);
+                      if (bookData.id) {
+                        onSave(updated as BookData);
+                      }
+                    }}
+                    onBack={() => {
+                      if (bookData.templateId === 'youth-archive-memories') {
+                        setUseAdvancedEditor(false);
+                      } else {
+                        setCurrentStep(2);
+                      }
+                    }}
+                    onFinish={handleFinish}
+                  />
+                )
               )}
           </div>
         </div>
