@@ -1,15 +1,17 @@
 import { useState } from 'react';
-import { BookHeart, Mail, Lock, User, Sparkles, Heart, Users, Cake } from 'lucide-react';
+import { BookHeart, Mail, Lock, User, Sparkles, Heart, Users, Cake, Loader2 } from 'lucide-react';
+import { GoogleLogin } from '@react-oauth/google';
 
 interface LoginScreenProps {
-  onLogin: (email: string, password: string, name?: string, picture?: string) => void;
+  onLogin: (email: string, password: string, isSignup: boolean, name?: string) => Promise<void> | void;
+  onGoogleLogin?: (idToken: string) => Promise<void> | void;
 }
 
-export function LoginScreen({ onLogin }: LoginScreenProps) {
+export function LoginScreen({ onLogin, onGoogleLogin }: LoginScreenProps) {
   const [isSignup, setIsSignup] = useState(false);
-  const [email,    setEmail]    = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name,     setName]     = useState('');
+  const [name, setName] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,9 +43,9 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
 
       {/* Soft ambient glows */}
       <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full pointer-events-none"
-           style={{ background: 'radial-gradient(circle, rgba(200,175,150,0.20) 0%, transparent 65%)' }} />
+        style={{ background: 'radial-gradient(circle, rgba(200,175,150,0.20) 0%, transparent 65%)' }} />
       <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full pointer-events-none"
-           style={{ background: 'radial-gradient(circle, rgba(185,165,145,0.15) 0%, transparent 65%)' }} />
+        style={{ background: 'radial-gradient(circle, rgba(185,165,145,0.15) 0%, transparent 65%)' }} />
 
       {/* Floating decorative text */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
@@ -134,6 +136,22 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
                 {isSignup ? 'Đăng ký để bắt đầu tạo sách' : 'Đăng nhập để tiếp tục'}
               </p>
             </div>
+
+            {onGoogleLogin && (
+              <>
+                <div className="mb-6 flex justify-center">
+                  <GoogleLogin
+                    onSuccess={(res) => { if (res.credential) onGoogleLogin(res.credential); }}
+                    onError={() => console.error('Google Login Failed')}
+                  />
+                </div>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="h-px flex-1" style={{ background: '#DDD8D0' }}></div>
+                  <span className="text-xs font-medium" style={{ color: '#9B9088' }}>HOẶC DÙNG EMAIL</span>
+                  <div className="h-px flex-1" style={{ background: '#DDD8D0' }}></div>
+                </div>
+              </>
+            )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               {isSignup && (

@@ -63,6 +63,7 @@ create table if not exists user_uploads (
     id uuid primary key default gen_random_uuid(),
     user_id uuid references profiles(id),
     file_url text not null,
+    thumbnail_url text,
     file_type text,
     created_at timestamptz default now()
 );

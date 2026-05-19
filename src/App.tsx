@@ -7,7 +7,8 @@ import { OrderFlow } from './components/OrderFlow';
 import { PageElement, EditorPage as BookPage } from './types/editor';
 import { profileApi } from './lib/profileApi';
 import { bookApi } from './lib/bookApi';
-import { toast } from 'sonner@2.0.3';
+import { signInWithEmail, signUpWithEmail, signOut as authSignOut, getCurrentSession, signInWithGoogleToken } from './lib/authApi';
+import { Toaster, toast } from 'sonner';
 
 export interface User {
   email: string;
@@ -55,62 +56,82 @@ function App() {
 
   // Check for existing session
   useEffect(() => {
-    const savedUser = localStorage.getItem('dearbook_user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-      setCurrentScreen('library');
-    }
+    const checkSession = async () => {
+      try {
+        const sessionUser = await getCurrentSession();
+        if (sessionUser) {
+          setUser({
+            email: sessionUser.email,
+            name: sessionUser.fullName,
+            picture: sessionUser.avatarUrl
+          });
+          setCurrentScreen('library');
+        } else {
+          localStorage.removeItem('dearbook_user');
+        }
+      } catch (err) {
+        console.error('Session check failed', err);
+      }
+    };
+    checkSession();
   }, []);
 
-  const handleLogin = async (email: string, password: string, name?: string, picture?: string) => {
-    // Simulation: Generate a consistent UUID from email for API calls
-    const userId = '00000000-0000-0000-0000-000000000000'; // Placeholder
-    
+  const handleLogin = async (email: string, password: string, isSignup: boolean, name?: string) => {
     try {
-      // Try to sync with backend
-      let profile;
-      try {
-        profile = await profileApi.getMyProfile(userId);
-      } catch (e) {
-        // If not found, create new
-        profile = await profileApi.updateProfile({
-          id: userId,
-          email,
-          fullName: name || email.split('@')[0],
-          avatarUrl: picture
-        });
+      let userRes;
+      if (isSignup) {
+        if (!name) throw new Error('Vui lòng nhập họ và tên');
+        userRes = await signUpWithEmail(email, password, name);
+      } else {
+        userRes = await signInWithEmail(email, password);
       }
 
       const userData = { 
-        email: profile?.email || email, 
-        name: profile?.fullName || name || email.split('@')[0],
-        picture: profile?.avatarUrl || picture 
+        email: userRes.email, 
+        name: userRes.fullName,
+        picture: userRes.avatarUrl 
       };
       
       setUser(userData);
       localStorage.setItem('dearbook_user', JSON.stringify(userData));
       setCurrentScreen('library');
-      toast.success('Đăng nhập thành công!');
-    } catch (err) {
-      console.error('Login failed, using local fallback:', err);
-      // Fallback to local authentication
-      const userData = { 
-        email, 
-        name: name || email.split('@')[0],
-        picture 
-      };
-      setUser(userData);
-      localStorage.setItem('dearbook_user', JSON.stringify(userData));
-      setCurrentScreen('library');
-      toast.success('Đăng nhập (ngoại tuyến)');
+      toast.success(isSignup ? 'Đăng ký thành công!' : 'Đăng nhập thành công!');
+    } catch (err: any) {
+      console.error('Authentication failed:', err);
+      toast.error(err.message || 'Có lỗi xảy ra. Vui lòng thử lại!');
     }
   };
 
-  const handleLogout = () => {
-    setUser(null);
-    setCurrentBook(null);
-    localStorage.removeItem('dearbook_user');
-    setCurrentScreen('login');
+  const handleGoogleLogin = async (idToken: string) => {
+    try {
+      const userRes = await signInWithGoogleToken(idToken);
+      const userData = { 
+        email: userRes.email, 
+        name: userRes.fullName,
+        picture: userRes.avatarUrl 
+      };
+      
+      setUser(userData);
+      localStorage.setItem('dearbook_user', JSON.stringify(userData));
+      setCurrentScreen('library');
+      toast.success('Đăng nhập bằng Google thành công!');
+    } catch (err: any) {
+      console.error('Google authentication failed:', err);
+      toast.error(err.message || 'Xác thực Google thất bại!');
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await authSignOut();
+      setUser(null);
+      setCurrentBook(null);
+      localStorage.removeItem('dearbook_user');
+      setCurrentScreen('login');
+      toast.success('Đã đăng xuất');
+    } catch (err) {
+      console.error('Logout error', err);
+    }
   };
 
   const handleCreateNewBook = () => {
@@ -172,12 +193,13 @@ function App() {
 
   return (
     <div className="min-h-screen" style={{ background: '#FAFAF8' }}>
+      <Toaster position="top-right" richColors />
       {currentScreen === 'home' && (
         <HomePage onGetStarted={() => setCurrentScreen('login')} />
       )}
 
       {currentScreen === 'login' && (
-        <LoginScreen onLogin={handleLogin} />
+        <LoginScreen onLogin={handleLogin} onGoogleLogin={handleGoogleLogin} />
       )}
       
       {currentScreen === 'library' && user && (
