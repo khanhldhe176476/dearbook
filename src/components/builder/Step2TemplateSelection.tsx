@@ -58,8 +58,10 @@ export function Step2TemplateSelection({
     fetchTemplates();
   }, []);
 
-  // Filter mock templates by theme
-  const filteredMockTemplates = realTemplates.filter(t => t.theme === theme);
+  // Filter mock templates by theme, always include Youth Archive
+  const filteredMockTemplates = realTemplates.filter(t =>
+    t.theme === theme || t.id === 'youth-archive-memories'
+  );
   
   // Map API templates to UI format, fallback to mock
   const templates = apiTemplates.length > 0
@@ -80,7 +82,9 @@ export function Step2TemplateSelection({
     : filteredMockTemplates.map(t => ({
         id: t.id,
         name: t.name,
-        description: `${t.pages.length} trang với nội dung ${t.theme === 'love' ? 'lãng mạn' : t.theme === 'family' ? 'gia đình' : t.theme === 'birthday' ? 'sinh nhật' : 'bạn bè'}`,
+        description: t.id === 'youth-archive-memories'
+          ? `${t.pages.length} trang scrapbook vintage – upload ảnh cá nhân của bạn`
+          : `${t.pages.length} trang với nội dung ${t.theme === 'love' ? 'lãng mạn' : t.theme === 'family' ? 'gia đình' : t.theme === 'birthday' ? 'sinh nhật' : 'bạn bè'}`,
         style: 'romantic' as const,
         pageCount: t.pages.length,
         preview: t.thumbnail,
@@ -211,7 +215,7 @@ export function Step2TemplateSelection({
                   >
                     {isSelected ? (
                       <><Check className="w-4 h-4" /> Đã chọn</>
-                    ) : 'Chọn mẫu'}
+                    ) : template.id === 'youth-archive-memories' ? 'Dùng mẫu này' : 'Chọn mẫu'}
                   </button>
                 </div>
               </div>
