@@ -1,26 +1,62 @@
 import { useState } from 'react';
-import { BookHeart, Mail, Lock, User, Sparkles, Heart, Users, Cake, Loader2 } from 'lucide-react';
+import { BookHeart, Mail, Lock, User, Sparkles, Heart, Users, Cake, Loader2, ShieldCheck, ArrowLeft } from 'lucide-react';
 
 interface LoginScreenProps {
-  onLogin: (email: string, password: string, isSignup: boolean, name?: string) => Promise<void> | void;
+  onLogin: (email: string, password: string, isSignup: boolean, name?: string) => Promise<{ needsOtp?: boolean } | void>;
+  onVerifyOtp: (email: string, token: string, name?: string) => Promise<void>;
 }
 
-export function LoginScreen({ onLogin }: LoginScreenProps) {
+export function LoginScreen({ onLogin, onVerifyOtp }: LoginScreenProps) {
   const [isSignup, setIsSignup] = useState(false);
   const [email,    setEmail]    = useState('');
   const [password, setPassword] = useState('');
   const [name,     setName]     = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  
+  // OTP Verification States
+  const [showOtpScreen, setShowOtpScreen] = useState(false);
+  const [otpCode, setOtpCode] = useState('');
+  const [otpLoading, setOtpLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (email && password) {
       try {
         setIsLoading(true);
-        await onLogin(email, password, isSignup, isSignup ? name : undefined);
+        const result = await onLogin(email, password, isSignup, isSignup ? name : undefined);
+        if (isSignup && result && result.needsOtp) {
+          setShowOtpScreen(true);
+        }
+      } catch (err) {
+        console.error('Registration/Login error in UI:', err);
       } finally {
         setIsLoading(false);
       }
+    }
+  };
+
+  const handleOtpSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (otpCode) {
+      try {
+        setOtpLoading(true);
+        await onVerifyOtp(email, otpCode, name);
+      } catch (err) {
+        console.error('OTP verification error in UI:', err);
+      } finally {
+        setOtpLoading(false);
+      }
+    }
+  };
+
+  const handleResendOtp = async () => {
+    try {
+      setIsLoading(true);
+      await onLogin(email, password, isSignup, name);
+    } catch (err) {
+      console.error('Resend OTP error:', err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -132,142 +168,235 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
               <h2 className="font-handwriting text-3xl" style={{ color: '#3A2E28' }}>DearBook</h2>
             </div>
 
-            <div className="mb-7">
-              <h3 className="text-xl font-semibold text-center" style={{ color: '#3A2E28' }}>
-                {isSignup ? 'Tạo tài khoản mới' : 'Chào mừng trở lại'}
-              </h3>
-              <p className="text-sm text-center mt-1" style={{ color: '#9B9088' }}>
-                {isSignup ? 'Đăng ký để bắt đầu tạo sách' : 'Đăng nhập để tiếp tục'}
-              </p>
-            </div>
+            {!showOtpScreen ? (
+              // ── Main SignUp/SignIn View ──
+              <>
+                <div className="mb-7">
+                  <h3 className="text-xl font-semibold text-center" style={{ color: '#3A2E28' }}>
+                    {isSignup ? 'Tạo tài khoản mới' : 'Chào mừng trở lại'}
+                  </h3>
+                  <p className="text-sm text-center mt-1" style={{ color: '#9B9088' }}>
+                    {isSignup ? 'Đăng ký để bắt đầu tạo sách' : 'Đăng nhập để tiếp tục'}
+                  </p>
+                </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {isSignup && (
-                <div>
-                  <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Họ và tên</label>
-                  <div className="relative">
-                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9B9088' }} />
-                    <input
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      className={inputClass}
-                      style={inputStyle}
-                      placeholder="Nhập họ và tên"
-                      required={isSignup}
-                      onFocus={e => { e.target.style.borderColor = '#7A6F66'; e.target.style.boxShadow = '0 0 0 3px rgba(122,111,102,0.10)'; }}
-                      onBlur={e => { e.target.style.borderColor = '#DDD8D0'; e.target.style.boxShadow = 'none'; }}
-                    />
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  {isSignup && (
+                    <div>
+                      <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Họ và tên</label>
+                      <div className="relative">
+                        <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9B9088' }} />
+                        <input
+                          type="text"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          className={inputClass}
+                          style={inputStyle}
+                          placeholder="Nhập họ và tên"
+                          required={isSignup}
+                          onFocus={e => { e.target.style.borderColor = '#7A6F66'; e.target.style.boxShadow = '0 0 0 3px rgba(122,111,102,0.10)'; }}
+                          onBlur={e => { e.target.style.borderColor = '#DDD8D0'; e.target.style.boxShadow = 'none'; }}
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  <div>
+                    <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Email</label>
+                    <div className="relative">
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9B9088' }} />
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className={inputClass}
+                        style={inputStyle}
+                        placeholder="email@example.com"
+                        required
+                        onFocus={e => { e.target.style.borderColor = '#7A6F66'; e.target.style.boxShadow = '0 0 0 3px rgba(122,111,102,0.10)'; }}
+                        onBlur={e => { e.target.style.borderColor = '#DDD8D0'; e.target.style.boxShadow = 'none'; }}
+                      />
+                    </div>
                   </div>
-                </div>
-              )}
 
-              <div>
-                <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Email</label>
-                <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9B9088' }} />
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className={inputClass}
-                    style={inputStyle}
-                    placeholder="email@example.com"
-                    required
-                    onFocus={e => { e.target.style.borderColor = '#7A6F66'; e.target.style.boxShadow = '0 0 0 3px rgba(122,111,102,0.10)'; }}
-                    onBlur={e => { e.target.style.borderColor = '#DDD8D0'; e.target.style.boxShadow = 'none'; }}
-                  />
-                </div>
-              </div>
+                  <div>
+                    <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Mật khẩu</label>
+                    <div className="relative">
+                      <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9B9088' }} />
+                      <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className={inputClass}
+                        style={inputStyle}
+                        placeholder="••••••••"
+                        required
+                        onFocus={e => { e.target.style.borderColor = '#7A6F66'; e.target.style.boxShadow = '0 0 0 3px rgba(122,111,102,0.10)'; }}
+                        onBlur={e => { e.target.style.borderColor = '#DDD8D0'; e.target.style.boxShadow = 'none'; }}
+                      />
+                    </div>
+                  </div>
 
-              <div>
-                <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Mật khẩu</label>
-                <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9B9088' }} />
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className={inputClass}
-                    style={inputStyle}
-                    placeholder="••••••••"
-                    required
-                    onFocus={e => { e.target.style.borderColor = '#7A6F66'; e.target.style.boxShadow = '0 0 0 3px rgba(122,111,102,0.10)'; }}
-                    onBlur={e => { e.target.style.borderColor = '#DDD8D0'; e.target.style.boxShadow = 'none'; }}
-                  />
-                </div>
-              </div>
+                  {!isSignup && (
+                    <div className="flex items-center justify-between text-xs">
+                      <label className="flex items-center gap-2 cursor-pointer" style={{ color: '#9B9088' }}>
+                        <input type="checkbox" className="rounded" />
+                        <span>Ghi nhớ đăng nhập</span>
+                      </label>
+                      <button
+                        type="button"
+                        className="transition-colors"
+                        style={{ color: '#7A6F66' }}
+                        onMouseEnter={e => ((e.target as HTMLElement).style.color = '#3A2E28')}
+                        onMouseLeave={e => ((e.target as HTMLElement).style.color = '#7A6F66')}
+                      >
+                        Quên mật khẩu?
+                      </button>
+                    </div>
+                  )}
 
-              {!isSignup && (
-                <div className="flex items-center justify-between text-xs">
-                  <label className="flex items-center gap-2 cursor-pointer" style={{ color: '#9B9088' }}>
-                    <input type="checkbox" className="rounded" />
-                    <span>Ghi nhớ đăng nhập</span>
-                  </label>
                   <button
-                    type="button"
-                    className="transition-colors"
-                    style={{ color: '#7A6F66' }}
-                    onMouseEnter={e => ((e.target as HTMLElement).style.color = '#3A2E28')}
-                    onMouseLeave={e => ((e.target as HTMLElement).style.color = '#7A6F66')}
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full py-3 px-6 rounded-xl font-semibold mt-2 transition-all duration-200 hover:-translate-y-0.5 disabled:opacity-70 disabled:hover:translate-y-0 flex items-center justify-center gap-2"
+                    style={{
+                      background: '#3A2E28',
+                      color: '#FAFAF8',
+                      boxShadow: '0 4px 16px rgba(60,46,40,0.22)',
+                    }}
+                    onMouseEnter={e => { if (!isLoading) (e.currentTarget as HTMLElement).style.background = '#1C1715'; }}
+                    onMouseLeave={e => { if (!isLoading) (e.currentTarget as HTMLElement).style.background = '#3A2E28'; }}
                   >
-                    Quên mật khẩu?
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        <span>Đang xử lý...</span>
+                      </>
+                    ) : (
+                      isSignup ? 'Đăng ký' : 'Đăng nhập'
+                    )}
+                  </button>
+                </form>
+
+                <div className="mt-5 text-center text-sm" style={{ color: '#9B9088' }}>
+                  {isSignup ? 'Đã có tài khoản?' : 'Chưa có tài khoản?'}{' '}
+                  <button
+                    onClick={() => setIsSignup(!isSignup)}
+                    className="font-semibold transition-colors"
+                    style={{ color: '#5A5049' }}
+                    onMouseEnter={e => ((e.target as HTMLElement).style.color = '#3A2E28')}
+                    onMouseLeave={e => ((e.target as HTMLElement).style.color = '#5A5049')}
+                  >
+                    {isSignup ? 'Đăng nhập' : 'Đăng ký ngay'}
                   </button>
                 </div>
-              )}
 
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full py-3 px-6 rounded-xl font-semibold mt-2 transition-all duration-200 hover:-translate-y-0.5 disabled:opacity-70 disabled:hover:translate-y-0 flex items-center justify-center gap-2"
-                style={{
-                  background: '#3A2E28',
-                  color: '#FAFAF8',
-                  boxShadow: '0 4px 16px rgba(60,46,40,0.22)',
-                }}
-                onMouseEnter={e => { if (!isLoading) (e.currentTarget as HTMLElement).style.background = '#1C1715'; }}
-                onMouseLeave={e => { if (!isLoading) (e.currentTarget as HTMLElement).style.background = '#3A2E28'; }}
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    <span>Đang xử lý...</span>
-                  </>
-                ) : (
-                  isSignup ? 'Đăng ký' : 'Đăng nhập'
-                )}
-              </button>
-            </form>
+                {/* Demo hint */}
+                <div
+                  className="mt-5 p-4 rounded-xl"
+                  style={{
+                    background: '#F5F2EE',
+                    border: '1px solid #DDD8D0',
+                  }}
+                >
+                  <p className="text-xs text-center font-medium mb-1" style={{ color: '#7A6F66' }}>
+                    💡 Demo Mode
+                  </p>
+                  <p className="text-xs text-center" style={{ color: '#9B9088' }}>
+                    Nhập bất kỳ email &amp; password nào để dùng thử<br />
+                    Ví dụ: demo@dearbook.com / 123456
+                  </p>
+                </div>
+              </>
+            ) : (
+              // ── OTP Code Verification View ──
+              <div className="transition-all duration-300">
+                <button
+                  onClick={() => setShowOtpScreen(false)}
+                  className="flex items-center gap-1.5 text-xs font-semibold mb-6 transition-colors"
+                  style={{ color: '#7A6F66' }}
+                  onMouseEnter={e => ((e.currentTarget as HTMLElement).style.color = '#3A2E28')}
+                  onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = '#7A6F66')}
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  <span>Quay lại đăng ký</span>
+                </button>
 
-            <div className="mt-5 text-center text-sm" style={{ color: '#9B9088' }}>
-              {isSignup ? 'Đã có tài khoản?' : 'Chưa có tài khoản?'}{' '}
-              <button
-                onClick={() => setIsSignup(!isSignup)}
-                className="font-semibold transition-colors"
-                style={{ color: '#5A5049' }}
-                onMouseEnter={e => ((e.target as HTMLElement).style.color = '#3A2E28')}
-                onMouseLeave={e => ((e.target as HTMLElement).style.color = '#5A5049')}
-              >
-                {isSignup ? 'Đăng nhập' : 'Đăng ký ngay'}
-              </button>
-            </div>
+                <div className="text-center mb-6">
+                  <div
+                    className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-3"
+                    style={{ background: '#EDE9E3' }}
+                  >
+                    <ShieldCheck className="w-8 h-8" style={{ color: '#3A2E28' }} />
+                  </div>
+                  <h3 className="text-xl font-bold" style={{ color: '#3A2E28' }}>Xác thực Email</h3>
+                  <p className="text-xs mt-1.5 px-2 leading-relaxed" style={{ color: '#7A6F66' }}>
+                    Chúng tôi đã gửi mã xác thực OTP gồm 6 chữ số vào địa chỉ email:
+                    <br />
+                    <strong style={{ color: '#3A2E28' }}>{email}</strong>
+                  </p>
+                </div>
 
-            {/* Demo hint */}
-            <div
-              className="mt-5 p-4 rounded-xl"
-              style={{
-                background: '#F5F2EE',
-                border: '1px solid #DDD8D0',
-              }}
-            >
-              <p className="text-xs text-center font-medium mb-1" style={{ color: '#7A6F66' }}>
-                💡 Demo Mode
-              </p>
-              <p className="text-xs text-center" style={{ color: '#9B9088' }}>
-                Nhập bất kỳ email &amp; password nào để dùng thử<br />
-                Ví dụ: demo@dearbook.com / 123456
-              </p>
-            </div>
+                <form onSubmit={handleOtpSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-medium mb-1.5 text-center" style={{ color: '#7A6F66' }}>
+                      Mã OTP xác thực
+                    </label>
+                    <div className="relative">
+                      <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9B9088' }} />
+                      <input
+                        type="text"
+                        maxLength={10}
+                        value={otpCode}
+                        onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
+                        className="w-full pl-12 pr-4 py-3 rounded-xl outline-none transition-all border text-center text-lg font-bold tracking-widest"
+                        style={inputStyle}
+                        placeholder="Nhập mã OTP"
+                        required
+                        onFocus={e => { e.target.style.borderColor = '#7A6F66'; e.target.style.boxShadow = '0 0 0 3px rgba(122,111,102,0.10)'; }}
+                        onBlur={e => { e.target.style.borderColor = '#DDD8D0'; e.target.style.boxShadow = 'none'; }}
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={otpLoading}
+                    className="w-full py-3 px-6 rounded-xl font-semibold mt-2 transition-all duration-200 hover:-translate-y-0.5 disabled:opacity-70 disabled:hover:translate-y-0 flex items-center justify-center gap-2"
+                    style={{
+                      background: '#3A2E28',
+                      color: '#FAFAF8',
+                      boxShadow: '0 4px 16px rgba(60,46,40,0.22)',
+                    }}
+                    onMouseEnter={e => { if (!otpLoading) (e.currentTarget as HTMLElement).style.background = '#1C1715'; }}
+                    onMouseLeave={e => { if (!otpLoading) (e.currentTarget as HTMLElement).style.background = '#3A2E28'; }}
+                  >
+                    {otpLoading ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        <span>Đang xác minh...</span>
+                      </>
+                    ) : (
+                      'Xác nhận đăng ký'
+                    )}
+                  </button>
+                </form>
+
+                <div className="mt-6 text-center text-xs" style={{ color: '#9B9088' }}>
+                  Không nhận được mã?{' '}
+                  <button
+                    onClick={handleResendOtp}
+                    disabled={isLoading}
+                    className="font-bold transition-colors underline"
+                    style={{ color: '#5A5049' }}
+                    onMouseEnter={e => ((e.target as HTMLElement).style.color = '#3A2E28')}
+                    onMouseLeave={e => ((e.target as HTMLElement).style.color = '#5A5049')}
+                  >
+                    {isLoading ? 'Đang gửi lại...' : 'Gửi lại mã'}
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Trust badges */}

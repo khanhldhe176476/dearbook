@@ -23,14 +23,18 @@ interface YouthArchiveEditorProps {
 }
 
 // Photo slots matching the ya-page-1.jpg layout
+// Image dimensions: 710×1006px → aspect ratio 5:7 matches canvas
+// Window frame is tilted ~-4.5° counter-clockwise
+// Each pane inner area (excluding white border):
 const COVER_SLOTS: PhotoSlot[] = [
-  { id: 'ya-win-1', label: 'Cửa sổ 1', x: 23, y: 8, w: 23, h: 17 },
-  { id: 'ya-win-2', label: 'Cửa sổ 2', x: 49, y: 8, w: 23, h: 17 },
-  { id: 'ya-win-3', label: 'Cửa sổ 3', x: 23, y: 27, w: 23, h: 17 },
-  { id: 'ya-win-4', label: 'Cửa sổ 4', x: 49, y: 27, w: 23, h: 17 },
-  { id: 'ya-pol-1', label: 'Polaroid 1', x: 9, y: 66, w: 24, h: 15, rotation: -10 },
-  { id: 'ya-pol-2', label: 'Polaroid 2', x: 38, y: 56, w: 24, h: 15, rotation: 5 },
-  { id: 'ya-pol-3', label: 'Polaroid 3', x: 61, y: 67, w: 24, h: 15, rotation: -3 },
+  { id: 'ya-win-1', label: 'Cửa sổ 1', x: 20.5, y: 7.5, w: 22, h: 18, rotation: -4.5 },
+  { id: 'ya-win-2', label: 'Cửa sổ 2', x: 46.0, y: 5.0, w: 22, h: 18, rotation: -4.5 },
+  { id: 'ya-win-3', label: 'Cửa sổ 3', x: 22.5, y: 26.5, w: 22, h: 18, rotation: -4.5 },
+  { id: 'ya-win-4', label: 'Cửa sổ 4', x: 48.0, y: 24.0, w: 22, h: 18, rotation: -4.5 },
+  // Polaroids: x/y = top-left of the full polaroid frame (including white border)
+  { id: 'ya-pol-1', label: 'Polaroid 1', x: 2, y: 62, w: 28, h: 26, rotation: -12, shape: 'polaroid' },
+  { id: 'ya-pol-2', label: 'Polaroid 2', x: 26, y: 56, w: 28, h: 26, rotation: -4, shape: 'polaroid' },
+  { id: 'ya-pol-3', label: 'Polaroid 3', x: 54, y: 63, w: 28, h: 26, rotation: -3, shape: 'polaroid' },
 ];
 
 // Photo slots matching the ya-page-2.png layout
@@ -90,7 +94,11 @@ export function YouthArchiveEditor({ book, pages, onChange, onBack, onFinish, on
     reader.onload = (ev) => {
       const dataUrl = ev.target?.result as string;
       const key = `dearbook_ya_${pendingSlotId}_${Date.now()}`;
-      localStorage.setItem(key, dataUrl);
+      try {
+        localStorage.setItem(key, dataUrl);
+      } catch (err) {
+        console.warn('Failed to save to localStorage:', err);
+      }
       setUploadedImages(prev => ({ ...prev, [pendingSlotId]: dataUrl }));
       // Update pages data
       const updatedPages = pages.map((p, i) => ({
@@ -107,6 +115,26 @@ export function YouthArchiveEditor({ book, pages, onChange, onBack, onFinish, on
   const getSlotStyle = (slot: PhotoSlot) => {
     const img = uploadedImages[slot.id];
     const isHovered = hoveredSlot === slot.id;
+    const isPolaroid = slot.shape === 'polaroid';
+
+    if (isPolaroid) {
+      return {
+        position: 'absolute' as const,
+        left: `${slot.x}%`,
+        top: `${slot.y}%`,
+        width: `${slot.w}%`,
+        height: `${slot.h}%`,
+        transform: `rotate(${slot.rotation || 0}deg)`,
+        cursor: 'pointer',
+        // Polaroid white border frame
+        background: '#fff',
+        padding: '4px 4px 14px 4px',
+        borderRadius: '2px',
+        boxShadow: '0 3px 12px rgba(0,0,0,0.25)',
+        overflow: 'hidden',
+        transition: 'all 0.3s ease',
+      };
+    }
 
     return {
       position: 'absolute' as const,
@@ -117,7 +145,7 @@ export function YouthArchiveEditor({ book, pages, onChange, onBack, onFinish, on
       transform: slot.rotation ? `rotate(${slot.rotation}deg)` : undefined,
       cursor: 'pointer',
       overflow: 'hidden',
-      borderRadius: slot.shape === 'circle' ? '50%' : slot.shape === 'polaroid' ? '3px' : '6px',
+      borderRadius: '4px',
       border: img ? 'none' : `2px dashed ${isHovered ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.4)'}`,
       background: img
         ? 'transparent'
@@ -283,6 +311,7 @@ export function YouthArchiveEditor({ book, pages, onChange, onBack, onFinish, on
             {currentSlots.map(slot => {
               const img = uploadedImages[slot.id];
               const isHovered = hoveredSlot === slot.id;
+              const isPolaroid = slot.shape === 'polaroid';
 
               return (
                 <div
@@ -292,18 +321,42 @@ export function YouthArchiveEditor({ book, pages, onChange, onBack, onFinish, on
                   onMouseEnter={() => setHoveredSlot(slot.id)}
                   onMouseLeave={() => setHoveredSlot(null)}
                 >
-                  {img ? (
-                    <img src={img} alt={slot.label} className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center gap-1">
-                      <Upload className="text-white/70" style={{ width: 'clamp(10px, 3%, 18px)', height: 'clamp(10px, 3%, 18px)' }} />
-                      <span className="text-white/70 text-center font-medium" style={{ fontSize: 'clamp(6px, 1.5%, 10px)', padding: '0 4px' }}>
-                        {slot.label}
-                      </span>
+                  {isPolaroid ? (
+                    // Polaroid layout: image fills top area, white border at bottom
+                    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                      {/* Image area: top 78% of polaroid */}
+                      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: '22%', overflow: 'hidden', background: img ? 'transparent' : (isHovered ? 'rgba(180,160,140,0.4)' : 'rgba(180,160,140,0.2)') }}>
+                        {img ? (
+                          <img src={img} alt={slot.label} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                        ) : (
+                          <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
+                            <Upload style={{ width: '14px', height: '14px', color: '#888' }} />
+                            <span style={{ fontSize: '7px', color: '#888', textAlign: 'center' }}>{slot.label}</span>
+                          </div>
+                        )}
+                        {/* Hover overlay */}
+                        {img && isHovered && (
+                          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.35)' }}>
+                            <Camera style={{ width: '16px', height: '16px', color: '#fff' }} />
+                          </div>
+                        )}
+                      </div>
                     </div>
+                  ) : (
+                    // Regular window slot
+                    img ? (
+                      <img src={img} alt={slot.label} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                    ) : (
+                      <div className="w-full h-full flex flex-col items-center justify-center gap-1">
+                        <Upload className="text-white/70" style={{ width: 'clamp(10px, 3%, 18px)', height: 'clamp(10px, 3%, 18px)' }} />
+                        <span className="text-white/70 text-center font-medium" style={{ fontSize: 'clamp(6px, 1.5%, 10px)', padding: '0 4px' }}>
+                          {slot.label}
+                        </span>
+                      </div>
+                    )
                   )}
-                  {/* Edit overlay on hover */}
-                  {img && isHovered && (
+                  {/* Edit overlay for non-polaroid */}
+                  {!isPolaroid && img && isHovered && (
                     <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.4)' }}>
                       <Camera className="text-white" style={{ width: '20px', height: '20px' }} />
                     </div>

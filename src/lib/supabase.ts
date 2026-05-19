@@ -7,6 +7,12 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.error('❌ Supabase env vars missing:', { supabaseUrl, supabaseAnonKey });
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    flowType: 'implicit',
+    persistSession: true,
+    detectSessionInUrl: true,
+  }
+});
 
 console.log('✅ Supabase client initialized with URL:', supabaseUrl);

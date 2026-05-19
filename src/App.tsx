@@ -8,8 +8,11 @@ import { PageElement, EditorPage as BookPage } from './types/editor';
 import { profileApi } from './lib/profileApi';
 import { bookApi } from './lib/bookApi';
 import { toast } from 'sonner@2.0.3';
+import { signUpWithEmail, verifySignupOTP, signInWithEmail, signOut as supabaseSignOut, getCurrentSession } from './lib/authApi';
+import { Toaster } from './components/ui/sonner';
 
 export interface User {
+  id?: string;
   email: string;
   name: string;
   picture?: string;
@@ -55,58 +58,116 @@ function App() {
 
   // Check for existing session
   useEffect(() => {
-    const savedUser = localStorage.getItem('dearbook_user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-      setCurrentScreen('library');
-    }
+    const checkSession = async () => {
+      try {
+        const activeUser = await getCurrentSession();
+        if (activeUser) {
+          const userData = {
+            id: activeUser.id,
+            email: activeUser.email,
+            name: activeUser.fullName,
+            picture: activeUser.avatarUrl
+          };
+          setUser(userData);
+          localStorage.setItem('dearbook_user', JSON.stringify(userData));
+          setCurrentScreen('library');
+        } else {
+          const savedUser = localStorage.getItem('dearbook_user');
+          if (savedUser) {
+            setUser(JSON.parse(savedUser));
+            setCurrentScreen('library');
+          }
+        }
+      } catch (err) {
+        console.error('Session check failed, using local storage fallback:', err);
+        const savedUser = localStorage.getItem('dearbook_user');
+        if (savedUser) {
+          setUser(JSON.parse(savedUser));
+          setCurrentScreen('library');
+        }
+      }
+    };
+    checkSession();
   }, []);
 
-  const handleLogin = async (email: string, password: string, name?: string, picture?: string) => {
-    // Simulation: Generate a consistent UUID from email for API calls
-    const userId = '00000000-0000-0000-0000-000000000000'; // Placeholder
-    
+  const handleLogin = async (email: string, password: string, isSignup: boolean, name?: string) => {
     try {
-      // Try to sync with backend
-      let profile;
-      try {
-        profile = await profileApi.getMyProfile(userId);
-      } catch (e) {
-        // If not found, create new
-        profile = await profileApi.updateProfile({
-          id: userId,
-          email,
-          fullName: name || email.split('@')[0],
-          avatarUrl: picture
-        });
-      }
+      if (isSignup) {
+        // Call Supabase signUp
+        await signUpWithEmail(email, password, name || email.split('@')[0]);
+        toast.success('Mã OTP xác thực đã được gửi tới email của bạn!');
+        return { needsOtp: true };
+      } else {
+        // Call Supabase signIn
+        const authUser = await signInWithEmail(email, password);
+        toast.success('Đăng nhập thành công!');
 
-      const userData = { 
-        email: profile?.email || email, 
-        name: profile?.fullName || name || email.split('@')[0],
-        picture: profile?.avatarUrl || picture 
-      };
-      
-      setUser(userData);
-      localStorage.setItem('dearbook_user', JSON.stringify(userData));
-      setCurrentScreen('library');
-      toast.success('Đăng nhập thành công!');
-    } catch (err) {
-      console.error('Login failed, using local fallback:', err);
-      // Fallback to local authentication
-      const userData = { 
-        email, 
-        name: name || email.split('@')[0],
-        picture 
-      };
-      setUser(userData);
-      localStorage.setItem('dearbook_user', JSON.stringify(userData));
-      setCurrentScreen('library');
-      toast.success('Đăng nhập (ngoại tuyến)');
+        const userData = {
+          id: authUser.id,
+          email: authUser.email,
+          name: authUser.fullName,
+          picture: authUser.avatarUrl
+        };
+
+        // Try to sync profile with Spring Boot Postgres backend in background
+        profileApi.updateProfile({
+          id: authUser.id,
+          email: authUser.email,
+          fullName: authUser.fullName,
+          avatarUrl: authUser.avatarUrl
+        }).catch(backendErr => {
+          console.warn('⚠️ Gửi profile lên Java backend thất bại:', backendErr);
+        });
+
+        setUser(userData);
+        localStorage.setItem('dearbook_user', JSON.stringify(userData));
+        setCurrentScreen('library');
+      }
+    } catch (err: any) {
+      console.error('Auth error:', err);
+      toast.error(err.message || 'Có lỗi xảy ra, vui lòng thử lại.');
+      throw err; // Propagate error back to LoginScreen so loading states reset correctly
     }
   };
 
-  const handleLogout = () => {
+  const handleVerifyOtp = async (email: string, token: string, name?: string) => {
+    try {
+      const authUser = await verifySignupOTP(email, token, name || email.split('@')[0]);
+      toast.success('Xác thực tài khoản thành công!');
+
+      const userData = {
+        id: authUser.id,
+        email: authUser.email,
+        name: authUser.fullName,
+        picture: authUser.avatarUrl
+      };
+
+      // Try to sync profile with Spring Boot Postgres backend in background
+      profileApi.updateProfile({
+        id: authUser.id,
+        email: authUser.email,
+        fullName: authUser.fullName,
+        avatarUrl: authUser.avatarUrl
+      }).catch(backendErr => {
+        console.warn('⚠️ Gửi profile lên Java backend thất bại:', backendErr);
+      });
+
+      setUser(userData);
+      localStorage.setItem('dearbook_user', JSON.stringify(userData));
+      setCurrentScreen('library');
+    } catch (err: any) {
+      console.error('OTP verify error:', err);
+      toast.error(err.message || 'Mã xác thực không hợp lệ hoặc đã hết hạn.');
+      throw err;
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await supabaseSignOut();
+    } catch (err) {
+      console.error('SignOut error:', err);
+    }
     setUser(null);
     setCurrentBook(null);
     localStorage.removeItem('dearbook_user');
@@ -128,8 +189,8 @@ function App() {
     const existingIndex = books.findIndex((b: BookData) => b.id === book.id);
     let finalBook = { ...book };
     
-    // Simulation userId
-    const userId = '00000000-0000-0000-0000-000000000000'; 
+    // Use the actual logged in user id or a local fallback
+    const userId = user?.id || '00000000-0000-0000-0000-000000000000'; 
     
     if (existingIndex >= 0) {
       books[existingIndex] = finalBook;
@@ -177,7 +238,7 @@ function App() {
       )}
 
       {currentScreen === 'login' && (
-        <LoginScreen onLogin={handleLogin} />
+        <LoginScreen onLogin={handleLogin} onVerifyOtp={handleVerifyOtp} />
       )}
       
       {currentScreen === 'library' && user && (
@@ -209,6 +270,7 @@ function App() {
           onComplete={handleOrderComplete}
         />
       )}
+      <Toaster />
     </div>
   );
 }

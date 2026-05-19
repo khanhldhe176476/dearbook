@@ -312,6 +312,11 @@ export function AssetLibrary({ onAddElement, onApplyTemplate, onAddTextCombinati
   };
 
   const renderImagesTab = () => {
+    const handleFileDragStart = (e: React.DragEvent, src: string) => {
+      e.dataTransfer.setData('application/dearbook-image-src', src);
+      e.dataTransfer.effectAllowed = 'copy';
+    };
+
     return (
       <div className="space-y-4">
         <div className="text-center py-8">
@@ -372,7 +377,10 @@ export function AssetLibrary({ onAddElement, onApplyTemplate, onAddTextCombinati
         </div>
 
         <div className="border-t pt-4">
-          <h4 className="text-sm font-semibold text-gray-700 mb-3">🎨 Ảnh minh họa</h4>
+          <h4 className="text-sm font-semibold text-gray-700 mb-1">🎨 Ảnh minh họa</h4>
+          <p className="text-xs text-gray-400 mb-3">
+            💡 Kéo ảnh thả vào khung trên canvas để tự động fit
+          </p>
           <div className="grid grid-cols-2 gap-2">
             {[
               { url: 'https://images.unsplash.com/photo-1626233563542-148409467765', name: 'Couple' },
@@ -382,8 +390,11 @@ export function AssetLibrary({ onAddElement, onApplyTemplate, onAddTextCombinati
               { url: 'https://images.unsplash.com/photo-1767455281523-8caf432d2ecc', name: 'Heart' },
               { url: 'https://images.unsplash.com/photo-1759976910127-33085ece44b3', name: 'Flowers' },
             ].map((img, idx) => (
-              <button
+              <div
                 key={idx}
+                // ✅ Draggable: set dataTransfer so canvas can detect drop-into-frame
+                draggable
+                onDragStart={(e) => handleFileDragStart(e, img.url)}
                 onClick={() => {
                   onAddElement('image', {
                     src: img.url,
@@ -396,10 +407,11 @@ export function AssetLibrary({ onAddElement, onApplyTemplate, onAddTextCombinati
                     opacity: 1,
                   });
                 }}
-                className="aspect-square rounded-lg overflow-hidden hover:ring-2 hover:ring-rose-500 transition-all"
+                className="aspect-square rounded-lg overflow-hidden hover:ring-2 hover:ring-rose-500 transition-all cursor-grab active:cursor-grabbing"
+                title={`Kéo vào khung hoặc click để thêm: ${img.name}`}
               >
-                <img src={img.url} alt={img.name} className="w-full h-full object-cover" />
-              </button>
+                <img src={img.url} alt={img.name} className="w-full h-full object-cover pointer-events-none" />
+              </div>
             ))}
           </div>
         </div>

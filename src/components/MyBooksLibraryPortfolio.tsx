@@ -40,8 +40,8 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Simulation: Generate a consistent UUID from email for API calls
-  const userId = '00000000-0000-0000-0000-000000000000'; // Placeholder
+  // Use the actual logged in user id or fallback
+  const userId = user.id || '00000000-0000-0000-0000-000000000000';
 
   useEffect(() => {
     loadBooks();

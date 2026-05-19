@@ -35,12 +35,85 @@ export async function signUpWithEmail(
 
   console.log('✅ Supabase Auth signUp OK, userId:', userId);
 
-  // 2. Insert vào bảng profiles
+  return {
+    id: userId,
+    email,
+    fullName,
+    avatarUrl: undefined,
+  };
+}
+
+/** Xác minh mã OTP sau khi đăng ký */
+export async function verifySignupOTP(
+  email: string,
+  token: string,
+  fullName: string
+): Promise<AuthUser> {
+  // 1. Đảm bảo OTP không có khoảng trắng và đúng định dạng
+  const cleanOtp = token.trim();
+  if (!/^\d{6,10}$/.test(cleanOtp)) {
+    throw new Error('Mã OTP không hợp lệ, vui lòng nhập từ 6 đến 10 chữ số.');
+  }
+
+  // Log tạm thời để debug
+  console.log('Verify OTP', { email, otp: cleanOtp, type: 'signup' });
+
+  // 2. Xác thực OTP với Supabase
+  let verifyResult = await supabase.auth.verifyOtp({
+    email,
+    token: cleanOtp,
+    type: 'signup',
+  });
+
+  // Fallback 1: Nếu signup bị lỗi, thử lại bằng type: 'email' (Numeric OTP chuẩn)
+  if (verifyResult.error) {
+    console.warn('⚠️ verifyOtp with type: signup failed, trying fallback type: email...', verifyResult.error.message);
+    const fallbackResult = await supabase.auth.verifyOtp({
+      email,
+      token: cleanOtp,
+      type: 'email',
+    });
+    if (!fallbackResult.error) {
+      verifyResult = fallbackResult;
+      console.log('✅ Fallback with type: email succeeded!');
+    }
+  }
+
+  // Fallback 2: Nếu vẫn bị lỗi, thử lại bằng type: 'magiclink'
+  if (verifyResult.error) {
+    console.warn('⚠️ verifyOtp with type: email failed, trying fallback type: magiclink...', verifyResult.error.message);
+    const fallbackResult2 = await supabase.auth.verifyOtp({
+      email,
+      token: cleanOtp,
+      type: 'magiclink',
+    });
+    if (!fallbackResult2.error) {
+      verifyResult = fallbackResult2;
+      console.log('✅ Fallback with type: magiclink succeeded!');
+    }
+  }
+
+  const { data, error } = verifyResult;
+
+  if (error) {
+    console.error('❌ verifyOtp error after fallbacks:', error);
+    let msg = error.message;
+    if (msg.includes('Token has expired') || msg.includes('expired')) msg = 'Mã OTP đã hết hạn. Vui lòng bấm gửi lại.';
+    if (msg.includes('Invalid token') || msg.includes('invalid')) msg = 'Mã OTP không chính xác hoặc đã hết hạn. Vui lòng nhập lại.';
+    throw new Error(msg);
+  }
+
+  const user = data.user;
+  if (!user) throw new Error('Không lấy được thông tin user sau khi xác thực OTP');
+
+  console.log('✅ OTP Verification OK, user:', user.email);
+
+  // 3. Insert vào bảng profiles sau khi tài khoản được xác minh
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .upsert(
       {
-        id: userId,
+        id: user.id,
         email,
         full_name: fullName,
         avatar_url: null,
@@ -51,17 +124,14 @@ export async function signUpWithEmail(
     .single();
 
   if (profileError) {
-    // Không fail toàn bộ flow nếu chỉ lỗi insert profile
-    console.warn('⚠️ Could not insert profile:', profileError.message);
-  } else {
-    console.log('✅ Profile inserted:', profile);
+    console.warn('⚠️ Could not insert profile on OTP verify:', profileError.message);
   }
 
   return {
-    id: userId,
-    email,
-    fullName,
-    avatarUrl: undefined,
+    id: user.id,
+    email: user.email || email,
+    fullName: profile?.full_name || fullName,
+    avatarUrl: profile?.avatar_url || undefined,
   };
 }
 
