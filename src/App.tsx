@@ -17,7 +17,7 @@ export interface User {
 
 export interface BookData {
   id: string;
-  theme: 'love' | 'family' | 'birthday' | 'friendship';
+  theme: 'love' | 'family' | 'birthday' | 'friendship' | 'youth';
   templateId: string;
   character?: CharacterData;
   cover?: BookPage;
@@ -44,6 +44,8 @@ export interface PageData {
   templatePageId: string;
   texts: { [key: string]: string };
   images: { [key: string]: string };
+  elements?: any[];
+  background?: any;
 }
 
 export type AppScreen = 'home' | 'login' | 'library' | 'builder' | 'order';

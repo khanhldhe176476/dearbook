@@ -28,7 +28,26 @@ export function ImageCropModal({
   const [rotation, setRotation] = useState(0);
   const [cropArea, setCropArea] = useState<CropArea>({ x: 50, y: 50, width: 200, height: 200 });
   const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [resizingHandle, setResizingHandle] = useState<string | null>(null);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0, initialCropArea: { x: 0, y: 0, width: 0, height: 0 } });
+
+  const getCanvasMetrics = () => {
+    const canvas = canvasRef.current;
+    const img = imageRef.current;
+    if (!canvas || !img) return null;
+
+    const scale = Math.min(
+      (canvas.width * 0.9) / img.width,
+      (canvas.height * 0.9) / img.height
+    );
+
+    const scaledWidth = img.width * scale * zoom;
+    const scaledHeight = img.height * scale * zoom;
+    const offsetX = (canvas.width - scaledWidth) / 2;
+    const offsetY = (canvas.height - scaledHeight) / 2;
+
+    return { scale, offsetX, offsetY };
+  };
 
   useEffect(() => {
     const img = new Image();
@@ -72,16 +91,12 @@ export function ImageCropModal({
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Calculate scaled dimensions
-    const scale = Math.min(
-      (canvas.width * 0.9) / img.width,
-      (canvas.height * 0.9) / img.height
-    );
-
+    const metrics = getCanvasMetrics();
+    if (!metrics) return;
+    const { scale, offsetX: x, offsetY: y } = metrics;
+    
     const scaledWidth = img.width * scale * zoom;
     const scaledHeight = img.height * scale * zoom;
-    const x = (canvas.width - scaledWidth) / 2;
-    const y = (canvas.height - scaledHeight) / 2;
 
     // Save context
     ctx.save();
@@ -143,37 +158,123 @@ export function ImageCropModal({
     if (!canvas) return;
 
     const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
 
-    setIsDragging(true);
-    setDragStart({ x, y });
+    const metrics = getCanvasMetrics();
+    if (!metrics) return;
+    const { scale, offsetX, offsetY } = metrics;
+
+    // Check if clicked on a handle
+    const handleSize = 15;
+    const handles = [
+      { id: 'tl', x: cropArea.x * scale * zoom + offsetX, y: cropArea.y * scale * zoom + offsetY },
+      { id: 'tr', x: (cropArea.x + cropArea.width) * scale * zoom + offsetX, y: cropArea.y * scale * zoom + offsetY },
+      { id: 'bl', x: cropArea.x * scale * zoom + offsetX, y: (cropArea.y + cropArea.height) * scale * zoom + offsetY },
+      { id: 'br', x: (cropArea.x + cropArea.width) * scale * zoom + offsetX, y: (cropArea.y + cropArea.height) * scale * zoom + offsetY },
+    ];
+
+    let clickedHandle = null;
+    for (const h of handles) {
+      if (
+        mouseX >= h.x - handleSize && mouseX <= h.x + handleSize &&
+        mouseY >= h.y - handleSize && mouseY <= h.y + handleSize
+      ) {
+        clickedHandle = h.id;
+        break;
+      }
+    }
+
+    if (clickedHandle) {
+      setResizingHandle(clickedHandle);
+    } else {
+      // Check if clicked inside crop area
+      const cx = cropArea.x * scale * zoom + offsetX;
+      const cy = cropArea.y * scale * zoom + offsetY;
+      const cw = cropArea.width * scale * zoom;
+      const ch = cropArea.height * scale * zoom;
+
+      if (mouseX >= cx && mouseX <= cx + cw && mouseY >= cy && mouseY <= cy + ch) {
+        setIsDragging(true);
+      }
+    }
+
+    setDragStart({ x: mouseX, y: mouseY, initialCropArea: { ...cropArea } });
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!isDragging) return;
+    if (!isDragging && !resizingHandle) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
 
-    const deltaX = x - dragStart.x;
-    const deltaY = y - dragStart.y;
+    const deltaX = (mouseX - dragStart.x) / zoom;
+    const deltaY = (mouseY - dragStart.y) / zoom;
+    
+    const metrics = getCanvasMetrics();
+    if (!metrics) return;
+    const { scale } = metrics;
 
-    setCropArea((prev) => ({
-      ...prev,
-      x: Math.max(0, Math.min(prev.x + deltaX / zoom, imageRef.current!.width - prev.width)),
-      y: Math.max(0, Math.min(prev.y + deltaY / zoom, imageRef.current!.height - prev.height)),
-    }));
+    const realDeltaX = deltaX / scale;
+    const realDeltaY = deltaY / scale;
 
-    setDragStart({ x, y });
+    const imgWidth = imageRef.current!.width;
+    const imgHeight = imageRef.current!.height;
+
+    if (resizingHandle) {
+      setCropArea(() => {
+        let { x, y, width, height } = dragStart.initialCropArea;
+
+        if (resizingHandle.includes('l')) {
+          const newX = Math.max(0, Math.min(x + realDeltaX, x + width - 20));
+          width += (x - newX);
+          x = newX;
+        }
+        if (resizingHandle.includes('r')) {
+          width = Math.max(20, Math.min(width + realDeltaX, imgWidth - x));
+        }
+        if (resizingHandle.includes('t')) {
+          const newY = Math.max(0, Math.min(y + realDeltaY, y + height - 20));
+          height += (y - newY);
+          y = newY;
+        }
+        if (resizingHandle.includes('b')) {
+          height = Math.max(20, Math.min(height + realDeltaY, imgHeight - y));
+        }
+
+        // Maintain aspect ratio if required
+        if (aspectRatio) {
+          if (resizingHandle === 'tl' || resizingHandle === 'bl') {
+            width = height * aspectRatio;
+            x = dragStart.initialCropArea.x + dragStart.initialCropArea.width - width;
+          } else {
+            width = height * aspectRatio;
+          }
+        }
+
+        return { x, y, width, height };
+      });
+    } else if (isDragging) {
+      setCropArea(() => {
+        const { width, height } = dragStart.initialCropArea;
+        const newX = dragStart.initialCropArea.x + realDeltaX;
+        const newY = dragStart.initialCropArea.y + realDeltaY;
+        return {
+          ...dragStart.initialCropArea,
+          x: Math.max(0, Math.min(newX, imgWidth - width)),
+          y: Math.max(0, Math.min(newY, imgHeight - height)),
+        };
+      });
+    }
   };
 
   const handleMouseUp = () => {
     setIsDragging(false);
+    setResizingHandle(null);
   };
 
   const handleComplete = () => {

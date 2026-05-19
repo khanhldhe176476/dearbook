@@ -11,11 +11,15 @@ import { PageElement, TextElement, ImageElement, ShapeElement, IconElement } fro
 interface PropertiesPanelAdvancedProps {
   selectedElements: PageElement[];
   onUpdateElement: (id: string, updates: Partial<PageElement>) => void;
+  onCropImage?: (id: string) => void;
+  onReplaceImage?: (id: string) => void;
 }
 
 export function PropertiesPanelAdvanced({
   selectedElements,
   onUpdateElement,
+  onCropImage,
+  onReplaceImage,
 }: PropertiesPanelAdvancedProps) {
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['content', 'style']));
 
@@ -452,6 +456,23 @@ export function PropertiesPanelAdvanced({
               <option value="contain">Vừa khung</option>
               <option value="fill">Kéo giãn</option>
             </select>
+          </div>
+
+          <div className="mt-4 grid grid-cols-2 gap-2">
+            <button
+              onClick={() => onReplaceImage?.(imgEl.id)}
+              className="px-3 py-2 border rounded-lg text-xs font-medium transition-colors hover:bg-gray-100"
+              style={{ borderColor: '#DDD8D0', color: '#3A2E28' }}
+            >
+              Thay thế ảnh
+            </button>
+            <button
+              onClick={() => onCropImage?.(imgEl.id)}
+              className="px-3 py-2 border rounded-lg text-xs font-medium transition-colors hover:bg-gray-100"
+              style={{ borderColor: '#DDD8D0', color: '#3A2E28' }}
+            >
+              Cắt ảnh
+            </button>
           </div>
         </Section>
 

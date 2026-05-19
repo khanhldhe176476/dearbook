@@ -240,9 +240,27 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
   // Front cover (1 spread) + content pages + back cover (1 spread)
   const totalSpreads = 1 + Math.ceil(totalPages / 2);
 
-  // Check if pages are already in BookPage format (template books) or PageData format
-  const isBookPageFormat = (page: any): page is BookPage => {
-    return page && 'elements' in page && Array.isArray(page.elements);
+  // Helper to ensure page is in BookPage format
+  const formatToBookPage = (page: any): BookPage | null => {
+    if (!page) return null;
+    
+    // If it has background object from V2 Editor, convert to BookPage
+    if (page.background && typeof page.background === 'object') {
+      return {
+        id: page.id,
+        backgroundColor: page.background.type === 'color' ? page.background.value : undefined,
+        backgroundImage: page.background.type === 'image' ? page.background.value : undefined,
+        elements: page.elements || [],
+      };
+    }
+    
+    // If it's already a BookPage (has backgroundColor or directly has elements without background obj)
+    if (page.backgroundColor !== undefined || (page.elements && !page.background)) {
+      return page as BookPage;
+    }
+    
+    // Fallback for old PageData without elements
+    return convertPageToRender(page);
   };
 
   // Get current spread pages
@@ -637,13 +655,13 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
     const leftIndex = (currentSpread - 1) * 2;
     const rightIndex = leftIndex + 1;
     
-    // Check if pages are already in BookPage format or need conversion
     const leftPage = bookPages[leftIndex];
     const rightPage = bookPages[rightIndex];
     
+    // Convert to BookPage format ensuring backgrounds and elements are preserved
     return {
-      left: leftPage ? (isBookPageFormat(leftPage) ? leftPage : convertPageToRender(leftPage)) : null,
-      right: rightPage ? (isBookPageFormat(rightPage) ? rightPage : convertPageToRender(rightPage)) : null
+      left: formatToBookPage(leftPage),
+      right: formatToBookPage(rightPage)
     };
   };
 

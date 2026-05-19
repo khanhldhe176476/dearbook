@@ -5,6 +5,8 @@ import cinemaImg  from 'figma:asset/7d3114f86616dc8bd97952f37820bf5ae13ce4de.png
 import familyImg  from 'figma:asset/03ef3be4e5a9d3f6b0010356d756eeaf3c80bb4c.png';
 import friendsImg from 'figma:asset/1463ab1e93bb2018a0697895e53bc29cfb8a8ea5.png';
 import loveImg    from 'figma:asset/4f81f59175575b9ebba78ca1d45401cd109f1941.png';
+import youthBg1 from '../assets/03ef3be4e5a9d3f6b0010356d756eeaf3c80bb4c.png';
+import youthBg2 from '../assets/1463ab1e93bb2018a0697895e53bc29cfb8a8ea5.png';
 
 interface HomePageProps {
   onGetStarted: () => void;
@@ -221,6 +223,20 @@ export function HomePage({ onGetStarted }: HomePageProps) {
         { url: familyImg,  caption: 'Family Moments — Khoảnh khắc gia đình 🏡' },
       ],
     },
+    {
+      id: 3,
+      price: '399k',
+      title: 'Youth Archive',
+      subtitle: 'Kỷ niệm thanh xuân',
+      tierLabel: 'Tier 3',
+      pages: '20 trang + 2 trang bìa',
+      size: '14x18cm',
+      paper: 'Giấy Couche 160gsm',
+      photos: [
+        { url: youthBg1, caption: 'Trang bìa rực rỡ ✨' },
+        { url: youthBg2, caption: 'Những chuyến đi xa 🎒' },
+      ],
+    },
   ];
 
   return (
@@ -312,7 +328,7 @@ export function HomePage({ onGetStarted }: HomePageProps) {
           </div>
 
           {/* Products Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 mb-16">
             {products.map((product) => (
               <div key={product.id} className="relative group">
                 <div

@@ -155,6 +155,8 @@ export function AdvancedPageEditorV2({
   const [showCoverSelector, setShowCoverSelector] = useState(false);
   const [showCoverGuide, setShowCoverGuide] = useState(false);
   const [editingTextId, setEditingTextId] = useState<string | null>(null);
+  const [imageToCrop, setImageToCrop] = useState<{ id: string; src: string; aspectRatio?: number } | null>(null);
+  const [imageToReplaceId, setImageToReplaceId] = useState<string | null>(null);
   const [draggedElement, setDraggedElement] = useState<{
     id: string;
     offsetX: number;
@@ -166,6 +168,13 @@ export function AdvancedPageEditorV2({
     startY: number;
     startWidth: number;
     startHeight: number;
+  } | null>(null);
+  const [rotatingElement, setRotatingElement] = useState<{
+    id: string;
+    centerX: number;
+    centerY: number;
+    startAngle: number;
+    startRotation: number;
   } | null>(null);
 
   // Check if current page is cover
@@ -491,6 +500,26 @@ export function AdvancedPageEditorV2({
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
+    if (rotatingElement) {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+
+      const angle = Math.atan2(mouseY - rotatingElement.centerY, mouseX - rotatingElement.centerX);
+      const angleDeg = angle * (180 / Math.PI);
+      
+      let newRotation = rotatingElement.startRotation + (angleDeg - rotatingElement.startAngle);
+      newRotation = Math.round(newRotation % 360);
+      if (newRotation > 180) newRotation -= 360;
+      if (newRotation < -180) newRotation += 360;
+
+      handleUpdateElement(rotatingElement.id, { rotation: newRotation });
+      return;
+    }
+
     if (resizingElement) {
       const el = elements.find(el => el.id === resizingElement.id);
       if (!el) return;
@@ -532,6 +561,7 @@ export function AdvancedPageEditorV2({
   const handleMouseUp = () => {
     setDraggedElement(null);
     setResizingElement(null);
+    setRotatingElement(null);
   };
 
   const handleResizeStart = (e: React.MouseEvent, id: string) => {
@@ -544,6 +574,32 @@ export function AdvancedPageEditorV2({
       startY: e.clientY,
       startWidth: element.width,
       startHeight: element.height,
+    });
+  };
+
+  const handleRotateStart = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    const element = elements.find((el) => el.id === id);
+    if (!element) return;
+    
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const centerX = element.x * zoom + (element.width * zoom) / 2;
+    const centerY = element.y * zoom + (element.height * zoom) / 2;
+    
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    const startAngle = Math.atan2(mouseY - centerY, mouseX - centerX) * (180 / Math.PI);
+
+    setRotatingElement({
+      id,
+      centerX,
+      centerY,
+      startAngle,
+      startRotation: element.rotation || 0,
     });
   };
 
@@ -583,21 +639,46 @@ export function AdvancedPageEditorV2({
     };
 
     const resizeHandle = isSelected && !element.locked && element.type !== 'text' ? (
-      <div
-        style={{
-          position: 'absolute',
-          right: -8,
-          bottom: -8,
-          width: 16,
-          height: 16,
-          backgroundColor: '#fff',
-          border: '2px solid #8C6E5D',
-          borderRadius: '50%',
-          cursor: 'se-resize',
-          zIndex: 10,
-        }}
-        onMouseDown={(e) => handleResizeStart(e, element.id)}
-      />
+      <>
+        <div
+          style={{
+            position: 'absolute',
+            right: -8,
+            bottom: -8,
+            width: 16,
+            height: 16,
+            backgroundColor: '#fff',
+            border: '2px solid #8C6E5D',
+            borderRadius: '50%',
+            cursor: 'se-resize',
+            zIndex: 10,
+          }}
+          onMouseDown={(e) => handleResizeStart(e, element.id)}
+          title="Kéo để thay đổi kích thước"
+        />
+        <div
+          style={{
+            position: 'absolute',
+            left: '50%',
+            top: -24,
+            transform: 'translateX(-50%)',
+            width: 16,
+            height: 16,
+            backgroundColor: '#fff',
+            border: '2px solid #8C6E5D',
+            borderRadius: '50%',
+            cursor: 'grab',
+            zIndex: 10,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+          onMouseDown={(e) => handleRotateStart(e, element.id)}
+          title="Kéo để xoay"
+        >
+          <div style={{ width: 4, height: 4, backgroundColor: '#8C6E5D', borderRadius: '50%' }} />
+        </div>
+      </>
     ) : null;
 
     let content;
@@ -690,7 +771,16 @@ export function AdvancedPageEditorV2({
           ? localStorage.getItem(imgEl.src) || imgEl.src
           : imgEl.src;
         content = (
-          <div style={commonStyle} onMouseDown={(e) => handleMouseDown(e, element.id)}>
+          <div 
+            style={commonStyle} 
+            onMouseDown={(e) => handleMouseDown(e, element.id)}
+            onDoubleClick={(e) => {
+              e.stopPropagation();
+              setImageToReplaceId(element.id);
+              setShowImageUploader(true);
+            }}
+            title="Nháy đúp chuột để tải ảnh lên"
+          >
             <img
               src={imgSrc}
               alt={imgEl.alt || 'Image'}
@@ -819,7 +909,10 @@ export function AdvancedPageEditorV2({
             onZoomIn={() => setZoom(Math.min(2, zoom + 0.1))}
             onZoomOut={() => setZoom(Math.max(0.5, zoom - 0.1))}
             onToggleGrid={() => setGridVisible(!gridVisible)}
-            onPreview={onPreview}
+            onPreview={onPreview ? () => {
+              forceSave();
+              onPreview();
+            } : undefined}
             onExport={handleExportPageAsPDF}
             onSaveOrder={handleSaveOrder}
             onToggleLeftPanel={() => setShowAssetLibrary(!showAssetLibrary)}
@@ -838,7 +931,14 @@ export function AdvancedPageEditorV2({
                 fontSize: 24,
               })
             }
-            onAddImage={() => setShowImageUploader(true)}
+            onAddImage={() => {
+              if (selectedElement && selectedElement.type === 'image') {
+                setImageToReplaceId(selectedElement.id);
+              } else {
+                setImageToReplaceId(null);
+              }
+              setShowImageUploader(true);
+            }}
             onSelectCover={isCoverPage ? () => setShowCoverSelector(true) : undefined}
           />
         )}
@@ -989,6 +1089,20 @@ export function AdvancedPageEditorV2({
               <PropertiesPanel
                 element={selectedElement}
                 onUpdate={(updates) => handleUpdateElement(selectedElement.id, updates)}
+                onCropImage={(id) => {
+                  const el = elements.find((e) => e.id === id);
+                  if (el && el.type === 'image') {
+                    const imgEl = el as ImageElement;
+                    const src = imgEl.src.startsWith('dearbook_image_')
+                      ? localStorage.getItem(imgEl.src) || imgEl.src
+                      : imgEl.src;
+                    setImageToCrop({ id, src, aspectRatio: el.width / el.height });
+                  }
+                }}
+                onReplaceImage={(id) => {
+                  setImageToReplaceId(id);
+                  setShowImageUploader(true);
+                }}
               />
             </div>
           )}
@@ -1010,7 +1124,14 @@ export function AdvancedPageEditorV2({
               fontSize: 24,
             })
           }
-          onAddImage={() => setShowImageUploader(true)}
+          onAddImage={() => {
+            if (selectedElement && selectedElement.type === 'image') {
+              setImageToReplaceId(selectedElement.id);
+            } else {
+              setImageToReplaceId(null);
+            }
+            setShowImageUploader(true);
+          }}
           onShowLayers={() => setShowLayerPanel(true)}
           onShowProperties={() => setShowProperties(true)}
           isSaving={isSaving}
@@ -1043,7 +1164,10 @@ export function AdvancedPageEditorV2({
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-gray-900">📷 Thêm hình ảnh</h3>
               <button
-                onClick={() => setShowImageUploader(false)}
+                onClick={() => {
+                  setShowImageUploader(false);
+                  setImageToReplaceId(null);
+                }}
                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
               >
                 <X className="w-5 h-5 text-gray-600" />
@@ -1051,10 +1175,23 @@ export function AdvancedPageEditorV2({
             </div>
             <ImageUploader
               onImageUpload={(imageKey) => {
-                handleAddElement('image', { src: imageKey });
+                if (imageToReplaceId) {
+                  handleUpdateElement(imageToReplaceId, { src: imageKey });
+                  setImageToReplaceId(null);
+                } else {
+                  handleAddElement('image', { src: imageKey });
+                }
                 setShowImageUploader(false);
               }}
               enableCrop={true}
+              aspectRatio={
+                imageToReplaceId
+                  ? (() => {
+                      const el = elements.find((e) => e.id === imageToReplaceId);
+                      return el ? el.width / el.height : undefined;
+                    })()
+                  : undefined
+              }
             />
           </div>
         </div>
@@ -1089,6 +1226,21 @@ export function AdvancedPageEditorV2({
             handleDismissCoverGuide();
           }}
           onDismiss={handleDismissCoverGuide}
+        />
+      )}
+
+      {/* Existing Image Crop Modal */}
+      {imageToCrop && (
+        <ImageCropModal
+          imageUrl={imageToCrop.src}
+          aspectRatio={imageToCrop.aspectRatio}
+          onComplete={(croppedImageUrl) => {
+            const imageKey = `dearbook_image_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            localStorage.setItem(imageKey, croppedImageUrl);
+            handleUpdateElement(imageToCrop.id, { src: imageKey });
+            setImageToCrop(null);
+          }}
+          onCancel={() => setImageToCrop(null)}
         />
       )}
     </div>

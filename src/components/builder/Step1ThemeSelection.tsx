@@ -3,8 +3,8 @@ import { Heart, Users, Cake, Sparkles, Check, Loader2 } from 'lucide-react';
 import { categoryApi, Category } from '../../lib/categoryApi';
 
 interface Step1ThemeSelectionProps {
-  selectedTheme?: 'love' | 'family' | 'birthday' | 'friendship';
-  onSelect: (theme: 'love' | 'family' | 'birthday' | 'friendship') => void;
+  selectedTheme?: 'love' | 'family' | 'birthday' | 'friendship' | 'youth';
+  onSelect: (theme: 'love' | 'family' | 'birthday' | 'friendship' | 'youth') => void;
 }
 
 const themes = [
@@ -43,6 +43,15 @@ const themes = [
     emoji: '🤝',
     bgImage: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800',
     examples: ['Kỷ niệm bạn bè', 'Tốt nghiệp', 'Chia tay'],
+  },
+  {
+    id: 'youth' as const,
+    name: 'Thanh xuân',
+    description: 'Kỷ niệm tuổi trẻ, trường lớp, kỷ yếu',
+    icon: Sparkles,
+    emoji: '✨',
+    bgImage: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800',
+    examples: ['Học trò', 'Chuyến đi', 'Thanh xuân'],
   },
 ];
 

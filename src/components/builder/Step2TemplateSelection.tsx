@@ -24,7 +24,7 @@ interface TemplatePageDef {
 }
 
 interface Step2TemplateSelectionProps {
-  theme: 'love' | 'family' | 'birthday' | 'friendship';
+  theme: 'love' | 'family' | 'birthday' | 'friendship' | 'youth';
   selectedTemplateId?: string;
   onSelect: (templateId: string, pages: PageData[]) => void;
   onBack: () => void;
@@ -62,9 +62,12 @@ export function Step2TemplateSelection({
   const filteredMockTemplates = realTemplates.filter(t => t.theme === theme);
   
   // Map API templates to UI format, fallback to mock
-  const templates = apiTemplates.length > 0
-    ? apiTemplates.map(t => {
-        // Try to find matching mock template for detailed pages/data
+  let templates: any[] = [];
+  
+  if (apiTemplates.length > 0) {
+    // 1. Map API templates that match the theme (or have a mock that matches the theme)
+    templates = apiTemplates
+      .map(t => {
         const mockMatch = realTemplates.find(m => m.id === t.id || m.name === t.name);
         return {
           id: t.id,
@@ -74,19 +77,42 @@ export function Step2TemplateSelection({
           pageCount: mockMatch?.pages.length || 10,
           preview: t.coverImageUrl || mockMatch?.thumbnail || '',
           badge: mockMatch?.badge,
-          realTemplate: mockMatch || t
+          realTemplate: mockMatch || t,
+          theme: mockMatch?.theme || t.theme
         };
       })
-    : filteredMockTemplates.map(t => ({
-        id: t.id,
-        name: t.name,
-        description: `${t.pages.length} trang với nội dung ${t.theme === 'love' ? 'lãng mạn' : t.theme === 'family' ? 'gia đình' : t.theme === 'birthday' ? 'sinh nhật' : 'bạn bè'}`,
-        style: 'romantic' as const,
-        pageCount: t.pages.length,
-        preview: t.thumbnail,
-        badge: t.badge,
-        realTemplate: t
-      }));
+      .filter(t => t.theme === theme);
+
+    // 2. Add local mock templates that aren't in the API response yet
+    const existingIds = new Set(templates.map(t => t.id));
+    filteredMockTemplates.forEach(t => {
+      if (!existingIds.has(t.id)) {
+        templates.push({
+          id: t.id,
+          name: t.name,
+          description: `${t.pages.length} trang với nội dung ${t.theme === 'love' ? 'lãng mạn' : t.theme === 'family' ? 'gia đình' : t.theme === 'birthday' ? 'sinh nhật' : t.theme === 'youth' ? 'thanh xuân' : 'bạn bè'}`,
+          style: 'romantic' as const,
+          pageCount: t.pages.length,
+          preview: t.thumbnail,
+          badge: t.badge,
+          realTemplate: t,
+          theme: t.theme
+        });
+      }
+    });
+  } else {
+    templates = filteredMockTemplates.map(t => ({
+      id: t.id,
+      name: t.name,
+      description: `${t.pages.length} trang với nội dung ${t.theme === 'love' ? 'lãng mạn' : t.theme === 'family' ? 'gia đình' : t.theme === 'birthday' ? 'sinh nhật' : t.theme === 'youth' ? 'thanh xuân' : 'bạn bè'}`,
+      style: 'romantic' as const,
+      pageCount: t.pages.length,
+      preview: t.thumbnail,
+      badge: t.badge,
+      realTemplate: t,
+      theme: t.theme
+    }));
+  }
 
   const handleSelectTemplate = (template: any) => {
     // Convert real template pages to PageData format

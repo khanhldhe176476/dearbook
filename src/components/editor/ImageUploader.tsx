@@ -61,8 +61,13 @@ export function ImageUploader({
           } else {
             // Store in localStorage with unique key
             const imageKey = `dearbook_image_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-            localStorage.setItem(imageKey, dataUrl);
-            onImageUpload(imageKey);
+            try {
+              localStorage.setItem(imageKey, dataUrl);
+              onImageUpload(imageKey);
+            } catch (error) {
+              console.warn('LocalStorage quota exceeded, using dataUrl directly');
+              onImageUpload(dataUrl);
+            }
           }
 
           setIsUploading(false);
@@ -120,8 +125,13 @@ export function ImageUploader({
   const handleCropComplete = (croppedImageUrl: string) => {
     // Store cropped image in localStorage
     const imageKey = `dearbook_image_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    localStorage.setItem(imageKey, croppedImageUrl);
-    onImageUpload(imageKey);
+    try {
+      localStorage.setItem(imageKey, croppedImageUrl);
+      onImageUpload(imageKey);
+    } catch (error) {
+      console.warn('LocalStorage quota exceeded, using croppedImageUrl directly');
+      onImageUpload(croppedImageUrl);
+    }
     setImageForCrop(null);
   };
 

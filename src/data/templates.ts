@@ -1,11 +1,12 @@
 import { BookPage } from '../App';
 import { romanticLoveTemplate } from './romanticLoveTemplate';
+import { youthArchiveTemplate, youthBg1 } from './youthArchiveTemplate';
 
 // Template definitions with real images
 export interface Template {
   id: string;
   name: string;
-  theme: 'family' | 'friendship' | 'love' | 'birthday';
+  theme: 'family' | 'friendship' | 'love' | 'birthday' | 'youth';
   thumbnail: string;
   cover: BookPage;
   pages: BookPage[];
@@ -14,7 +15,7 @@ export interface Template {
 
 // Helper function to create magazine-style cover
 function createMagazineCover(
-  theme: 'family' | 'friendship' | 'love' | 'birthday',
+  theme: 'family' | 'friendship' | 'love' | 'birthday' | 'youth',
   title: string,
   subtitle: string,
   mainImage: string,
@@ -24,7 +25,8 @@ function createMagazineCover(
     love: { primary: 'rgba(255,192,203,0.9)', label: 'LOVE STORY' },
     family: { primary: 'rgba(96,165,250,0.9)', label: 'FAMILY' },
     birthday: { primary: 'rgba(196,181,253,0.9)', label: 'CELEBRATION' },
-    friendship: { primary: 'rgba(252,211,77,0.9)', label: 'FRIENDSHIP' }
+    friendship: { primary: 'rgba(252,211,77,0.9)', label: 'FRIENDSHIP' },
+    youth: { primary: 'rgba(167,139,250,0.9)', label: 'YOUTH ARCHIVE' }
   };
   
   const config = themeColors[theme];
@@ -2859,7 +2861,24 @@ export const templates: Template[] = [
   },
   
   // Add new romantic love template with 10 pages
-  romanticLoveTemplate
+  romanticLoveTemplate,
+
+  // ========== YOUTH TEMPLATES ==========
+  {
+    id: 'youth-1',
+    name: 'Youth Archive',
+    theme: 'youth',
+    badge: 'new',
+    thumbnail: youthBg1,
+    cover: createMagazineCover(
+      'youth',
+      'Tuổi Trẻ Rực Rỡ',
+      '✨ Lưu giữ thanh xuân',
+      'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&h=1200&fit=crop',
+      'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=300&h=300&fit=crop'
+    ),
+    pages: youthArchiveTemplate
+  }
 ];
 
 export function getTemplatesByTheme(theme: string): Template[] {

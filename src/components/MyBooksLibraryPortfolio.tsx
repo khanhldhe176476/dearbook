@@ -178,6 +178,7 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
     family:     { name: 'Gia đình', emoji: '👨‍👩‍👧', color: 'from-sky-300 to-blue-400',     bg: 'bg-sky-50',    text: 'text-sky-700'    },
     birthday:   { name: 'Sinh nhật',emoji: '🎂',  color: 'from-amber-300 to-orange-400', bg: 'bg-amber-50',  text: 'text-amber-700'  },
     friendship: { name: 'Tình bạn', emoji: '🤝',  color: 'from-emerald-300 to-teal-400', bg: 'bg-emerald-50',text: 'text-emerald-700'},
+    youth:      { name: 'Thanh xuân', emoji: '✨',  color: 'from-indigo-300 to-purple-400', bg: 'bg-indigo-50', text: 'text-indigo-700' },
   };
 
   const formatDate = (dateString: string) => {
@@ -367,6 +368,7 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
                 <option value="family">👨‍👩‍👧 Gia đình</option>
                 <option value="birthday">🎂 Sinh nhật</option>
                 <option value="friendship">🤝 Tình bạn</option>
+                <option value="youth">✨ Thanh xuân</option>
               </select>
               <select
                 value={sortBy}

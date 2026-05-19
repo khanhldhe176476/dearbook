@@ -5,12 +5,14 @@ import { PropertiesPanelAdvanced } from './PropertiesPanelAdvanced';
 interface PropertiesPanelProps {
   element?: PageElement | null;
   onUpdate: (updates: Partial<PageElement>) => void;
+  onCropImage?: (id: string) => void;
+  onReplaceImage?: (id: string) => void;
 }
 
 /**
  * Wrapper component for PropertiesPanelAdvanced to handle single element
  */
-export function PropertiesPanel({ element, onUpdate }: PropertiesPanelProps) {
+export function PropertiesPanel({ element, onUpdate, onCropImage, onReplaceImage }: PropertiesPanelProps) {
   if (!element) {
     return (
       <div className="h-full flex flex-col items-center justify-center p-8 text-center text-gray-400 bg-white">
@@ -24,6 +26,8 @@ export function PropertiesPanel({ element, onUpdate }: PropertiesPanelProps) {
     <PropertiesPanelAdvanced
       selectedElements={[element]}
       onUpdateElement={(id, updates) => onUpdate(updates)}
+      onCropImage={onCropImage}
+      onReplaceImage={onReplaceImage}
     />
   );
 }

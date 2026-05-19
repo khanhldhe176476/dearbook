@@ -63,6 +63,20 @@ export function Step4PageEditorAdvanced({
     }
     
     return localPages.map((page, idx) => {
+      // If we already have saved elements in the page data, use them directly!
+      if (page.elements && page.elements.length > 0) {
+        return {
+          id: page.id,
+          elements: page.elements,
+          background: page.background || {
+            type: 'color',
+            value: getThemeBackground()
+          },
+          width: PAGE_W,
+          height: PAGE_H,
+        };
+      }
+
       // Try to find the corresponding template page
       const templatePage = template?.pages[idx];
       
@@ -265,6 +279,8 @@ export function Step4PageEditorAdvanced({
         templatePageId: localPages[idx]?.templatePageId || '',
         texts,
         images,
+        elements: editorPage.elements,
+        background: editorPage.background,
       };
     });
   };
