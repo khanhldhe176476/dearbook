@@ -844,8 +844,12 @@ export function LoginScreen({ onLogin, onVerifyOtp }: LoginScreenProps) {
             </div>
             
             {/* Subtitle branding */}
-            <div style={{ textAlign: 'center', marginTop: '1rem' }}>
-              <span className="font-serif italic text-sm font-bold tracking-wide text-slate-800">DearBook</span>
+            <div style={{ textAlign: 'center', marginTop: '1rem' }} className="flex flex-col items-center">
+              <img 
+                src="/logo.png" 
+                alt="dearmemories" 
+                className="h-6 object-contain block" 
+              />
               <p className="text-[9px] font-bold tracking-[0.12em] uppercase mt-0.5 text-slate-400" style={{ margin: '2px 0 0' }}>
                 Personalized Story Book
               </p>

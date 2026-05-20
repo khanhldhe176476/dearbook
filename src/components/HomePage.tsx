@@ -253,12 +253,14 @@ export function HomePage({ onGetStarted }: HomePageProps) {
         }}
       >
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <h1
-            className="text-xl font-bold tracking-widest"
-            style={{ color: '#000000', letterSpacing: '0.15em' }}
-          >
-            GIFT BOX
-          </h1>
+          <div className="flex items-center" style={{ height: '58px', overflow: 'visible' }}>
+            <img 
+              src="/logo.png" 
+              alt="dearmemories" 
+              className="object-contain block" 
+              style={{ height: '175px', margin: '-58.5px 0' }}
+            />
+          </div>
 
           <nav className="hidden lg:flex items-center gap-8">
             {navItems.map((item) => (
@@ -300,12 +302,14 @@ export function HomePage({ onGetStarted }: HomePageProps) {
               <Sparkles className="w-3 h-3" />
               Sách quà tặng cá nhân hóa
             </div>
-            <h2
-              className="font-handwriting text-6xl md:text-7xl mb-4"
-              style={{ color: '#000000' }}
-            >
-              DearBook
-            </h2>
+            <div className="flex justify-center" style={{ height: '70px', overflow: 'visible', marginTop: '8px', marginBottom: '20px' }}>
+              <img 
+                src="/logo.png" 
+                alt="dearmemories" 
+                className="object-contain block transform hover:scale-105 transition-transform duration-300" 
+                style={{ height: '190px', margin: '-60px 0' }}
+              />
+            </div>
             <p className="text-lg" style={{ color: '#7A6F66', letterSpacing: '0.03em' }}>
               Tạo kỷ niệm thành cuốn sách đẹp · In chất lượng cao · Giao tận nơi
             </p>
@@ -478,7 +482,7 @@ export function HomePage({ onGetStarted }: HomePageProps) {
       >
         <div className="max-w-7xl mx-auto px-6 py-6">
           <p className="text-center text-sm" style={{ color: '#9B9088' }}>
-            © 2026 DearBook – Thiết kế sách cá nhân hóa với tình yêu
+            © 2026 DearMemories – Thiết kế sách cá nhân hóa với tình yêu
             <span style={{ color: '#8C6E5D' }}> ♥</span>
           </p>
         </div>

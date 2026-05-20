@@ -151,7 +151,7 @@ function createMagazineCover(
       {
         id: 'cover-brand',
         type: 'text',
-        content: 'DearBook',
+        content: 'DearMemories',
         x: 30,
         y: 650,
         width: 200,

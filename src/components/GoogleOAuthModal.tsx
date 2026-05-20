@@ -58,7 +58,7 @@ export function GoogleOAuthModal({
             </div>
             <div>
               <h3 className="text-xl font-bold">Google Sign In</h3>
-              <p className="text-sm text-blue-100">DearBook wants to access your account</p>
+              <p className="text-sm text-blue-100">DearMemories wants to access your account</p>
             </div>
           </div>
         </div>
@@ -80,7 +80,7 @@ export function GoogleOAuthModal({
 
           {/* Permissions */}
           <div className="space-y-3">
-            <p className="text-sm font-semibold text-gray-700">DearBook sẽ có quyền:</p>
+            <p className="text-sm font-semibold text-gray-700">DearMemories sẽ có quyền:</p>
             <div className="space-y-2">
               <div className="flex items-start gap-2 text-sm text-gray-600">
                 <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />

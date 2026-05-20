@@ -330,7 +330,7 @@ function RealisticBook({
           width: '120px',
           textAlign: 'center'
         }}>
-          DEARBOOK
+          DEARMEMORIES
         </div>
       </div>
     );
@@ -1006,7 +1006,7 @@ function RealisticBook({
             position: 'relative',
             zIndex: 2
           }}>
-            DearBook
+            DearMemories
           </div>
         </div>
 
@@ -1362,7 +1362,7 @@ export default function Book3DOverviewPreview({
       {
         id: 'back-text-1',
         type: 'text' as const,
-        content: 'Tạo bởi DearBook',
+        content: 'Tạo bởi DearMemories',
         x: 150,
         y: 450,
         width: 300,

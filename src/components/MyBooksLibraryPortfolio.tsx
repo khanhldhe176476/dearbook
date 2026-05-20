@@ -339,11 +339,14 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
               >
                 <BookHeart className="w-5 h-5" style={{ color: '#f3e9d7' }} />
               </div>
-              <div className="leading-none">
-                <span className="font-handwriting text-xl block" style={{ color: '#111', lineHeight: '1.2' }}>
-                  DearBook
-                </span>
-                <span className="text-xs hidden sm:block" style={{ color: '#aaa' }}>
+              <div className="flex flex-col justify-center leading-none" style={{ height: '32px', overflow: 'visible' }}>
+                <img 
+                  src="/logo.png" 
+                  alt="dearmemories" 
+                  className="object-contain block" 
+                  style={{ height: '76px', margin: '-20px 0' }}
+                />
+                <span className="text-[10px] hidden sm:block" style={{ color: '#aaa', marginTop: '-18px' }}>
                   Thiết kế sách cá nhân hoá
                 </span>
               </div>

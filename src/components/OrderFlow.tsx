@@ -340,7 +340,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     Đặt hàng thành công! 🎉
                   </h2>
                   <p className="mb-6" style={{ color: '#7A6F66' }}>
-                    Cảm ơn bạn đã tin tưởng DearBook. Chúng tôi sẽ bắt đầu in cuốn sách của bạn ngay!
+                    Cảm ơn bạn đã tin tưởng DearMemories. Chúng tôi sẽ bắt đầu in cuốn sách của bạn ngay!
                   </p>
 
                   <div

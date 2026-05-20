@@ -23,7 +23,7 @@ export function HelpPanel() {
             <div className="bg-gradient-to-r from-blue-500 to-purple-500 px-6 py-4 flex items-center justify-between">
               <div className="flex items-center gap-3 text-white">
                 <BookOpen className="w-6 h-6" />
-                <h2 className="text-xl font-bold">Hướng dẫn sử dụng DearBook</h2>
+                <h2 className="text-xl font-bold">Hướng dẫn sử dụng DearMemories</h2>
               </div>
               <button
                 onClick={() => setIsOpen(false)}

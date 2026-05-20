@@ -121,7 +121,7 @@ function createPremiumCover(
         {
           id: 'cover-brand',
           type: 'text',
-          content: 'DearBook',
+          content: 'DearMemories',
           x: 60,
           y: 600,
           width: 380,
@@ -309,7 +309,7 @@ function createPremiumCover(
         {
           id: 'cover-brand',
           type: 'text',
-          content: 'DearBook',
+          content: 'DearMemories',
           x: 60,
           y: 580,
           width: 380,
@@ -461,7 +461,7 @@ function createPremiumCover(
       {
         id: 'cover-brand',
         type: 'text',
-        content: 'DearBook',
+        content: 'DearMemories',
         x: 40,
         y: 645,
         width: 200,

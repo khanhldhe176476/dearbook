@@ -81,9 +81,14 @@ export function Dashboard({ user, onLogout, onCreateBook, onEditBook }: Dashboar
             >
               <BookHeart className="w-5 h-5" style={{ color: N.sandLight }} />
             </div>
-            <div>
-              <h1 className="font-handwriting text-2xl" style={{ color: N.espresso }}>DearBook</h1>
-              <p className="text-xs" style={{ color: N.stone }}>Thiết kế sách cá nhân hoá</p>
+            <div className="flex flex-col justify-center" style={{ height: '32px', overflow: 'visible' }}>
+              <img 
+                src="/logo.png" 
+                alt="dearmemories" 
+                className="object-contain block" 
+                style={{ height: '76px', margin: '-20px 0' }}
+              />
+              <p className="text-[10px] leading-none" style={{ color: N.stone, marginTop: '-18px' }}>Thiết kế sách cá nhân hoá</p>
             </div>
           </div>
 
