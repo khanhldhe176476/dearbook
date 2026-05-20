@@ -135,14 +135,14 @@ function BookPhotoCarousel({ photos, interval = 3000 }: { photos: Photo[]; inter
             className="absolute left-3 z-30 w-9 h-9 rounded-full flex items-center justify-center transition-all"
             style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(6px)', top: '50%', transform: 'translateY(-50%)' }}
           >
-            <ChevronLeft className="w-4 h-4" style={{ color: '#3A2E28' }} />
+            <ChevronLeft className="w-4 h-4" style={{ color: '#000000' }} />
           </button>
           <button
             onClick={handleNext}
             className="absolute right-3 z-30 w-9 h-9 rounded-full flex items-center justify-center transition-all"
             style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(6px)', top: '50%', transform: 'translateY(-50%)' }}
           >
-            <ChevronRight className="w-4 h-4" style={{ color: '#3A2E28' }} />
+            <ChevronRight className="w-4 h-4" style={{ color: '#000000' }} />
           </button>
         </>
       )}
@@ -255,7 +255,7 @@ export function HomePage({ onGetStarted }: HomePageProps) {
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <h1
             className="text-xl font-bold tracking-widest"
-            style={{ color: '#3A2E28', letterSpacing: '0.15em' }}
+            style={{ color: '#000000', letterSpacing: '0.15em' }}
           >
             GIFT BOX
           </h1>
@@ -267,7 +267,7 @@ export function HomePage({ onGetStarted }: HomePageProps) {
                 onMouseEnter={() => setHoveredNav(item.id)}
                 onMouseLeave={() => setHoveredNav(null)}
                 className="text-sm font-medium transition-all duration-200"
-                style={{ color: hoveredNav === item.id ? '#3A2E28' : '#7A6F66' }}
+                style={{ color: hoveredNav === item.id ? '#000000' : '#7A6F66' }}
               >
                 {item.label}
               </button>
@@ -277,9 +277,9 @@ export function HomePage({ onGetStarted }: HomePageProps) {
           <button
             onClick={onGetStarted}
             className="hidden md:flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium transition-all duration-200"
-            style={{ background: '#3A2E28', color: '#FAFAF8', border: '1px solid #3A2E28' }}
-            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = '#1C1715'; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = '#3A2E28'; }}
+            style={{ background: '#000000', color: '#FAFAF8', border: '1px solid #000000' }}
+            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = '#000000'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = '#000000'; }}
           >
             Đăng nhập
             <ArrowRight className="w-3.5 h-3.5" />
@@ -302,7 +302,7 @@ export function HomePage({ onGetStarted }: HomePageProps) {
             </div>
             <h2
               className="font-handwriting text-6xl md:text-7xl mb-4"
-              style={{ color: '#3A2E28' }}
+              style={{ color: '#000000' }}
             >
               DearBook
             </h2>
@@ -331,20 +331,20 @@ export function HomePage({ onGetStarted }: HomePageProps) {
                     <div className="relative w-28 h-28">
                       <svg viewBox="0 0 200 200" className="w-full h-full"
                            style={{ filter: 'drop-shadow(0 4px 12px rgba(60,46,40,0.18))' }}>
-                        <circle cx="100" cy="100" r="90" fill="#3A2E28" />
+                        <circle cx="100" cy="100" r="90" fill="#000000" />
                         {[...Array(12)].map((_, i) => {
                           const angle = (i * 30 * Math.PI) / 180;
                           return (
                             <circle key={i}
                               cx={100 + 90 * Math.cos(angle)}
                               cy={100 + 90 * Math.sin(angle)}
-                              r="15" fill="#1C1715" />
+                              r="15" fill="#000000" />
                           );
                         })}
                         <circle cx="100" cy="100" r="75" fill="#F5F2EE" />
                       </svg>
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-2xl font-bold" style={{ color: '#3A2E28' }}>
+                        <span className="text-2xl font-bold" style={{ color: '#000000' }}>
                           {product.price}
                         </span>
                       </div>
@@ -363,13 +363,13 @@ export function HomePage({ onGetStarted }: HomePageProps) {
                   <div className="space-y-3">
                     {product.subtitle ? (
                       <div className="flex items-center gap-3">
-                        <h3 className="font-handwriting text-4xl" style={{ color: '#3A2E28' }}>
+                        <h3 className="font-handwriting text-4xl" style={{ color: '#000000' }}>
                           {product.title}
                         </h3>
                         <span style={{ color: '#9B9088' }}>{product.subtitle}</span>
                       </div>
                     ) : (
-                      <h3 className="font-handwriting text-4xl" style={{ color: '#3A2E28' }}>
+                      <h3 className="font-handwriting text-4xl" style={{ color: '#000000' }}>
                         {product.title}
                       </h3>
                     )}
@@ -401,16 +401,16 @@ export function HomePage({ onGetStarted }: HomePageProps) {
               onClick={onGetStarted}
               className="group relative inline-flex items-center gap-3 px-12 py-5 rounded-full transition-all duration-300 hover:-translate-y-1"
               style={{
-                background: '#3A2E28',
+                background: '#000000',
                 color: '#FAFAF8',
                 boxShadow: '0 8px 32px rgba(60,46,40,0.22)',
               }}
               onMouseEnter={e => {
-                (e.currentTarget as HTMLButtonElement).style.background = '#1C1715';
+                (e.currentTarget as HTMLButtonElement).style.background = '#000000';
                 (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 12px 40px rgba(28,23,21,0.30)';
               }}
               onMouseLeave={e => {
-                (e.currentTarget as HTMLButtonElement).style.background = '#3A2E28';
+                (e.currentTarget as HTMLButtonElement).style.background = '#000000';
                 (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 8px 32px rgba(60,46,40,0.22)';
               }}
             >
@@ -448,7 +448,7 @@ export function HomePage({ onGetStarted }: HomePageProps) {
                   >
                     <Icon className="w-6 h-6" style={{ color: '#7A6F66' }} />
                   </div>
-                  <h3 className="mb-1" style={{ color: '#3A2E28', fontSize: '1rem', fontWeight: 600 }}>{f.title}</h3>
+                  <h3 className="mb-1" style={{ color: '#000000', fontSize: '1rem', fontWeight: 600 }}>{f.title}</h3>
                   <p className="text-sm" style={{ color: '#9B9088' }}>{f.desc}</p>
                 </div>
               );
@@ -461,7 +461,7 @@ export function HomePage({ onGetStarted }: HomePageProps) {
       <button
         onClick={onGetStarted}
         className="md:hidden fixed bottom-6 right-6 z-50 flex items-center gap-2 px-6 py-4 rounded-full shadow-xl"
-        style={{ background: '#3A2E28', color: '#FAFAF8' }}
+        style={{ background: '#000000', color: '#FAFAF8' }}
       >
         <BookOpen className="w-5 h-5" />
         <span className="font-semibold">Bắt đầu</span>

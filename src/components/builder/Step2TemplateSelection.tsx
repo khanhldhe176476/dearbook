@@ -42,25 +42,14 @@ export function Step2TemplateSelection({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchTemplates = async () => {
-      try {
-        setLoading(true);
-        const data = await templateApi.getTemplates();
-        setApiTemplates(data);
-        setError(null);
-      } catch (err) {
-        console.error('Failed to fetch templates:', err);
-        setError('Không thể tải mẫu sách từ máy chủ. Đang sử dụng dữ liệu dự phòng.');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchTemplates();
+    // Không load đè template từ API nữa để giữ lại mẫu Youth Archive của user
+    setLoading(false);
   }, []);
 
   // Filter mock templates by theme, always include Youth Archive
+  // THEO YÊU CẦU: Xóa hết các mẫu khác, chỉ để lại mẫu Youth Archive đã hoàn thành
   const filteredMockTemplates = realTemplates.filter(t =>
-    t.theme === theme || t.id === 'youth-archive-memories'
+    t.id === 'youth-archive-memories'
   );
   
   // Map API templates to UI format, fallback to mock
@@ -83,7 +72,7 @@ export function Step2TemplateSelection({
         id: t.id,
         name: t.name,
         description: t.id === 'youth-archive-memories'
-          ? `${t.pages.length} trang scrapbook vintage – upload ảnh cá nhân của bạn`
+          ? `${t.pages.length} trang scrapbook vintage – tải lên ảnh kỷ niệm của bạn`
           : `${t.pages.length} trang với nội dung ${t.theme === 'love' ? 'lãng mạn' : t.theme === 'family' ? 'gia đình' : t.theme === 'birthday' ? 'sinh nhật' : 'bạn bè'}`,
         style: 'romantic' as const,
         pageCount: t.pages.length,
@@ -104,70 +93,82 @@ export function Step2TemplateSelection({
     onSelect(template.id, pages);
   };
 
-
-
   return (
     <div className="space-y-8">
       {/* Back Button */}
       <button
         onClick={onBack}
-        className="flex items-center gap-2 px-4 py-2 rounded-xl transition-all text-sm font-medium"
-        style={{ color: '#7A6F66' }}
-        onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = '#EDE9E3')}
-        onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = 'transparent')}
+        className="flex items-center gap-2 px-3.5 py-2 rounded-xl transition-all duration-200 text-sm font-semibold group hover:-translate-x-0.5"
+        style={{
+          color: '#7a6f66',
+          background: '#ffffff',
+          border: '1px solid #eeece9',
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.background = '#faf8f5';
+          e.currentTarget.style.borderColor = '#ddd8d0';
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.background = '#ffffff';
+          e.currentTarget.style.borderColor = '#eeece9';
+        }}
       >
-        <ArrowLeft className="w-4 h-4" />
+        <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
         <span>Quay lại chọn chủ đề</span>
       </button>
 
       {/* Header */}
-      <div className="text-center max-w-2xl mx-auto">
-        <h2 className="text-3xl sm:text-4xl font-bold mb-3" style={{ color: '#3A2E28' }}>
+      <div className="text-center max-w-2xl mx-auto space-y-2">
+        <p className="text-[11px] font-semibold tracking-widest uppercase" style={{ color: '#9ca3af' }}>
+          Bước 2 · Phong cách thiết kế
+        </p>
+        <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight" style={{ color: '#111827' }}>
           Chọn phong cách thiết kế
         </h2>
         {loading ? (
-          <div className="flex items-center justify-center gap-2 text-sm" style={{ color: '#7A6F66' }}>
-            <Loader2 className="w-4 h-4 animate-spin" />
+          <div className="flex items-center justify-center gap-2 text-sm" style={{ color: '#7a6f66' }}>
+            <Loader2 className="w-4 h-4 animate-spin text-[#111]" />
             Đang tải mẫu sách...
           </div>
         ) : error ? (
-          <p className="text-xs italic" style={{ color: '#9B9088' }}>{error}</p>
+          <p className="text-xs italic text-rose-500">{error}</p>
         ) : (
-          <p className="text-base" style={{ color: '#7A6F66' }}>
-            Mỗi mẫu có bố cục và số trang khác nhau. Bạn có thể tùy chỉnh nội dung sau.
+          <p className="text-sm sm:text-base leading-relaxed" style={{ color: '#6b7280' }}>
+            Mỗi mẫu được đo đạc với số trang và bố cục chuyên nghiệp. Bạn có thể tùy chỉnh hình ảnh, câu chữ ở bước tiếp theo.
           </p>
         )}
       </div>
 
       {/* Template Grid */}
-      <div className="grid sm:grid-cols-2 gap-5 max-w-4xl mx-auto">
+      <div className="grid sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
         {templates.map((template) => {
           const isSelected = selectedTemplateId === template.id;
 
           return (
             <div
               key={template.id}
-              className="relative rounded-2xl overflow-hidden transition-all duration-200"
+              className="relative rounded-3xl overflow-hidden transition-all duration-300 flex flex-col group"
               style={{
-                background: '#FAFAF8',
-                border: isSelected ? '2px solid #3A2E28' : '1.5px solid #DDD8D0',
-                boxShadow: isSelected ? '0 8px 28px rgba(58,46,40,0.18)' : '0 2px 8px rgba(58,46,40,0.06)',
-                transform: isSelected ? 'scale(1.02)' : 'scale(1)',
+                background: '#ffffff',
+                border: isSelected ? '2.5px solid #111' : '1px solid #eeece9',
+                boxShadow: isSelected ? '0 12px 36px rgba(0,0,0,0.12)' : '0 2px 16px rgba(0,0,0,0.05)',
+                transform: isSelected ? 'translateY(-2px)' : 'none',
               }}
             >
-              {/* Preview */}
-              <div className="h-48 relative overflow-hidden" style={{ background: '#EDE9E3' }}>
+              {/* Preview Image */}
+              <div className="h-56 relative overflow-hidden bg-[#faf8f5] flex-shrink-0">
                 <img
                   src={template.preview}
                   alt={template.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
 
-                {/* Badge */}
+                {/* Badge Overlay */}
                 {template.badge && (
                   <div
-                    className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold"
-                    style={{ background: '#3A2E28', color: '#EDE9E3' }}
+                    className="absolute top-4 left-4 px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase shadow-md"
+                    style={{ background: '#111111', color: '#f3e9d7' }}
                   >
                     {template.badge === 'bestseller' ? '🔥 Bán chạy' :
                      template.badge === 'popular'    ? '⭐ Phổ biến' :
@@ -175,47 +176,62 @@ export function Step2TemplateSelection({
                   </div>
                 )}
 
-                <div className="absolute top-3 right-3">
+                {/* Page Count Tag Overlay */}
+                <div className="absolute top-4 right-4">
                   <div
-                    className="px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1"
-                    style={{ background: 'rgba(250,250,248,0.90)', color: '#3A2E28' }}
+                    className="px-2.5 py-1 rounded-full text-[10px] font-bold flex items-center gap-1 shadow-md"
+                    style={{ background: 'rgba(255, 255, 255, 0.90)', color: '#111', backdropFilter: 'blur(4px)' }}
                   >
-                    <Layout className="w-3 h-3" />
+                    <Layout className="w-3.5 h-3.5 text-[#8c6e5d]" />
                     {template.pageCount} trang
                   </div>
                 </div>
+                
+                {/* Hover overlay shading */}
+                <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
 
-              {/* Info */}
-              <div className="p-5">
-                <h3 className="font-bold mb-1" style={{ color: '#3A2E28' }}>{template.name}</h3>
-                <p className="text-sm mb-4" style={{ color: '#7A6F66' }}>{template.description}</p>
+              {/* Info & Content */}
+              <div className="p-6 flex flex-col flex-1 gap-4 justify-between">
+                <div>
+                  <h3 className="text-lg font-bold text-[#111] mb-1.5 leading-snug">{template.name}</h3>
+                  <p className="text-xs sm:text-sm leading-relaxed text-[#7a6f66]">{template.description}</p>
+                </div>
 
-                <div className="flex gap-2">
+                {/* Action Buttons Row */}
+                <div className="flex gap-2.5 pt-2">
                   <button
                     onClick={() => setPreviewTemplate(template)}
-                    className="flex-1 py-2 px-3 rounded-xl text-sm font-medium flex items-center justify-center gap-1.5 transition-colors"
-                    style={{ background: '#EDE9E3', color: '#5A5049' }}
-                    onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = '#DDD8D0')}
-                    onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#EDE9E3')}
+                    className="flex-1 py-2.5 px-3.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all duration-200 hover:-translate-y-0.5 border"
+                    style={{ background: '#faf8f5', color: '#111', borderColor: '#eeece9' }}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.background = '#f0ede8';
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.background = '#faf8f5';
+                    }}
                   >
                     <Eye className="w-4 h-4" />
-                    Xem trước
+                    Xem mẫu
                   </button>
                   <button
                     onClick={() => handleSelectTemplate(template)}
-                    className="flex-1 py-2 px-3 rounded-xl text-sm font-medium flex items-center justify-center gap-1.5 transition-all"
+                    className="flex-1 py-2.5 px-3.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all duration-200 hover:-translate-y-0.5"
                     style={{
-                      background: isSelected ? '#1C1715' : '#3A2E28',
-                      color: '#EDE9E3',
-                      boxShadow: isSelected ? '0 4px 14px rgba(28,23,21,0.30)' : 'none',
+                      background: '#111111',
+                      color: '#f3e9d7',
+                      boxShadow: isSelected ? '0 4px 12px rgba(0,0,0,0.15)' : 'none',
                     }}
-                    onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = '#1C1715')}
-                    onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = isSelected ? '#1C1715' : '#3A2E28')}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.background = '#000000';
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.background = '#111111';
+                    }}
                   >
                     {isSelected ? (
-                      <><Check className="w-4 h-4" /> Đã chọn</>
-                    ) : template.id === 'youth-archive-memories' ? 'Dùng mẫu này' : 'Chọn mẫu'}
+                      <><Check className="w-4 h-4 text-emerald-400" strokeWidth={3} /> Đã chọn</>
+                    ) : 'Sử dụng mẫu này'}
                   </button>
                 </div>
               </div>
@@ -253,18 +269,15 @@ export function Step2TemplateSelection({
         );
       })()}
 
-      {/* Info */}
-      <div
-        className="max-w-2xl mx-auto p-5 rounded-2xl text-center"
-        style={{ background: '#F5F2EE', border: '1px solid #DDD8D0' }}
+      {/* Tip Info banner */}
+      <div className="max-w-2xl mx-auto flex items-start gap-0.5 rounded-2xl overflow-hidden shadow-sm"
+        style={{ background: '#ffffff', border: '1px solid #eeece9' }}
       >
-        <p className="text-sm" style={{ color: '#7A6F66' }}>
-          💡 <strong style={{ color: '#5A5049' }}>Lưu ý:</strong>{' '}
-          Số trang và bố cục được cố định để đảm bảo chất lượng in ấn. Bạn sẽ tùy chỉnh nội dung ở bước tiếp theo.
+        <div className="w-1.5 self-stretch bg-[#8c6e5d]" />
+        <p className="text-xs sm:text-sm p-4 leading-relaxed text-[#7a6f66] flex-1">
+          💡 <strong>Mẹo nhỏ:</strong> Số lượng trang sách đã được tối ưu hóa cho công nghệ đóng gáy sách cứng cao cấp, bảo đảm độ mở phẳng và thẩm mỹ hoàn mỹ nhất.
         </p>
       </div>
     </div>
   );
 }
-
-// Templates are now imported from /data/templates.ts

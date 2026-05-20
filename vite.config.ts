@@ -63,5 +63,12 @@
     server: {
       port: 3000,
       open: true,
+      proxy: {
+        '/api': {
+          target: 'https://dearbook-backend-docker.onrender.com',
+          changeOrigin: true,
+          secure: false,
+        },
+      },
     },
   });

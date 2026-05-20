@@ -421,9 +421,9 @@ export function Step4PageEditorAdvanced({
           <button
             onClick={() => setShow3DView(true)}
             className="flex items-center gap-2 px-4 py-2 rounded-xl transition-all font-semibold"
-            style={{ background: '#3A2E28', color: '#FAFAF8' }}
-            onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = '#1C1715')}
-            onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#3A2E28')}
+            style={{ background: '#000000', color: '#FAFAF8' }}
+            onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = '#000000')}
+            onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#000000')}
           >
             <Box className="w-4 h-4" />
             <span className="hidden sm:inline">Xem 3D</span>
@@ -442,9 +442,9 @@ export function Step4PageEditorAdvanced({
           <button
             onClick={onFinish}
             className="flex items-center gap-2 px-6 py-2 rounded-xl transition-all font-bold"
-            style={{ background: 'linear-gradient(135deg, #3A2E28 0%, #5A5049 100%)', color: '#FAFAF8', boxShadow: '0 4px 14px rgba(60,46,40,0.25)' }}
-            onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = 'linear-gradient(135deg, #1C1715 0%, #3A2E28 100%)')}
-            onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = 'linear-gradient(135deg, #3A2E28 0%, #5A5049 100%)')}
+            style={{ background: 'linear-gradient(135deg, #000000 0%, #5A5049 100%)', color: '#FAFAF8', boxShadow: '0 4px 14px rgba(60,46,40,0.25)' }}
+            onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = 'linear-gradient(135deg, #000000 0%, #000000 100%)')}
+            onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = 'linear-gradient(135deg, #000000 0%, #5A5049 100%)')}
           >
             <ShoppingCart className="w-4 h-4" />
             <span>Đặt hàng</span>
@@ -454,7 +454,7 @@ export function Step4PageEditorAdvanced({
 
       {/* Title Editor */}
       <div className="rounded-2xl p-6 border" style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(8px)', borderColor: '#DDD8D0', boxShadow: '0 2px 10px rgba(60,46,40,0.06)' }}>
-        <label className="block font-semibold mb-3" style={{ color: '#3A2E28' }}>
+        <label className="block font-semibold mb-3" style={{ color: '#000000' }}>
           📖 Tên cuốn sách
         </label>
         <input
@@ -465,7 +465,7 @@ export function Step4PageEditorAdvanced({
             onChange(localPages, e.target.value);
           }}
           className="w-full px-4 py-3 rounded-xl outline-none transition-all text-lg font-semibold border"
-          style={{ borderColor: '#DDD8D0', color: '#3A2E28', background: '#FAFAF8' }}
+          style={{ borderColor: '#DDD8D0', color: '#000000', background: '#FAFAF8' }}
           placeholder="Nhập tên cuốn sách..."
           onFocus={e => { e.currentTarget.style.borderColor = '#7A6F66'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(122,111,102,0.12)'; }}
           onBlur={e  => { e.currentTarget.style.borderColor = '#DDD8D0'; e.currentTarget.style.boxShadow = 'none'; }}
@@ -480,7 +480,7 @@ export function Step4PageEditorAdvanced({
             className="rounded-2xl p-6 border"
             style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(8px)', borderColor: '#DDD8D0', boxShadow: '0 2px 10px rgba(60,46,40,0.06)' }}
           >
-            <h3 className="font-bold mb-4" style={{ color: '#3A2E28' }}>
+            <h3 className="font-bold mb-4" style={{ color: '#000000' }}>
               Trang {pageIndex + 1}
             </h3>
             <div className="space-y-3">
@@ -503,7 +503,7 @@ export function Step4PageEditorAdvanced({
                       }}
                       rows={3}
                       className="w-full px-3 py-2 rounded-lg outline-none text-sm border transition-all"
-                      style={{ borderColor: '#DDD8D0', color: '#3A2E28', background: '#FAFAF8' }}
+                      style={{ borderColor: '#DDD8D0', color: '#000000', background: '#FAFAF8' }}
                       onFocus={e => { e.currentTarget.style.borderColor = '#7A6F66'; e.currentTarget.style.boxShadow = '0 0 0 2px rgba(122,111,102,0.12)'; }}
                       onBlur={e  => { e.currentTarget.style.borderColor = '#DDD8D0'; e.currentTarget.style.boxShadow = 'none'; }}
                     />
@@ -521,7 +521,7 @@ export function Step4PageEditorAdvanced({
                         onChange(updated, bookTitle);
                       }}
                       className="w-full px-3 py-2 rounded-lg outline-none text-sm border transition-all"
-                      style={{ borderColor: '#DDD8D0', color: '#3A2E28', background: '#FAFAF8' }}
+                      style={{ borderColor: '#DDD8D0', color: '#000000', background: '#FAFAF8' }}
                       onFocus={e => { e.currentTarget.style.borderColor = '#7A6F66'; e.currentTarget.style.boxShadow = '0 0 0 2px rgba(122,111,102,0.12)'; }}
                       onBlur={e  => { e.currentTarget.style.borderColor = '#DDD8D0'; e.currentTarget.style.boxShadow = 'none'; }}
                     />
@@ -536,11 +536,11 @@ export function Step4PageEditorAdvanced({
       {/* Promotion for Advanced Mode */}
       <div className="rounded-2xl p-6 border-2" style={{ background: 'linear-gradient(135deg, #F5F2EE 0%, #EDE9E3 100%)', borderColor: '#C8C2BA' }}>
         <div className="flex items-start gap-4">
-          <div className="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: '#3A2E28' }}>
+          <div className="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: '#000000' }}>
             <Wand2 className="w-6 h-6" style={{ color: '#EDE9E3' }} />
           </div>
           <div className="flex-1">
-            <h3 className="font-bold mb-2" style={{ color: '#3A2E28' }}>
+            <h3 className="font-bold mb-2" style={{ color: '#000000' }}>
               🎨 Muốn thiết kế tự do hơn?
             </h3>
             <p className="mb-3" style={{ color: '#5A5049' }}>
@@ -549,9 +549,9 @@ export function Step4PageEditorAdvanced({
             <button
               onClick={() => setMode('advanced')}
               className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all font-medium"
-              style={{ background: '#3A2E28', color: '#FAFAF8' }}
-              onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = '#1C1715')}
-              onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#3A2E28')}
+              style={{ background: '#000000', color: '#FAFAF8' }}
+              onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = '#000000')}
+              onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#000000')}
             >
               <Sliders className="w-4 h-4" />
               <span>Mở chế độ nâng cao</span>

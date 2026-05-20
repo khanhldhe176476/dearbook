@@ -55,8 +55,7 @@ export async function verifySignupOTP(
     throw new Error('Mã OTP không hợp lệ, vui lòng nhập từ 6 đến 10 chữ số.');
   }
 
-  // Log tạm thời để debug
-  console.log('Verify OTP', { email, otp: cleanOtp, type: 'signup' });
+
 
   // 2. Xác thực OTP với Supabase
   let verifyResult = await supabase.auth.verifyOtp({

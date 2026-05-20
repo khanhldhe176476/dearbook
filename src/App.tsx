@@ -119,9 +119,12 @@ function App() {
           console.warn('⚠️ Gửi profile lên Java backend thất bại:', backendErr);
         });
 
-        setUser(userData);
-        localStorage.setItem('dearbook_user', JSON.stringify(userData));
-        setCurrentScreen('library');
+        // Delay state update by 2 seconds so LoginScreen displays success animation and "Correct password" bubble
+        setTimeout(() => {
+          setUser(userData);
+          localStorage.setItem('dearbook_user', JSON.stringify(userData));
+          setCurrentScreen('library');
+        }, 2000);
       }
     } catch (err: any) {
       console.error('Auth error:', err);

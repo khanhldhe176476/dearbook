@@ -95,7 +95,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
               <span>Quay lại</span>
             </button>
 
-            <h1 className="text-lg font-bold" style={{ color: '#3A2E28' }}>Đặt hàng</h1>
+            <h1 className="text-lg font-bold" style={{ color: '#000000' }}>Đặt hàng</h1>
             <div className="w-20" />
           </div>
         </div>
@@ -111,7 +111,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                 className="h-full rounded-full transition-all duration-500"
                 style={{
                   width: step === 'shipping' ? '0%' : step === 'payment' ? '50%' : '100%',
-                  background: '#3A2E28',
+                  background: '#000000',
                 }}
               />
             </div>
@@ -125,8 +125,8 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                   <div
                     className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all z-10"
                     style={{
-                      background:  isActive ? '#3A2E28' : isCompleted ? '#EDE9E3' : '#EDE9E3',
-                      color:       isActive ? '#EDE9E3' : '#3A2E28',
+                      background:  isActive ? '#000000' : isCompleted ? '#EDE9E3' : '#EDE9E3',
+                      color:       isActive ? '#EDE9E3' : '#000000',
                       border:      isCompleted && !isActive ? '2px solid #7A6F66' : isActive ? 'none' : '2px solid #DDD8D0',
                       boxShadow:   isActive ? '0 4px 12px rgba(58,46,40,0.28)' : 'none',
                       transform:   isActive ? 'scale(1.1)' : 'scale(1)',
@@ -134,7 +134,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                   >
                     {isCompleted ? '✓' : index + 1}
                   </div>
-                  <p className="text-xs font-medium" style={{ color: isActive ? '#3A2E28' : '#9B9088' }}>
+                  <p className="text-xs font-medium" style={{ color: isActive ? '#000000' : '#9B9088' }}>
                     {s === 'shipping' ? 'Giao hàng' : s === 'payment' ? 'Thanh toán' : 'Hoàn tất'}
                   </p>
                 </div>
@@ -151,7 +151,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
             {step === 'shipping' && (
               <form onSubmit={handleShippingSubmit} className="space-y-6">
                 <div className="rounded-2xl p-6" style={{ background: 'white', border: '1.5px solid #DDD8D0' }}>
-                  <h2 className="text-lg font-bold mb-5 flex items-center gap-2" style={{ color: '#3A2E28' }}>
+                  <h2 className="text-lg font-bold mb-5 flex items-center gap-2" style={{ color: '#000000' }}>
                     <MapPin className="w-5 h-5" style={{ color: '#7A6F66' }} />
                     Thông tin giao hàng
                   </h2>
@@ -172,7 +172,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                             onChange={e => setShippingInfo({ ...shippingInfo, [key]: e.target.value })}
                             placeholder={placeholder}
                             className="w-full pl-10 pr-4 py-3 rounded-xl outline-none text-sm transition-all"
-                            style={{ border: '1.5px solid #DDD8D0', color: '#3A2E28', background: '#FAFAF8' }}
+                            style={{ border: '1.5px solid #DDD8D0', color: '#000000', background: '#FAFAF8' }}
                             onFocus={e => ((e.target as HTMLElement).style.borderColor = '#7A6F66')}
                             onBlur={e  => ((e.target as HTMLElement).style.borderColor = '#DDD8D0')}
                           />
@@ -188,7 +188,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                           type="email" required value={shippingInfo.email}
                           onChange={e => setShippingInfo({ ...shippingInfo, email: e.target.value })}
                           className="w-full pl-10 pr-4 py-3 rounded-xl outline-none text-sm transition-all"
-                          style={{ border: '1.5px solid #DDD8D0', color: '#3A2E28', background: '#FAFAF8' }}
+                          style={{ border: '1.5px solid #DDD8D0', color: '#000000', background: '#FAFAF8' }}
                           onFocus={e => ((e.target as HTMLElement).style.borderColor = '#7A6F66')}
                           onBlur={e  => ((e.target as HTMLElement).style.borderColor = '#DDD8D0')}
                         />
@@ -201,7 +201,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                         required value={shippingInfo.city}
                         onChange={e => setShippingInfo({ ...shippingInfo, city: e.target.value })}
                         className="w-full px-4 py-3 rounded-xl outline-none text-sm transition-all"
-                        style={{ border: '1.5px solid #DDD8D0', color: '#3A2E28', background: '#FAFAF8' }}
+                        style={{ border: '1.5px solid #DDD8D0', color: '#000000', background: '#FAFAF8' }}
                       >
                         <option value="">Chọn thành phố</option>
                         <option value="Hà Nội">Hà Nội</option>
@@ -216,7 +216,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                         type="text" required value={shippingInfo.district}
                         onChange={e => setShippingInfo({ ...shippingInfo, district: e.target.value })}
                         className="w-full px-4 py-3 rounded-xl outline-none text-sm transition-all"
-                        style={{ border: '1.5px solid #DDD8D0', color: '#3A2E28', background: '#FAFAF8' }}
+                        style={{ border: '1.5px solid #DDD8D0', color: '#000000', background: '#FAFAF8' }}
                         onFocus={e => ((e.target as HTMLElement).style.borderColor = '#7A6F66')}
                         onBlur={e  => ((e.target as HTMLElement).style.borderColor = '#DDD8D0')}
                       />
@@ -229,7 +229,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                         onChange={e => setShippingInfo({ ...shippingInfo, address: e.target.value })}
                         rows={3} placeholder="Số nhà, tên đường..."
                         className="w-full px-4 py-3 rounded-xl outline-none text-sm transition-all resize-none"
-                        style={{ border: '1.5px solid #DDD8D0', color: '#3A2E28', background: '#FAFAF8' }}
+                        style={{ border: '1.5px solid #DDD8D0', color: '#000000', background: '#FAFAF8' }}
                         onFocus={e => ((e.target as HTMLElement).style.borderColor = '#7A6F66')}
                         onBlur={e  => ((e.target as HTMLElement).style.borderColor = '#DDD8D0')}
                       />
@@ -242,7 +242,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                         onChange={e => setShippingInfo({ ...shippingInfo, notes: e.target.value })}
                         rows={2} placeholder="Ghi chú cho người giao hàng..."
                         className="w-full px-4 py-3 rounded-xl outline-none text-sm transition-all resize-none"
-                        style={{ border: '1.5px solid #DDD8D0', color: '#3A2E28', background: '#FAFAF8' }}
+                        style={{ border: '1.5px solid #DDD8D0', color: '#000000', background: '#FAFAF8' }}
                       />
                     </div>
                   </div>
@@ -251,9 +251,9 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                 <button
                   type="submit"
                   className="w-full py-4 px-6 rounded-2xl font-bold transition-all hover:-translate-y-0.5"
-                  style={{ background: '#3A2E28', color: '#EDE9E3', boxShadow: '0 6px 20px rgba(58,46,40,0.22)' }}
-                  onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = '#1C1715')}
-                  onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#3A2E28')}
+                  style={{ background: '#000000', color: '#EDE9E3', boxShadow: '0 6px 20px rgba(58,46,40,0.22)' }}
+                  onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = '#000000')}
+                  onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#000000')}
                 >
                   Tiếp tục thanh toán
                 </button>
@@ -263,7 +263,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
             {step === 'payment' && (
               <div className="space-y-6">
                 <div className="rounded-2xl p-6" style={{ background: 'white', border: '1.5px solid #DDD8D0' }}>
-                  <h2 className="text-lg font-bold mb-5 flex items-center gap-2" style={{ color: '#3A2E28' }}>
+                  <h2 className="text-lg font-bold mb-5 flex items-center gap-2" style={{ color: '#000000' }}>
                     <CreditCard className="w-5 h-5" style={{ color: '#7A6F66' }} />
                     Phương thức thanh toán
                   </h2>
@@ -278,21 +278,21 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                         onClick={() => setPaymentMethod(method as 'bank' | 'cod')}
                         className="w-full p-4 rounded-xl text-left transition-all"
                         style={{
-                          border: paymentMethod === method ? '2px solid #3A2E28' : '1.5px solid #DDD8D0',
+                          border: paymentMethod === method ? '2px solid #000000' : '1.5px solid #DDD8D0',
                           background: paymentMethod === method ? '#F5F2EE' : '#FAFAF8',
                         }}
                       >
                         <div className="flex items-center gap-3">
                           <div
                             className="w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0"
-                            style={{ borderColor: paymentMethod === method ? '#3A2E28' : '#C8C2BA' }}
+                            style={{ borderColor: paymentMethod === method ? '#000000' : '#C8C2BA' }}
                           >
                             {paymentMethod === method && (
-                              <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#3A2E28' }} />
+                              <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#000000' }} />
                             )}
                           </div>
                           <div>
-                            <p className="font-semibold text-sm" style={{ color: '#3A2E28' }}>{title}</p>
+                            <p className="font-semibold text-sm" style={{ color: '#000000' }}>{title}</p>
                             <p className="text-xs" style={{ color: '#7A6F66' }}>{sub}</p>
                           </div>
                         </div>
@@ -315,9 +315,9 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     onClick={handlePaymentSubmit}
                     disabled={loading}
                     className="flex-1 py-4 px-6 rounded-2xl font-bold transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2"
-                    style={{ background: '#3A2E28', color: '#EDE9E3', boxShadow: '0 6px 20px rgba(58,46,40,0.22)' }}
-                    onMouseEnter={e => !loading && ((e.currentTarget as HTMLElement).style.background = '#1C1715')}
-                    onMouseLeave={e => !loading && ((e.currentTarget as HTMLElement).style.background = '#3A2E28')}
+                    style={{ background: '#000000', color: '#EDE9E3', boxShadow: '0 6px 20px rgba(58,46,40,0.22)' }}
+                    onMouseEnter={e => !loading && ((e.currentTarget as HTMLElement).style.background = '#000000')}
+                    onMouseLeave={e => !loading && ((e.currentTarget as HTMLElement).style.background = '#000000')}
                   >
                     {loading && <Loader2 className="w-5 h-5 animate-spin" />}
                     {loading ? 'Đang xử lý...' : 'Xác nhận đặt hàng'}
@@ -333,10 +333,10 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6"
                     style={{ background: '#EDE9E3' }}
                   >
-                    <CheckCircle className="w-10 h-10" style={{ color: '#3A2E28' }} />
+                    <CheckCircle className="w-10 h-10" style={{ color: '#000000' }} />
                   </div>
 
-                  <h2 className="text-2xl font-bold mb-3" style={{ color: '#3A2E28' }}>
+                  <h2 className="text-2xl font-bold mb-3" style={{ color: '#000000' }}>
                     Đặt hàng thành công! 🎉
                   </h2>
                   <p className="mb-6" style={{ color: '#7A6F66' }}>
@@ -347,7 +347,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     className="rounded-xl p-5 text-left space-y-2 mb-6"
                     style={{ background: '#F5F2EE' }}
                   >
-                    <p className="font-semibold text-sm" style={{ color: '#3A2E28' }}>📦 Thông tin đơn hàng:</p>
+                    <p className="font-semibold text-sm" style={{ color: '#000000' }}>📦 Thông tin đơn hàng:</p>
                     <div className="space-y-1 text-sm" style={{ color: '#7A6F66' }}>
                       <p>• Mã đơn: #{orderId || `BK${Date.now()}`}</p>
                       <p>• Thời gian giao hàng: 5-7 ngày làm việc</p>
@@ -361,9 +361,9 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                   <button
                     onClick={handleComplete}
                     className="w-full py-4 px-6 rounded-2xl font-bold transition-all hover:-translate-y-0.5"
-                    style={{ background: '#3A2E28', color: '#EDE9E3' }}
-                    onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = '#1C1715')}
-                    onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#3A2E28')}
+                    style={{ background: '#000000', color: '#EDE9E3' }}
+                    onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = '#000000')}
+                    onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#000000')}
                   >
                     Về trang chủ
                   </button>
@@ -378,7 +378,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
               className="rounded-2xl p-5 sticky top-24"
               style={{ background: 'white', border: '1.5px solid #DDD8D0' }}
             >
-              <h3 className="font-bold mb-4 flex items-center gap-2" style={{ color: '#3A2E28' }}>
+              <h3 className="font-bold mb-4 flex items-center gap-2" style={{ color: '#000000' }}>
                 <Package className="w-4 h-4" style={{ color: '#7A6F66' }} />
                 Đơn hàng
               </h3>
@@ -392,7 +392,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     📖
                   </div>
                   <div>
-                    <p className="font-semibold text-sm" style={{ color: '#3A2E28' }}>
+                    <p className="font-semibold text-sm" style={{ color: '#000000' }}>
                       {book.title || 'Cuốn sách của tôi'}
                     </p>
                     <p className="text-xs mt-1" style={{ color: '#9B9088' }}>
@@ -404,24 +404,24 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                 <div className="space-y-2 text-sm pt-3" style={{ borderTop: '1px solid #EDE9E3' }}>
                   <div className="flex justify-between">
                     <span style={{ color: '#7A6F66' }}>Giá cơ bản (10 trang)</span>
-                    <span className="font-medium" style={{ color: '#3A2E28' }}>{basePrice.toLocaleString('vi-VN')} ₫</span>
+                    <span className="font-medium" style={{ color: '#000000' }}>{basePrice.toLocaleString('vi-VN')} ₫</span>
                   </div>
                   {additionalPages > 0 && (
                     <div className="flex justify-between">
                       <span style={{ color: '#7A6F66' }}>Trang thêm ({additionalPages})</span>
-                      <span className="font-medium" style={{ color: '#3A2E28' }}>{pagePrice.toLocaleString('vi-VN')} ₫</span>
+                      <span className="font-medium" style={{ color: '#000000' }}>{pagePrice.toLocaleString('vi-VN')} ₫</span>
                     </div>
                   )}
                   <div className="flex justify-between">
                     <span style={{ color: '#7A6F66' }}>Phí vận chuyển</span>
-                    <span className="font-medium" style={{ color: '#3A2E28' }}>{shippingFee.toLocaleString('vi-VN')} ₫</span>
+                    <span className="font-medium" style={{ color: '#000000' }}>{shippingFee.toLocaleString('vi-VN')} ₫</span>
                   </div>
                 </div>
 
                 <div className="pt-3" style={{ borderTop: '1px solid #EDE9E3' }}>
                   <div className="flex justify-between font-bold">
-                    <span style={{ color: '#3A2E28' }}>Tổng cộng</span>
-                    <span style={{ color: '#3A2E28' }}>{totalPrice.toLocaleString('vi-VN')} ₫</span>
+                    <span style={{ color: '#000000' }}>Tổng cộng</span>
+                    <span style={{ color: '#000000' }}>{totalPrice.toLocaleString('vi-VN')} ₫</span>
                   </div>
                 </div>
               </div>

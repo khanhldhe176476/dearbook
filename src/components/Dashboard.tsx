@@ -20,8 +20,8 @@ const N = {
   stone:      '#9B9088',
   taupe:      '#7A6F66',
   taupeDark:  '#5A5049',
-  espresso:   '#3A2E28',
-  ink:        '#1C1715',
+  espresso:   '#000000',
+  ink:        '#000000',
   accent:     '#8C6E5D',
 };
 

@@ -67,22 +67,22 @@ ALTER TABLE public.user_book_pages ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Users can read own user_book_pages" ON public.user_book_pages;
 CREATE POLICY "Users can read own user_book_pages"
 ON public.user_book_pages FOR SELECT TO authenticated
-USING (auth.uid() = (SELECT user_id FROM public.user_books WHERE id = book_id));
+USING (auth.uid() = (SELECT user_id FROM public.user_books WHERE id = user_book_id));
 
 DROP POLICY IF EXISTS "Users can insert own user_book_pages" ON public.user_book_pages;
 CREATE POLICY "Users can insert own user_book_pages"
 ON public.user_book_pages FOR INSERT TO authenticated
-WITH CHECK (auth.uid() = (SELECT user_id FROM public.user_books WHERE id = book_id));
+WITH CHECK (auth.uid() = (SELECT user_id FROM public.user_books WHERE id = user_book_id));
 
 DROP POLICY IF EXISTS "Users can update own user_book_pages" ON public.user_book_pages;
 CREATE POLICY "Users can update own user_book_pages"
 ON public.user_book_pages FOR UPDATE TO authenticated
-USING (auth.uid() = (SELECT user_id FROM public.user_books WHERE id = book_id));
+USING (auth.uid() = (SELECT user_id FROM public.user_books WHERE id = user_book_id));
 
 DROP POLICY IF EXISTS "Users can delete own user_book_pages" ON public.user_book_pages;
 CREATE POLICY "Users can delete own user_book_pages"
 ON public.user_book_pages FOR DELETE TO authenticated
-USING (auth.uid() = (SELECT user_id FROM public.user_books WHERE id = book_id));
+USING (auth.uid() = (SELECT user_id FROM public.user_books WHERE id = user_book_id));
 
 -- 7. user_uploads
 ALTER TABLE public.user_uploads ENABLE ROW LEVEL SECURITY;
