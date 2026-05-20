@@ -13,6 +13,9 @@ export async function signUpWithEmail(
   password: string,
   fullName: string
 ): Promise<AuthUser> {
+  if (!supabase) {
+    throw new Error('Chưa kết nối cơ sở dữ liệu! Vui lòng cấu hình VITE_SUPABASE_URL và VITE_SUPABASE_ANON_KEY trên Render Dashboard.');
+  }
   // 1. Tạo tài khoản trong Supabase Auth
   const { data: authData, error: authError } = await supabase.auth.signUp({
     email,
@@ -49,6 +52,9 @@ export async function verifySignupOTP(
   token: string,
   fullName: string
 ): Promise<AuthUser> {
+  if (!supabase) {
+    throw new Error('Chưa kết nối cơ sở dữ liệu! Vui lòng cấu hình VITE_SUPABASE_URL và VITE_SUPABASE_ANON_KEY trên Render Dashboard.');
+  }
   // 1. Đảm bảo OTP không có khoảng trắng và đúng định dạng
   const cleanOtp = token.trim();
   if (!/^\d{6,10}$/.test(cleanOtp)) {
@@ -139,6 +145,9 @@ export async function signInWithEmail(
   email: string,
   password: string
 ): Promise<AuthUser> {
+  if (!supabase) {
+    throw new Error('Chưa kết nối cơ sở dữ liệu! Vui lòng cấu hình VITE_SUPABASE_URL và VITE_SUPABASE_ANON_KEY trên Render Dashboard.');
+  }
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
@@ -174,6 +183,7 @@ export async function signInWithEmail(
 
 /** Lấy session hiện tại nếu có */
 export async function getCurrentSession(): Promise<AuthUser | null> {
+  if (!supabase) return null;
   const { data: { session } } = await supabase.auth.getSession();
   if (!session?.user) return null;
 
@@ -194,5 +204,6 @@ export async function getCurrentSession(): Promise<AuthUser | null> {
 
 /** Đăng xuất */
 export async function signOut(): Promise<void> {
+  if (!supabase) return;
   await supabase.auth.signOut();
 }
