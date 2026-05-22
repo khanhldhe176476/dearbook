@@ -10,7 +10,7 @@ type GhostState = 'idle' | 'typing-email' | 'typing-password' | 'typing-name' | 
 
 export function LoginScreen({ onLogin, onVerifyOtp }: LoginScreenProps) {
   const [isSignup, setIsSignup] = useState(false);
-  const [email,    setEmail]    = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name,     setName]     = useState('');
   const [isLoading, setIsLoading] = useState(false);

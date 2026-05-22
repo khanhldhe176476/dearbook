@@ -236,6 +236,7 @@ function App() {
 
   return (
     <div className="min-h-screen" style={{ background: '#FAFAF8' }}>
+      <Toaster position="top-right" richColors />
       {currentScreen === 'home' && (
         <HomePage 
           user={user}
