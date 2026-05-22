@@ -471,16 +471,16 @@
   }
 
   :root {
-    --ivory: #fafaf8;
-    --cream: #f5f2ee;
+    --ivory: #F3E9D7;
+    --cream: #EADBC5;
     --sand-light: #ede9e3;
     --sand: #ddd8d0;
     --stone-light: #c8c2ba;
     --stone: #9b9088;
     --taupe: #7a6f66;
     --taupe-dark: #5a5049;
-    --espresso: #3a2e28;
-    --ink: #1c1715;
+    --espresso: #000000;
+    --ink: #000000;
     --accent: #8c6e5d;
     --accent-light: #c4a898;
     --accent-dark: #5c3d30;
@@ -4679,4 +4679,19 @@ button, a, input, select, textarea {
   [class*="Filmstrip"] {
     display: none !important;
   }
+}
+
+/* User-requested Global Rule for Image Frames */
+.image-frame {
+  position: relative;
+  overflow: hidden;
+}
+
+.image-frame img,
+.image-frame video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
 }

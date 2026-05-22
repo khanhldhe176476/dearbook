@@ -13,6 +13,9 @@ export async function signUpWithEmail(
   password: string,
   fullName: string
 ): Promise<AuthUser> {
+  if (!supabase) {
+    throw new Error('Chưa kết nối cơ sở dữ liệu! Vui lòng cấu hình VITE_SUPABASE_URL và VITE_SUPABASE_ANON_KEY trên Render Dashboard.');
+  }
   // 1. Tạo tài khoản trong Supabase Auth
   const { data: authData, error: authError } = await supabase.auth.signUp({
     email,
@@ -35,12 +38,87 @@ export async function signUpWithEmail(
 
   console.log('✅ Supabase Auth signUp OK, userId:', userId);
 
-  // 2. Insert vào bảng profiles
+  return {
+    id: userId,
+    email,
+    fullName,
+    avatarUrl: undefined,
+  };
+}
+
+/** Xác minh mã OTP sau khi đăng ký */
+export async function verifySignupOTP(
+  email: string,
+  token: string,
+  fullName: string
+): Promise<AuthUser> {
+  if (!supabase) {
+    throw new Error('Chưa kết nối cơ sở dữ liệu! Vui lòng cấu hình VITE_SUPABASE_URL và VITE_SUPABASE_ANON_KEY trên Render Dashboard.');
+  }
+  // 1. Đảm bảo OTP không có khoảng trắng và đúng định dạng
+  const cleanOtp = token.trim();
+  if (!/^\d{6,10}$/.test(cleanOtp)) {
+    throw new Error('Mã OTP không hợp lệ, vui lòng nhập từ 6 đến 10 chữ số.');
+  }
+
+
+
+  // 2. Xác thực OTP với Supabase
+  let verifyResult = await supabase.auth.verifyOtp({
+    email,
+    token: cleanOtp,
+    type: 'signup',
+  });
+
+  // Fallback 1: Nếu signup bị lỗi, thử lại bằng type: 'email' (Numeric OTP chuẩn)
+  if (verifyResult.error) {
+    console.warn('⚠️ verifyOtp with type: signup failed, trying fallback type: email...', verifyResult.error.message);
+    const fallbackResult = await supabase.auth.verifyOtp({
+      email,
+      token: cleanOtp,
+      type: 'email',
+    });
+    if (!fallbackResult.error) {
+      verifyResult = fallbackResult;
+      console.log('✅ Fallback with type: email succeeded!');
+    }
+  }
+
+  // Fallback 2: Nếu vẫn bị lỗi, thử lại bằng type: 'magiclink'
+  if (verifyResult.error) {
+    console.warn('⚠️ verifyOtp with type: email failed, trying fallback type: magiclink...', verifyResult.error.message);
+    const fallbackResult2 = await supabase.auth.verifyOtp({
+      email,
+      token: cleanOtp,
+      type: 'magiclink',
+    });
+    if (!fallbackResult2.error) {
+      verifyResult = fallbackResult2;
+      console.log('✅ Fallback with type: magiclink succeeded!');
+    }
+  }
+
+  const { data, error } = verifyResult;
+
+  if (error) {
+    console.error('❌ verifyOtp error after fallbacks:', error);
+    let msg = error.message;
+    if (msg.includes('Token has expired') || msg.includes('expired')) msg = 'Mã OTP đã hết hạn. Vui lòng bấm gửi lại.';
+    if (msg.includes('Invalid token') || msg.includes('invalid')) msg = 'Mã OTP không chính xác hoặc đã hết hạn. Vui lòng nhập lại.';
+    throw new Error(msg);
+  }
+
+  const user = data.user;
+  if (!user) throw new Error('Không lấy được thông tin user sau khi xác thực OTP');
+
+  console.log('✅ OTP Verification OK, user:', user.email);
+
+  // 3. Insert vào bảng profiles sau khi tài khoản được xác minh
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .upsert(
       {
-        id: userId,
+        id: user.id,
         email,
         full_name: fullName,
         avatar_url: null,
@@ -51,17 +129,14 @@ export async function signUpWithEmail(
     .single();
 
   if (profileError) {
-    // Không fail toàn bộ flow nếu chỉ lỗi insert profile
-    console.warn('⚠️ Could not insert profile:', profileError.message);
-  } else {
-    console.log('✅ Profile inserted:', profile);
+    console.warn('⚠️ Could not insert profile on OTP verify:', profileError.message);
   }
 
   return {
-    id: userId,
-    email,
-    fullName,
-    avatarUrl: undefined,
+    id: user.id,
+    email: user.email || email,
+    fullName: profile?.full_name || fullName,
+    avatarUrl: profile?.avatar_url || undefined,
   };
 }
 
@@ -70,6 +145,9 @@ export async function signInWithEmail(
   email: string,
   password: string
 ): Promise<AuthUser> {
+  if (!supabase) {
+    throw new Error('Chưa kết nối cơ sở dữ liệu! Vui lòng cấu hình VITE_SUPABASE_URL và VITE_SUPABASE_ANON_KEY trên Render Dashboard.');
+  }
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
@@ -105,6 +183,7 @@ export async function signInWithEmail(
 
 /** Lấy session hiện tại nếu có */
 export async function getCurrentSession(): Promise<AuthUser | null> {
+  if (!supabase) return null;
   const { data: { session } } = await supabase.auth.getSession();
   if (!session?.user) return null;
 
@@ -125,27 +204,6 @@ export async function getCurrentSession(): Promise<AuthUser | null> {
 
 /** Đăng xuất */
 export async function signOut(): Promise<void> {
+  if (!supabase) return;
   await supabase.auth.signOut();
-  localStorage.removeItem('dearbook_jwt');
-}
-
-/** Đăng nhập bằng Google thông qua Spring Boot Backend */
-export async function signInWithGoogleToken(idToken: string): Promise<AuthUser> {
-  const response = await fetch('http://localhost:8080/api/v1/auth/google', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ idToken })
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message || 'Xác thực Google với server thất bại.');
-  }
-
-  const data = await response.json(); // { token, user: { id, email, fullName, avatarUrl } }
-  
-  // Lưu JWT nội bộ của Spring Boot
-  localStorage.setItem('dearbook_jwt', data.token);
-
-  return data.user;
 }

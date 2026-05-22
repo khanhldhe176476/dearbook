@@ -1,5 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
-import { BookHeart, Plus, Search, Edit, Copy, Trash2, Clock, FileText, Grid3x3, Rows3, Calendar, Star, Filter, Box, Sparkles } from 'lucide-react';
+import { useState, useEffect, useRef, type ReactNode } from 'react';
+import {
+  BookHeart, Plus, Search, Edit, Copy, Trash2, Clock,
+  FileText, Grid3x3, Rows3, Sparkles, Box, BookOpen,
+  TrendingUp, ChevronRight
+} from 'lucide-react';
 import { BookData, User } from '../App';
 import { GoogleUserProfile } from './GoogleUserProfile';
 import { Test3DButton } from './Test3DButton';
@@ -7,7 +11,7 @@ import { FlipBookReader } from './FlipBookReader';
 import { DeleteConfirmDialog } from './DeleteConfirmDialog';
 import { useBookTemplates } from '../hooks/useBookTemplates';
 import { toast } from 'sonner@2.0.3';
-import { bookApi, UserBook } from '../lib/bookApi';
+import { bookApi } from '../lib/bookApi';
 import { Loader2 } from 'lucide-react';
 
 interface MyBooksLibraryPortfolioProps {
@@ -22,72 +26,52 @@ type ViewMode = 'grid' | 'masonry' | 'list';
 type SortBy = 'recent' | 'oldest' | 'name' | 'theme';
 
 export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBook, onBackToHome }: MyBooksLibraryPortfolioProps) {
-  // ── Supabase: book_templates ────────────────────────────────────────────
   const { templates: supabaseTemplates, loading: templatesLoading, error: templatesError } = useBookTemplates();
   const [books, setBooks] = useState<BookData[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [viewMode, setViewMode] = useState<ViewMode>('masonry');
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [sortBy, setSortBy] = useState<SortBy>('recent');
   const [filterTheme, setFilterTheme] = useState<string>('all');
   const [show3DBook, setShow3DBook] = useState<BookData | null>(null);
   const [highlightedBookId, setHighlightedBookId] = useState<string | null>(null);
   const userBooksSectionRef = useRef<HTMLDivElement>(null);
   const [deleteDialog, setDeleteDialog] = useState<{ isOpen: boolean; bookId: string; bookTitle: string }>({
-    isOpen: false,
-    bookId: '',
-    bookTitle: '',
+    isOpen: false, bookId: '', bookTitle: '',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Simulation: Generate a consistent UUID from email for API calls
-  const userId = '00000000-0000-0000-0000-000000000000'; // Placeholder
+  const userId = user.id || '00000000-0000-0000-0000-000000000000';
 
-  useEffect(() => {
-    loadBooks();
-  }, []);
+  useEffect(() => { loadBooks(); }, []);
 
   const loadBooks = async () => {
     setLoading(true);
     const localBooks = JSON.parse(localStorage.getItem('dearbook_books') || '[]');
-    
     try {
-      // Try to fetch from API
       const apiBooks = await bookApi.getMyBooks(userId);
-      
-      // Map API books to BookData format
       const mappedApiBooks: BookData[] = apiBooks.map(b => {
         const localMatch = localBooks.find((l: BookData) => l.id === b.id);
         return {
-          id: b.id,
-          title: b.title,
+          id: b.id, title: b.title,
           status: b.status.toLowerCase() as any,
-          updatedAt: b.updatedAt,
-          createdAt: b.updatedAt, // Fallback
+          updatedAt: b.updatedAt, createdAt: b.updatedAt,
           theme: (localMatch?.theme || 'love') as any,
           templateId: b.templateId,
           pages: localMatch?.pages || [],
           character: localMatch?.character
         };
       });
-
-      // Merge with local books that are not on API (e.g. newly created locally)
       const mergedBooks = [...mappedApiBooks];
       localBooks.forEach((l: BookData) => {
-        if (!mergedBooks.find(m => m.id === l.id)) {
-          mergedBooks.push(l);
-        }
+        if (!mergedBooks.find(m => m.id === l.id)) mergedBooks.push(l);
       });
-
-      setBooks(mergedBooks);
-      setError(null);
+      setBooks(mergedBooks); setError(null);
     } catch (err) {
       console.error('Failed to fetch books from API:', err);
-      setError('Không thể kết nối với máy chủ. Đang hiển thị sách từ bộ nhớ cục bộ.');
+      setError('Không thể kết nối máy chủ. Hiển thị từ bộ nhớ cục bộ.');
       setBooks(localBooks);
-    } finally {
-      setLoading(false);
-    }
+    } finally { setLoading(false); }
   };
 
   const handleDuplicate = (book: BookData) => {
@@ -99,512 +83,594 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
-    
-    const books = JSON.parse(localStorage.getItem('dearbook_books') || '[]');
-    books.push(duplicated);
-    localStorage.setItem('dearbook_books', JSON.stringify(books));
+    const allBooks = JSON.parse(localStorage.getItem('dearbook_books') || '[]');
+    allBooks.push(duplicated);
+    localStorage.setItem('dearbook_books', JSON.stringify(allBooks));
     loadBooks();
-    
-    // Show success toast
-    toast.success('✅ Đã thêm sách mẫu vào thư viện của bạn!', {
-      description: `"${duplicated.title}" đã sẵn sàng để chỉnh sửa`,
-      duration: 3000,
-    });
-    
-    // Highlight the new book
+    toast.success('✅ Đã thêm sách mẫu vào thư viện!', { description: `"${duplicated.title}" sẵn sàng chỉnh sửa`, duration: 3000 });
     setHighlightedBookId(duplicated.id);
     setTimeout(() => setHighlightedBookId(null), 3000);
-    
-    // Scroll to user books section
-    setTimeout(() => {
-      userBooksSectionRef.current?.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
-      });
-    }, 300);
+    setTimeout(() => { userBooksSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 300);
   };
 
   const handleDeleteClick = (bookId: string, bookTitle: string) => {
-    setDeleteDialog({
-      isOpen: true,
-      bookId,
-      bookTitle,
-    });
+    setDeleteDialog({ isOpen: true, bookId, bookTitle });
   };
 
   const handleDeleteConfirm = () => {
-    const books = JSON.parse(localStorage.getItem('dearbook_books') || '[]');
-    const filtered = books.filter((b: BookData) => b.id !== deleteDialog.bookId);
+    const allBooks = JSON.parse(localStorage.getItem('dearbook_books') || '[]');
+    const filtered = allBooks.filter((b: BookData) => b.id !== deleteDialog.bookId);
     localStorage.setItem('dearbook_books', JSON.stringify(filtered));
     loadBooks();
     setDeleteDialog({ isOpen: false, bookId: '', bookTitle: '' });
-    
-    // Show success toast
-    toast.success('🗑️ Đã xóa sách thành công', {
-      description: 'Sách đã được xóa khỏi thư viện của bạn',
-      duration: 2000,
-    });
+    toast.success('🗑️ Đã xóa sách thành công', { duration: 2000 });
   };
 
-  const handleDeleteCancel = () => {
-    setDeleteDialog({ isOpen: false, bookId: '', bookTitle: '' });
-  };
+  const handleDeleteCancel = () => setDeleteDialog({ isOpen: false, bookId: '', bookTitle: '' });
 
-  // Filter and sort
   let filteredBooks = books.filter(book => {
     const matchesSearch = (book.title || '').toLowerCase().includes(searchQuery.toLowerCase());
     const matchesTheme = filterTheme === 'all' || book.theme === filterTheme;
     return matchesSearch && matchesTheme;
   });
 
-  // Sort
   filteredBooks.sort((a, b) => {
     switch (sortBy) {
-      case 'recent':
-        return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
-      case 'oldest':
-        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-      case 'name':
-        return (a.title || '').localeCompare(b.title || '');
-      case 'theme':
-        return a.theme.localeCompare(b.theme);
-      default:
-        return 0;
+      case 'recent': return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+      case 'oldest': return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      case 'name':   return (a.title || '').localeCompare(b.title || '');
+      case 'theme':  return a.theme.localeCompare(b.theme);
+      default: return 0;
     }
   });
 
   const themeData = {
-    love:       { name: 'Tình yêu', emoji: '💕', color: 'from-rose-300 to-pink-400',     bg: 'bg-rose-50',   text: 'text-rose-700'   },
-    family:     { name: 'Gia đình', emoji: '👨‍👩‍👧', color: 'from-sky-300 to-blue-400',     bg: 'bg-sky-50',    text: 'text-sky-700'    },
-    birthday:   { name: 'Sinh nhật',emoji: '🎂',  color: 'from-amber-300 to-orange-400', bg: 'bg-amber-50',  text: 'text-amber-700'  },
-    friendship: { name: 'Tình bạn', emoji: '🤝',  color: 'from-emerald-300 to-teal-400', bg: 'bg-emerald-50',text: 'text-emerald-700'},
+    love:       { name: 'Tình yêu', emoji: '💕', grad: 'from-rose-400 to-pink-500',     badge: 'bg-rose-50 text-rose-600 border-rose-100'   },
+    family:     { name: 'Gia đình', emoji: '👨‍👩‍👧', grad: 'from-sky-400 to-blue-500',     badge: 'bg-sky-50 text-sky-600 border-sky-100'       },
+    birthday:   { name: 'Sinh nhật', emoji: '🎂', grad: 'from-amber-400 to-orange-500', badge: 'bg-amber-50 text-amber-600 border-amber-100'  },
+    friendship: { name: 'Tình bạn', emoji: '🤝', grad: 'from-emerald-400 to-teal-500', badge: 'bg-emerald-50 text-emerald-600 border-emerald-100' },
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('vi-VN', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    });
-  };
+  const formatDate = (dateString: string) =>
+    new Date(dateString).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
+  // ─── Book Card (User's books) ───────────────────────────────────────────────
   const BookCard = ({ book }: { book: BookData }) => {
-    const theme = themeData[book.theme];
+    const theme = themeData[book.theme] ?? themeData['love'];
     const isHighlighted = highlightedBookId === book.id;
-    
+
     return (
-      <div className={`group relative rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border ${
-        isHighlighted 
-          ? 'ring-4 ring-[#8C6E5D]/40' 
-          : 'border-[#DDD8D0]'
-      }`} style={{ background: '#FFFFFF' }}>
-        {/* Book Cover Preview */}
-        <div className={`relative h-64 bg-gradient-to-br ${theme.color} p-6 flex items-center justify-center`}>
-          <div className="absolute inset-0 opacity-10" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'%3E%3C/path%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-          }} />
-          <div className="relative text-center">
-            <div className="text-6xl mb-3">{theme.emoji}</div>
-            <h3 className="text-2xl font-bold text-white drop-shadow-lg line-clamp-2">
-              {book.title || 'Chưa đặt tên'}
+      <div
+        className={`group relative flex flex-col overflow-hidden transition-all duration-500
+          hover:-translate-y-2 hover:shadow-2xl cursor-pointer
+          ${isHighlighted ? 'ring-2 ring-black/20 ring-offset-2' : ''}`}
+        style={{
+          background: '#ffffff',
+          borderRadius: '24px',
+          border: '1px solid rgba(0,0,0,0.03)',
+          boxShadow: isHighlighted
+            ? '0 12px 48px rgba(0,0,0,0.16)'
+            : '0 8px 30px rgba(0,0,0,0.04)',
+        }}
+      >
+        {/* Cover */}
+        <div className={`relative h-56 flex-shrink-0 overflow-hidden bg-gradient-to-br ${theme.grad}`}>
+          {/* Pattern overlay */}
+          <div className="absolute inset-0 opacity-[0.15] mix-blend-overlay"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Ccircle cx='7' cy='7' r='2'/%3E%3Ccircle cx='37' cy='7' r='2'/%3E%3Ccircle cx='7' cy='37' r='2'/%3E%3Ccircle cx='37' cy='37' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            }}
+          />
+          {/* Dark gradient bottom */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+          
+          {/* Glassmorphism Icon Container */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <div className="relative z-10 w-20 h-20 mb-3 flex items-center justify-center rounded-[1.5rem] bg-white/20 backdrop-blur-md shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/30 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3">
+              <span className="text-4xl drop-shadow-lg">{theme.emoji}</span>
+            </div>
+            <h3 className="text-sm font-bold text-white drop-shadow-lg line-clamp-2 leading-snug px-4 text-center z-10">
+              {book.title || <span className="opacity-60 italic">Chưa đặt tên</span>}
             </h3>
+          </div>
+
+          {/* Status badge top-left */}
+          <div className="absolute top-4 left-4 flex gap-1.5 z-20">
             {book.status === 'draft' && (
-              <span className="inline-block mt-2 px-3 py-1 bg-white/90 text-[#5A5049] text-xs font-semibold rounded-full">
+              <span className="px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-full"
+                style={{ background: 'rgba(255,255,255,0.95)', color: '#666', backdropFilter: 'blur(8px)', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}>
                 Nháp
               </span>
             )}
+            {book.status === 'completed' && (
+              <span className="px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-full flex items-center gap-1"
+                style={{ background: 'rgba(34,197,94,0.95)', color: '#fff', backdropFilter: 'blur(8px)', boxShadow: '0 4px 12px rgba(34,197,94,0.3)' }}>
+                ✓ Hoàn thành
+              </span>
+            )}
           </div>
-          {/* Hover Actions Overlay */}
-          <div className="absolute inset-0 bg-black/55 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-            <button
-              onClick={() => setShow3DBook(book)}
-              className="p-3 rounded-full text-white transition-all transform hover:scale-110"
-              style={{ background: '#3A2E28' }}
-              title="Xem 3D"
-            >
-              <Box className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() => onEditBook(book)}
-              className="p-3 rounded-full transition-all transform hover:scale-110"
-              style={{ background: '#FAFAF8', color: '#3A2E28' }}
-              title="Chỉnh sửa"
-            >
-              <Edit className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() => handleDuplicate(book)}
-              className="p-3 rounded-full transition-all transform hover:scale-110"
-              style={{ background: '#FAFAF8', color: '#3A2E28' }}
-              title="Nhân bản"
-            >
-              <Copy className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() => handleDeleteClick(book.id, book.title || 'Sách của bạn')}
-              className="p-3 rounded-full text-white transition-all transform hover:scale-110"
-              style={{ background: '#b45d5d' }}
-              title="Xóa"
-            >
-              <Trash2 className="w-5 h-5" />
-            </button>
+          {/* Pages badge top-right */}
+          <div className="absolute top-4 right-4 z-20">
+            <span className="px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-full"
+              style={{ background: 'rgba(0,0,0,0.6)', color: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(8px)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+              {book.pages?.length || 0} trang
+            </span>
+          </div>
+
+          {/* Hover action overlay */}
+          <div className="absolute inset-0 flex items-center justify-center gap-3 z-30
+            opacity-0 group-hover:opacity-100 transition-all duration-300"
+            style={{ background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)' }}>
+            <ActionBtn onClick={() => setShow3DBook(book)} title="Xem 3D" icon={<Box className="w-4 h-4" />} dark />
+            <ActionBtn onClick={() => onEditBook(book)} title="Chỉnh sửa" icon={<Edit className="w-4 h-4" />} />
+            <ActionBtn onClick={() => handleDuplicate(book)} title="Nhân bản" icon={<Copy className="w-4 h-4" />} />
+            <ActionBtn onClick={() => handleDeleteClick(book.id, book.title || 'Sách')} title="Xóa" icon={<Trash2 className="w-4 h-4" />} danger />
           </div>
         </div>
-        {/* Book Info */}
-        <div className="p-5">
-          <div className="flex items-center gap-2 mb-2">
-            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${theme.bg} ${theme.text}`}>
-              {theme.name}
+
+        {/* Info */}
+        <div className="flex flex-col flex-1 p-5 gap-3">
+          {/* Title */}
+          <p className="font-bold text-base leading-snug line-clamp-1 transition-colors group-hover:text-amber-700" style={{ color: '#1a1a1a' }}>
+            {book.title || <span style={{ color: '#ccc', fontStyle: 'italic' }}>Chưa đặt tên</span>}
+          </p>
+          {/* Meta row */}
+          <div className="flex items-center justify-between mt-auto">
+            <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[12px] font-semibold border ${theme.badge}`}>
+              {theme.emoji} {theme.name}
             </span>
-            <span className="text-xs" style={{ color: '#9B9088' }}>•</span>
-            <span className="text-xs" style={{ color: '#9B9088' }}>{book.pages?.length || 0} trang</span>
-          </div>
-          <div className="flex items-center gap-2 text-xs" style={{ color: '#9B9088' }}>
-            <Clock className="w-4 h-4" />
-            <span>{formatDate(book.updatedAt)}</span>
+            <div className="flex items-center gap-1.5 text-[12px] font-medium" style={{ color: '#888' }}>
+              <Clock className="w-3.5 h-3.5 text-gray-400" />
+              <span>{formatDate(book.updatedAt)}</span>
+            </div>
           </div>
         </div>
       </div>
     );
   };
 
-  return (
-    <div className="min-h-screen" style={{ background: 'linear-gradient(160deg, #FAFAF8 0%, #F5F2EE 50%, #EDE9E3 100%)' }}>
 
-      {/* Dot pattern */}
-      <div className="fixed inset-0 pointer-events-none opacity-30"
-           style={{ backgroundImage: `radial-gradient(circle, #DDD8D0 1px, transparent 1px)`, backgroundSize: '28px 28px' }} />
-
-      {/* Header */}
-      <header className="sticky top-0 z-50" style={{ background: 'rgba(250,250,248,0.90)', backdropFilter: 'blur(16px)', borderBottom: '1px solid #DDD8D0' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <button 
-              onClick={onBackToHome}
-              className="flex items-center gap-3 group hover:opacity-80 transition-opacity"
-              title="Quay về trang chủ"
-            >
-              <div className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-md group-hover:shadow-lg group-hover:scale-105 transition-all" style={{ background: '#3A2E28' }}>
-                <BookHeart className="w-6 h-6" style={{ color: '#EDE9E3' }} />
+  // ─── Template Card ──────────────────────────────────────────────────────────
+  const TemplateCard = ({ tpl }: { tpl: any }) => {
+    const themeKey = (tpl.theme || 'love') as keyof typeof themeData;
+    const td = themeData[themeKey] ?? themeData['love'];
+    return (
+      <div
+        className="group flex flex-col overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl"
+        style={{
+          background: '#ffffff',
+          borderRadius: '24px',
+          border: '1px solid rgba(0,0,0,0.03)',
+          boxShadow: '0 8px 30px rgba(0,0,0,0.04)',
+        }}
+      >
+        {/* Image Area */}
+        <div className="relative h-60 flex-shrink-0 overflow-hidden bg-gray-50">
+          {tpl.cover_image_url ? (
+            <img
+              src={tpl.cover_image_url}
+              alt={tpl.name}
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            />
+          ) : (
+            <div className={`w-full h-full flex items-center justify-center relative overflow-hidden bg-gradient-to-br ${td.grad}`}>
+              {/* Premium overlay pattern */}
+              <div className="absolute inset-0 opacity-[0.15] mix-blend-overlay"
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Ccircle cx='7' cy='7' r='2'/%3E%3Ccircle cx='37' cy='7' r='2'/%3E%3Ccircle cx='7' cy='37' r='2'/%3E%3Ccircle cx='37' cy='37' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+              {/* Glassmorphism Icon Container */}
+              <div className="relative z-10 w-24 h-24 flex items-center justify-center rounded-[2rem] bg-white/20 backdrop-blur-md shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/30 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3">
+                <span className="text-5xl drop-shadow-lg">{td.emoji}</span>
               </div>
-              <div>
-                <h1 className="font-handwriting text-2xl" style={{ color: '#3A2E28' }}>DearBook</h1>
-                <p className="text-sm" style={{ color: '#7A6F66' }}>Thiết kế sách cá nhân hoá</p>
+            </div>
+          )}
+          
+          {/* Badges */}
+          <div className="absolute top-4 left-4 z-20">
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[11px] font-bold tracking-wide uppercase transition-all"
+              style={{ background: 'rgba(255,255,255,0.95)', color: '#111', backdropFilter: 'blur(8px)', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}>
+              {td.emoji} {td.name}
+            </span>
+          </div>
+          <div className="absolute top-4 right-4 z-20">
+            <span className="px-3.5 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase"
+              style={{ background: '#1a1a1a', color: '#fff', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>
+              MẪU
+            </span>
+          </div>
+          {tpl.price != null && (
+            <div className="absolute bottom-4 right-4 z-20">
+              <span className="px-3 py-1.5 rounded-full text-xs font-bold"
+                style={{ background: 'rgba(255,255,255,0.95)', color: '#111', backdropFilter: 'blur(8px)', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}>
+                {tpl.price.toLocaleString('vi-VN')}đ
+              </span>
+            </div>
+          )}
+        </div>
+
+        {/* Content Body */}
+        <div className="flex flex-col flex-1 p-6 gap-4">
+          <div>
+            <h4 className="font-bold text-xl mb-2.5 transition-colors group-hover:text-amber-700" style={{ color: '#1a1a1a', lineHeight: '1.3' }}>
+              {tpl.name}
+            </h4>
+            <p className="text-[14px] leading-relaxed line-clamp-2" style={{ color: '#666', minHeight: '2.75rem' }}>
+              {tpl.description || 'Mẫu sách thiết kế cao cấp, lưu giữ những kỷ niệm vô giá.'}
+            </p>
+          </div>
+          
+          <div className="flex items-center gap-3 text-[13px] font-medium mt-auto pb-5 border-b border-gray-100/80" style={{ color: '#888' }}>
+            <div className="flex items-center gap-1.5 bg-gray-50 px-2.5 py-1.5 rounded-md">
+              <FileText className="w-4 h-4 text-gray-400" />
+              <span>{tpl.page_count ?? '—'} trang</span>
+            </div>
+            <div className="flex items-center gap-1.5 bg-gray-50 px-2.5 py-1.5 rounded-md">
+              <Sparkles className="w-4 h-4 text-gray-400" />
+              <span>Nội dung đầy đủ</span>
+            </div>
+          </div>
+
+          <button
+            onClick={onCreateNew}
+            className="w-full py-3.5 rounded-xl text-[14px] font-bold transition-all duration-300
+              hover:shadow-[0_8px_20px_rgba(0,0,0,0.12)] active:scale-[0.98] flex items-center justify-center gap-2 group/btn"
+            style={{ background: '#1a1a1a', color: '#fff' }}
+          >
+            Sử dụng mẫu này
+            <ChevronRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  // ─── Render ─────────────────────────────────────────────────────────────────
+  return (
+    <div className="min-h-screen" style={{ background: '#faf8f5' }}>
+
+      {/* Subtle dot grid background */}
+      <div className="fixed inset-0 pointer-events-none"
+        style={{
+          backgroundImage: 'radial-gradient(circle, #e2ddd6 1px, transparent 1px)',
+          backgroundSize: '32px 32px',
+          opacity: 0.45,
+        }}
+      />
+
+      {/* ── Header ─────────────────────────────────────────────────────────── */}
+      <header className="sticky top-0 z-50"
+        style={{
+          background: 'rgba(250,248,245,0.88)',
+          backdropFilter: 'blur(18px)',
+          borderBottom: '1px solid rgba(0,0,0,0.07)',
+          boxShadow: '0 1px 16px rgba(0,0,0,0.04)',
+        }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <button
+              onClick={onBackToHome}
+              className="flex items-center group"
+              title="Về trang chủ"
+            >
+              <div className="flex flex-col justify-center leading-none" style={{ height: '40px', overflow: 'visible' }}>
+                <img 
+                  src="/logo.png" 
+                  alt="dearmemories" 
+                  className="object-contain block transition-transform duration-300 group-hover:scale-105" 
+                  style={{ height: '96px', margin: '-28px 0' }}
+                />
               </div>
             </button>
-            <GoogleUserProfile user={user} onLogout={onLogout} />
+
+            {/* User pill */}
+            <div className="flex items-center gap-2">
+              <GoogleUserProfile user={user} onLogout={onLogout} />
+            </div>
           </div>
         </div>
       </header>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      {/* ── Main ───────────────────────────────────────────────────────────── */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-10">
 
         {/* Welcome */}
-        <div className="mb-8">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-3" style={{ color: '#3A2E28' }}>
-            Xin chào, {user.name}! 👋
+        <div className="space-y-1">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight" style={{ color: '#111', lineHeight: 1.2 }}>
+            Xin chào, {user.name.split(' ').slice(-1)[0]}! 👋
           </h2>
-          <div className="flex items-center gap-4">
-            <p className="text-lg" style={{ color: '#7A6F66' }}>
-              {books.length > 0 
-                ? `Bạn đang có ${books.length} cuốn sách`
-                : 'Bắt đầu tạo cuốn sách đầu tiên của bạn'
-              }
+          <div className="flex items-center gap-3">
+            <p className="text-base sm:text-lg" style={{ color: '#999' }}>
+              {books.length > 0
+                ? `Bạn đang có ${books.length} cuốn sách trong thư viện`
+                : 'Bắt đầu tạo cuốn sách đầu tiên của bạn'}
             </p>
-            {loading && <Loader2 className="w-5 h-5 animate-spin" style={{ color: '#9B9088' }} />}
+            {loading && <Loader2 className="w-4 h-4 animate-spin" style={{ color: '#ccc' }} />}
           </div>
-          {error && <p className="text-xs mt-1 italic" style={{ color: '#9B9088' }}>{error}</p>}
+          {error && <p className="text-xs italic" style={{ color: '#bbb' }}>{error}</p>}
         </div>
 
-        {/* Create New Button */}
+        {/* ── CTA Banner ──────────────────────────────────────────────────── */}
         <button
           onClick={onCreateNew}
-          className="w-full mb-10 p-8 rounded-3xl text-white shadow-2xl transform hover:-translate-y-1 transition-all group relative overflow-hidden"
-          style={{ background: 'linear-gradient(135deg, #3A2E28 0%, #5A5049 100%)', boxShadow: '0 12px 40px rgba(60,46,40,0.28)' }}
-          onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = 'linear-gradient(135deg, #1C1715 0%, #3A2E28 100%)')}
-          onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = 'linear-gradient(135deg, #3A2E28 0%, #5A5049 100%)')}
+          className="relative w-full overflow-hidden text-left transition-all duration-300
+            hover:-translate-y-1 hover:shadow-2xl active:scale-[0.99] cursor-pointer group"
+          style={{
+            borderRadius: '24px',
+            background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2520 60%, #3a2e26 100%)',
+            boxShadow: '0 8px 40px rgba(0,0,0,0.18)',
+            padding: '32px 36px',
+          }}
         >
-          <div className="absolute inset-0 opacity-8" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'%3E%3C/path%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-          }} />
-          <div className="relative flex items-center justify-center gap-4">
-            <div className="w-16 h-16 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform" style={{ background: 'rgba(250,250,248,0.18)', backdropFilter: 'blur(4px)' }}>
-              <Plus className="w-8 h-8" />
+          {/* Noise/grain overlay */}
+          <div className="absolute inset-0 opacity-[0.04]"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+              backgroundSize: '200px',
+            }}
+          />
+          {/* Radial glow */}
+          <div className="absolute top-0 left-1/4 w-72 h-72 rounded-full pointer-events-none"
+            style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%)', transform: 'translate(-50%, -50%)' }} />
+
+          <div className="relative flex items-center gap-5">
+            {/* Icon circle */}
+            <div
+              className="w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0
+                transition-transform duration-300 group-hover:scale-110"
+              style={{ background: 'rgba(255,255,255,0.10)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.15)' }}
+            >
+              <Plus className="w-8 h-8 text-white" />
             </div>
-            <div className="text-left">
-              <p className="text-2xl font-bold mb-1">Tạo cuốn sách mới</p>
-              <p className="text-sm" style={{ color: 'rgba(250,250,248,0.80)' }}>Thiết kế quà tặng ý nghĩa trong vài phút</p>
+            <div>
+              <p className="text-xl sm:text-2xl font-bold text-white leading-tight">Tạo cuốn sách mới</p>
+              <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.55)' }}>
+                Thiết kế quà tặng ý nghĩa chỉ trong vài phút
+              </p>
+            </div>
+            {/* Arrow */}
+            <div className="ml-auto">
+              <ChevronRight className="w-6 h-6 transition-transform duration-300 group-hover:translate-x-1"
+                style={{ color: 'rgba(255,255,255,0.4)' }} />
             </div>
           </div>
         </button>
 
-        {/* Filters and View Controls */}
-        <div className="rounded-2xl p-4 mb-6 border" style={{ background: 'rgba(255,255,255,0.80)', backdropFilter: 'blur(8px)', borderColor: '#DDD8D0', boxShadow: '0 2px 12px rgba(60,46,40,0.06)' }}>
-          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-            <div className="flex-1 flex gap-3 flex-wrap">
-              <div className="relative flex-1 min-w-[200px]">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" style={{ color: '#9B9088' }} />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Tìm kiếm sách..."
-                  className="w-full pl-10 pr-4 py-2 rounded-xl outline-none transition-all border"
-                  style={{ borderColor: '#DDD8D0', color: '#3A2E28', background: '#FAFAF8' }}
-                  onFocus={e => { e.currentTarget.style.borderColor = '#7A6F66'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(122,111,102,0.12)'; }}
-                  onBlur={e  => { e.currentTarget.style.borderColor = '#DDD8D0'; e.currentTarget.style.boxShadow = 'none'; }}
-                />
-              </div>
-              <select
-                value={filterTheme}
-                onChange={(e) => setFilterTheme(e.target.value)}
-                className="px-4 py-2 rounded-xl outline-none transition-all border"
-                style={{ borderColor: '#DDD8D0', color: '#3A2E28', background: '#FAFAF8' }}
-              >
-                <option value="all">Tất cả chủ đề</option>
-                <option value="love">💕 Tình yêu</option>
-                <option value="family">👨‍👩‍👧 Gia đình</option>
-                <option value="birthday">🎂 Sinh nhật</option>
-                <option value="friendship">🤝 Tình bạn</option>
-              </select>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as SortBy)}
-                className="px-4 py-2 rounded-xl outline-none transition-all border"
-                style={{ borderColor: '#DDD8D0', color: '#3A2E28', background: '#FAFAF8' }}
-              >
-                <option value="recent">Mới nhất</option>
-                <option value="oldest">Cũ nhất</option>
-                <option value="name">Tên A-Z</option>
-                <option value="theme">Chủ đề</option>
-              </select>
-            </div>
-            <div className="flex gap-1 rounded-xl p-1" style={{ background: '#EDE9E3' }}>
-              {(['masonry','grid','list'] as ViewMode[]).map((mode) => (
+        {/* ── Toolbar ─────────────────────────────────────────────────────── */}
+        <div
+          className="flex flex-col sm:flex-row gap-3 items-start sm:items-center p-3 sm:p-4"
+          style={{
+            background: '#fff',
+            borderRadius: '16px',
+            border: '1px solid #eeece9',
+            boxShadow: '0 1px 8px rgba(0,0,0,0.04)',
+          }}
+        >
+          {/* Search */}
+          <div className="relative flex-1 w-full sm:min-w-[200px]">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#ccc' }} />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              placeholder="Tìm kiếm sách..."
+              className="w-full pl-10 pr-4 py-2.5 text-sm outline-none transition-all"
+              style={{
+                borderRadius: '10px',
+                border: '1px solid #e8e4de',
+                background: '#faf8f5',
+                color: '#333',
+              }}
+              onFocus={e => { e.currentTarget.style.borderColor = '#999'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(0,0,0,0.06)'; }}
+              onBlur={e  => { e.currentTarget.style.borderColor = '#e8e4de'; e.currentTarget.style.boxShadow = 'none'; }}
+            />
+          </div>
+
+          {/* Filters row */}
+          <div className="flex items-center gap-2 w-full sm:w-auto flex-wrap">
+            <select
+              value={filterTheme}
+              onChange={e => setFilterTheme(e.target.value)}
+              className="flex-1 sm:flex-none px-3 py-2.5 text-sm outline-none transition-all cursor-pointer"
+              style={{ borderRadius: '10px', border: '1px solid #e8e4de', background: '#faf8f5', color: '#444', minWidth: '130px' }}
+            >
+              <option value="all">Tất cả chủ đề</option>
+              <option value="love">💕 Tình yêu</option>
+              <option value="family">👨‍👩‍👧 Gia đình</option>
+              <option value="birthday">🎂 Sinh nhật</option>
+              <option value="friendship">🤝 Tình bạn</option>
+            </select>
+
+            <select
+              value={sortBy}
+              onChange={e => setSortBy(e.target.value as SortBy)}
+              className="flex-1 sm:flex-none px-3 py-2.5 text-sm outline-none transition-all cursor-pointer"
+              style={{ borderRadius: '10px', border: '1px solid #e8e4de', background: '#faf8f5', color: '#444', minWidth: '110px' }}
+            >
+              <option value="recent">Mới nhất</option>
+              <option value="oldest">Cũ nhất</option>
+              <option value="name">Tên A-Z</option>
+              <option value="theme">Chủ đề</option>
+            </select>
+
+            {/* View toggle */}
+            <div className="flex gap-1 p-1 rounded-xl" style={{ background: '#f0ede8' }}>
+              {(['grid', 'masonry', 'list'] as ViewMode[]).map(mode => (
                 <button
                   key={mode}
                   onClick={() => setViewMode(mode)}
-                  className="p-2 rounded-lg transition-all"
+                  title={mode === 'grid' ? 'Lưới đều' : mode === 'masonry' ? 'Masonry' : 'Danh sách'}
+                  className="w-9 h-9 flex items-center justify-center rounded-lg transition-all"
                   style={viewMode === mode
-                    ? { background: '#FFFFFF', boxShadow: '0 1px 4px rgba(60,46,40,0.10)', color: '#3A2E28' }
-                    : { color: '#7A6F66' }
+                    ? { background: '#fff', color: '#111', boxShadow: '0 1px 4px rgba(0,0,0,0.10)' }
+                    : { color: '#aaa' }
                   }
-                  title={mode === 'masonry' ? 'Masonry' : mode === 'grid' ? 'Grid' : 'List'}
                 >
-                  {mode === 'list' ? <Rows3 className="w-5 h-5" /> : <Grid3x3 className="w-5 h-5" />}
+                  {mode === 'list' ? <Rows3 className="w-4 h-4" /> : <Grid3x3 className="w-4 h-4" />}
                 </button>
               ))}
             </div>
           </div>
         </div>
 
-        {/* Template Books Section — dữ liệu từ Supabase bảng book_templates */}
-        <div className="mb-12">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: '#3A2E28' }}>
-              <Sparkles className="w-5 h-5" style={{ color: '#EDE9E3' }} />
+        {/* ── Template Section ─────────────────────────────────────────────── */}
+        <section className="space-y-6">
+          {/* Section header */}
+          <div className="flex items-start gap-3">
+            <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
+              style={{ background: '#111' }}>
+              <Sparkles className="w-4 h-4" style={{ color: '#f3e9d7' }} />
             </div>
             <div>
-              <h3 className="text-2xl font-bold" style={{ color: '#3A2E28' }}>Sách Mẫu Tham Khảo</h3>
-              <p className="text-sm" style={{ color: '#7A6F66' }}>Các mẫu sách đã được thiết kế sẵn nội dung chuyên nghiệp</p>
+              <h3 className="text-xl font-bold leading-tight" style={{ color: '#111' }}>Sách Mẫu Tham Khảo</h3>
+              <p className="text-sm mt-0.5" style={{ color: '#aaa' }}>
+                Các mẫu đã được thiết kế sẵn nội dung chuyên nghiệp
+              </p>
             </div>
-            {templatesLoading && <Loader2 className="w-5 h-5 animate-spin ml-2" style={{ color: '#9B9088' }} />}
+            {templatesLoading && <Loader2 className="w-4 h-4 animate-spin ml-1 mt-1 flex-shrink-0" style={{ color: '#ccc' }} />}
           </div>
 
-          {/* Skeleton loading */}
+          {/* Skeleton */}
           {templatesLoading && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {[1, 2, 3].map(i => (
-                <div key={i} className="rounded-2xl overflow-hidden border animate-pulse" style={{ background: '#F5F2EE', borderColor: '#DDD8D0' }}>
-                  <div className="h-56" style={{ background: '#EDE9E3' }} />
+                <div key={i} className="animate-pulse overflow-hidden"
+                  style={{ borderRadius: '20px', border: '1px solid #eeece9', background: '#fff' }}>
+                  <div className="h-52" style={{ background: '#f0ede8' }} />
                   <div className="p-5 space-y-3">
-                    <div className="h-5 rounded-lg" style={{ background: '#DDD8D0', width: '60%' }} />
-                    <div className="h-4 rounded-lg" style={{ background: '#EDE9E3', width: '90%' }} />
-                    <div className="h-4 rounded-lg" style={{ background: '#EDE9E3', width: '75%' }} />
+                    <div className="h-4 rounded-lg" style={{ background: '#eee', width: '55%' }} />
+                    <div className="h-3 rounded-lg" style={{ background: '#f2f2f2', width: '90%' }} />
+                    <div className="h-3 rounded-lg" style={{ background: '#f2f2f2', width: '70%' }} />
+                    <div className="h-9 rounded-xl mt-4" style={{ background: '#eee' }} />
                   </div>
                 </div>
               ))}
             </div>
           )}
 
-          {/* Error state */}
+          {/* Error */}
           {!templatesLoading && templatesError && (
-            <div className="rounded-2xl p-6 text-center border" style={{ background: '#FFF5F5', borderColor: '#FECACA' }}>
-              <p className="text-sm font-medium mb-1" style={{ color: '#B91C1C' }}>⚠️ Không thể tải mẫu sách từ Supabase</p>
-              <p className="text-xs" style={{ color: '#9B9088' }}>{templatesError}</p>
+            <div className="p-5 text-center rounded-2xl" style={{ background: '#fff5f5', border: '1px solid #fecaca' }}>
+              <p className="text-sm font-medium" style={{ color: '#b91c1c' }}>⚠️ Không thể tải mẫu sách</p>
+              <p className="text-xs mt-1" style={{ color: '#aaa' }}>{templatesError}</p>
             </div>
           )}
 
-          {/* Empty state */}
+          {/* Empty */}
           {!templatesLoading && !templatesError && supabaseTemplates.length === 0 && (
-            <div className="rounded-2xl p-8 text-center border" style={{ background: '#F5F2EE', borderColor: '#DDD8D0' }}>
-              <p className="text-sm" style={{ color: '#9B9088' }}>Chưa có mẫu sách nào. Vui lòng thêm dữ liệu vào bảng <code>book_templates</code> trên Supabase.</p>
+            <div className="p-8 text-center rounded-2xl" style={{ background: '#faf8f5', border: '1px dashed #e0dbd3' }}>
+              <BookOpen className="w-10 h-10 mx-auto mb-3" style={{ color: '#ddd' }} />
+              <p className="text-sm" style={{ color: '#bbb' }}>
+                Chưa có mẫu sách. Thêm dữ liệu vào bảng <code className="text-xs px-1 py-0.5 rounded" style={{ background: '#f0ede8' }}>book_templates</code> trên Supabase.
+              </p>
             </div>
           )}
 
-          {/* Supabase data — field mapping: name, description, cover_image_url, price, theme */}
+          {/* Template grid */}
           {!templatesLoading && !templatesError && supabaseTemplates.length > 0 && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {supabaseTemplates.map((tpl) => {
-                const themeKey = (tpl.theme || 'love') as keyof typeof themeData;
-                const td = themeData[themeKey] ?? themeData['love'];
-                return (
-                  <div
-                    key={tpl.id}
-                    className="group rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all border flex flex-col hover:-translate-y-0.5"
-                    style={{ background: '#FFFFFF', borderColor: '#DDD8D0' }}
-                  >
-                    {/* Ảnh bìa — field: cover_image_url */}
-                    <div className="relative h-56 overflow-hidden flex-shrink-0" style={{ background: '#EDE9E3' }}>
-                      {tpl.cover_image_url ? (
-                        <img
-                          src={tpl.cover_image_url}
-                          alt={tpl.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                      ) : (
-                        <div className={`w-full h-full flex items-center justify-center bg-gradient-to-br ${td.color}`}>
-                          <span className="text-6xl opacity-60">{td.emoji}</span>
-                        </div>
-                      )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                      <div className="absolute top-3 right-3 px-3 py-1 text-white text-xs font-bold rounded-full shadow-lg" style={{ background: '#3A2E28' }}>
-                        MẪU
-                      </div>
-                      <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-semibold shadow-lg" style={{ background: 'rgba(250,250,248,0.92)', color: '#3A2E28' }}>
-                        {td.emoji} {td.name}
-                      </div>
-                      {/* Giá — field: price */}
-                      {tpl.price != null && (
-                        <div className="absolute bottom-3 right-3 px-3 py-1 rounded-full text-xs font-bold shadow-lg" style={{ background: 'rgba(250,250,248,0.92)', color: '#3A2E28' }}>
-                          {tpl.price.toLocaleString('vi-VN')}đ
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="p-5 flex flex-col flex-grow">
-                      {/* Tiêu đề — field: name */}
-                      <h4 className="font-bold text-xl mb-2 line-clamp-1" style={{ color: '#3A2E28' }}>{tpl.name}</h4>
-                      {/* Mô tả — field: description */}
-                      <div className="h-16 mb-4">
-                        {tpl.description && (
-                          <p className="text-sm line-clamp-3 leading-relaxed" style={{ color: '#7A6F66' }}>
-                            {tpl.description}
-                          </p>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-2 text-xs mb-4" style={{ color: '#9B9088' }}>
-                        <FileText className="w-4 h-4" />
-                        <span>{tpl.page_count ?? '—'} trang</span>
-                        <span style={{ color: '#C8C2BA' }}>•</span>
-                        <span>Nội dung đầy đủ</span>
-                      </div>
-                      <div className="flex gap-2 mt-auto">
-                        <button
-                          onClick={() => onCreateNew()}
-                          className="flex-1 px-4 py-3 rounded-xl text-sm font-bold transition-all flex items-center justify-center"
-                          style={{ background: '#3A2E28', color: '#FAFAF8' }}
-                          onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = '#1C1715')}
-                          onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#3A2E28')}
-                        >
-                          Dùng mẫu này
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+              {supabaseTemplates.map(tpl => <TemplateCard key={tpl.id} tpl={tpl} />)}
             </div>
           )}
-        </div>
+        </section>
 
-        {/* User's Books Section */}
-        <div ref={userBooksSectionRef} className="mb-6">
-          <h3 className="text-2xl font-bold mb-6" style={{ color: '#3A2E28' }}>Sách Của Bạn</h3>
-        </div>
-
-        {/* Books Grid/Masonry/List */}
-        {filteredBooks.length === 0 ? (
-          <div className="text-center py-20">
-            <div className="w-24 h-24 mx-auto mb-6 rounded-3xl flex items-center justify-center" style={{ background: '#EDE9E3' }}>
-              <FileText className="w-12 h-12" style={{ color: '#9B9088' }} />
+        {/* ── User Books Section ───────────────────────────────────────────── */}
+        <section ref={userBooksSectionRef} className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-start gap-3">
+              <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
+                style={{ background: '#111' }}>
+                <BookOpen className="w-4 h-4" style={{ color: '#f3e9d7' }} />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold" style={{ color: '#111' }}>Sách Của Bạn</h3>
+                <p className="text-sm mt-0.5" style={{ color: '#aaa' }}>
+                  {filteredBooks.length} cuốn{filteredBooks.length !== books.length ? ` / ${books.length} tổng` : ''}
+                </p>
+              </div>
             </div>
-            <h3 className="text-2xl font-bold mb-2" style={{ color: '#3A2E28' }}>
-              {searchQuery || filterTheme !== 'all' 
-                ? 'Không tìm thấy sách nào'
-                : 'Chưa có cuốn sách nào'
-              }
-            </h3>
-            <p className="mb-6" style={{ color: '#7A6F66' }}>
-              {searchQuery || filterTheme !== 'all'
-                ? 'Thử thay đổi bộ lọc hoặc tìm kiếm'
-                : 'Bắt đầu tạo cuốn sách đầu tiên của bạn'
-              }
-            </p>
-            {!searchQuery && filterTheme === 'all' && (
-              <button
-                onClick={onCreateNew}
-                className="px-8 py-3 rounded-xl font-bold transition-all"
-                style={{ background: '#3A2E28', color: '#FAFAF8' }}
-                onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = '#1C1715')}
-                onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#3A2E28')}
-              >
-                Tạo sách mới
-              </button>
-            )}
           </div>
-        ) : (
-          <div
-            className={
+
+          {/* Empty state */}
+          {filteredBooks.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <div className="w-20 h-20 rounded-3xl flex items-center justify-center mb-5"
+                style={{ background: '#f0ede8' }}>
+                <FileText className="w-9 h-9" style={{ color: '#ccc' }} />
+              </div>
+              <h4 className="text-xl font-bold mb-2" style={{ color: '#222' }}>
+                {searchQuery || filterTheme !== 'all' ? 'Không tìm thấy sách nào' : 'Chưa có cuốn sách nào'}
+              </h4>
+              <p className="text-sm mb-6" style={{ color: '#aaa' }}>
+                {searchQuery || filterTheme !== 'all'
+                  ? 'Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm'
+                  : 'Bắt đầu hành trình tạo sách cá nhân hóa của bạn'}
+              </p>
+              {!searchQuery && filterTheme === 'all' && (
+                <button
+                  onClick={onCreateNew}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold transition-all hover:opacity-80"
+                  style={{ background: '#111', color: '#fff' }}
+                >
+                  <Plus className="w-4 h-4" /> Tạo sách mới
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className={
               viewMode === 'masonry'
                 ? 'columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6'
                 : viewMode === 'grid'
                 ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'
                 : 'space-y-4'
-            }
-          >
-            {filteredBooks.map((book) => (
-              <div key={book.id} className={viewMode === 'masonry' ? 'break-inside-avoid' : ''}>
-                <BookCard book={book} />
-              </div>
-            ))}
-          </div>
-        )}
+            }>
+              {filteredBooks.map(book => (
+                <div key={book.id} className={viewMode === 'masonry' ? 'break-inside-avoid' : ''}>
+                  <BookCard book={book} />
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
 
-        {/* Stats Footer */}
+        {/* ── Stats Footer ─────────────────────────────────────────────────── */}
         {books.length > 0 && (
-          <div className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <section
+            className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-1"
+          >
             {Object.entries(themeData).map(([key, data]) => {
               const count = books.filter(b => b.theme === key).length;
               return (
                 <div
                   key={key}
-                  className="rounded-2xl p-4 text-center border"
-                  style={{ background: 'rgba(255,255,255,0.80)', backdropFilter: 'blur(8px)', borderColor: '#DDD8D0' }}
+                  className="flex flex-col items-center justify-center p-5 text-center transition-all hover:-translate-y-0.5"
+                  style={{
+                    background: '#fff',
+                    borderRadius: '16px',
+                    border: '1px solid #eeece9',
+                    boxShadow: '0 1px 6px rgba(0,0,0,0.04)',
+                  }}
                 >
-                  <div className="text-3xl mb-2">{data.emoji}</div>
-                  <div className="text-2xl font-bold" style={{ color: '#3A2E28' }}>{count}</div>
-                  <div className="text-sm" style={{ color: '#7A6F66' }}>{data.name}</div>
+                  <div className="text-2xl mb-2">{data.emoji}</div>
+                  <div className="text-2xl font-bold leading-none" style={{ color: '#111' }}>{count}</div>
+                  <div className="text-xs mt-1" style={{ color: '#aaa' }}>{data.name}</div>
                 </div>
               );
             })}
-          </div>
+          </section>
         )}
       </div>
 
-      {/* Test 3D Button */}
+      {/* Floating elements */}
       <Test3DButton />
 
-      {/* FlipBook Reader Modal */}
       {show3DBook && (
-        <FlipBookReader
-          book={show3DBook}
-          onClose={() => setShow3DBook(null)}
-        />
+        <FlipBookReader book={show3DBook} onClose={() => setShow3DBook(null)} />
       )}
 
-      {/* Delete Confirmation Dialog */}
       <DeleteConfirmDialog
         isOpen={deleteDialog.isOpen}
         bookTitle={deleteDialog.bookTitle}
@@ -612,5 +678,27 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
         onCancel={handleDeleteCancel}
       />
     </div>
+  );
+}
+
+// ── Tiny helper component ────────────────────────────────────────────────────
+function ActionBtn({
+  onClick, title, icon, dark, danger
+}: {
+  onClick: () => void; title: string; icon: ReactNode; dark?: boolean; danger?: boolean;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      title={title}
+      className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+      style={{
+        background: danger ? '#b45d5d' : dark ? '#111' : '#fff',
+        color: (dark || danger) ? '#fff' : '#111',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.18)',
+      }}
+    >
+      {icon}
+    </button>
   );
 }

@@ -4,7 +4,7 @@ export function FeatureShowcase() {
   return (
     <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-3xl p-8 shadow-xl border border-blue-200">
       <h2 className="text-2xl font-bold text-center mb-8 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-        ✨ Tính năng DearBook
+        ✨ Tính năng DearMemories
       </h2>
 
       <div className="grid md:grid-cols-2 gap-6">

@@ -24,7 +24,7 @@ public class AuthService {
     private final String googleClientId;
 
     public AuthService(ProfileRepository profileRepository, JwtProvider jwtProvider,
-                       @Value("${google.client-id}") String googleClientId) {
+                       @Value("${google.client-id:dummy-client-id}") String googleClientId) {
         this.profileRepository = profileRepository;
         this.jwtProvider = jwtProvider;
         this.googleClientId = googleClientId;

@@ -103,9 +103,14 @@ export function MyBooksLibrary({ user, onLogout, onCreateNew, onEditBook }: MyBo
               <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-rose-400 to-amber-400 flex items-center justify-center shadow-lg">
                 <BookHeart className="w-6 h-6 text-white" />
               </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-800">DearBook</h1>
-                <p className="text-sm text-gray-600">Sách tặng ý nghĩa</p>
+              <div className="flex flex-col justify-center" style={{ height: '32px', overflow: 'visible' }}>
+                <img 
+                  src="/logo.png" 
+                  alt="dearmemories" 
+                  className="object-contain block" 
+                  style={{ height: '76px', margin: '-20px 0' }}
+                />
+                <p className="text-xs text-gray-600" style={{ marginTop: '-18px' }}>Sách tặng ý nghĩa</p>
               </div>
             </div>
 

@@ -418,7 +418,7 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
           {
             id: 'cover-brand',
             type: 'text',
-            content: 'DearBook',
+            content: 'DearMemories',
             x: 24,
             y: 560,
             width: 160,
@@ -544,7 +544,7 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
           {
             id: 'back-brand',
             type: 'text',
-            content: 'DearBook',
+            content: 'DearMemories',
             x: 64,
             y: 192,
             width: 272,

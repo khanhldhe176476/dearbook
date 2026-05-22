@@ -263,7 +263,11 @@ export async function getImageDimensions(
  */
 export function storeImage(dataUrl: string): string {
   const key = `dearbook_image_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  localStorage.setItem(key, dataUrl);
+  try {
+    localStorage.setItem(key, dataUrl);
+  } catch (err) {
+    console.warn('Failed to save to localStorage:', err);
+  }
   return key;
 }
 

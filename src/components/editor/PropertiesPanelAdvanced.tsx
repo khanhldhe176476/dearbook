@@ -60,7 +60,7 @@ export function PropertiesPanelAdvanced({
         <button
           onClick={() => toggleSection(id)}
           className="w-full px-4 py-3 flex items-center justify-between hover:bg-opacity-50 transition-colors"
-          style={{ background: isExpanded ? '#F5F2EE' : 'transparent', color: '#3A2E28' }}
+          style={{ background: isExpanded ? '#F5F2EE' : 'transparent', color: '#000000' }}
         >
           <div className="flex items-center gap-2">
             <Icon className="w-4 h-4" style={{ color: '#7A6F66' }} />
@@ -91,7 +91,7 @@ export function PropertiesPanelAdvanced({
               style={{ 
                 borderColor: '#DDD8D0',
                 background: '#FFFFFF',
-                color: '#3A2E28'
+                color: '#000000'
               }}
               onFocus={(e) => e.target.style.borderColor = '#8C6E5D'}
               onBlur={(e) => e.target.style.borderColor = '#DDD8D0'}
@@ -113,7 +113,7 @@ export function PropertiesPanelAdvanced({
               style={{ 
                 borderColor: '#DDD8D0',
                 background: '#FFFFFF',
-                color: '#3A2E28'
+                color: '#000000'
               }}
               onFocus={(e) => e.target.style.borderColor = '#8C6E5D'}
               onBlur={(e) => e.target.style.borderColor = '#DDD8D0'}
@@ -260,7 +260,7 @@ export function PropertiesPanelAdvanced({
                 style={{ 
                   borderColor: '#DDD8D0',
                   background: '#FFFFFF',
-                  color: '#3A2E28'
+                  color: '#000000'
                 }}
                 placeholder="#000000"
               />
@@ -268,7 +268,7 @@ export function PropertiesPanelAdvanced({
             
             {/* Quick Color Palette */}
             <div className="grid grid-cols-6 gap-2">
-              {['#3A2E28', '#7A6F66', '#8C6E5D', '#5A5049', '#1C1715', '#9B9088',
+              {['#000000', '#7A6F66', '#8C6E5D', '#5A5049', '#000000', '#9B9088',
                 '#EF4444', '#F59E0B', '#10B981', '#3B82F6', '#8B5CF6', '#EC4899',
                 '#FFFFFF', '#F5F2EE', '#EDE9E3', '#DDD8D0', '#000000', '#6B7280'
               ].map((color) => (
@@ -341,7 +341,7 @@ export function PropertiesPanelAdvanced({
                 style={{ 
                   borderColor: '#DDD8D0',
                   background: '#FFFFFF',
-                  color: '#3A2E28'
+                  color: '#000000'
                 }}
               />
             </div>
@@ -355,7 +355,7 @@ export function PropertiesPanelAdvanced({
                 style={{ 
                   borderColor: '#DDD8D0',
                   background: '#FFFFFF',
-                  color: '#3A2E28'
+                  color: '#000000'
                 }}
               />
             </div>
@@ -369,7 +369,7 @@ export function PropertiesPanelAdvanced({
                 style={{ 
                   borderColor: '#DDD8D0',
                   background: '#FFFFFF',
-                  color: '#3A2E28'
+                  color: '#000000'
                 }}
               />
             </div>
@@ -383,7 +383,7 @@ export function PropertiesPanelAdvanced({
                 style={{ 
                   borderColor: '#DDD8D0',
                   background: '#FFFFFF',
-                  color: '#3A2E28'
+                  color: '#000000'
                 }}
               />
             </div>
@@ -445,7 +445,7 @@ export function PropertiesPanelAdvanced({
               style={{ 
                 borderColor: '#DDD8D0',
                 background: '#FFFFFF',
-                color: '#3A2E28'
+                color: '#000000'
               }}
             >
               <option value="cover">Lấp đầy</option>
@@ -464,7 +464,7 @@ export function PropertiesPanelAdvanced({
                 value={Math.round(imgEl.x)}
                 onChange={(e) => handleUpdate({ x: parseInt(e.target.value) })}
                 className="w-full px-3 py-2 border rounded-lg"
-                style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#3A2E28' }}
+                style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#000000' }}
               />
             </div>
             <div>
@@ -474,7 +474,7 @@ export function PropertiesPanelAdvanced({
                 value={Math.round(imgEl.y)}
                 onChange={(e) => handleUpdate({ y: parseInt(e.target.value) })}
                 className="w-full px-3 py-2 border rounded-lg"
-                style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#3A2E28' }}
+                style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#000000' }}
               />
             </div>
             <div>
@@ -484,7 +484,7 @@ export function PropertiesPanelAdvanced({
                 value={Math.round(imgEl.width)}
                 onChange={(e) => handleUpdate({ width: parseInt(e.target.value) })}
                 className="w-full px-3 py-2 border rounded-lg"
-                style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#3A2E28' }}
+                style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#000000' }}
               />
             </div>
             <div>
@@ -494,7 +494,7 @@ export function PropertiesPanelAdvanced({
                 value={Math.round(imgEl.height)}
                 onChange={(e) => handleUpdate({ height: parseInt(e.target.value) })}
                 className="w-full px-3 py-2 border rounded-lg"
-                style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#3A2E28' }}
+                style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#000000' }}
               />
             </div>
           </div>
@@ -567,13 +567,13 @@ export function PropertiesPanelAdvanced({
                 value={shapeEl.fill || '#FF6B6B'}
                 onChange={(e) => handleUpdate({ fill: e.target.value })}
                 className="flex-1 px-3 py-2 border rounded-lg text-xs font-mono"
-                style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#3A2E28' }}
+                style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#000000' }}
               />
             </div>
             
             <div className="grid grid-cols-6 gap-2">
               {['#EF4444', '#F59E0B', '#10B981', '#3B82F6', '#8B5CF6', '#EC4899',
-                '#8C6E5D', '#7A6F66', '#5A5049', '#3A2E28', '#1C1715', '#9B9088'
+                '#8C6E5D', '#7A6F66', '#5A5049', '#000000', '#000000', '#9B9088'
               ].map((color) => (
                 <button
                   key={color}
@@ -593,19 +593,19 @@ export function PropertiesPanelAdvanced({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>X</label>
-              <input type="number" value={Math.round(shapeEl.x)} onChange={(e) => handleUpdate({ x: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#3A2E28' }} />
+              <input type="number" value={Math.round(shapeEl.x)} onChange={(e) => handleUpdate({ x: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#000000' }} />
             </div>
             <div>
               <label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Y</label>
-              <input type="number" value={Math.round(shapeEl.y)} onChange={(e) => handleUpdate({ y: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#3A2E28' }} />
+              <input type="number" value={Math.round(shapeEl.y)} onChange={(e) => handleUpdate({ y: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#000000' }} />
             </div>
             <div>
               <label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Rộng</label>
-              <input type="number" value={Math.round(shapeEl.width)} onChange={(e) => handleUpdate({ width: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#3A2E28' }} />
+              <input type="number" value={Math.round(shapeEl.width)} onChange={(e) => handleUpdate({ width: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#000000' }} />
             </div>
             <div>
               <label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Cao</label>
-              <input type="number" value={Math.round(shapeEl.height)} onChange={(e) => handleUpdate({ height: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#3A2E28' }} />
+              <input type="number" value={Math.round(shapeEl.height)} onChange={(e) => handleUpdate({ height: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#000000' }} />
             </div>
           </div>
 
@@ -631,10 +631,10 @@ export function PropertiesPanelAdvanced({
       {(element.type === 'sticker' || element.type === 'icon' || element.type === 'frame') && (
         <Section id="position" title="Vị trí & Kích thước" icon={Settings}>
           <div className="grid grid-cols-2 gap-3">
-            <div><label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>X</label><input type="number" value={Math.round(element.x)} onChange={(e) => handleUpdate({ x: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#3A2E28' }} /></div>
-            <div><label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Y</label><input type="number" value={Math.round(element.y)} onChange={(e) => handleUpdate({ y: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#3A2E28' }} /></div>
-            <div><label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Rộng</label><input type="number" value={Math.round(element.width)} onChange={(e) => handleUpdate({ width: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#3A2E28' }} /></div>
-            <div><label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Cao</label><input type="number" value={Math.round(element.height)} onChange={(e) => handleUpdate({ height: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#3A2E28' }} /></div>
+            <div><label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>X</label><input type="number" value={Math.round(element.x)} onChange={(e) => handleUpdate({ x: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#000000' }} /></div>
+            <div><label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Y</label><input type="number" value={Math.round(element.y)} onChange={(e) => handleUpdate({ y: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#000000' }} /></div>
+            <div><label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Rộng</label><input type="number" value={Math.round(element.width)} onChange={(e) => handleUpdate({ width: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#000000' }} /></div>
+            <div><label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Cao</label><input type="number" value={Math.round(element.height)} onChange={(e) => handleUpdate({ height: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#000000' }} /></div>
           </div>
         </Section>
       )}

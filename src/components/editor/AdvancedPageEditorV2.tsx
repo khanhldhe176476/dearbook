@@ -167,6 +167,8 @@ export function AdvancedPageEditorV2({
     startWidth: number;
     startHeight: number;
   } | null>(null);
+  // Track which upload slot is being hovered during external drag (from library)
+  const [dragOverSlotId, setDragOverSlotId] = useState<string | null>(null);
 
   // Check if current page is cover
   const isCoverPage = currentPageIndex === 0 || currentPage?.id === 'cover';
@@ -185,8 +187,30 @@ export function AdvancedPageEditorV2({
   };
 
   const canvasRef = useRef<HTMLDivElement>(null);
+  // ✅ Global rule: hidden file input for click-to-fill upload slots
+  const slotFileInputRef = useRef<HTMLInputElement>(null);
+  const pendingSlotIdRef = useRef<string | null>(null);
   const PAGE_WIDTH = 400;
   const PAGE_HEIGHT = 600;
+
+  // Called when user selects a file after clicking an upload slot
+  const handleSlotFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    const slotId = pendingSlotIdRef.current;
+    if (!file || !slotId) return;
+
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const src = ev.target?.result as string;
+      // Fill the slot: set src, enforce cover fit
+      handleUpdateElement(slotId, { src, objectFit: 'cover' });
+      toast.success('✅ Ảnh đã được fit vào khung!');
+    };
+    reader.readAsDataURL(file);
+    // Reset so same file can be re-selected
+    e.target.value = '';
+    pendingSlotIdRef.current = null;
+  };
 
   // Syncing is now handled during render above for better performance
 
@@ -534,6 +558,117 @@ export function AdvancedPageEditorV2({
     setResizingElement(null);
   };
 
+  // ─── Drop-Into-Frame: Universal rule for all templates ───────────────────────
+  // When an image is dragged from the AssetLibrary onto the canvas:
+  //   1. Check if the drop point hits an isUploadSlot element
+  //   2. If YES → set the slot's src to the dragged image (auto-fit cover)
+  //   3. If NO  → add a new free-floating image element as before
+  const handleCanvasDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy';
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = (e.clientX - rect.left) / zoom;
+    const mouseY = (e.clientY - rect.top) / zoom;
+
+    // Find topmost upload slot under cursor
+    const slotUnder = [...elements]
+      .filter((el): el is ImageElement => el.type === 'image' && !!(el as any).isUploadSlot)
+      .sort((a, b) => b.zIndex - a.zIndex)
+      .find(el => {
+        const imgEl = el as ImageElement;
+        return (
+          mouseX >= imgEl.x &&
+          mouseX <= imgEl.x + imgEl.width &&
+          mouseY >= imgEl.y &&
+          mouseY <= imgEl.y + imgEl.height
+        );
+      });
+
+    setDragOverSlotId(slotUnder ? slotUnder.id : null);
+  };
+
+  const handleCanvasDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setDragOverSlotId(null);
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = (e.clientX - rect.left) / zoom;
+    const mouseY = (e.clientY - rect.top) / zoom;
+
+    // Find topmost upload slot under drop point
+    const slotUnder = [...elements]
+      .filter((el): el is ImageElement => el.type === 'image' && !!(el as any).isUploadSlot)
+      .sort((a, b) => b.zIndex - a.zIndex)
+      .find(el => {
+        const imgEl = el as ImageElement;
+        return (
+          mouseX >= imgEl.x &&
+          mouseX <= imgEl.x + imgEl.width &&
+          mouseY >= imgEl.y &&
+          mouseY <= imgEl.y + imgEl.height
+        );
+      });
+
+    // Handle OS file drop first
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const file = e.dataTransfer.files[0];
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const fileSrc = ev.target?.result as string;
+          if (slotUnder) {
+            handleUpdateElement(slotUnder.id, { src: fileSrc, objectFit: 'cover' });
+            toast.success('✅ Ảnh đã được fit vào khung!');
+          } else {
+            handleAddElement('image', {
+              src: fileSrc,
+              objectFit: 'cover',
+              x: Math.max(0, mouseX - 100),
+              y: Math.max(0, mouseY - 100),
+              width: 200,
+              height: 200,
+              rotation: 0,
+              opacity: 1,
+            });
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+      return;
+    }
+
+    // Handle internal drag from asset library
+    const src = e.dataTransfer.getData('application/dearbook-image-src');
+    if (!src) return;
+
+    if (slotUnder) {
+      // ✅ Drop into frame: replace slot src, keep frame dimensions
+      handleUpdateElement(slotUnder.id, {
+        src,
+        objectFit: 'cover',
+      });
+      toast.success('✅ Ảnh đã được fit vào khung!');
+    } else {
+      // Drop onto empty canvas area → add as new free-floating element
+      handleAddElement('image', {
+        src,
+        objectFit: 'cover',
+        x: Math.max(0, mouseX - 100),
+        y: Math.max(0, mouseY - 100),
+        width: 200,
+        height: 200,
+        rotation: 0,
+        opacity: 1,
+      });
+    }
+  };
+  // ─────────────────────────────────────────────────────────────────────────────
+
   const handleResizeStart = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
     const element = elements.find((el) => el.id === id);
@@ -574,12 +709,13 @@ export function AdvancedPageEditorV2({
       height: element.height * zoom,
       transform,
       opacity: element.opacity,
+      zIndex: element.zIndex,
       cursor: element.locked ? 'not-allowed' : (isEditing ? 'text' : 'move'),
       display: element.visible ? 'block' : 'none',
       pointerEvents: element.locked ? ('none' as const) : ('auto' as const),
-      border: isSelected ? '2px solid #8C6E5D' : 'none',
-      boxShadow: isSelected ? '0 0 0 3px rgba(140,110,93,0.2)' : 'none',
-      borderRadius: isSelected ? '4px' : '0',
+      outline: isSelected ? '2px solid #C4956A' : 'none',
+      outlineOffset: '-2px',
+      borderRadius: (element as any).borderRadius || 0,
     };
 
     const resizeHandle = isSelected && !element.locked && element.type !== 'text' ? (
@@ -686,21 +822,91 @@ export function AdvancedPageEditorV2({
 
       case 'image':
         const imgEl = element as ImageElement;
-        const imgSrc = imgEl.src.startsWith('dearbook_image_')
-          ? localStorage.getItem(imgEl.src) || imgEl.src
-          : imgEl.src;
+        const isUploadSlot = !!(imgEl as any).isUploadSlot;
+        const isDragTarget = dragOverSlotId === element.id;
+        const imgSrc = imgEl.src
+          ? (imgEl.src.startsWith('dearbook_image_')
+            ? localStorage.getItem(imgEl.src) || imgEl.src
+            : imgEl.src)
+          : '';
         content = (
-          <div style={commonStyle} onMouseDown={(e) => handleMouseDown(e, element.id)}>
-            <img
-              src={imgSrc}
-              alt={imgEl.alt || 'Image'}
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: imgEl.objectFit,
-                pointerEvents: 'none',
-              }}
-            />
+          <div
+            className={isUploadSlot ? "image-frame" : ""}
+            style={{
+              ...commonStyle,
+              // ✅ GLOBAL RULE: always clip image to its frame bounds
+              overflow: 'hidden',
+              // Highlight upload slots during drag-over
+              outline: isDragTarget
+                ? '3px solid #C4956A'
+                : isUploadSlot && !imgSrc
+                ? 'none'
+                : commonStyle.outline,
+              border: 'none',
+              background: isUploadSlot && !imgSrc
+                ? (isDragTarget ? '#DCD4CB' : '#EAE6DF')
+                : 'transparent',
+              // Upload slots show pointer when empty
+              cursor: isUploadSlot && !imgSrc ? 'pointer' : (element.locked ? 'not-allowed' : 'move'),
+            }}
+            onMouseDown={(e) => {
+              // ✅ If it's an empty upload slot, open file picker on click instead of drag
+              if (isUploadSlot && !imgSrc) {
+                e.stopPropagation();
+                pendingSlotIdRef.current = element.id;
+                slotFileInputRef.current?.click();
+              } else {
+                handleMouseDown(e, element.id);
+              }
+            }}
+            // ✅ If slot already has image, double-click to replace
+            onDoubleClick={(e) => {
+              if (isUploadSlot && imgSrc) {
+                e.stopPropagation();
+                pendingSlotIdRef.current = element.id;
+                slotFileInputRef.current?.click();
+              }
+            }}
+          >
+            {imgSrc ? (
+              <img
+                src={imgSrc}
+                alt={(imgEl as any).alt || (imgEl as any).uploadLabel || 'Image'}
+                style={{
+                  // ✅ GLOBAL RULE: absolute fill ensures 100% coverage regardless of zoom
+                  position: 'absolute',
+                  inset: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: isUploadSlot ? 'cover' : (imgEl.objectFit || 'cover'),
+                  objectPosition: 'center',
+                  pointerEvents: 'none',
+                  display: 'block',
+                }}
+              />
+            ) : isUploadSlot ? (
+              // Empty upload slot placeholder
+              <div style={{
+                position: 'absolute',
+                inset: 0,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                color: isDragTarget ? '#8C6E5D' : '#8D96A0', // Canva gray
+                transition: 'all 0.2s ease',
+              }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/>
+                  <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+                <span style={{ fontSize: '11px', fontWeight: 500, textAlign: 'center', padding: '0 4px', fontFamily: 'var(--font-secondary), sans-serif' }}>
+                  {isDragTarget ? '↓ Thả ảnh vào đây' : ((imgEl as any).uploadLabel || 'Click tải ảnh')}
+                </span>
+              </div>
+            ) : null}
             {resizeHandle}
           </div>
         );
@@ -779,6 +985,14 @@ export function AdvancedPageEditorV2({
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      {/* ✅ Global hidden file input for click-to-fill upload slots */}
+      <input
+        ref={slotFileInputRef}
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        className="hidden"
+        onChange={handleSlotFileChange}
+      />
       {/* Left Sidebar - Asset Library (Desktop only) */}
       {!isMobile && showAssetLibrary && (
         <div className="w-72 bg-white border-r border-gray-200 overflow-y-auto animate-in slide-in-from-left duration-200">
@@ -898,10 +1112,15 @@ export function AdvancedPageEditorV2({
                 : 'none',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
             }}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
+            // ✅ Drop-Into-Frame handlers
+            onDragOver={handleCanvasDragOver}
+            onDragLeave={() => setDragOverSlotId(null)}
+            onDrop={handleCanvasDrop}
           >
             {/* Grid */}
             {gridVisible && (

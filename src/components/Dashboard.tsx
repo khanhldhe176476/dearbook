@@ -20,8 +20,8 @@ const N = {
   stone:      '#9B9088',
   taupe:      '#7A6F66',
   taupeDark:  '#5A5049',
-  espresso:   '#3A2E28',
-  ink:        '#1C1715',
+  espresso:   '#000000',
+  ink:        '#000000',
   accent:     '#8C6E5D',
 };
 
@@ -74,16 +74,14 @@ export function Dashboard({ user, onLogout, onCreateBook, onEditBook }: Dashboar
       >
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center gap-3">
-            <div
-              className="w-11 h-11 rounded-xl flex items-center justify-center"
-              style={{ background: N.espresso }}
-            >
-              <BookHeart className="w-5 h-5" style={{ color: N.sandLight }} />
-            </div>
-            <div>
-              <h1 className="font-handwriting text-2xl" style={{ color: N.espresso }}>DearBook</h1>
-              <p className="text-xs" style={{ color: N.stone }}>Thiết kế sách cá nhân hoá</p>
+          <div className="flex items-center">
+            <div className="flex flex-col justify-center" style={{ height: '40px', overflow: 'visible' }}>
+              <img 
+                src="/logo.png" 
+                alt="dearmemories" 
+                className="object-contain block" 
+                style={{ height: '96px', margin: '-28px 0' }}
+              />
             </div>
           </div>
 

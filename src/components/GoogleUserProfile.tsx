@@ -1,6 +1,5 @@
 import { User } from '../App';
-import { useState, useRef, useEffect } from 'react';
-import { LogOut } from 'lucide-react';
+import { InteractiveLogoutButton } from './InteractiveLogoutButton';
 
 interface GoogleUserProfileProps {
   user: User;
@@ -10,68 +9,49 @@ interface GoogleUserProfileProps {
 export function GoogleUserProfile({ user, onLogout }: GoogleUserProfileProps) {
   const googleUserStr = localStorage.getItem('google_user');
   const googleUser = googleUserStr ? JSON.parse(googleUserStr) : null;
+  const hasGooglePicture = googleUser && googleUser.picture;
 
-  if (googleUser && googleUser.picture) {
-    return (
-      <div className="flex items-center gap-3">
-        <div
-          className="flex items-center gap-3 px-3 py-2 rounded-2xl"
-          style={{ background: 'rgba(250,250,248,0.85)', backdropFilter: 'blur(8px)', border: '1px solid #DDD8D0' }}
-        >
+  return (
+    <div className="flex items-center gap-2">
+      {/* User Pill */}
+      <div
+        className="flex items-center gap-2.5 px-3 py-2 transition-all"
+        style={{
+          background: '#fff',
+          borderRadius: '999px',
+          border: '1px solid #e8e4de',
+          boxShadow: '0 1px 6px rgba(0,0,0,0.06)',
+        }}
+      >
+        {/* Avatar */}
+        {hasGooglePicture ? (
           <img
             src={googleUser.picture}
             alt={user.name}
-            className="w-9 h-9 rounded-full"
-            style={{ border: '2px solid #EDE9E3' }}
+            className="w-8 h-8 rounded-full flex-shrink-0"
+            style={{ border: '1.5px solid #e8e4de', objectFit: 'cover' }}
             referrerPolicy="no-referrer"
           />
-          <div className="hidden sm:block">
-            <p className="text-sm font-semibold" style={{ color: '#3A2E28' }}>{user.name}</p>
-            <p className="text-xs" style={{ color: '#9B9088' }}>{user.email}</p>
+        ) : (
+          <div
+            className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-bold"
+            style={{ background: '#111', color: '#f3e9d7' }}
+          >
+            {user.name.charAt(0).toUpperCase()}
           </div>
+        )}
+        {/* Name + email */}
+        <div className="hidden sm:block leading-none">
+          <p className="text-sm font-semibold leading-tight" style={{ color: '#111' }}>{user.name}</p>
+          <p className="text-xs mt-0.5" style={{ color: '#bbb' }}>{user.email}</p>
         </div>
-        <button
-          onClick={onLogout}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all"
-          style={{ background: '#EDE9E3', color: '#5A5049' }}
-          onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = '#DDD8D0')}
-          onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#EDE9E3')}
-        >
-          <LogOut className="w-4 h-4" />
-          <span className="hidden sm:inline">Đăng xuất</span>
-        </button>
       </div>
-    );
-  }
 
-  // Regular email/password user
-  return (
-    <div className="flex items-center gap-3">
-      <div
-        className="flex items-center gap-3 px-3 py-2 rounded-2xl"
-        style={{ background: 'rgba(250,250,248,0.85)', backdropFilter: 'blur(8px)', border: '1px solid #DDD8D0' }}
-      >
-        <div
-          className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm"
-          style={{ background: '#3A2E28', color: '#EDE9E3' }}
-        >
-          {user.name.charAt(0).toUpperCase()}
-        </div>
-        <div className="hidden sm:block">
-          <p className="text-sm font-semibold" style={{ color: '#3A2E28' }}>{user.name}</p>
-          <p className="text-xs" style={{ color: '#9B9088' }}>{user.email}</p>
-        </div>
-      </div>
-      <button
-        onClick={onLogout}
-        className="flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all"
-        style={{ background: '#EDE9E3', color: '#5A5049' }}
-        onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = '#DDD8D0')}
-        onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#EDE9E3')}
-      >
-        <LogOut className="w-4 h-4" />
-        <span className="hidden sm:inline">Đăng xuất</span>
-      </button>
+      {/* Logout button */}
+      <InteractiveLogoutButton 
+        onLogout={onLogout} 
+        variant="light" 
+      />
     </div>
   );
 }

@@ -37,10 +37,10 @@ public class AssetService {
     private final UserUploadRepository userUploadRepository;
     private final ProfileRepository profileRepository;
 
-    @Value("${app.aws.s3.bucket-name}")
+    @Value("${app.aws.s3.bucket-name:dummy-bucket}")
     private String bucketName;
-
-    @Value("${app.aws.s3.region}")
+ 
+    @Value("${app.aws.s3.region:ap-southeast-1}")
     private String region;
 
     public AssetService(S3Presigner s3Presigner, S3Client s3Client, UserUploadRepository userUploadRepository, ProfileRepository profileRepository) {

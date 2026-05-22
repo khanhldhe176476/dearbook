@@ -1,5 +1,6 @@
 import { BookPage } from '../App';
 import { romanticLoveTemplate } from './romanticLoveTemplate';
+import { youthArchiveTemplate } from './youthArchiveTemplate';
 
 // Template definitions with real images
 export interface Template {
@@ -150,7 +151,7 @@ function createMagazineCover(
       {
         id: 'cover-brand',
         type: 'text',
-        content: 'DearBook',
+        content: 'DearMemories',
         x: 30,
         y: 650,
         width: 200,
@@ -2859,7 +2860,10 @@ export const templates: Template[] = [
   },
   
   // Add new romantic love template with 10 pages
-  romanticLoveTemplate
+  romanticLoveTemplate,
+
+  // Youth Archive - scrapbook style template
+  youthArchiveTemplate,
 ];
 
 export function getTemplatesByTheme(theme: string): Template[] {

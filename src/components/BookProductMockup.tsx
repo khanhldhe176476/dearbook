@@ -274,7 +274,7 @@ export default function BookProductMockup({ bookData, onClose }: BookProductMock
             fontFamily: 'Poppins, sans-serif',
             letterSpacing: '1px'
           }}>
-            {bookData?.title || 'DEARBOOK'}
+            {bookData?.title || 'DEARMEMORIES'}
           </div>
         </div>
 
@@ -314,7 +314,7 @@ export default function BookProductMockup({ bookData, onClose }: BookProductMock
               fontFamily: 'Poppins, sans-serif',
               lineHeight: '1.6'
             }}>
-              Tạo bởi DearBook
+              Tạo bởi DearMemories
               <br />
               <span style={{ fontSize: '11px', opacity: 0.7 }}>Thiết kế sách cá nhân hoá</span>
             </div>

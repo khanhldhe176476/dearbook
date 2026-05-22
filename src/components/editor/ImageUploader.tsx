@@ -61,7 +61,11 @@ export function ImageUploader({
           } else {
             // Store in localStorage with unique key
             const imageKey = `dearbook_image_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-            localStorage.setItem(imageKey, dataUrl);
+            try {
+              localStorage.setItem(imageKey, dataUrl);
+            } catch (err) {
+              console.warn('Failed to save to localStorage:', err);
+            }
             onImageUpload(imageKey);
           }
 
@@ -120,7 +124,11 @@ export function ImageUploader({
   const handleCropComplete = (croppedImageUrl: string) => {
     // Store cropped image in localStorage
     const imageKey = `dearbook_image_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    localStorage.setItem(imageKey, croppedImageUrl);
+    try {
+      localStorage.setItem(imageKey, croppedImageUrl);
+    } catch (err) {
+      console.warn('Failed to save cropped image to localStorage:', err);
+    }
     onImageUpload(imageKey);
     setImageForCrop(null);
   };
