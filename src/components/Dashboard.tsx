@@ -74,21 +74,14 @@ export function Dashboard({ user, onLogout, onCreateBook, onEditBook }: Dashboar
       >
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center gap-3">
-            <div
-              className="w-11 h-11 rounded-xl flex items-center justify-center"
-              style={{ background: N.espresso }}
-            >
-              <BookHeart className="w-5 h-5" style={{ color: N.sandLight }} />
-            </div>
-            <div className="flex flex-col justify-center" style={{ height: '32px', overflow: 'visible' }}>
+          <div className="flex items-center">
+            <div className="flex flex-col justify-center" style={{ height: '40px', overflow: 'visible' }}>
               <img 
                 src="/logo.png" 
                 alt="dearmemories" 
                 className="object-contain block" 
-                style={{ height: '76px', margin: '-20px 0' }}
+                style={{ height: '96px', margin: '-28px 0' }}
               />
-              <p className="text-[10px] leading-none" style={{ color: N.stone, marginTop: '-18px' }}>Thiết kế sách cá nhân hoá</p>
             </div>
           </div>
 

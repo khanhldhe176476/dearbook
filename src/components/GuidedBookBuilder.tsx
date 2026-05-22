@@ -8,6 +8,7 @@ import { YouthArchiveEditor } from './builder/YouthArchiveEditor';
 import { Book3DPreviewPanel } from './builder/Book3DPreviewPanel';
 import { BeginnerTutorial } from './BeginnerTutorial';
 import { HelpPanel } from './HelpPanel';
+import { InteractiveLogoutButton } from './InteractiveLogoutButton';
 
 interface GuidedBookBuilderProps {
   user: User;
@@ -227,12 +228,13 @@ export function GuidedBookBuilder({
                     <p className="text-xs font-bold text-[#111] truncate">{user.name}</p>
                     <p className="text-[10px] text-[#9b9088] truncate">{user.email}</p>
                   </div>
-                  <button
-                    onClick={onLogout}
-                    className="w-full text-left px-3 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 flex items-center gap-1.5 transition-colors"
-                  >
-                    <LogOut className="w-3.5 h-3.5" /> Đăng xuất
-                  </button>
+                  <div className="w-full text-left text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors">
+                    <InteractiveLogoutButton 
+                      onLogout={onLogout}
+                      variant="ghost"
+                      className="w-full !justify-start px-3 py-2"
+                    />
+                  </div>
                 </div>
               </div>
             </div>

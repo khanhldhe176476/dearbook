@@ -1,5 +1,5 @@
 import { User } from '../App';
-import { LogOut } from 'lucide-react';
+import { InteractiveLogoutButton } from './InteractiveLogoutButton';
 
 interface GoogleUserProfileProps {
   user: User;
@@ -48,23 +48,10 @@ export function GoogleUserProfile({ user, onLogout }: GoogleUserProfileProps) {
       </div>
 
       {/* Logout button */}
-      <button
-        onClick={onLogout}
-        title="Đăng xuất"
-        className="flex items-center gap-1.5 px-3.5 py-2.5 text-sm font-medium transition-all hover:opacity-80 active:scale-95"
-        style={{
-          background: '#fff',
-          borderRadius: '999px',
-          border: '1px solid #e8e4de',
-          color: '#666',
-          boxShadow: '0 1px 6px rgba(0,0,0,0.06)',
-        }}
-        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#f5f2ee'; }}
-        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = '#fff'; }}
-      >
-        <LogOut className="w-4 h-4" />
-        <span className="hidden sm:inline">Đăng xuất</span>
-      </button>
+      <InteractiveLogoutButton 
+        onLogout={onLogout} 
+        variant="light" 
+      />
     </div>
   );
 }

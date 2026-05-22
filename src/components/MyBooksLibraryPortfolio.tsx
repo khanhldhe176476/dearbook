@@ -141,61 +141,66 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
 
     return (
       <div
-        className={`group relative flex flex-col overflow-hidden transition-all duration-300
-          hover:-translate-y-1.5 hover:shadow-2xl cursor-pointer
+        className={`group relative flex flex-col overflow-hidden transition-all duration-500
+          hover:-translate-y-2 hover:shadow-2xl cursor-pointer
           ${isHighlighted ? 'ring-2 ring-black/20 ring-offset-2' : ''}`}
         style={{
           background: '#ffffff',
-          borderRadius: '20px',
-          border: '1px solid #eeece9',
+          borderRadius: '24px',
+          border: '1px solid rgba(0,0,0,0.03)',
           boxShadow: isHighlighted
             ? '0 12px 48px rgba(0,0,0,0.16)'
-            : '0 2px 16px rgba(0,0,0,0.07)',
+            : '0 8px 30px rgba(0,0,0,0.04)',
         }}
       >
         {/* Cover */}
-        <div className={`relative h-48 flex-shrink-0 overflow-hidden bg-gradient-to-br ${theme.grad}`}>
+        <div className={`relative h-56 flex-shrink-0 overflow-hidden bg-gradient-to-br ${theme.grad}`}>
           {/* Pattern overlay */}
-          <div className="absolute inset-0 opacity-20"
+          <div className="absolute inset-0 opacity-[0.15] mix-blend-overlay"
             style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.3'%3E%3Ccircle cx='7' cy='7' r='2'/%3E%3Ccircle cx='37' cy='7' r='2'/%3E%3Ccircle cx='7' cy='37' r='2'/%3E%3Ccircle cx='37' cy='37' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Ccircle cx='7' cy='7' r='2'/%3E%3Ccircle cx='37' cy='7' r='2'/%3E%3Ccircle cx='7' cy='37' r='2'/%3E%3Ccircle cx='37' cy='37' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
             }}
           />
           {/* Dark gradient bottom */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-          {/* Content */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center px-5 text-center">
-            <div className="text-4xl mb-2.5 drop-shadow-lg">{theme.emoji}</div>
-            <h3 className="text-sm font-bold text-white drop-shadow-lg line-clamp-2 leading-snug px-2">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+          
+          {/* Glassmorphism Icon Container */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <div className="relative z-10 w-20 h-20 mb-3 flex items-center justify-center rounded-[1.5rem] bg-white/20 backdrop-blur-md shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/30 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3">
+              <span className="text-4xl drop-shadow-lg">{theme.emoji}</span>
+            </div>
+            <h3 className="text-sm font-bold text-white drop-shadow-lg line-clamp-2 leading-snug px-4 text-center z-10">
               {book.title || <span className="opacity-60 italic">Chưa đặt tên</span>}
             </h3>
           </div>
+
           {/* Status badge top-left */}
-          <div className="absolute top-3 left-3 flex gap-1.5">
+          <div className="absolute top-4 left-4 flex gap-1.5 z-20">
             {book.status === 'draft' && (
-              <span className="px-2 py-0.5 text-xs font-semibold rounded-full"
-                style={{ background: 'rgba(255,255,255,0.90)', color: '#666', backdropFilter: 'blur(4px)' }}>
+              <span className="px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-full"
+                style={{ background: 'rgba(255,255,255,0.95)', color: '#666', backdropFilter: 'blur(8px)', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}>
                 Nháp
               </span>
             )}
             {book.status === 'completed' && (
-              <span className="px-2 py-0.5 text-xs font-semibold rounded-full"
-                style={{ background: 'rgba(34,197,94,0.90)', color: '#fff' }}>
+              <span className="px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-full flex items-center gap-1"
+                style={{ background: 'rgba(34,197,94,0.95)', color: '#fff', backdropFilter: 'blur(8px)', boxShadow: '0 4px 12px rgba(34,197,94,0.3)' }}>
                 ✓ Hoàn thành
               </span>
             )}
           </div>
           {/* Pages badge top-right */}
-          <div className="absolute top-3 right-3">
-            <span className="px-2 py-0.5 text-xs font-medium rounded-full"
-              style={{ background: 'rgba(0,0,0,0.45)', color: 'rgba(255,255,255,0.90)', backdropFilter: 'blur(4px)' }}>
-              {book.pages?.length || 0}tr
+          <div className="absolute top-4 right-4 z-20">
+            <span className="px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-full"
+              style={{ background: 'rgba(0,0,0,0.6)', color: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(8px)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+              {book.pages?.length || 0} trang
             </span>
           </div>
+
           {/* Hover action overlay */}
-          <div className="absolute inset-0 flex items-center justify-center gap-2.5
-            opacity-0 group-hover:opacity-100 transition-all duration-200"
-            style={{ background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(2px)' }}>
+          <div className="absolute inset-0 flex items-center justify-center gap-3 z-30
+            opacity-0 group-hover:opacity-100 transition-all duration-300"
+            style={{ background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)' }}>
             <ActionBtn onClick={() => setShow3DBook(book)} title="Xem 3D" icon={<Box className="w-4 h-4" />} dark />
             <ActionBtn onClick={() => onEditBook(book)} title="Chỉnh sửa" icon={<Edit className="w-4 h-4" />} />
             <ActionBtn onClick={() => handleDuplicate(book)} title="Nhân bản" icon={<Copy className="w-4 h-4" />} />
@@ -204,18 +209,18 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
         </div>
 
         {/* Info */}
-        <div className="flex flex-col flex-1 p-4 gap-2.5">
+        <div className="flex flex-col flex-1 p-5 gap-3">
           {/* Title */}
-          <p className="font-semibold text-sm leading-snug line-clamp-1" style={{ color: '#111' }}>
+          <p className="font-bold text-base leading-snug line-clamp-1 transition-colors group-hover:text-amber-700" style={{ color: '#1a1a1a' }}>
             {book.title || <span style={{ color: '#ccc', fontStyle: 'italic' }}>Chưa đặt tên</span>}
           </p>
           {/* Meta row */}
           <div className="flex items-center justify-between mt-auto">
-            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium border ${theme.badge}`}>
+            <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[12px] font-semibold border ${theme.badge}`}>
               {theme.emoji} {theme.name}
             </span>
-            <div className="flex items-center gap-1 text-xs" style={{ color: '#bbb' }}>
-              <Clock className="w-3 h-3" />
+            <div className="flex items-center gap-1.5 text-[12px] font-medium" style={{ color: '#888' }}>
+              <Clock className="w-3.5 h-3.5 text-gray-400" />
               <span>{formatDate(book.updatedAt)}</span>
             </div>
           </div>
@@ -231,73 +236,91 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
     const td = themeData[themeKey] ?? themeData['love'];
     return (
       <div
-        className="group flex flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
+        className="group flex flex-col overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl"
         style={{
           background: '#ffffff',
-          borderRadius: '20px',
-          border: '1px solid #eeece9',
-          boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
+          borderRadius: '24px',
+          border: '1px solid rgba(0,0,0,0.03)',
+          boxShadow: '0 8px 30px rgba(0,0,0,0.04)',
         }}
       >
-        {/* Image */}
-        <div className="relative h-52 flex-shrink-0 overflow-hidden" style={{ background: '#f0ede8' }}>
+        {/* Image Area */}
+        <div className="relative h-60 flex-shrink-0 overflow-hidden bg-gray-50">
           {tpl.cover_image_url ? (
             <img
               src={tpl.cover_image_url}
               alt={tpl.name}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             />
           ) : (
-            <div className={`w-full h-full flex items-center justify-center bg-gradient-to-br ${td.grad}`}>
-              <span className="text-6xl opacity-70">{td.emoji}</span>
+            <div className={`w-full h-full flex items-center justify-center relative overflow-hidden bg-gradient-to-br ${td.grad}`}>
+              {/* Premium overlay pattern */}
+              <div className="absolute inset-0 opacity-[0.15] mix-blend-overlay"
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Ccircle cx='7' cy='7' r='2'/%3E%3Ccircle cx='37' cy='7' r='2'/%3E%3Ccircle cx='7' cy='37' r='2'/%3E%3Ccircle cx='37' cy='37' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+              {/* Glassmorphism Icon Container */}
+              <div className="relative z-10 w-24 h-24 flex items-center justify-center rounded-[2rem] bg-white/20 backdrop-blur-md shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/30 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3">
+                <span className="text-5xl drop-shadow-lg">{td.emoji}</span>
+              </div>
             </div>
           )}
-          {/* Bottom gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+          
           {/* Badges */}
-          <div className="absolute top-3 left-3">
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium"
-              style={{ background: 'rgba(255,255,255,0.93)', color: '#222', boxShadow: '0 1px 6px rgba(0,0,0,0.10)' }}>
+          <div className="absolute top-4 left-4 z-20">
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[11px] font-bold tracking-wide uppercase transition-all"
+              style={{ background: 'rgba(255,255,255,0.95)', color: '#111', backdropFilter: 'blur(8px)', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}>
               {td.emoji} {td.name}
             </span>
           </div>
-          <div className="absolute top-3 right-3">
-            <span className="px-2.5 py-1 rounded-full text-xs font-bold tracking-wide"
-              style={{ background: '#111', color: '#fff' }}>
+          <div className="absolute top-4 right-4 z-20">
+            <span className="px-3.5 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase"
+              style={{ background: '#1a1a1a', color: '#fff', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>
               MẪU
             </span>
           </div>
           {tpl.price != null && (
-            <div className="absolute bottom-3 right-3">
-              <span className="px-2.5 py-1 rounded-full text-xs font-bold"
-                style={{ background: 'rgba(255,255,255,0.93)', color: '#222', boxShadow: '0 1px 6px rgba(0,0,0,0.10)' }}>
+            <div className="absolute bottom-4 right-4 z-20">
+              <span className="px-3 py-1.5 rounded-full text-xs font-bold"
+                style={{ background: 'rgba(255,255,255,0.95)', color: '#111', backdropFilter: 'blur(8px)', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}>
                 {tpl.price.toLocaleString('vi-VN')}đ
               </span>
             </div>
           )}
         </div>
 
-        {/* Body */}
-        <div className="flex flex-col flex-1 p-5 gap-3">
-          <h4 className="font-bold text-base leading-snug line-clamp-1" style={{ color: '#111' }}>
-            {tpl.name}
-          </h4>
-          <p className="text-sm leading-relaxed line-clamp-2 flex-1" style={{ color: '#888', minHeight: '2.5rem' }}>
-            {tpl.description || 'Mẫu sách thiết kế cao cấp.'}
-          </p>
-          <div className="flex items-center gap-2 text-xs" style={{ color: '#bbb' }}>
-            <FileText className="w-3.5 h-3.5 flex-shrink-0" />
-            <span>{tpl.page_count ?? '—'} trang</span>
-            <span>·</span>
-            <span>Nội dung đầy đủ</span>
+        {/* Content Body */}
+        <div className="flex flex-col flex-1 p-6 gap-4">
+          <div>
+            <h4 className="font-bold text-xl mb-2.5 transition-colors group-hover:text-amber-700" style={{ color: '#1a1a1a', lineHeight: '1.3' }}>
+              {tpl.name}
+            </h4>
+            <p className="text-[14px] leading-relaxed line-clamp-2" style={{ color: '#666', minHeight: '2.75rem' }}>
+              {tpl.description || 'Mẫu sách thiết kế cao cấp, lưu giữ những kỷ niệm vô giá.'}
+            </p>
           </div>
+          
+          <div className="flex items-center gap-3 text-[13px] font-medium mt-auto pb-5 border-b border-gray-100/80" style={{ color: '#888' }}>
+            <div className="flex items-center gap-1.5 bg-gray-50 px-2.5 py-1.5 rounded-md">
+              <FileText className="w-4 h-4 text-gray-400" />
+              <span>{tpl.page_count ?? '—'} trang</span>
+            </div>
+            <div className="flex items-center gap-1.5 bg-gray-50 px-2.5 py-1.5 rounded-md">
+              <Sparkles className="w-4 h-4 text-gray-400" />
+              <span>Nội dung đầy đủ</span>
+            </div>
+          </div>
+
           <button
             onClick={onCreateNew}
-            className="mt-1 w-full py-2.5 rounded-xl text-sm font-semibold transition-all duration-200
-              hover:opacity-80 active:scale-95 flex items-center justify-center gap-1.5"
-            style={{ background: '#111', color: '#fff' }}
+            className="w-full py-3.5 rounded-xl text-[14px] font-bold transition-all duration-300
+              hover:shadow-[0_8px_20px_rgba(0,0,0,0.12)] active:scale-[0.98] flex items-center justify-center gap-2 group/btn"
+            style={{ background: '#1a1a1a', color: '#fff' }}
           >
-            Dùng mẫu này <ChevronRight className="w-4 h-4" />
+            Sử dụng mẫu này
+            <ChevronRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
           </button>
         </div>
       </div>
@@ -330,25 +353,16 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
             {/* Logo */}
             <button
               onClick={onBackToHome}
-              className="flex items-center gap-3 group"
+              className="flex items-center group"
               title="Về trang chủ"
             >
-              <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center transition-transform group-hover:scale-105"
-                style={{ background: '#111' }}
-              >
-                <BookHeart className="w-5 h-5" style={{ color: '#f3e9d7' }} />
-              </div>
-              <div className="flex flex-col justify-center leading-none" style={{ height: '32px', overflow: 'visible' }}>
+              <div className="flex flex-col justify-center leading-none" style={{ height: '40px', overflow: 'visible' }}>
                 <img 
                   src="/logo.png" 
                   alt="dearmemories" 
-                  className="object-contain block" 
-                  style={{ height: '76px', margin: '-20px 0' }}
+                  className="object-contain block transition-transform duration-300 group-hover:scale-105" 
+                  style={{ height: '96px', margin: '-28px 0' }}
                 />
-                <span className="text-[10px] hidden sm:block" style={{ color: '#aaa', marginTop: '-18px' }}>
-                  Thiết kế sách cá nhân hoá
-                </span>
               </div>
             </button>
 

@@ -70,12 +70,12 @@ function App() {
           };
           setUser(userData);
           localStorage.setItem('dearbook_user', JSON.stringify(userData));
-          setCurrentScreen('library');
+          setCurrentScreen('home');
         } else {
           const savedUser = localStorage.getItem('dearbook_user');
           if (savedUser) {
             setUser(JSON.parse(savedUser));
-            setCurrentScreen('library');
+            setCurrentScreen('home');
           }
         }
       } catch (err) {
@@ -83,7 +83,7 @@ function App() {
         const savedUser = localStorage.getItem('dearbook_user');
         if (savedUser) {
           setUser(JSON.parse(savedUser));
-          setCurrentScreen('library');
+          setCurrentScreen('home');
         }
       }
     };
@@ -123,7 +123,7 @@ function App() {
         setTimeout(() => {
           setUser(userData);
           localStorage.setItem('dearbook_user', JSON.stringify(userData));
-          setCurrentScreen('library');
+          setCurrentScreen('home');
         }, 2000);
       }
     } catch (err: any) {
@@ -157,7 +157,7 @@ function App() {
 
       setUser(userData);
       localStorage.setItem('dearbook_user', JSON.stringify(userData));
-      setCurrentScreen('library');
+      setCurrentScreen('home');
     } catch (err: any) {
       console.error('OTP verify error:', err);
       toast.error(err.message || 'Mã xác thực không hợp lệ hoặc đã hết hạn.');
@@ -237,7 +237,11 @@ function App() {
   return (
     <div className="min-h-screen" style={{ background: '#FAFAF8' }}>
       {currentScreen === 'home' && (
-        <HomePage onGetStarted={() => setCurrentScreen('login')} />
+        <HomePage 
+          user={user}
+          onGetStarted={() => user ? setCurrentScreen('library') : setCurrentScreen('login')} 
+          onLogout={handleLogout}
+        />
       )}
 
       {currentScreen === 'login' && (
