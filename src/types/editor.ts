@@ -86,6 +86,10 @@ export interface EditorPage {
     type: 'color' | 'gradient' | 'image' | 'pattern';
     value: string;
   };
+  overlay?: {
+    type: 'image';
+    value: string;
+  };
   width: number;
   height: number;
 }

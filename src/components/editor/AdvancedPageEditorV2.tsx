@@ -162,10 +162,20 @@ export function AdvancedPageEditorV2({
   } | null>(null);
   const [resizingElement, setResizingElement] = useState<{
     id: string;
+    handle: string;
     startX: number;
     startY: number;
     startWidth: number;
     startHeight: number;
+    elStartX: number;
+    elStartY: number;
+  } | null>(null);
+  const [rotatingElement, setRotatingElement] = useState<{
+    id: string;
+    centerX: number;
+    centerY: number;
+    startAngle: number;
+    startRotation: number;
   } | null>(null);
   // Track which upload slot is being hovered during external drag (from library)
   const [dragOverSlotId, setDragOverSlotId] = useState<string | null>(null);
@@ -515,6 +525,13 @@ export function AdvancedPageEditorV2({
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
+    if (rotatingElement) {
+      const angle = Math.atan2(e.clientY - rotatingElement.centerY, e.clientX - rotatingElement.centerX);
+      let deltaRotation = (angle - rotatingElement.startAngle) * 180 / Math.PI;
+      handleUpdateElement(rotatingElement.id, { rotation: rotatingElement.startRotation + deltaRotation });
+      return;
+    }
+
     if (resizingElement) {
       const el = elements.find(el => el.id === resizingElement.id);
       if (!el) return;
@@ -527,14 +544,45 @@ export function AdvancedPageEditorV2({
       const rawDeltaX = (e.clientX - resizingElement.startX) / zoom;
       const rawDeltaY = (e.clientY - resizingElement.startY) / zoom;
 
-      // Unrotate the delta vector
       const deltaX = rawDeltaX * cos + rawDeltaY * sin;
       const deltaY = -rawDeltaX * sin + rawDeltaY * cos;
 
-      const newWidth = Math.max(20, resizingElement.startWidth + deltaX);
-      const newHeight = Math.max(20, resizingElement.startHeight + deltaY);
-      
-      handleUpdateElement(resizingElement.id, { width: newWidth, height: newHeight });
+      let newWidth = resizingElement.startWidth;
+      let newHeight = resizingElement.startHeight;
+      let deltaX_local = 0;
+      let deltaY_local = 0;
+
+      if (resizingElement.handle.includes('e')) {
+        newWidth = Math.max(20, resizingElement.startWidth + deltaX);
+      }
+      if (resizingElement.handle.includes('w')) {
+        newWidth = Math.max(20, resizingElement.startWidth - deltaX);
+        deltaX_local = resizingElement.startWidth - newWidth;
+      }
+      if (resizingElement.handle.includes('s')) {
+        newHeight = Math.max(20, resizingElement.startHeight + deltaY);
+      }
+      if (resizingElement.handle.includes('n')) {
+        newHeight = Math.max(20, resizingElement.startHeight - deltaY);
+        deltaY_local = resizingElement.startHeight - newHeight;
+      }
+
+      const localDeltaCenterX = deltaX_local + (newWidth - resizingElement.startWidth) / 2;
+      const localDeltaCenterY = deltaY_local + (newHeight - resizingElement.startHeight) / 2;
+
+      const globalDeltaCenterX = localDeltaCenterX * cos - localDeltaCenterY * sin;
+      const globalDeltaCenterY = localDeltaCenterX * sin + localDeltaCenterY * cos;
+
+      const startCenterGlobalX = resizingElement.elStartX + resizingElement.startWidth / 2;
+      const startCenterGlobalY = resizingElement.elStartY + resizingElement.startHeight / 2;
+
+      const newCenterGlobalX = startCenterGlobalX + globalDeltaCenterX;
+      const newCenterGlobalY = startCenterGlobalY + globalDeltaCenterY;
+
+      const newX = newCenterGlobalX - newWidth / 2;
+      const newY = newCenterGlobalY - newHeight / 2;
+
+      handleUpdateElement(resizingElement.id, { x: newX, y: newY, width: newWidth, height: newHeight });
       return;
     }
 
@@ -556,6 +604,7 @@ export function AdvancedPageEditorV2({
   const handleMouseUp = () => {
     setDraggedElement(null);
     setResizingElement(null);
+    setRotatingElement(null);
   };
 
   // ─── Drop-Into-Frame: Universal rule for all templates ───────────────────────
@@ -669,16 +718,38 @@ export function AdvancedPageEditorV2({
   };
   // ─────────────────────────────────────────────────────────────────────────────
 
-  const handleResizeStart = (e: React.MouseEvent, id: string) => {
+  const handleResizeStart = (e: React.MouseEvent, id: string, handle: string) => {
     e.stopPropagation();
     const element = elements.find((el) => el.id === id);
     if (!element) return;
     setResizingElement({
       id,
+      handle,
       startX: e.clientX,
       startY: e.clientY,
       startWidth: element.width,
       startHeight: element.height,
+      elStartX: element.x,
+      elStartY: element.y,
+    });
+  };
+
+  const handleRotateStart = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    const element = elements.find((el) => el.id === id);
+    if (!element) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const centerX = rect.left + (element.x + element.width / 2) * zoom;
+    const centerY = rect.top + (element.y + element.height / 2) * zoom;
+    const startAngle = Math.atan2(e.clientY - centerY, e.clientX - centerX);
+    setRotatingElement({
+      id,
+      centerX,
+      centerY,
+      startAngle,
+      startRotation: element.rotation || 0,
     });
   };
 
@@ -718,22 +789,67 @@ export function AdvancedPageEditorV2({
       borderRadius: (element as any).borderRadius || 0,
     };
 
+    const handles = [
+      { position: 'nw', cursor: 'nwse-resize', top: -6, left: -6 },
+      { position: 'n', cursor: 'ns-resize', top: -6, left: 'calc(50% - 6px)' },
+      { position: 'ne', cursor: 'nesw-resize', top: -6, right: -6 },
+      { position: 'w', cursor: 'ew-resize', top: 'calc(50% - 6px)', left: -6 },
+      { position: 'e', cursor: 'ew-resize', top: 'calc(50% - 6px)', right: -6 },
+      { position: 'sw', cursor: 'nesw-resize', bottom: -6, left: -6 },
+      { position: 's', cursor: 'ns-resize', bottom: -6, left: 'calc(50% - 6px)' },
+      { position: 'se', cursor: 'nwse-resize', bottom: -6, right: -6 },
+    ];
+
     const resizeHandle = isSelected && !element.locked && element.type !== 'text' ? (
-      <div
-        style={{
-          position: 'absolute',
-          right: -8,
-          bottom: -8,
-          width: 16,
-          height: 16,
-          backgroundColor: '#fff',
-          border: '2px solid #8C6E5D',
-          borderRadius: '50%',
-          cursor: 'se-resize',
-          zIndex: 10,
-        }}
-        onMouseDown={(e) => handleResizeStart(e, element.id)}
-      />
+      <>
+        {handles.map((h, i) => (
+          <div
+            key={i}
+            style={{
+              position: 'absolute',
+              width: 12,
+              height: 12,
+              backgroundColor: '#fff',
+              border: '2px solid #8C6E5D',
+              borderRadius: h.position.length === 1 ? '0%' : '50%',
+              cursor: h.cursor,
+              zIndex: 10,
+              top: h.top,
+              left: h.left,
+              right: h.right,
+              bottom: h.bottom,
+            }}
+            onMouseDown={(e) => handleResizeStart(e, element.id, h.position)}
+          />
+        ))}
+        {/* Rotate Handle */}
+        <div
+          style={{
+            position: 'absolute',
+            top: -30,
+            left: 'calc(50% - 6px)',
+            width: 12,
+            height: 12,
+            backgroundColor: '#fff',
+            border: '2px solid #8C6E5D',
+            borderRadius: '50%',
+            cursor: 'crosshair',
+            zIndex: 10,
+          }}
+          onMouseDown={(e) => handleRotateStart(e, element.id)}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            top: -18,
+            left: 'calc(50% - 1px)',
+            width: 2,
+            height: 18,
+            backgroundColor: '#8C6E5D',
+            zIndex: 9,
+          }}
+        />
+      </>
     ) : null;
 
     let content;
@@ -1140,6 +1256,20 @@ export function AdvancedPageEditorV2({
             {elements && elements.length > 0 && elements
               .sort((a, b) => a.zIndex - b.zIndex)
               .map((element) => renderElement(element))}
+
+            {/* Overlay Template Layer */}
+            {currentPage?.overlay && (
+              <div 
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  backgroundImage: `url(${currentPage.overlay.value})`,
+                  backgroundSize: '100% 100%',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat',
+                  zIndex: 9999
+                }}
+              />
+            )}
           </div>
         </div>
 

@@ -63,11 +63,20 @@ const PAGE5_SLOTS: PhotoSlot[] = [
   { id: 'ya5-photo1', label: 'Ảnh kỷ niệm', x: 5, y: 24, w: 90, h: 45 },
 ];
 
-const ALL_PAGES_SLOTS = [COVER_SLOTS, PAGE2_SLOTS, PAGE3_SLOTS, PAGE4_SLOTS, PAGE5_SLOTS];
+const PAGE6_SLOTS: PhotoSlot[] = [
+  { id: 'ya6-camera', label: 'Camera', x: 31, y: 24, w: 26, h: 13, rotation: -2 },
+  { id: 'ya6-pol1', label: 'Polaroid 1', x: 3, y: 51, w: 26, h: 21, rotation: -5 },
+  { id: 'ya6-pol2', label: 'Polaroid 2', x: 31, y: 53, w: 26, h: 21, rotation: 8 },
+  { id: 'ya6-film1', label: 'Film 1', x: 80, y: 19, w: 18, h: 14, rotation: -6 },
+  { id: 'ya6-film2', label: 'Film 2', x: 78, y: 36, w: 18, h: 14, rotation: -6 },
+  { id: 'ya6-film3', label: 'Film 3', x: 76, y: 53, w: 18, h: 14, rotation: -6 },
+];
 
-const PAGE_LABELS = ['Trang bìa', 'Bộ sưu tập ảnh', 'Khoảnh khắc đặc biệt', 'Hành trình', 'Ghi lại kỷ niệm'];
+const ALL_PAGES_SLOTS = [COVER_SLOTS, PAGE2_SLOTS, PAGE3_SLOTS, PAGE4_SLOTS, PAGE5_SLOTS, PAGE6_SLOTS];
 
-const PAGE_BG_COLORS = ['#6B4A2A', '#F5EFE6', '#5C3D20', '#1A1A1A', '#F5EFE6'];
+const PAGE_LABELS = ['Trang bìa', 'Bộ sưu tập ảnh', 'Khoảnh khắc đặc biệt', 'Hành trình', 'Ghi lại kỷ niệm', 'Năm 2025'];
+
+const PAGE_BG_COLORS = ['#6B4A2A', '#F5EFE6', '#5C3D20', '#1A1A1A', '#F5EFE6', '#E5DFD5'];
 
 export function YouthArchiveEditor({ book, pages, onChange, onBack, onFinish, onAdvancedEdit }: YouthArchiveEditorProps) {
   const [currentPageIdx, setCurrentPageIdx] = useState(0);
@@ -276,12 +285,15 @@ export function YouthArchiveEditor({ book, pages, onChange, onBack, onFinish, on
               boxShadow: '0 25px 50px -12px rgba(74, 59, 50, 0.25), 0 0 0 1px rgba(74, 59, 50, 0.05)',
             }}
           >
-            {/* Page content overlay */}
+            {/* Page content overlay (Foreground Template) */}
             {currentPageIdx === 0 && (
-              <img src="/templates/ya-page-1.jpg" alt="Template Page 1" className="absolute inset-0 w-full h-full object-cover z-0" />
+              <img src="/templates/ya-page-1.jpg" alt="Template Page 1" className="absolute inset-0 w-full h-full object-cover z-20 pointer-events-none" />
             )}
             {currentPageIdx === 1 && (
-              <img src="/templates/ya-page-2.png" alt="Template Page 2" className="absolute inset-0 w-full h-full object-cover z-0" />
+              <img src="/templates/ya-page-2.png" alt="Template Page 2" className="absolute inset-0 w-full h-full object-cover z-20 pointer-events-none" />
+            )}
+            {currentPageIdx === 5 && (
+              <img src="/templates/aatbio_com_image_export_May_21_2026.png" alt="Template Page 6" className="absolute inset-0 w-full h-full object-cover z-20 pointer-events-none" />
             )}
             {currentPageIdx === 2 && (
               <>

@@ -380,6 +380,21 @@ export const youthArchivePages: BookPage[] = [
       { id: 'ya5-stk3', type: 'sticker', content: '🌸', emoji: '🌸', x: 345, y: 560, width: 35, height: 35, zIndex: 3 },
     ],
   },
+
+  // Page 6: 2025 custom template
+  {
+    id: 'ya-page-6',
+    backgroundColor: '#E5DFD5',
+    overlay: { type: 'image', value: '/templates/aatbio_com_image_export_May_21_2026.png' },
+    elements: [
+      { id: 'ya6-camera', type: 'image', src: '', x: 124, y: 144, width: 104, height: 78, objectFit: 'cover', rotation: -2, zIndex: 1, isUploadSlot: true, uploadLabel: 'Camera' },
+      { id: 'ya6-pol1', type: 'image', src: '', x: 12, y: 306, width: 104, height: 126, objectFit: 'cover', rotation: -5, zIndex: 1, isUploadSlot: true, uploadLabel: 'Polaroid 1' },
+      { id: 'ya6-pol2', type: 'image', src: '', x: 124, y: 318, width: 104, height: 126, objectFit: 'cover', rotation: 8, zIndex: 1, isUploadSlot: true, uploadLabel: 'Polaroid 2' },
+      { id: 'ya6-film1', type: 'image', src: '', x: 320, y: 114, width: 72, height: 84, objectFit: 'cover', rotation: -6, zIndex: 1, isUploadSlot: true, uploadLabel: 'Film 1' },
+      { id: 'ya6-film2', type: 'image', src: '', x: 312, y: 216, width: 72, height: 84, objectFit: 'cover', rotation: -6, zIndex: 1, isUploadSlot: true, uploadLabel: 'Film 2' },
+      { id: 'ya6-film3', type: 'image', src: '', x: 304, y: 318, width: 72, height: 84, objectFit: 'cover', rotation: -6, zIndex: 1, isUploadSlot: true, uploadLabel: 'Film 3' },
+    ],
+  },
 ];
 
 // Full template definition
