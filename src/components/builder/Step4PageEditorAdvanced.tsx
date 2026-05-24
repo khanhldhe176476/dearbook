@@ -65,20 +65,39 @@ export function Step4PageEditorAdvanced({
     // Trong editor, ảnh đó trở thành background của canvas; elements rỗng để user tự thêm.
     if (templateId.startsWith('local-template-')) {
       return localPages.map((page) => {
-        if (page.elements) return page; // Already in Editor format
+        let elements = page.elements ? [...page.elements] : [];
+        let background = page.background;
+
+        // Convert the old format (template as background) to new format (template as foreground overlay)
+        if (!page.elements || (background?.type === 'image' && background?.value === page.images?.pageImage)) {
+          const maxZ = elements.length > 0 ? Math.max(...elements.map((e: any) => e.zIndex || 0)) : 0;
+          elements.push({
+            id: `template-frame-${page.id}`,
+            type: 'image',
+            src: page.images?.pageImage || '',
+            x: 0,
+            y: 0,
+            width: PAGE_W,
+            height: PAGE_H,
+            rotation: 0,
+            opacity: 1,
+            locked: true, // Không cho click chọn
+            visible: true,
+            zIndex: maxZ + 10, // Luôn đè lên các elements có sẵn
+            objectFit: 'fill'
+          });
+          background = { type: 'color', value: '#FFFFFF' };
+        }
 
         return {
           id: page.id,
-        elements: [],
-        background: {
-          type: 'image' as const,
-          value: page.images?.pageImage || '',
-        },
-        width: PAGE_W,
-        height: PAGE_H,
-      };
-    });
-  }
+          elements,
+          background: background || { type: 'color', value: '#FFFFFF' },
+          width: PAGE_W,
+          height: PAGE_H,
+        };
+      });
+    }
 
     // Find the real template
     const template = templates.find(t => t.id === templateId);

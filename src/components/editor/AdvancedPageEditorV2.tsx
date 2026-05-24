@@ -947,22 +947,14 @@ export function AdvancedPageEditorV2({
           : '';
         content = (
           <div
-            className={isUploadSlot ? "image-frame" : ""}
             style={{
               ...commonStyle,
-              // ✅ GLOBAL RULE: always clip image to its frame bounds
-              overflow: 'hidden',
-              // Highlight upload slots during drag-over
               outline: isDragTarget
                 ? '3px solid #C4956A'
                 : isUploadSlot && !imgSrc
                 ? 'none'
                 : commonStyle.outline,
-              border: 'none',
-              background: isUploadSlot && !imgSrc
-                ? (isDragTarget ? '#DCD4CB' : '#EAE6DF')
-                : 'transparent',
-              // Upload slots show pointer when empty
+              // Move pointer/cursor logic here for the whole element
               cursor: isUploadSlot && !imgSrc ? 'pointer' : (element.locked ? 'not-allowed' : 'move'),
             }}
             onMouseDown={(e) => {
@@ -984,45 +976,59 @@ export function AdvancedPageEditorV2({
               }
             }}
           >
-            {imgSrc ? (
-              <img
-                src={imgSrc}
-                alt={(imgEl as any).alt || (imgEl as any).uploadLabel || 'Image'}
-                style={{
-                  // ✅ GLOBAL RULE: absolute fill ensures 100% coverage regardless of zoom
+            <div
+              className={isUploadSlot ? "image-frame" : ""}
+              style={{
+                width: '100%',
+                height: '100%',
+                // ✅ GLOBAL RULE: always clip image to its frame bounds
+                overflow: 'hidden',
+                borderRadius: 'inherit',
+                background: isUploadSlot && !imgSrc
+                  ? (isDragTarget ? '#DCD4CB' : '#EAE6DF')
+                  : 'transparent',
+              }}
+            >
+              {imgSrc ? (
+                <img
+                  src={imgSrc}
+                  alt={(imgEl as any).alt || (imgEl as any).uploadLabel || 'Image'}
+                  style={{
+                    // ✅ GLOBAL RULE: absolute fill ensures 100% coverage regardless of zoom
+                    position: 'absolute',
+                    inset: 0,
+                    width: '100%',
+                    height: '100%',
+                    objectFit: isUploadSlot ? 'cover' : (imgEl.objectFit || 'cover'),
+                    objectPosition: 'center',
+                    pointerEvents: 'none',
+                    display: 'block',
+                  }}
+                />
+              ) : isUploadSlot ? (
+                // Empty upload slot placeholder
+                <div style={{
                   position: 'absolute',
                   inset: 0,
-                  width: '100%',
-                  height: '100%',
-                  objectFit: isUploadSlot ? 'cover' : (imgEl.objectFit || 'cover'),
-                  objectPosition: 'center',
-                  pointerEvents: 'none',
-                  display: 'block',
-                }}
-              />
-            ) : isUploadSlot ? (
-              // Empty upload slot placeholder
-              <div style={{
-                position: 'absolute',
-                inset: 0,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                color: isDragTarget ? '#8C6E5D' : '#8D96A0', // Canva gray
-                transition: 'all 0.2s ease',
-              }}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                  <polyline points="17 8 12 3 7 8"/>
-                  <line x1="12" y1="3" x2="12" y2="15"/>
-                </svg>
-                <span style={{ fontSize: '11px', fontWeight: 500, textAlign: 'center', padding: '0 4px', fontFamily: 'var(--font-secondary), sans-serif' }}>
-                  {isDragTarget ? '↓ Thả ảnh vào đây' : ((imgEl as any).uploadLabel || 'Click tải ảnh')}
-                </span>
-              </div>
-            ) : null}
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  color: isDragTarget ? '#8C6E5D' : '#8D96A0', // Canva gray
+                  transition: 'all 0.2s ease',
+                }}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="17 8 12 3 7 8"/>
+                    <line x1="12" y1="3" x2="12" y2="15"/>
+                  </svg>
+                  <span style={{ fontSize: '11px', fontWeight: 500, textAlign: 'center', padding: '0 4px', fontFamily: 'var(--font-secondary), sans-serif' }}>
+                    {isDragTarget ? '↓ Thả ảnh vào đây' : ((imgEl as any).uploadLabel || 'Click tải ảnh')}
+                  </span>
+                </div>
+              ) : null}
+            </div>
             {resizeHandle}
           </div>
         );
@@ -1403,7 +1409,7 @@ export function AdvancedPageEditorV2({
                 handleAddElement('image', { src: imageKey });
                 setShowImageUploader(false);
               }}
-              enableCrop={true}
+              enableCrop={false}
             />
           </div>
         </div>
