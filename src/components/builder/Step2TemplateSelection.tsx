@@ -1,27 +1,7 @@
-import { useState, useEffect } from 'react';
-import { ArrowLeft, Eye, Check, Layout, Loader2 } from 'lucide-react';
-import { PageData, BookData } from '../../App';
-import { templates as realTemplates } from '../../data/templates';
-import { FlipBookReader } from '../FlipBookReader';
-import { templateApi } from '../../lib/templateApi';
-
-interface Template {
-  id: string;
-  name: string;
-  description: string;
-  style: 'minimal' | 'romantic' | 'playful' | 'elegant';
-  pageCount: number;
-  preview: string;
-  pages: TemplatePageDef[];
-}
-
-interface TemplatePageDef {
-  id: string;
-  layout: string;
-  textFields: string[];
-  imageFields: string[];
-  defaultTexts: { [key: string]: string };
-}
+import { useState } from 'react';
+import { ArrowLeft, Eye, Check, Layout, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { PageData } from '../../App';
+import { localTemplates, LocalTemplate } from '../../data/localTemplates';
 
 interface Step2TemplateSelectionProps {
   theme: 'love' | 'family' | 'birthday' | 'friendship';
@@ -30,67 +10,149 @@ interface Step2TemplateSelectionProps {
   onBack: () => void;
 }
 
+// ── Preview Modal: hiển thị toàn bộ trang của template ────────────────────
+function TemplatePreviewModal({
+  template,
+  onClose,
+  onSelect,
+}: {
+  template: LocalTemplate;
+  onClose: () => void;
+  onSelect: () => void;
+}) {
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const total = template.pages.length;
+  const page = template.pages[currentIdx];
+
+  const prev = () => setCurrentIdx(i => Math.max(0, i - 1));
+  const next = () => setCurrentIdx(i => Math.min(total - 1, i + 1));
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center"
+      style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(6px)' }}
+      onClick={onClose}
+    >
+      <div
+        className="relative flex flex-col items-center"
+        style={{ maxWidth: 540, width: '96vw' }}
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="w-full flex items-center justify-between mb-3 px-1">
+          <div>
+            <h2 className="text-base font-bold text-white leading-tight">{template.name}</h2>
+            <p className="text-xs text-white/60 mt-0.5">
+              Trang {currentIdx + 1} / {total}
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={onSelect}
+              className="px-4 py-1.5 rounded-lg text-xs font-bold transition-all"
+              style={{ background: '#ffffff', color: '#111' }}
+            >
+              <Check className="w-3.5 h-3.5 inline mr-1" />
+              Chọn mẫu này
+            </button>
+            <button
+              onClick={onClose}
+              className="w-8 h-8 flex items-center justify-center rounded-full transition-all"
+              style={{ background: 'rgba(255,255,255,0.12)' }}
+            >
+              <X className="w-4 h-4 text-white" />
+            </button>
+          </div>
+        </div>
+
+        {/* Page image */}
+        <div
+          className="relative w-full rounded-2xl overflow-hidden shadow-2xl"
+          style={{ background: '#1a1a1a', aspectRatio: '3/4' }}
+        >
+          <img
+            src={page.imageUrl}
+            alt={page.label}
+            className="w-full h-full object-contain"
+          />
+
+          {/* Nav arrows */}
+          {currentIdx > 0 && (
+            <button
+              onClick={prev}
+              className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full shadow-lg transition-all hover:scale-110"
+              style={{ background: 'rgba(255,255,255,0.92)' }}
+            >
+              <ChevronLeft className="w-5 h-5 text-[#111]" />
+            </button>
+          )}
+          {currentIdx < total - 1 && (
+            <button
+              onClick={next}
+              className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full shadow-lg transition-all hover:scale-110"
+              style={{ background: 'rgba(255,255,255,0.92)' }}
+            >
+              <ChevronRight className="w-5 h-5 text-[#111]" />
+            </button>
+          )}
+
+          {/* Label */}
+          <div
+            className="absolute bottom-0 left-0 right-0 px-4 py-2 text-xs font-semibold text-white text-center"
+            style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.6), transparent)' }}
+          >
+            {page.label}
+          </div>
+        </div>
+
+        {/* Thumbnail filmstrip */}
+        <div className="mt-3 flex gap-1.5 overflow-x-auto pb-1 max-w-full" style={{ scrollbarWidth: 'thin' }}>
+          {template.pages.map((p, i) => (
+            <button
+              key={p.id}
+              onClick={() => setCurrentIdx(i)}
+              className="flex-shrink-0 rounded-lg overflow-hidden transition-all"
+              style={{
+                width: 44,
+                height: 60,
+                border: i === currentIdx ? '2px solid #ffffff' : '2px solid transparent',
+                opacity: i === currentIdx ? 1 : 0.5,
+              }}
+            >
+              <img src={p.imageUrl} alt={p.label} className="w-full h-full object-cover" />
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Main Step2 Component ───────────────────────────────────────────────────
 export function Step2TemplateSelection({
   theme,
   selectedTemplateId,
   onSelect,
   onBack,
 }: Step2TemplateSelectionProps) {
-  const [previewTemplate, setPreviewTemplate] = useState<any>(null);
-  const [apiTemplates, setApiTemplates] = useState<Template[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [previewTemplate, setPreviewTemplate] = useState<LocalTemplate | null>(null);
 
-  useEffect(() => {
-    // Không load đè template từ API nữa để giữ lại mẫu Youth Archive của user
-    setLoading(false);
-  }, []);
-
-  // Filter mock templates by theme, always include Youth Archive
-  // THEO YÊU CẦU: Xóa hết các mẫu khác, chỉ để lại mẫu Youth Archive đã hoàn thành
-  const filteredMockTemplates = realTemplates.filter(t =>
-    t.id === 'youth-archive-memories'
-  );
-  
-  // Map API templates to UI format, fallback to mock
-  const templates = apiTemplates.length > 0
-    ? apiTemplates.map(t => {
-        // Try to find matching mock template for detailed pages/data
-        const mockMatch = realTemplates.find(m => m.id === t.id || m.name === t.name);
-        return {
-          id: t.id,
-          name: t.name,
-          description: t.description || `${mockMatch?.pages.length || 10} trang thiết kế cao cấp`,
-          style: 'romantic' as const,
-          pageCount: mockMatch?.pages.length || 10,
-          preview: t.coverImageUrl || mockMatch?.thumbnail || '',
-          badge: mockMatch?.badge,
-          realTemplate: mockMatch || t
-        };
-      })
-    : filteredMockTemplates.map(t => ({
-        id: t.id,
-        name: t.name,
-        description: t.id === 'youth-archive-memories'
-          ? `${t.pages.length} trang scrapbook vintage – tải lên ảnh kỷ niệm của bạn`
-          : `${t.pages.length} trang với nội dung ${t.theme === 'love' ? 'lãng mạn' : t.theme === 'family' ? 'gia đình' : t.theme === 'birthday' ? 'sinh nhật' : 'bạn bè'}`,
-        style: 'romantic' as const,
-        pageCount: t.pages.length,
-        preview: t.thumbnail,
-        badge: t.badge,
-        realTemplate: t
-      }));
-
-  const handleSelectTemplate = (template: any) => {
-    // Convert real template pages to PageData format
-    const pages: PageData[] = template.realTemplate.pages.map((page: any) => ({
-      id: page.id,
-      templatePageId: page.id,
+  const handleSelectTemplate = (template: LocalTemplate) => {
+    // Chuyển đổi pages của local template sang PageData
+    const pages: PageData[] = template.pages.map(p => ({
+      id: p.id,
+      templatePageId: p.id,
       texts: {},
-      images: {},
+      images: { pageImage: p.imageUrl },
     }));
-
     onSelect(template.id, pages);
+    setPreviewTemplate(null);
+  };
+
+  const badgeLabel: Record<string, string> = {
+    bestseller: '🔥 Bán chạy',
+    popular: '⭐ Phổ biến',
+    new: '✨ Mới',
   };
 
   return (
@@ -126,23 +188,14 @@ export function Step2TemplateSelection({
         <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight" style={{ color: '#111827' }}>
           Chọn phong cách thiết kế
         </h2>
-        {loading ? (
-          <div className="flex items-center justify-center gap-2 text-sm" style={{ color: '#7a6f66' }}>
-            <Loader2 className="w-4 h-4 animate-spin text-[#111]" />
-            Đang tải mẫu sách...
-          </div>
-        ) : error ? (
-          <p className="text-xs italic text-rose-500">{error}</p>
-        ) : (
-          <p className="text-sm sm:text-base leading-relaxed" style={{ color: '#6b7280' }}>
-            Mỗi mẫu được đo đạc với số trang và bố cục chuyên nghiệp. Bạn có thể tùy chỉnh hình ảnh, câu chữ ở bước tiếp theo.
-          </p>
-        )}
+        <p className="text-sm sm:text-base leading-relaxed" style={{ color: '#6b7280' }}>
+          Mỗi mẫu được thiết kế chuyên nghiệp với đầy đủ trang bìa và nội dung. Bạn có thể xem trước toàn bộ trước khi chọn.
+        </p>
       </div>
 
       {/* Template Grid */}
-      <div className="grid sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
-        {templates.map((template) => {
+      <div className="grid sm:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        {localTemplates.map((template) => {
           const isSelected = selectedTemplateId === template.id;
 
           return (
@@ -152,85 +205,96 @@ export function Step2TemplateSelection({
               style={{
                 background: '#ffffff',
                 border: isSelected ? '2.5px solid #111' : '1px solid #eeece9',
-                boxShadow: isSelected ? '0 12px 36px rgba(0,0,0,0.12)' : '0 2px 16px rgba(0,0,0,0.05)',
+                boxShadow: isSelected
+                  ? '0 12px 36px rgba(0,0,0,0.12)'
+                  : '0 2px 16px rgba(0,0,0,0.05)',
                 transform: isSelected ? 'translateY(-2px)' : 'none',
               }}
             >
-              {/* Preview Image */}
-              <div className="h-56 relative overflow-hidden bg-[#faf8f5] flex-shrink-0">
+              {/* Preview Image (trang bìa) */}
+              <div className="relative overflow-hidden bg-[#faf8f5] flex-shrink-0" style={{ aspectRatio: '3/4' }}>
                 <img
-                  src={template.preview}
+                  src={template.thumbnail}
                   alt={template.name}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
 
-                {/* Badge Overlay */}
+                {/* Badge */}
                 {template.badge && (
                   <div
-                    className="absolute top-4 left-4 px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase shadow-md"
+                    className="absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase shadow-md"
                     style={{ background: '#111111', color: '#f3e9d7' }}
                   >
-                    {template.badge === 'bestseller' ? '🔥 Bán chạy' :
-                     template.badge === 'popular'    ? '⭐ Phổ biến' :
-                     '✨ Mới'}
+                    {badgeLabel[template.badge]}
                   </div>
                 )}
 
-                {/* Page Count Tag Overlay */}
-                <div className="absolute top-4 right-4">
+                {/* Page count */}
+                <div className="absolute top-3 right-3">
                   <div
                     className="px-2.5 py-1 rounded-full text-[10px] font-bold flex items-center gap-1 shadow-md"
-                    style={{ background: 'rgba(255, 255, 255, 0.90)', color: '#111', backdropFilter: 'blur(4px)' }}
+                    style={{
+                      background: 'rgba(255,255,255,0.92)',
+                      color: '#111',
+                      backdropFilter: 'blur(4px)',
+                    }}
                   >
                     <Layout className="w-3.5 h-3.5 text-[#8c6e5d]" />
-                    {template.pageCount} trang
+                    {template.pages.length} trang
                   </div>
                 </div>
-                
-                {/* Hover overlay shading */}
+
+                {/* Hover overlay */}
                 <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                {/* Selected check */}
+                {isSelected && (
+                  <div
+                    className="absolute inset-0 flex items-center justify-center"
+                    style={{ background: 'rgba(0,0,0,0.25)' }}
+                  >
+                    <div
+                      className="w-14 h-14 rounded-full flex items-center justify-center shadow-xl"
+                      style={{ background: '#111' }}
+                    >
+                      <Check className="w-7 h-7 text-emerald-400" strokeWidth={3} />
+                    </div>
+                  </div>
+                )}
               </div>
 
-              {/* Info & Content */}
-              <div className="p-6 flex flex-col flex-1 gap-4 justify-between">
+              {/* Info & Actions */}
+              <div className="p-5 flex flex-col flex-1 gap-3 justify-between">
                 <div>
-                  <h3 className="text-lg font-bold text-[#111] mb-1.5 leading-snug">{template.name}</h3>
-                  <p className="text-xs sm:text-sm leading-relaxed text-[#7a6f66]">{template.description}</p>
+                  <h3 className="text-base font-bold text-[#111] mb-1 leading-snug">{template.name}</h3>
+                  <p className="text-xs leading-relaxed text-[#7a6f66]">{template.description}</p>
                 </div>
 
-                {/* Action Buttons Row */}
-                <div className="flex gap-2.5 pt-2">
+                {/* Action Buttons */}
+                <div className="flex gap-2 pt-1">
                   <button
                     onClick={() => setPreviewTemplate(template)}
-                    className="flex-1 py-2.5 px-3.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all duration-200 hover:-translate-y-0.5 border"
+                    className="flex-1 py-2 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all duration-200 hover:-translate-y-0.5 border"
                     style={{ background: '#faf8f5', color: '#111', borderColor: '#eeece9' }}
-                    onMouseEnter={e => {
-                      e.currentTarget.style.background = '#f0ede8';
-                    }}
-                    onMouseLeave={e => {
-                      e.currentTarget.style.background = '#faf8f5';
-                    }}
+                    onMouseEnter={e => { e.currentTarget.style.background = '#f0ede8'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = '#faf8f5'; }}
                   >
-                    <Eye className="w-4 h-4" />
+                    <Eye className="w-3.5 h-3.5" />
                     Xem mẫu
                   </button>
                   <button
                     onClick={() => handleSelectTemplate(template)}
-                    className="flex-1 py-2.5 px-3.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all duration-200 hover:-translate-y-0.5"
+                    className="flex-1 py-2 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all duration-200 hover:-translate-y-0.5"
                     style={{
-                      background: '#111111',
+                      background: isSelected ? '#059669' : '#111111',
                       color: '#f3e9d7',
-                      boxShadow: isSelected ? '0 4px 12px rgba(0,0,0,0.15)' : 'none',
+                      boxShadow: isSelected ? '0 4px 12px rgba(5,150,105,0.25)' : '0 4px 12px rgba(0,0,0,0.15)',
                     }}
-                    onMouseEnter={e => {
-                      e.currentTarget.style.background = '#000000';
-                    }}
-                    onMouseLeave={e => {
-                      e.currentTarget.style.background = '#111111';
-                    }}
+                    onMouseEnter={e => { e.currentTarget.style.background = isSelected ? '#047857' : '#000000'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = isSelected ? '#059669' : '#111111'; }}
                   >
                     {isSelected ? (
-                      <><Check className="w-4 h-4 text-emerald-400" strokeWidth={3} /> Đã chọn</>
+                      <><Check className="w-3.5 h-3.5 text-emerald-300" strokeWidth={3} /> Đã chọn</>
                     ) : 'Sử dụng mẫu này'}
                   </button>
                 </div>
@@ -240,44 +304,26 @@ export function Step2TemplateSelection({
         })}
       </div>
 
-      {/* Preview Modal - Using FlipBookReader */}
-      {previewTemplate && (() => {
-        // Create a BookData object from the template for FlipBookReader
-        const previewBook: BookData = {
-          id: previewTemplate.realTemplate.id,
-          title: previewTemplate.name,
-          theme: theme,
-          templateId: previewTemplate.realTemplate.id,
-          status: 'completed',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          cover: previewTemplate.realTemplate.cover,
-          pages: previewTemplate.realTemplate.pages
-        };
-
-        console.log('📖 Opening template preview:', {
-          template: previewTemplate.name,
-          theme: theme,
-          templateId: previewTemplate.realTemplate.id
-        });
-
-        return (
-          <FlipBookReader
-            book={previewBook}
-            onClose={() => setPreviewTemplate(null)}
-          />
-        );
-      })()}
-
-      {/* Tip Info banner */}
-      <div className="max-w-2xl mx-auto flex items-start gap-0.5 rounded-2xl overflow-hidden shadow-sm"
+      {/* Tip banner */}
+      <div
+        className="max-w-3xl mx-auto flex items-start gap-0.5 rounded-2xl overflow-hidden shadow-sm"
         style={{ background: '#ffffff', border: '1px solid #eeece9' }}
       >
         <div className="w-1.5 self-stretch bg-[#8c6e5d]" />
         <p className="text-xs sm:text-sm p-4 leading-relaxed text-[#7a6f66] flex-1">
-          💡 <strong>Mẹo nhỏ:</strong> Số lượng trang sách đã được tối ưu hóa cho công nghệ đóng gáy sách cứng cao cấp, bảo đảm độ mở phẳng và thẩm mỹ hoàn mỹ nhất.
+          💡 <strong>Mẹo nhỏ:</strong> Nhấn <strong>Xem mẫu</strong> để xem trước từng trang của mẫu sách trước khi chọn.
+          Sau khi chọn, bạn có thể chỉnh sửa tự do ở bước tiếp theo.
         </p>
       </div>
+
+      {/* Preview Modal */}
+      {previewTemplate && (
+        <TemplatePreviewModal
+          template={previewTemplate}
+          onClose={() => setPreviewTemplate(null)}
+          onSelect={() => handleSelectTemplate(previewTemplate)}
+        />
+      )}
     </div>
   );
 }

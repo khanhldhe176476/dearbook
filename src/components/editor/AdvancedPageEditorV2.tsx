@@ -1222,11 +1222,11 @@ export function AdvancedPageEditorV2({
             style={{
               width: PAGE_WIDTH * zoom,
               height: PAGE_HEIGHT * zoom,
-              background: background?.type === 'color' ? background.value : '#FFFFFF',
+              backgroundColor: background?.type === 'color' ? background.value : '#FFFFFF',
               backgroundImage: background?.type === 'image'
-                ? `url(${background.value})`
+                ? `url("${background.value}")`
                 : 'none',
-              backgroundSize: 'cover',
+              backgroundSize: '100% 100%',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',
             }}

@@ -5,6 +5,7 @@ import { Step1ThemeSelection } from './builder/Step1ThemeSelection';
 import { Step2TemplateSelection } from './builder/Step2TemplateSelection';
 import { Step4PageEditorAdvanced } from './builder/Step4PageEditorAdvanced';
 import { YouthArchiveEditor } from './builder/YouthArchiveEditor';
+import { LocalTemplatePageViewer } from './builder/LocalTemplatePageViewer';
 import { Book3DPreviewPanel } from './builder/Book3DPreviewPanel';
 import { BeginnerTutorial } from './BeginnerTutorial';
 import { HelpPanel } from './HelpPanel';
@@ -350,7 +351,15 @@ export function GuidedBookBuilder({
               bookData.theme &&
               bookData.templateId &&
               bookData.pages && (
-                bookData.templateId === 'youth-archive-memories' && !useAdvancedEditor ? (
+                // LOCAL TEMPLATES (temp1 / temp2 / temp3)
+                bookData.templateId.startsWith('local-template-') && !useAdvancedEditor ? (
+                  <LocalTemplatePageViewer
+                    book={bookData as BookData}
+                    onBack={() => setCurrentStep(2)}
+                    onFinish={handleFinish}
+                    onAdvancedEdit={() => setUseAdvancedEditor(true)}
+                  />
+                ) : bookData.templateId === 'youth-archive-memories' && !useAdvancedEditor ? (
                   <YouthArchiveEditor
                     book={bookData as BookData}
                     pages={bookData.pages}
@@ -380,7 +389,10 @@ export function GuidedBookBuilder({
                       }
                     }}
                     onBack={() => {
-                      if (bookData.templateId === 'youth-archive-memories') {
+                      if (
+                        bookData.templateId === 'youth-archive-memories' ||
+                        bookData.templateId.startsWith('local-template-')
+                      ) {
                         setUseAdvancedEditor(false);
                       } else {
                         setCurrentStep(2);
