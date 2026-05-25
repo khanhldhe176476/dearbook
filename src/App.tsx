@@ -4,11 +4,17 @@ import { LoginScreen } from './components/LoginScreen';
 import { MyBooksLibraryPortfolio } from './components/MyBooksLibraryPortfolio';
 import { GuidedBookBuilder } from './components/GuidedBookBuilder';
 import { OrderFlow } from './components/OrderFlow';
-import { PageElement, EditorPage as BookPage } from './types/editor';
-import { profileApi } from './lib/profileApi';
+import { EditorPage as BookPage } from './types/editor';
 import { bookApi } from './lib/bookApi';
+import { supabase } from './lib/supabase';
 import { toast } from 'sonner@2.0.3';
-import { signUpWithEmail, verifySignupOTP, signInWithEmail, signOut as supabaseSignOut, getCurrentSession } from './lib/authApi';
+import {
+  signUpWithEmail,
+  verifySignupOTP,
+  signInWithEmail,
+  signOut as supabaseSignOut,
+  getCurrentSession,
+} from './lib/authApi';
 import { Toaster } from './components/ui/sonner';
 
 export interface User {
@@ -41,7 +47,6 @@ export interface CharacterData {
   accessories?: string[];
 }
 
-// PageData is still used for the builder's local state before conversion
 export interface PageData {
   id: string;
   templatePageId: string;
@@ -56,23 +61,56 @@ function App() {
   const [user, setUser] = useState<User | null>(null);
   const [currentBook, setCurrentBook] = useState<BookData | null>(null);
 
-  // Check for existing session
+  const syncProfileToSupabase = async (authUser: {
+    id: string;
+    email: string;
+    fullName?: string;
+    avatarUrl?: string;
+  }) => {
+    try {
+      const { error } = await supabase.from('profiles').upsert(
+        {
+          id: authUser.id,
+          email: authUser.email,
+          full_name: authUser.fullName || authUser.email,
+          avatar_url: authUser.avatarUrl || null,
+        },
+        {
+          onConflict: 'id',
+        }
+      );
+
+      if (error) {
+        console.warn('⚠️ Gửi profile lên Supabase thất bại:', error);
+      } else {
+        console.log('✅ Gửi profile lên Supabase thành công:', authUser.email);
+      }
+    } catch (err) {
+      console.warn('⚠️ Lỗi khi đồng bộ profile lên Supabase:', err);
+    }
+  };
+
   useEffect(() => {
     const checkSession = async () => {
       try {
         const activeUser = await getCurrentSession();
+
         if (activeUser) {
           const userData = {
             id: activeUser.id,
             email: activeUser.email,
             name: activeUser.fullName,
-            picture: activeUser.avatarUrl
+            picture: activeUser.avatarUrl,
           };
+
+          await syncProfileToSupabase(activeUser);
+
           setUser(userData);
           localStorage.setItem('dearbook_user', JSON.stringify(userData));
           setCurrentScreen('home');
         } else {
           const savedUser = localStorage.getItem('dearbook_user');
+
           if (savedUser) {
             setUser(JSON.parse(savedUser));
             setCurrentScreen('home');
@@ -80,80 +118,74 @@ function App() {
         }
       } catch (err) {
         console.error('Session check failed, using local storage fallback:', err);
+
         const savedUser = localStorage.getItem('dearbook_user');
+
         if (savedUser) {
           setUser(JSON.parse(savedUser));
           setCurrentScreen('home');
         }
       }
     };
+
     checkSession();
   }, []);
 
-  const handleLogin = async (email: string, password: string, isSignup: boolean, name?: string) => {
+  const handleLogin = async (
+    email: string,
+    password: string,
+    isSignup: boolean,
+    name?: string
+  ) => {
     try {
       if (isSignup) {
-        // Call Supabase signUp
         await signUpWithEmail(email, password, name || email.split('@')[0]);
         toast.success('Mã OTP xác thực đã được gửi tới email của bạn!');
         return { needsOtp: true };
-      } else {
-        // Call Supabase signIn
-        const authUser = await signInWithEmail(email, password);
-        toast.success('Đăng nhập thành công!');
-
-        const userData = {
-          id: authUser.id,
-          email: authUser.email,
-          name: authUser.fullName,
-          picture: authUser.avatarUrl
-        };
-
-        // Try to sync profile with Spring Boot Postgres backend in background
-        profileApi.updateProfile({
-          id: authUser.id,
-          email: authUser.email,
-          fullName: authUser.fullName,
-          avatarUrl: authUser.avatarUrl
-        }).catch(backendErr => {
-          console.warn('⚠️ Gửi profile lên Java backend thất bại:', backendErr);
-        });
-
-        // Delay state update by 2 seconds so LoginScreen displays success animation and "Correct password" bubble
-        setTimeout(() => {
-          setUser(userData);
-          localStorage.setItem('dearbook_user', JSON.stringify(userData));
-          setCurrentScreen('home');
-        }, 2000);
       }
+
+      const authUser = await signInWithEmail(email, password);
+      toast.success('Đăng nhập thành công!');
+
+      const userData = {
+        id: authUser.id,
+        email: authUser.email,
+        name: authUser.fullName,
+        picture: authUser.avatarUrl,
+      };
+
+      await syncProfileToSupabase(authUser);
+
+      setTimeout(() => {
+        setUser(userData);
+        localStorage.setItem('dearbook_user', JSON.stringify(userData));
+        setCurrentScreen('home');
+      }, 2000);
     } catch (err: any) {
       console.error('Auth error:', err);
       toast.error(err.message || 'Có lỗi xảy ra, vui lòng thử lại.');
-      throw err; // Propagate error back to LoginScreen so loading states reset correctly
+      throw err;
     }
   };
 
   const handleVerifyOtp = async (email: string, token: string, name?: string) => {
     try {
-      const authUser = await verifySignupOTP(email, token, name || email.split('@')[0]);
+      const authUser = await verifySignupOTP(
+        email,
+        token,
+        name || email.split('@')[0]
+      );
+
       toast.success('Xác thực tài khoản thành công!');
 
       const userData = {
         id: authUser.id,
         email: authUser.email,
         name: authUser.fullName,
-        picture: authUser.avatarUrl
+        picture: authUser.avatarUrl,
       };
 
-      // Try to sync profile with Spring Boot Postgres backend in background
-      profileApi.updateProfile({
-        id: authUser.id,
-        email: authUser.email,
-        fullName: authUser.fullName,
-        avatarUrl: authUser.avatarUrl
-      }).catch(backendErr => {
-        console.warn('⚠️ Gửi profile lên Java backend thất bại:', backendErr);
-      });
+      await syncProfileToSupabase(authUser);
 
       setUser(userData);
       localStorage.setItem('dearbook_user', JSON.stringify(userData));
@@ -171,6 +203,7 @@ function App() {
     } catch (err) {
       console.error('SignOut error:', err);
     }
+
     setUser(null);
     setCurrentBook(null);
     localStorage.removeItem('dearbook_user');
@@ -191,30 +224,28 @@ function App() {
     const books = JSON.parse(localStorage.getItem('dearbook_books') || '[]');
     const existingIndex = books.findIndex((b: BookData) => b.id === book.id);
     let finalBook = { ...book };
-    
-    // Use the actual logged in user id or a local fallback
-    const userId = user?.id || '00000000-0000-0000-0000-000000000000'; 
-    
+
+    const userId = user?.id || '00000000-0000-0000-0000-000000000000';
+
     if (existingIndex >= 0) {
       books[existingIndex] = finalBook;
-      // We could call updatePage here if we know which page changed, but MVP might just rely on local storage for drafts
     } else {
       try {
-        // Only create if we have a templateId
         if (book.templateId) {
           const apiBook = await bookApi.createBook(userId, {
             templateId: book.templateId,
-            title: book.title || 'Sách mới'
+            title: book.title || 'Sách mới',
           });
-          // Update the local book ID with the real API ID
+
           finalBook = { ...book, id: apiBook.id };
         }
       } catch (err) {
         console.error('Failed to create book on backend, using local draft:', err);
       }
+
       books.push(finalBook);
     }
-    
+
     localStorage.setItem('dearbook_books', JSON.stringify(books));
     setCurrentBook(finalBook);
   };
@@ -237,10 +268,13 @@ function App() {
   return (
     <div className="min-h-screen" style={{ background: '#FAFAF8' }}>
       <Toaster position="top-right" richColors />
+
       {currentScreen === 'home' && (
-        <HomePage 
+        <HomePage
           user={user}
-          onGetStarted={() => user ? setCurrentScreen('library') : setCurrentScreen('login')} 
+          onGetStarted={() =>
+            user ? setCurrentScreen('library') : setCurrentScreen('login')
+          }
           onLogout={handleLogout}
         />
       )}
@@ -248,7 +282,7 @@ function App() {
       {currentScreen === 'login' && (
         <LoginScreen onLogin={handleLogin} onVerifyOtp={handleVerifyOtp} />
       )}
-      
+
       {currentScreen === 'library' && user && (
         <MyBooksLibraryPortfolio
           user={user}
@@ -258,18 +292,19 @@ function App() {
           onBackToHome={handleBackToLibrary}
         />
       )}
-      
+
       {currentScreen === 'builder' && user && (
         <GuidedBookBuilder
           user={user}
           initialBook={currentBook}
           onSave={handleSaveBook}
           onBack={handleBackToLibrary}
+          onBackToHome={() => setCurrentScreen('home')}
           onProceedToOrder={handleProceedToOrder}
           onLogout={handleLogout}
         />
       )}
-      
+
       {currentScreen === 'order' && user && currentBook && (
         <OrderFlow
           user={user}
@@ -278,7 +313,6 @@ function App() {
           onComplete={handleOrderComplete}
         />
       )}
-      <Toaster />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Check, HelpCircle, Book, Wallet, LogOut } from 'lucide-react';
+import { ArrowLeft, Check, HelpCircle, Book, Wallet, LogOut, Home } from 'lucide-react';
 import { BookData, User } from '../App';
 import { Step1ThemeSelection } from './builder/Step1ThemeSelection';
 import { Step2TemplateSelection } from './builder/Step2TemplateSelection';
@@ -18,6 +18,7 @@ interface GuidedBookBuilderProps {
   onBack: () => void;
   onProceedToOrder: (book: BookData) => void;
   onLogout: () => void;
+  onBackToHome?: () => void;
 }
 
 type Step = 1 | 2 | 3;
@@ -29,6 +30,7 @@ export function GuidedBookBuilder({
   onBack,
   onProceedToOrder,
   onLogout,
+  onBackToHome,
 }: GuidedBookBuilderProps) {
   const [currentStep, setCurrentStep] = useState<Step>(1);
   const [useAdvancedEditor, setUseAdvancedEditor] = useState(false);
@@ -145,9 +147,35 @@ export function GuidedBookBuilder({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
           <div className="flex items-center justify-between gap-4">
             
-            {/* Back Button */}
-            <button
-              onClick={onBack}
+            <div className="flex items-center gap-2">
+              {/* Home Button */}
+              {onBackToHome && (
+                <button
+                  onClick={onBackToHome}
+                  className="flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 group hover:-translate-y-0.5"
+                  style={{
+                    color: '#7a6f66',
+                    background: '#ffffff',
+                    border: '1px solid #eeece9',
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = '#faf8f5';
+                    e.currentTarget.style.borderColor = '#ddd8d0';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = '#ffffff';
+                    e.currentTarget.style.borderColor = '#eeece9';
+                  }}
+                  title="Về trang chủ"
+                >
+                  <Home className="w-4 h-4 transition-transform group-hover:scale-110" />
+                </button>
+              )}
+
+              {/* Back Button */}
+              <button
+                onClick={onBack}
               className="flex items-center gap-2 px-3.5 py-2 rounded-xl transition-all duration-200 text-sm font-semibold group hover:-translate-x-0.5"
               style={{
                 color: '#7a6f66',
@@ -167,6 +195,7 @@ export function GuidedBookBuilder({
               <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
               <span className="hidden sm:inline">Quay lại</span>
             </button>
+            </div>
 
             {/* Book Info Title & Badges */}
             <div className="text-center flex-1 min-w-0">

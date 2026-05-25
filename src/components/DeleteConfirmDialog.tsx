@@ -20,8 +20,8 @@ export function DeleteConfirmDialog({ isOpen, bookTitle, onConfirm, onCancel }: 
       
       {/* Dialog */}
       <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden animate-scaleIn">
-        {/* Header with gradient */}
-        <div className="bg-gradient-to-br from-red-500 to-rose-600 px-6 py-5 relative overflow-hidden">
+        {/* Header with solid color */}
+        <div className="bg-red-500 px-6 py-5 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16" />
           <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full -ml-12 -mb-12" />
           
@@ -76,7 +76,7 @@ export function DeleteConfirmDialog({ isOpen, bookTitle, onConfirm, onCancel }: 
           
           <button
             onClick={onConfirm}
-            className="flex-1 px-5 py-3 bg-gradient-to-br from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white font-medium rounded-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-red-500/30"
+            className="flex-1 px-5 py-3 bg-red-500 hover:bg-red-600 text-white font-medium rounded-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-red-500/30"
           >
             Xóa sách
           </button>

@@ -430,12 +430,27 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
 
               <h1 className="font-serif text-6xl lg:text-7xl leading-[0.95] mb-6">
                 <span className="text-[#333] block">GIFT</span>
-                <span className="shimmer-text font-handwriting text-7xl lg:text-8xl block mt-1" style={{ WebkitTextFillColor: 'unset', color: 'transparent' }}>
+                <span
+                  className="shimmer-text block mt-1"
+                  style={{
+                    fontFamily: '"Great Vibes", cursive',
+                    fontSize: 'clamp(4rem, 9vw, 8rem)',
+                    lineHeight: 1,
+                    WebkitTextFillColor: 'unset',
+                    color: 'transparent',
+                  }}
+                >
                   Box
                 </span>
               </h1>
 
-              <h2 className="font-handwriting text-5xl lg:text-6xl text-[#AF5B6A] mb-6 rotate-[-1deg]">
+              <h2
+                className="text-[#AF5B6A] mb-6 rotate-[-1deg]"
+                style={{
+                  fontFamily: '"Great Vibes", cursive',
+                  fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+                }}
+              >
                 Túi mù Keycard
               </h2>
 
