@@ -1,4 +1,8 @@
-import { Eye, EyeOff, Lock, Unlock, Copy, Trash2, ChevronUp, ChevronDown, Type, Image, Circle, Sparkles, Frame } from 'lucide-react';
+import { useState, useRef } from 'react';
+import {
+  Eye, EyeOff, Lock, Unlock, Copy, Trash2, Type, Image, Circle,
+  Sparkles, GripVertical, LayoutTemplate,
+} from 'lucide-react';
 import { PageElement } from '../../types/editor';
 
 interface LayerPanelProps {
@@ -10,6 +14,7 @@ interface LayerPanelProps {
   onDuplicate: (id: string) => void;
   onDelete: (id: string) => void;
   onReorder: (id: string, direction: 'up' | 'down') => void;
+  onReorderByIndex?: (fromIndex: number, toIndex: number) => void;
 }
 
 export function LayerPanel({
@@ -21,179 +26,214 @@ export function LayerPanel({
   onDuplicate,
   onDelete,
   onReorder,
+  onReorderByIndex,
 }: LayerPanelProps) {
-  
-  // Sort by zIndex (highest first)
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+  const dragIndexRef = useRef<number | null>(null);
+
+  // Sort by zIndex (highest = top of list = visually on top)
   const sortedElements = [...elements].sort((a, b) => b.zIndex - a.zIndex);
 
+  const isTemplateFrame = (el: PageElement) => el.id.startsWith('template-frame-');
+
   const getElementIcon = (element: PageElement) => {
+    if (isTemplateFrame(element)) return <LayoutTemplate className="w-4 h-4 text-amber-600" />;
     switch (element.type) {
-      case 'text':
-        return <Type className="w-4 h-4" />;
-      case 'image':
-        return <Image className="w-4 h-4" />;
-      case 'shape':
-        return <Circle className="w-4 h-4" />;
-      case 'sticker':
-        return <Sparkles className="w-4 h-4" />;
-      case 'icon':
-        return <Sparkles className="w-4 h-4" />;
-      case 'frame':
-        return <Frame className="w-4 h-4" />;
-      default:
-        return <Circle className="w-4 h-4" />;
+      case 'text': return <Type className="w-4 h-4" />;
+      case 'image': return <Image className="w-4 h-4" />;
+      case 'shape': return <Circle className="w-4 h-4" />;
+      case 'sticker': return <Sparkles className="w-4 h-4" />;
+      case 'icon': return <Sparkles className="w-4 h-4" />;
+      default: return <Circle className="w-4 h-4" />;
     }
   };
 
   const getElementLabel = (element: PageElement): string => {
+    if (isTemplateFrame(element)) return '🖼 Template';
     switch (element.type) {
       case 'text':
-        return element.content.substring(0, 20) + (element.content.length > 20 ? '...' : '');
-      case 'image':
-        return 'Hình ảnh';
-      case 'shape':
-        return `Hình ${element.shape}`;
-      case 'sticker':
-        return element.emoji;
-      case 'icon':
-        return `Icon ${element.iconName}`;
-      case 'frame':
-        return 'Khung viền';
-      default:
-        return 'Element';
+        return (element as any).content?.substring(0, 22) + ((element as any).content?.length > 22 ? '…' : '') || 'Văn bản';
+      case 'image': return 'Hình ảnh';
+      case 'shape': return `Hình ${(element as any).shape || ''}`;
+      case 'sticker': return (element as any).emoji || 'Sticker';
+      case 'icon': return `Icon`;
+      case 'frame': return 'Khung viền';
+      default: return 'Phần tử';
     }
   };
 
+  const getImageThumb = (element: PageElement): string | null => {
+    if (element.type !== 'image') return null;
+    const src = (element as any).src || '';
+    if (!src) return null;
+    if (src.startsWith('dearbook_image_')) {
+      return localStorage.getItem(src) || null;
+    }
+    return src;
+  };
+
+  // ────────── Drag-and-drop handlers ──────────
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    dragIndexRef.current = index;
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    setDragOverIndex(index);
+  };
+
+  const handleDrop = (e: React.DragEvent, toIndex: number) => {
+    e.preventDefault();
+    const fromIndex = dragIndexRef.current;
+    if (fromIndex === null || fromIndex === toIndex) {
+      setDragOverIndex(null);
+      return;
+    }
+
+    if (onReorderByIndex) {
+      onReorderByIndex(fromIndex, toIndex);
+    } else {
+      // Fallback: use up/down direction multiple times
+      const steps = toIndex - fromIndex;
+      const direction = steps > 0 ? 'down' : 'up';
+      const elementId = sortedElements[fromIndex].id;
+      for (let i = 0; i < Math.abs(steps); i++) {
+        onReorder(elementId, direction);
+      }
+    }
+    dragIndexRef.current = null;
+    setDragOverIndex(null);
+  };
+
+  const handleDragEnd = () => {
+    dragIndexRef.current = null;
+    setDragOverIndex(null);
+  };
+
   return (
-    <div className="h-full flex flex-col bg-white">
+    <div className="h-full flex flex-col bg-white select-none">
       {/* Header */}
-      <div className="p-4 border-b">
-        <h3 className="font-semibold text-gray-900">Lớp ({elements.length})</h3>
-        <p className="text-xs text-gray-500 mt-1">Quản lý các thành phần</p>
+      <div className="px-4 py-3 border-b bg-gradient-to-r from-purple-50 to-indigo-50">
+        <p className="text-xs text-gray-500 mt-0.5">Kéo thả để sắp xếp thứ tự</p>
       </div>
 
       {/* Layers List */}
       <div className="flex-1 overflow-y-auto">
         {sortedElements.length === 0 ? (
           <div className="p-8 text-center text-gray-400">
-            <Circle className="w-12 h-12 mx-auto mb-3 opacity-30" />
-            <p className="text-sm">Chưa có thành phần nào</p>
+            <Circle className="w-10 h-10 mx-auto mb-3 opacity-25" />
+            <p className="text-sm">Chưa có phần tử nào</p>
           </div>
         ) : (
           <div className="p-2 space-y-1">
             {sortedElements.map((element, index) => {
               const isSelected = selectedIds.includes(element.id);
-              const isFirst = index === 0;
-              const isLast = index === sortedElements.length - 1;
+              const isTemplate = isTemplateFrame(element);
+              const thumb = getImageThumb(element);
+              const isDropTarget = dragOverIndex === index;
 
               return (
                 <div
                   key={element.id}
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, index)}
+                  onDragOver={(e) => handleDragOver(e, index)}
+                  onDrop={(e) => handleDrop(e, index)}
+                  onDragEnd={handleDragEnd}
                   onClick={(e) => onSelectElement(element.id, e.shiftKey)}
-                  className={`group flex items-center gap-2 p-2 rounded-lg cursor-pointer transition-all ${
-                    isSelected
-                      ? 'bg-rose-50 ring-2 ring-rose-500'
+                  className={`
+                    group relative flex items-center gap-2 p-2 rounded-xl cursor-pointer transition-all duration-150
+                    ${isSelected
+                      ? 'bg-indigo-50 ring-2 ring-indigo-400 shadow-sm'
                       : 'hover:bg-gray-50'
-                  } ${!element.visible ? 'opacity-50' : ''}`}
+                    }
+                    ${!element.visible ? 'opacity-40' : ''}
+                    ${isDropTarget ? 'ring-2 ring-amber-400 bg-amber-50' : ''}
+                  `}
+                  style={{ userSelect: 'none' }}
                 >
-                  {/* Icon */}
-                  <div className={`flex-shrink-0 ${isSelected ? 'text-rose-600' : 'text-gray-400'}`}>
-                    {getElementIcon(element)}
+                  {/* Drag Handle */}
+                  <div className="flex-shrink-0 text-gray-300 group-hover:text-gray-500 transition-colors cursor-grab active:cursor-grabbing">
+                    <GripVertical className="w-3.5 h-3.5" />
+                  </div>
+
+                  {/* Thumbnail or Icon */}
+                  <div className="flex-shrink-0 w-8 h-8 rounded-md overflow-hidden border border-gray-200 bg-gray-100 flex items-center justify-center">
+                    {thumb ? (
+                      <img
+                        src={thumb}
+                        alt=""
+                        className="w-full h-full object-cover"
+                        draggable={false}
+                      />
+                    ) : (
+                      <span className={isSelected ? 'text-indigo-500' : 'text-gray-400'}>
+                        {getElementIcon(element)}
+                      </span>
+                    )}
                   </div>
 
                   {/* Label */}
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium text-gray-900 truncate">
+                    <div className={`text-xs font-semibold truncate ${isSelected ? 'text-indigo-700' : 'text-gray-800'}`}>
                       {getElementLabel(element)}
                     </div>
-                    <div className="text-xs text-gray-500">
-                      {element.type}
+                    <div className="text-[10px] text-gray-400 mt-0.5 flex items-center gap-1">
+                      {isTemplate && (
+                        <span className="bg-amber-100 text-amber-700 px-1 rounded text-[9px] font-bold">TEMPLATE</span>
+                      )}
+                      {element.locked && <Lock className="w-2.5 h-2.5" />}
+                      <span>z: {element.zIndex}</span>
                     </div>
                   </div>
 
-                  {/* Actions (hidden by default, shown on hover) */}
-                  <div className="flex-shrink-0 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    {/* Reorder */}
-                    <div className="flex flex-col">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (!isFirst) onReorder(element.id, 'up');
-                        }}
-                        disabled={isFirst}
-                        className="p-0.5 hover:bg-gray-200 rounded disabled:opacity-30 disabled:cursor-not-allowed"
-                        title="Di chuyển lên"
-                      >
-                        <ChevronUp className="w-3 h-3" />
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (!isLast) onReorder(element.id, 'down');
-                        }}
-                        disabled={isLast}
-                        className="p-0.5 hover:bg-gray-200 rounded disabled:opacity-30 disabled:cursor-not-allowed"
-                        title="Di chuyển xuống"
-                      >
-                        <ChevronDown className="w-3 h-3" />
-                      </button>
-                    </div>
-
+                  {/* Quick Action Buttons (shown on hover/select) */}
+                  <div className="flex-shrink-0 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
                     {/* Visibility */}
                     <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onToggleVisibility(element.id);
-                      }}
-                      className="p-1 hover:bg-gray-200 rounded"
+                      onClick={(e) => { e.stopPropagation(); onToggleVisibility(element.id); }}
+                      className="p-1 rounded hover:bg-gray-200 transition-colors"
                       title={element.visible ? 'Ẩn' : 'Hiện'}
                     >
-                      {element.visible ? (
-                        <Eye className="w-4 h-4 text-gray-600" />
-                      ) : (
-                        <EyeOff className="w-4 h-4 text-gray-400" />
-                      )}
+                      {element.visible
+                        ? <Eye className="w-3.5 h-3.5 text-gray-600" />
+                        : <EyeOff className="w-3.5 h-3.5 text-gray-400" />}
                     </button>
 
                     {/* Lock */}
                     <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onToggleLock(element.id);
-                      }}
-                      className="p-1 hover:bg-gray-200 rounded"
-                      title={element.locked ? 'Mở khóa' : 'Khóa'}
+                      onClick={(e) => { e.stopPropagation(); onToggleLock(element.id); }}
+                      className="p-1 rounded hover:bg-gray-200 transition-colors"
+                      title={element.locked ? 'Mở khoá' : 'Khoá'}
                     >
-                      {element.locked ? (
-                        <Lock className="w-4 h-4 text-gray-600" />
-                      ) : (
-                        <Unlock className="w-4 h-4 text-gray-400" />
-                      )}
+                      {element.locked
+                        ? <Lock className="w-3.5 h-3.5 text-amber-600" />
+                        : <Unlock className="w-3.5 h-3.5 text-gray-400" />}
                     </button>
 
-                    {/* Duplicate */}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onDuplicate(element.id);
-                      }}
-                      className="p-1 hover:bg-gray-200 rounded"
-                      title="Nhân bản"
-                    >
-                      <Copy className="w-4 h-4 text-gray-600" />
-                    </button>
+                    {/* Duplicate (not for template) */}
+                    {!isTemplate && (
+                      <button
+                        onClick={(e) => { e.stopPropagation(); onDuplicate(element.id); }}
+                        className="p-1 rounded hover:bg-blue-100 transition-colors"
+                        title="Nhân bản"
+                      >
+                        <Copy className="w-3.5 h-3.5 text-blue-600" />
+                      </button>
+                    )}
 
-                    {/* Delete */}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onDelete(element.id);
-                      }}
-                      className="p-1 hover:bg-red-100 rounded text-red-600"
-                      title="Xóa"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                    {/* Delete (not for template) */}
+                    {!isTemplate && (
+                      <button
+                        onClick={(e) => { e.stopPropagation(); onDelete(element.id); }}
+                        className="p-1 rounded hover:bg-red-100 transition-colors"
+                        title="Xoá"
+                      >
+                        <Trash2 className="w-3.5 h-3.5 text-red-500" />
+                      </button>
+                    )}
                   </div>
                 </div>
               );
@@ -202,10 +242,11 @@ export function LayerPanel({
         )}
       </div>
 
-      {/* Quick Tips */}
-      <div className="p-3 border-t bg-gray-50 text-xs text-gray-600 space-y-1">
-        <div>💡 <strong>Tip:</strong> Shift + Click để chọn nhiều</div>
-        <div>🔒 Khóa để tránh di chuy��n nhầm</div>
+      {/* Tips */}
+      <div className="p-3 border-t bg-gray-50 text-[11px] text-gray-500 space-y-1">
+        <div>🖱 Kéo thả để đổi thứ tự lớp</div>
+        <div>👁 Click 👁 để ẩn/hiện · 🔒 để khoá lớp</div>
+        <div>⇧ + Click để chọn nhiều phần tử</div>
       </div>
     </div>
   );

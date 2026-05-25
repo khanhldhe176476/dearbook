@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { ArrowLeft, Eye, ShoppingCart, Wand2, Sliders, Box } from 'lucide-react';
 import { PageData, CharacterData, BookData } from '../../App';
 import { PageElement } from '../../types/editor';
@@ -55,14 +56,55 @@ export function Step4PageEditorAdvanced({
 
   // Convert PageData to Editor format
   const convertToEditorFormat = (): any[] => {
-    // Find the real template
-    const template = templates.find(t => t.id === templateId);
-    
     if (!localPages || localPages.length === 0) {
       return [];
     }
+
+    // ── LOCAL TEMPLATES (local-template-1/2/3) ──────────────────────────────
+    // Mỗi trang lưu URL ảnh gốc trong images.pageImage.
+    // Trong editor, ảnh đó trở thành background của canvas; elements rỗng để user tự thêm.
+    if (templateId.startsWith('local-template-')) {
+      return localPages.map((page) => {
+        let elements = page.elements ? [...page.elements] : [];
+        let background = page.background;
+
+        // Convert the old format (template as background) to new format (template as foreground overlay)
+        if (!page.elements || (background?.type === 'image' && background?.value === page.images?.pageImage)) {
+          const maxZ = elements.length > 0 ? Math.max(...elements.map((e: any) => e.zIndex || 0)) : 0;
+          elements.push({
+            id: `template-frame-${page.id}`,
+            type: 'image',
+            src: page.images?.pageImage || '',
+            x: 0,
+            y: 0,
+            width: PAGE_W,
+            height: PAGE_H,
+            rotation: 0,
+            opacity: 1,
+            locked: true, // Không cho click chọn
+            visible: true,
+            zIndex: maxZ + 10, // Luôn đè lên các elements có sẵn
+            objectFit: 'fill'
+          });
+          background = { type: 'color', value: '#FFFFFF' };
+        }
+
+        return {
+          id: page.id,
+          elements,
+          background: background || { type: 'color', value: '#FFFFFF' },
+          width: PAGE_W,
+          height: PAGE_H,
+        };
+      });
+    }
+
+    // Find the real template
+    const template = templates.find(t => t.id === templateId);
     
     return localPages.map((page, idx) => {
+      if (page.elements) return page; // Already in Editor format
+
       // Try to find the corresponding template page
       const templatePage = template?.pages[idx];
       
@@ -280,16 +322,6 @@ export function Step4PageEditorAdvanced({
   };
 
   const handlePageUpdate = (pageIndex: number, elements: PageElement[], background?: any, backgroundImage?: string) => {
-    const updatedLocalPages = [...localPages];
-    // In simple book structure, we might not store all elements, 
-    // but here we are in advanced mode or transitioning.
-    // We'll update the localPages with some representation if needed, 
-    // or just rely on the editor triggering a save.
-    
-    // Actually, we should update localPages to reflect changes
-    // But localPages in App.tsx is PageData[] (simple format).
-    // We need to convert from Editor format back.
-    
     const editorFormat = convertToEditorFormat();
     if (editorFormat[pageIndex]) {
       editorFormat[pageIndex].elements = elements;
@@ -300,9 +332,9 @@ export function Step4PageEditorAdvanced({
       }
     }
     
-    const newPages = convertFromEditorFormat(editorFormat);
-    setLocalPages(newPages);
-    onChange(newPages, bookTitle);
+    // Lưu thẳng định dạng EditorPage (chứa full elements) để không bị mất khi render lại
+    setLocalPages(editorFormat);
+    onChange(editorFormat, bookTitle);
   };
 
   const handleAddPage = () => {
@@ -359,9 +391,9 @@ export function Step4PageEditorAdvanced({
       title: bookTitle,
     };
 
-    return (
+    return createPortal(
       <>
-        <div className="fixed inset-0 z-50" style={{ background: '#FAFAF8' }}>
+        <div className="fixed inset-0 z-[100]" style={{ background: '#FAFAF8' }}>
           {/* New V2 Editor with all features */}
           <AdvancedPageEditorV2
             book={bookData}
@@ -371,7 +403,13 @@ export function Step4PageEditorAdvanced({
             onUpdatePage={handlePageUpdate}
             onSave={handleEditorSave}
             onPreview={() => setShow3DView(true)}
-            onBack={() => setMode('simple')}
+            onBack={() => {
+              if (templateId.startsWith('local-template-') || templateId === 'youth-archive-memories') {
+                onBack();
+              } else {
+                setMode('simple');
+              }
+            }}
             onAddPage={handleAddPage}
             onDeletePage={handleDeletePage}
             onDuplicatePage={handleDuplicatePage}
@@ -381,23 +419,26 @@ export function Step4PageEditorAdvanced({
         
         {/* FlipBook Reader for Advanced Mode */}
         {show3DView && (
-          <FlipBookReader
-            book={{
-              id: templateId,
-              title: bookTitle,
-              theme,
-              templateId,
-              character,
-              cover: templates.find(t => t.id === templateId)?.cover || { id: 'cover', backgroundColor: '#fff', elements: [] },
-              pages: localPages,
-              status: 'draft',
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString()
-            }}
-            onClose={() => setShow3DView(false)}
-          />
+          <div className="fixed inset-0 z-[110]">
+            <FlipBookReader
+              book={{
+                id: templateId,
+                title: bookTitle,
+                theme,
+                templateId,
+                character,
+                cover: templates.find(t => t.id === templateId)?.cover || { id: 'cover', backgroundColor: '#fff', elements: [] },
+                pages: localPages,
+                status: 'draft',
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+              }}
+              onClose={() => setShow3DView(false)}
+            />
+          </div>
         )}
-      </>
+      </>,
+      document.body
     );
   }
 

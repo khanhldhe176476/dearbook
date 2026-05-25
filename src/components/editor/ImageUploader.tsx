@@ -59,14 +59,14 @@ export function ImageUploader({
           if (enableCrop) {
             setImageForCrop(dataUrl);
           } else {
-            // Store in localStorage with unique key
             const imageKey = `dearbook_image_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
             try {
               localStorage.setItem(imageKey, dataUrl);
+              onImageUpload(imageKey);
             } catch (err) {
               console.warn('Failed to save to localStorage:', err);
+              onImageUpload(dataUrl);
             }
-            onImageUpload(imageKey);
           }
 
           setIsUploading(false);
@@ -126,10 +126,11 @@ export function ImageUploader({
     const imageKey = `dearbook_image_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     try {
       localStorage.setItem(imageKey, croppedImageUrl);
+      onImageUpload(imageKey);
     } catch (err) {
       console.warn('Failed to save cropped image to localStorage:', err);
+      onImageUpload(croppedImageUrl);
     }
-    onImageUpload(imageKey);
     setImageForCrop(null);
   };
 
