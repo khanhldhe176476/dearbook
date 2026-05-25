@@ -257,14 +257,91 @@ const styles = `
    ═══════════════════════════════════════════════════════════ */
 
 const PriceTag = ({ price, size = 'md' }: { price: string; size?: 'sm' | 'md' | 'lg' }) => {
-  const sizeMap = { sm: 'w-16 h-16 text-lg', md: 'w-24 h-24 text-2xl', lg: 'w-28 h-28 text-3xl' };
+  const sizeMap = {
+    sm: 'w-16 h-16 text-base',
+    md: 'w-24 h-24 text-xl',
+    lg: 'w-28 h-28 text-3xl',
+  };
+
   return (
-    <div className={`price-badge ${sizeMap[size]} rounded-full flex items-center justify-center cursor-pointer`}
-         style={{
-           background: 'linear-gradient(135deg, #CD8F9A 0%, #AF5B6A 50%, #9A3540 100%)',
-           boxShadow: '0 8px 25px rgba(175, 91, 106, 0.4), inset 0 1px 0 rgba(255,255,255,0.3)',
-         }}>
-      <span className="font-serif font-bold text-white drop-shadow-sm" style={{ textShadow: '0 1px 3px rgba(0,0,0,0.2)' }}>
+    <div
+      className={`price-badge ${sizeMap[size]} relative flex items-center justify-center cursor-pointer`}
+      style={{
+        filter: 'drop-shadow(0 10px 18px rgba(84, 45, 25, 0.28))',
+      }}
+    >
+      {/* Chỉ đổi hình dạng tag: từ tròn sang tag hoa giống mẫu */}
+      <svg
+        className="absolute inset-0 w-full h-full"
+        viewBox="0 0 100 100"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <defs>
+          <linearGradient id="priceTagBrown" x1="20" y1="12" x2="82" y2="92" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#9A6848" />
+            <stop offset="52%" stopColor="#7A472B" />
+            <stop offset="100%" stopColor="#63361F" />
+          </linearGradient>
+        </defs>
+
+        <path
+          d="
+            M50 8
+            C58 8 62 18 65 26
+            C72 21 84 17 90 24
+            C96 31 88 42 80 48
+            C90 52 98 62 94 71
+            C90 80 77 78 68 73
+            C67 83 60 94 50 94
+            C40 94 33 83 32 73
+            C23 78 10 80 6 71
+            C2 62 10 52 20 48
+            C12 42 4 31 10 24
+            C16 17 28 21 35 26
+            C38 18 42 8 50 8
+            Z
+          "
+          fill="url(#priceTagBrown)"
+          stroke="#E8B89B"
+          strokeWidth="3.2"
+          strokeLinejoin="round"
+        />
+
+        <path
+          d="
+            M50 14
+            C56 14 59 23 62 31
+            C69 26 79 24 84 29
+            C89 35 82 44 74 50
+            C84 54 90 62 87 68
+            C84 75 73 73 65 67
+            C64 77 57 87 50 87
+            C43 87 36 77 35 67
+            C27 73 16 75 13 68
+            C10 62 16 54 26 50
+            C18 44 11 35 16 29
+            C21 24 31 26 38 31
+            C41 23 44 14 50 14
+            Z
+          "
+          fill="none"
+          stroke="rgba(255, 224, 204, 0.88)"
+          strokeWidth="1.3"
+          strokeLinejoin="round"
+        />
+
+        <circle cx="50" cy="18" r="5.4" fill="#3A1E12" />
+      </svg>
+
+      <span
+        className="absolute left-1/2 top-1/2 z-10 font-serif font-bold text-white leading-none whitespace-nowrap pointer-events-none"
+        style={{
+          fontSize: size === 'lg' ? '24px' : size === 'md' ? '20px' : '16px',
+          transform: 'translate(-50%, -50%) translateY(8px)',
+          textShadow: '0 2px 4px rgba(0,0,0,0.32)',
+        }}
+      >
         {price}
       </span>
     </div>
@@ -279,20 +356,20 @@ const ProductImage = ({ src, alt = '', className = '' }: { src: string; alt?: st
 
 const BlindBagCard = ({ imgUrl, title, subtitle }: { imgUrl: string; title: string; subtitle: string }) => (
   <div className="blind-box-card w-52 bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer group"
-       style={{ border: '1px solid rgba(205,143,154,0.2)' }}>
+    style={{ border: '1px solid rgba(205,143,154,0.2)' }}>
     {/* Top stripe */}
     <div className="h-2" style={{ background: 'linear-gradient(90deg, #AF5B6A, #CD8F9A, #AF5B6A)' }} />
-    
+
     <div className="p-4 flex flex-col items-center">
       <div className="w-full h-36 rounded-xl overflow-hidden mb-3 shadow-inner"
-           style={{ border: '4px solid #F3E9D7' }}>
+        style={{ border: '4px solid #F3E9D7' }}>
         <img src={imgUrl} className="w-full h-full object-cover img-zoom" alt="" />
       </div>
-      
+
       <p className="text-xs text-gray-400 tracking-widest uppercase mb-1">{subtitle}</p>
       <p className="font-handwriting text-2xl text-[#9A3540] text-center leading-tight">{title}</p>
     </div>
-    
+
     {/* Bottom stripe */}
     <div className="h-2" style={{ background: 'linear-gradient(90deg, #AF5B6A, #CD8F9A, #AF5B6A)' }} />
   </div>
@@ -300,7 +377,7 @@ const BlindBagCard = ({ imgUrl, title, subtitle }: { imgUrl: string; title: stri
 
 const PhotoBoothStrip = ({ images, rotation }: { images: string[]; rotation: number }) => (
   <div className="photo-strip bg-white p-2 pb-8 shadow-lg border border-gray-100 rounded-sm cursor-pointer"
-       style={{ transform: `rotate(${rotation}deg)`, width: '100px' }}>
+    style={{ transform: `rotate(${rotation}deg)`, width: '100px' }}>
     <div className="space-y-2">
       {images.map((img: string, i: number) => (
         <div key={i} className="aspect-[3/2] bg-gray-200 overflow-hidden rounded-sm">
@@ -309,7 +386,7 @@ const PhotoBoothStrip = ({ images, rotation }: { images: string[]; rotation: num
       ))}
     </div>
     <div className="text-center mt-4">
-      <p className="font-handwriting text-[#D498A7] text-xs">dear<br/>memories</p>
+      <p className="font-handwriting text-[#D498A7] text-xs">dear<br />memories</p>
     </div>
   </div>
 );
@@ -326,12 +403,12 @@ const AutoFlipRightPage = ({ pages, bgColor }: { pages: any[]; bgColor: string }
       <div className="absolute inset-y-0 left-0 w-4 bg-gradient-to-r from-black/20 to-transparent z-20 pointer-events-none" />
       {pages.map((page, index) => (
         <div key={index}
-             className="absolute inset-0 transition-all duration-1000 ease-in-out"
-             style={{
-               opacity: activeIndex === index ? 1 : 0,
-               transform: activeIndex === index ? 'translateX(0)' : 'translateX(10px)',
-               zIndex: activeIndex === index ? 10 : 0,
-             }}>
+          className="absolute inset-0 transition-all duration-1000 ease-in-out"
+          style={{
+            opacity: activeIndex === index ? 1 : 0,
+            transform: activeIndex === index ? 'translateX(0)' : 'translateX(10px)',
+            zIndex: activeIndex === index ? 10 : 0,
+          }}>
           {page}
         </div>
       ))}
@@ -384,9 +461,9 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
                   className="cta-btn bg-[#333] text-white px-5 py-2.5 rounded-full font-medium text-sm relative z-10">
                   Thư viện của tôi
                 </button>
-                <InteractiveLogoutButton 
-                  onLogout={onLogout} 
-                  variant="ghost" 
+                <InteractiveLogoutButton
+                  onLogout={onLogout}
+                  variant="ghost"
                 />
               </div>
             ) : (
@@ -405,15 +482,15 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
           SECTION 1 — Hero: Túi mù Keycard
           ══════════════════════════════════════════════════════ */}
       <section className="relative w-full min-h-[620px] overflow-hidden flex items-center"
-               style={{
-                 background: 'linear-gradient(160deg, #FDFBFB 0%, #F6F0ED 40%, #F3E6E8 100%)',
-               }}>
+        style={{
+          background: 'linear-gradient(160deg, #FDFBFB 0%, #F6F0ED 40%, #F3E6E8 100%)',
+        }}>
         {/* Decorative circles */}
         <div className="absolute top-[-100px] right-[-80px] w-[400px] h-[400px] rounded-full opacity-10"
-             style={{ background: 'radial-gradient(circle, #CD8F9A, transparent 70%)' }} />
+          style={{ background: 'radial-gradient(circle, #CD8F9A, transparent 70%)' }} />
         <div className="absolute bottom-[-60px] left-[-60px] w-[300px] h-[300px] rounded-full opacity-8"
-             style={{ background: 'radial-gradient(circle, #AF5B6A, transparent 70%)' }} />
-        
+          style={{ background: 'radial-gradient(circle, #AF5B6A, transparent 70%)' }} />
+
         {/* Dot pattern overlay */}
         <div className="absolute inset-0 dot-pattern opacity-50 pointer-events-none" />
 
@@ -423,7 +500,7 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
             {/* Left content */}
             <div className="flex-1 animate-slide-left" style={{ animationDelay: '0.2s' }}>
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6"
-                   style={{ background: 'rgba(175, 91, 106, 0.1)', border: '1px solid rgba(175, 91, 106, 0.2)' }}>
+                style={{ background: 'rgba(175, 91, 106, 0.1)', border: '1px solid rgba(175, 91, 106, 0.2)' }}>
                 <span className="w-2 h-2 rounded-full bg-[#AF5B6A] animate-pulse" />
                 <span className="text-sm font-medium text-[#AF5B6A]">Sản phẩm hot</span>
               </div>
@@ -513,12 +590,12 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
           SECTION 2 — Museum Box
           ══════════════════════════════════════════════════════ */}
       <section className="relative w-full min-h-[650px] overflow-hidden flex items-center"
-               style={{ background: 'linear-gradient(160deg, #FDF9F7 0%, #F8EEF0 50%, #F3DDE1 100%)' }}>
+        style={{ background: 'linear-gradient(160deg, #FDF9F7 0%, #F8EEF0 50%, #F3DDE1 100%)' }}>
         {/* Decorative elements */}
         <div className="absolute top-20 left-10 w-20 h-20 rounded-full opacity-10"
-             style={{ background: '#CD8F9A', filter: 'blur(30px)' }} />
+          style={{ background: '#CD8F9A', filter: 'blur(30px)' }} />
         <div className="absolute bottom-20 right-20 w-32 h-32 rounded-full opacity-10"
-             style={{ background: '#AF5B6A', filter: 'blur(40px)' }} />
+          style={{ background: '#AF5B6A', filter: 'blur(40px)' }} />
         <div className="absolute inset-0 dot-pattern opacity-30 pointer-events-none" />
 
         <div className="max-w-7xl mx-auto w-full px-8 py-20 relative z-10">
@@ -536,9 +613,9 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
 
             {/* Frame Box */}
             <div className="product-card w-64 h-80 bg-white rounded-2xl shadow-xl p-5 flex flex-col items-center cursor-pointer group"
-                 style={{ border: '1px solid rgba(205,143,154,0.15)' }}>
+              style={{ border: '1px solid rgba(205,143,154,0.15)' }}>
               <div className="w-full flex-1 rounded-xl overflow-hidden shadow-inner relative"
-                   style={{ border: '3px solid #F3E9D7' }}>
+                style={{ border: '3px solid #F3E9D7' }}>
                 <img src={loveImg} className="w-full h-full object-cover img-zoom" alt="" />
                 {/* Hover overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-3">
@@ -558,7 +635,7 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
 
             {/* Love Badge Set */}
             <div className="product-card w-56 h-72 bg-white rounded-2xl shadow-xl p-5 relative cursor-pointer group"
-                 style={{ border: '1px solid rgba(205,143,154,0.15)' }}>
+              style={{ border: '1px solid rgba(205,143,154,0.15)' }}>
               <h4 className="font-handwriting text-3xl text-[#AF5B6A] text-center mb-1 group-hover:scale-110 transition-transform duration-300">
                 Love Badge
               </h4>
@@ -567,11 +644,11 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
               <div className="relative h-40">
                 {/* Badge circles */}
                 <div className="absolute top-0 left-4 w-20 h-20 rounded-full shadow-xl overflow-hidden z-10 group-hover:translate-x-[-5px] group-hover:translate-y-[-3px] transition-transform duration-500"
-                     style={{ border: '4px solid #F3E9D7' }}>
+                  style={{ border: '4px solid #F3E9D7' }}>
                   <img src={familyImg} className="w-full h-full object-cover" alt="" />
                 </div>
                 <div className="absolute top-12 right-4 w-24 h-24 rounded-full shadow-xl overflow-hidden z-20 group-hover:translate-x-[5px] group-hover:translate-y-[-3px] transition-transform duration-500"
-                     style={{ border: '4px solid #DFA3B1' }}>
+                  style={{ border: '4px solid #DFA3B1' }}>
                   <img src={loveImg} className="w-full h-full object-cover" alt="" />
                 </div>
 
@@ -603,11 +680,11 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
       <section className="w-full py-24 relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #2D2D2D 0%, #363636 30%, #3D3D3D 100%)' }}>
         {/* Subtle dot pattern */}
         <div className="absolute inset-0 pointer-events-none opacity-5"
-             style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
+          style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
 
         {/* Glow accents */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[2px]"
-             style={{ background: 'linear-gradient(90deg, transparent, rgba(205,143,154,0.5), transparent)' }} />
+          style={{ background: 'linear-gradient(90deg, transparent, rgba(205,143,154,0.5), transparent)' }} />
 
         <div className="max-w-7xl mx-auto px-8 relative z-10">
           {/* Section title */}
@@ -626,13 +703,13 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
               { id: 4, title: 'Tier 4', color: '#F0E5E7', accent: '#742D35', img: loveImg, secondImg: hanoiImg },
             ].map((tier) => (
               <div key={tier.id}
-                   className="tier-card rounded-2xl overflow-hidden cursor-pointer group"
-                   onClick={onGetStarted}
-                   style={{
-                     background: 'rgba(255,255,255,0.05)',
-                     border: '1px solid rgba(255,255,255,0.08)',
-                     backdropFilter: 'blur(10px)',
-                   }}>
+                className="tier-card rounded-2xl overflow-hidden cursor-pointer group"
+                onClick={onGetStarted}
+                style={{
+                  background: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  backdropFilter: 'blur(10px)',
+                }}>
                 {/* Price tag */}
                 <div className="flex justify-between items-center p-4 pb-2">
                   <PriceTag price="128k" size="sm" />
@@ -642,7 +719,7 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
                 {/* Book preview */}
                 <div className="px-4 mb-4">
                   <div className="book-mockup flex rounded-lg overflow-hidden shadow-lg"
-                       style={{ border: '1px solid rgba(255,255,255,0.1)' }}>
+                    style={{ border: '1px solid rgba(255,255,255,0.1)' }}>
                     {/* Left page */}
                     <div className="w-1/2 h-44 overflow-hidden relative" style={{ backgroundColor: tier.color }}>
                       <img src={tier.img} className="w-full h-full object-cover img-zoom" alt="" />
@@ -688,7 +765,7 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
           ══════════════════════════════════════════════════════ */}
       <section className="w-full py-24 relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #3D3D3D 0%, #363636 50%, #2D2D2D 100%)' }}>
         <div className="absolute inset-0 pointer-events-none opacity-5"
-             style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
+          style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
 
         <div className="max-w-7xl mx-auto px-8 relative z-10">
           {/* Section title */}
@@ -706,14 +783,14 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
                 <div className="absolute -top-4 -left-4 z-20"><PriceTag price="38k" size="sm" /></div>
 
                 <div className="product-card rounded-2xl overflow-hidden cursor-pointer group"
-                     style={{ background: '#5E1921', border: '1px solid rgba(255,255,255,0.05)' }}>
+                  style={{ background: '#5E1921', border: '1px solid rgba(255,255,255,0.05)' }}>
                   <div className="p-6 flex flex-col items-center text-center">
                     <p className="font-serif text-[10px] text-white/50 tracking-widest uppercase mb-2">anh & em</p>
                     <p className="font-serif text-sm text-white tracking-[0.2em] mb-1 uppercase">Happy</p>
                     <p className="font-handwriting text-3xl text-white mb-3">anniversary</p>
 
                     <div className="w-36 h-28 rounded-2xl overflow-hidden mb-4 shadow-lg group-hover:shadow-2xl transition-shadow duration-500"
-                         style={{ border: '3px solid rgba(255,255,255,0.2)' }}>
+                      style={{ border: '3px solid rgba(255,255,255,0.2)' }}>
                       <img src={familyImg} className="w-full h-full object-cover img-zoom" alt="" />
                     </div>
 
@@ -737,13 +814,13 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
                 <div className="absolute -top-4 -left-4 z-20"><PriceTag price="38k" size="sm" /></div>
 
                 <div className="product-card rounded-2xl overflow-hidden cursor-pointer group"
-                     style={{ background: '#FFF5E6', border: '1px solid rgba(141,52,62,0.1)' }}>
+                  style={{ background: '#FFF5E6', border: '1px solid rgba(141,52,62,0.1)' }}>
                   <div className="p-6 flex flex-col items-center text-center">
                     <p className="font-handwriting text-3xl text-[#8D343E] leading-none mb-1">Happy</p>
                     <p className="font-serif text-[10px] uppercase text-[#8D343E] tracking-widest mb-4">Birthday</p>
 
                     <div className="w-36 h-28 rounded-2xl overflow-hidden mb-4 shadow-lg group-hover:shadow-2xl transition-shadow duration-500"
-                         style={{ border: '3px solid rgba(141,52,62,0.15)' }}>
+                      style={{ border: '3px solid rgba(141,52,62,0.15)' }}>
                       <img src={loveImg} className="w-full h-full object-cover img-zoom" alt="" />
                     </div>
 
@@ -794,7 +871,7 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center" style={{ height: '40px', overflow: 'visible' }}>
               <img src="/logo.png" alt="dearmemories" className="object-contain block"
-                   style={{ height: '120px', margin: '-40px 0', filter: 'brightness(1.5)' }} />
+                style={{ height: '120px', margin: '-40px 0', filter: 'brightness(1.5)' }} />
             </div>
             <p className="text-gray-500 text-sm">© 2026 Dear Memories. Made with ❤️ in Vietnam</p>
             <div className="flex gap-6 text-gray-500 text-sm">
