@@ -14,8 +14,14 @@ import {
   BookOpen,
   X,
 } from 'lucide-react';
-import { localTemplates, LocalTemplatePage } from '../../data/localTemplates';
+import autoData from '../../data/autoTemplates.json';
 import { BookData } from '../../App';
+
+export interface LocalTemplatePage {
+  id: string;
+  imageUrl: string;
+  label: string;
+}
 
 interface LocalTemplatePageViewerProps {
   book: Partial<BookData>;
@@ -30,7 +36,8 @@ export function LocalTemplatePageViewer({
   onFinish,
   onAdvancedEdit,
 }: LocalTemplatePageViewerProps) {
-  const template = localTemplates.find(t => t.id === book.templateId);
+  const allTemplates = autoData.themes.flatMap(t => t.templates);
+  const template = allTemplates.find(t => t.id === book.templateId);
   const [viewMode, setViewMode] = useState<'grid' | 'single'>('grid');
   const [currentIdx, setCurrentIdx] = useState(0);
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);

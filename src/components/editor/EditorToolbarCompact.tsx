@@ -29,6 +29,7 @@ interface EditorToolbarCompactProps {
   canRedo: boolean;
   gridVisible: boolean;
   showLeftPanel: boolean;
+  showLayerPanel: boolean;
   showRightPanel: boolean;
   saveStatus: 'saved' | 'saving' | 'unsaved';
   lastSavedAt?: Date;
@@ -42,6 +43,7 @@ interface EditorToolbarCompactProps {
   onExport: () => void;
   onSaveOrder?: () => void;
   onToggleLeftPanel: () => void;
+  onToggleLayerPanel: () => void;
   onToggleRightPanel: () => void;
   onAddText?: () => void;
   onAddImage?: () => void;
@@ -57,6 +59,7 @@ export function EditorToolbarCompact({
   canRedo,
   gridVisible,
   showLeftPanel,
+  showLayerPanel,
   showRightPanel,
   saveStatus,
   lastSavedAt,
@@ -70,6 +73,7 @@ export function EditorToolbarCompact({
   onExport,
   onSaveOrder,
   onToggleLeftPanel,
+  onToggleLayerPanel,
   onToggleRightPanel,
   onAddText,
   onAddImage,
@@ -102,12 +106,26 @@ export function EditorToolbarCompact({
               </button>
             )}
             
-            <div className="flex-shrink-0 p-2 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors" onClick={onToggleLeftPanel}>
-              {showLeftPanel ? (
-                <PanelLeftClose className="w-5 h-5 text-gray-600" />
-              ) : (
-                <PanelLeftOpen className="w-5 h-5 text-gray-600" />
-              )}
+            <div className="flex items-center gap-1">
+              <button
+                onClick={onToggleLeftPanel}
+                className={`p-2 hover:bg-gray-100 rounded-lg transition-colors ${showLeftPanel ? 'bg-gray-100 text-gray-900' : 'text-gray-600'}`}
+                title={showLeftPanel ? "Ẩn thư viện" : "Hiện thư viện (Ảnh/Sticker)"}
+              >
+                {showLeftPanel ? (
+                  <PanelLeftClose className="w-5 h-5" />
+                ) : (
+                  <PanelLeftOpen className="w-5 h-5" />
+                )}
+              </button>
+
+              <button
+                onClick={onToggleLayerPanel}
+                className={`p-2 hover:bg-gray-100 rounded-lg transition-colors ${showLayerPanel ? 'bg-purple-50 text-purple-600 font-semibold' : 'text-gray-600'}`}
+                title={showLayerPanel ? "Ẩn quản lý lớp" : "Hiện quản lý lớp (Layers)"}
+              >
+                <Layers className="w-5 h-5" />
+              </button>
             </div>
 
             <div className="min-w-0">

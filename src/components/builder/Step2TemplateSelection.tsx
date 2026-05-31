@@ -1,10 +1,23 @@
 import { useState } from 'react';
 import { ArrowLeft, Eye, Check, Layout, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { PageData } from '../../App';
-import { localTemplates, LocalTemplate } from '../../data/localTemplates';
+import autoData from '../../data/autoTemplates.json';
+
+export interface LocalTemplate {
+  id: string;
+  name: string;
+  description: string;
+  thumbnail: string;
+  badge?: string;
+  pages: {
+    id: string;
+    imageUrl: string;
+    label: string;
+  }[];
+}
 
 interface Step2TemplateSelectionProps {
-  theme: 'love' | 'family' | 'birthday' | 'friendship';
+  theme: string;
   selectedTemplateId?: string;
   onSelect: (templateId: string, pages: PageData[]) => void;
   onBack: () => void;
@@ -137,6 +150,8 @@ export function Step2TemplateSelection({
 }: Step2TemplateSelectionProps) {
   const [previewTemplate, setPreviewTemplate] = useState<LocalTemplate | null>(null);
 
+  const templates = autoData.themes.find(t => t.id === theme)?.templates || [];
+
   const handleSelectTemplate = (template: LocalTemplate) => {
     // Chuyển đổi pages của local template sang PageData
     const pages: PageData[] = template.pages.map(p => ({
@@ -195,7 +210,7 @@ export function Step2TemplateSelection({
 
       {/* Template Grid */}
       <div className="grid sm:grid-cols-3 gap-6 max-w-5xl mx-auto">
-        {localTemplates.map((template) => {
+        {templates.map((template) => {
           const isSelected = selectedTemplateId === template.id;
 
           return (

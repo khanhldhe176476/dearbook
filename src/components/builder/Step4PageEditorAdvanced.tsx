@@ -63,7 +63,7 @@ export function Step4PageEditorAdvanced({
     // ── LOCAL TEMPLATES (local-template-1/2/3) ──────────────────────────────
     // Mỗi trang lưu URL ảnh gốc trong images.pageImage.
     // Trong editor, ảnh đó trở thành background của canvas; elements rỗng để user tự thêm.
-    if (templateId.startsWith('local-template-')) {
+    if (templateId.startsWith('local-template-') || templateId.startsWith('auto-template-')) {
       return localPages.map((page) => {
         let elements = page.elements ? [...page.elements] : [];
         let background = page.background;
@@ -404,7 +404,7 @@ export function Step4PageEditorAdvanced({
             onSave={handleEditorSave}
             onPreview={() => setShow3DView(true)}
             onBack={() => {
-              if (templateId.startsWith('local-template-') || templateId === 'youth-archive-memories') {
+              if (templateId.startsWith('local-template-') || templateId.startsWith('auto-template-') || templateId === 'youth-archive-memories') {
                 onBack();
               } else {
                 setMode('simple');

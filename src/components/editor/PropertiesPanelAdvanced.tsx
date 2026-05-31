@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, createContext, useContext } from 'react';
 import { 
   Type, AlignLeft, AlignCenter, AlignRight, AlignJustify, 
   Bold, Italic, Underline, Strikethrough,
@@ -7,6 +7,38 @@ import {
   Square, Triangle, Star, Heart, Minus, Plus
 } from 'lucide-react';
 import { PageElement, TextElement, ImageElement, ShapeElement, IconElement } from '../../types/editor';
+
+const SectionContext = createContext<{
+  expandedSections: Set<string>;
+  toggleSection: (id: string) => void;
+} | null>(null);
+
+function Section({ id, title, icon: Icon, children }: { id: string; title: string; icon: any; children: React.ReactNode }) {
+  const context = useContext(SectionContext);
+  if (!context) return null;
+  const { expandedSections, toggleSection } = context;
+  const isExpanded = expandedSections.has(id);
+  return (
+    <div className="border-b" style={{ borderColor: '#DDD8D0' }}>
+      <button
+        onClick={() => toggleSection(id)}
+        className="w-full px-4 py-3 flex items-center justify-between hover:bg-opacity-50 transition-colors"
+        style={{ background: isExpanded ? '#F5F2EE' : 'transparent', color: '#000000' }}
+      >
+        <div className="flex items-center gap-2">
+          <Icon className="w-4 h-4" style={{ color: '#7A6F66' }} />
+          <span className="text-sm font-medium">{title}</span>
+        </div>
+        {isExpanded ? <ChevronUp className="w-4 h-4" style={{ color: '#7A6F66' }} /> : <ChevronDown className="w-4 h-4" style={{ color: '#7A6F66' }} />}
+      </button>
+      {isExpanded && (
+        <div className="px-4 py-4 space-y-4 animate-in slide-in-from-top duration-200" style={{ background: '#FAFAF8' }}>
+          {children}
+        </div>
+      )}
+    </div>
+  );
+}
 
 interface PropertiesPanelAdvancedProps {
   selectedElements: PageElement[];
@@ -53,29 +85,7 @@ export function PropertiesPanelAdvanced({
     setExpandedSections(newExpanded);
   };
 
-  const Section = ({ id, title, icon: Icon, children }: { id: string; title: string; icon: any; children: React.ReactNode }) => {
-    const isExpanded = expandedSections.has(id);
-    return (
-      <div className="border-b" style={{ borderColor: '#DDD8D0' }}>
-        <button
-          onClick={() => toggleSection(id)}
-          className="w-full px-4 py-3 flex items-center justify-between hover:bg-opacity-50 transition-colors"
-          style={{ background: isExpanded ? '#F5F2EE' : 'transparent', color: '#000000' }}
-        >
-          <div className="flex items-center gap-2">
-            <Icon className="w-4 h-4" style={{ color: '#7A6F66' }} />
-            <span className="text-sm font-medium">{title}</span>
-          </div>
-          {isExpanded ? <ChevronUp className="w-4 h-4" style={{ color: '#7A6F66' }} /> : <ChevronDown className="w-4 h-4" style={{ color: '#7A6F66' }} />}
-        </button>
-        {isExpanded && (
-          <div className="px-4 py-4 space-y-4 animate-in slide-in-from-top duration-200" style={{ background: '#FAFAF8' }}>
-            {children}
-          </div>
-        )}
-      </div>
-    );
-  };
+  // Section component moved outside to prevent unmounting and flickering
 
   const renderTextProperties = (textEl: TextElement) => {
     return (
@@ -172,6 +182,7 @@ export function PropertiesPanelAdvanced({
             <label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Định dạng</label>
             <div className="grid grid-cols-3 gap-2">
               <button
+                onMouseDown={(e) => e.preventDefault()}
                 onClick={() => handleUpdate({ fontWeight: (textEl.fontWeight || 'normal') === 'bold' ? 'normal' : 'bold' })}
                 className="px-3 py-2 rounded-lg border transition-all flex items-center justify-center gap-1.5"
                 style={{
@@ -183,6 +194,7 @@ export function PropertiesPanelAdvanced({
                 <Bold className="w-4 h-4" />
               </button>
               <button
+                onMouseDown={(e) => e.preventDefault()}
                 onClick={() => handleUpdate({ fontStyle: (textEl.fontStyle || 'normal') === 'italic' ? 'normal' : 'italic' })}
                 className="px-3 py-2 rounded-lg border transition-all flex items-center justify-center gap-1.5"
                 style={{
@@ -194,6 +206,7 @@ export function PropertiesPanelAdvanced({
                 <Italic className="w-4 h-4" />
               </button>
               <button
+                onMouseDown={(e) => e.preventDefault()}
                 onClick={() => handleUpdate({ textDecoration: (textEl.textDecoration || 'none') === 'underline' ? 'none' : 'underline' })}
                 className="px-3 py-2 rounded-lg border transition-all flex items-center justify-center gap-1.5"
                 style={{
@@ -219,6 +232,7 @@ export function PropertiesPanelAdvanced({
               ].map(({ value, icon: Icon }) => (
                 <button
                   key={value}
+                  onMouseDown={(e) => e.preventDefault()}
                   onClick={() => handleUpdate({ textAlign: value as any })}
                   className="px-3 py-2 rounded-lg border transition-all flex items-center justify-center"
                   style={{
@@ -274,6 +288,7 @@ export function PropertiesPanelAdvanced({
               ].map((color) => (
                 <button
                   key={color}
+                  onMouseDown={(e) => e.preventDefault()}
                   onClick={() => handleUpdate({ color })}
                   className="w-full aspect-square rounded-lg border-2 hover:scale-110 transition-transform"
                   style={{ 
@@ -624,20 +639,22 @@ export function PropertiesPanelAdvanced({
   };
 
   return (
-    <div className="h-full overflow-y-auto" style={{ background: '#FAFAF8' }}>
-      {element.type === 'text' && renderTextProperties(element as TextElement)}
-      {element.type === 'image' && renderImageProperties(element as ImageElement)}
-      {element.type === 'shape' && renderShapeProperties(element as ShapeElement)}
-      {(element.type === 'sticker' || element.type === 'icon' || element.type === 'frame') && (
-        <Section id="position" title="Vị trí & Kích thước" icon={Settings}>
-          <div className="grid grid-cols-2 gap-3">
-            <div><label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>X</label><input type="number" value={Math.round(element.x)} onChange={(e) => handleUpdate({ x: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#000000' }} /></div>
-            <div><label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Y</label><input type="number" value={Math.round(element.y)} onChange={(e) => handleUpdate({ y: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#000000' }} /></div>
-            <div><label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Rộng</label><input type="number" value={Math.round(element.width)} onChange={(e) => handleUpdate({ width: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#000000' }} /></div>
-            <div><label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Cao</label><input type="number" value={Math.round(element.height)} onChange={(e) => handleUpdate({ height: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#000000' }} /></div>
-          </div>
-        </Section>
-      )}
-    </div>
+    <SectionContext.Provider value={{ expandedSections, toggleSection }}>
+      <div className="h-full overflow-y-auto" style={{ background: '#FAFAF8' }}>
+        {element.type === 'text' && renderTextProperties(element as TextElement)}
+        {element.type === 'image' && renderImageProperties(element as ImageElement)}
+        {element.type === 'shape' && renderShapeProperties(element as ShapeElement)}
+        {(element.type === 'sticker' || element.type === 'icon' || element.type === 'frame') && (
+          <Section id="position" title="Vị trí & Kích thước" icon={Settings}>
+            <div className="grid grid-cols-2 gap-3">
+              <div><label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>X</label><input type="number" value={Math.round(element.x)} onChange={(e) => handleUpdate({ x: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#000000' }} /></div>
+              <div><label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Y</label><input type="number" value={Math.round(element.y)} onChange={(e) => handleUpdate({ y: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#000000' }} /></div>
+              <div><label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Rộng</label><input type="number" value={Math.round(element.width)} onChange={(e) => handleUpdate({ width: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#000000' }} /></div>
+              <div><label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Cao</label><input type="number" value={Math.round(element.height)} onChange={(e) => handleUpdate({ height: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#000000' }} /></div>
+            </div>
+          </Section>
+        )}
+      </div>
+    </SectionContext.Provider>
   );
 }

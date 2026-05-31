@@ -1,10 +1,22 @@
-
-  import { defineConfig } from 'vite';
+import { defineConfig } from 'vite';
   import react from '@vitejs/plugin-react-swc';
   import path from 'path';
+  import { execSync } from 'child_process';
+
+  const autoGenerateTemplates = () => ({
+    name: 'auto-generate-templates',
+    buildStart() {
+      try {
+        console.log('Generating templates from public folder...');
+        execSync('node scripts/generate-templates.js', { stdio: 'inherit' });
+      } catch (err) {
+        console.error('Failed to generate templates:', err);
+      }
+    }
+  });
 
   export default defineConfig({
-    plugins: [react()],
+    plugins: [react(), autoGenerateTemplates()],
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
       alias: {
@@ -63,6 +75,9 @@
     server: {
       port: 3000,
       open: true,
+      watch: {
+        ignored: ['**/public/**']
+      },
       proxy: {
         '/api': {
           target: 'https://dearbook-backend-docker.onrender.com',
