@@ -2,17 +2,31 @@ import { useState, useEffect } from 'react';
 import { Heart, Users, Cake, Sparkles, Check, Loader2, Info } from 'lucide-react';
 import { categoryApi, Category } from '../../lib/categoryApi';
 
+import autoData from '../../data/autoTemplates.json';
+
 interface Step1ThemeSelectionProps {
-  selectedTheme?: 'love' | 'family' | 'birthday' | 'friendship';
-  onSelect: (theme: 'love' | 'family' | 'birthday' | 'friendship') => void;
+  selectedTheme?: string;
+  onSelect: (theme: string) => void;
 }
 
-const themes = [
-  { id: 'love' as const, name: 'Tình yêu', description: 'Dành tặng người yêu, vợ/chồng, bạn đời', icon: Heart, emoji: '💕', bgImage: 'https://images.unsplash.com/photo-1650595808040-e58faadbc6e8?w=800', examples: ['Kỷ niệm ngày cưới', 'Valentine', 'Ngày yêu đầu'] },
-  { id: 'family' as const, name: 'Gia đình', description: 'Kỷ niệm gia đình, cha mẹ, con cái', icon: Users, emoji: '👨‍👩‍👧', bgImage: 'https://images.unsplash.com/photo-1598623549917-a38dc6cd19b5?w=800', examples: ['Kỷ niệm gia đình', 'Ngày của mẹ', 'Tuổi thơ'] },
-  { id: 'birthday' as const, name: 'Sinh nhật', description: 'Quà tặng sinh nhật đặc biệt', icon: Cake, emoji: '🎂', bgImage: 'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=800', examples: ['Sinh nhật bạn bè', 'Tuổi mới', 'Năm mới'] },
-  { id: 'friendship' as const, name: 'Tình bạn', description: 'Tặng bạn thân, người bạn tri kỷ', icon: Sparkles, emoji: '🤝', bgImage: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800', examples: ['Kỷ niệm bạn bè', 'Tốt nghiệp', 'Chia tay'] },
-];
+const getThemeDetails = (name: string, id: string) => {
+  const lowerName = name.toLowerCase();
+  if (lowerName.includes('yêu') || id.includes('love')) return { icon: Heart, emoji: '💕', bgImage: 'https://images.unsplash.com/photo-1650595808040-e58faadbc6e8?w=800', examples: ['Kỷ niệm tình yêu', 'Valentine'] };
+  if (lowerName.includes('gia đình') || id.includes('family')) return { icon: Users, emoji: '👨‍👩‍👧', bgImage: 'https://images.unsplash.com/photo-1598623549917-a38dc6cd19b5?w=800', examples: ['Kỷ niệm gia đình', 'Ngày của mẹ'] };
+  if (lowerName.includes('sinh nhật') || id.includes('birthday')) return { icon: Cake, emoji: '🎂', bgImage: 'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=800', examples: ['Sinh nhật', 'Tuổi mới'] };
+  if (lowerName.includes('bạn') || lowerName.includes('friend')) return { icon: Sparkles, emoji: '🤝', bgImage: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800', examples: ['Kỷ niệm bạn bè', 'Tốt nghiệp'] };
+  return { icon: Sparkles, emoji: '✨', bgImage: 'https://images.unsplash.com/photo-1517404215738-15263e9f9178?w=800', examples: ['Lưu bút', 'Kỷ niệm'] };
+};
+
+const autoThemes = autoData.themes.map(t => {
+  const details = getThemeDetails(t.name, t.id);
+  return {
+    id: t.id,
+    name: t.name,
+    description: `Sách ảnh chủ đề ${t.name}`,
+    ...details
+  };
+});
 
 export function Step1ThemeSelection({ selectedTheme, onSelect }: Step1ThemeSelectionProps) {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -36,10 +50,15 @@ export function Step1ThemeSelection({ selectedTheme, onSelect }: Step1ThemeSelec
 
   const displayThemes = categories.length > 0
     ? categories.map(cat => {
-        const mockTheme = themes.find(t => t.id === cat.slug) || themes[0];
-        return { ...mockTheme, id: cat.slug as any, name: cat.name, description: cat.description || mockTheme.description, apiId: cat.id };
-      })
-    : themes;
+        const matched = autoThemes.find(t => t.id === cat.slug);
+        const fallback = autoThemes.length > 0 ? autoThemes[0] : null;
+        const mockTheme = matched || fallback;
+        
+        if (!mockTheme) return null;
+        
+        return { ...mockTheme, id: cat.slug, name: cat.name, description: cat.description || mockTheme.description, apiId: cat.id };
+      }).filter(Boolean) as typeof autoThemes
+    : autoThemes;
 
   return (
     <div className="step1-wrapper">

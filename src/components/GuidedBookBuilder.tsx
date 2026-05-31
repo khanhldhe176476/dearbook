@@ -57,8 +57,17 @@ export function GuidedBookBuilder({
   ];
 
   const handleStepComplete = (data: Partial<BookData>) => {
+    const baseData = { ...bookData };
+    
+    // Reset selected template and pages when theme is selected/changed
+    if (data.theme !== undefined) {
+      delete baseData.templateId;
+      delete baseData.pages;
+      setUseAdvancedEditor(false);
+    }
+
     const updated = {
-      ...bookData,
+      ...baseData,
       ...data,
       updatedAt: new Date().toISOString(),
     };
@@ -351,8 +360,8 @@ export function GuidedBookBuilder({
               bookData.theme &&
               bookData.templateId &&
               bookData.pages && (
-                // LOCAL TEMPLATES (temp1 / temp2 / temp3)
-                bookData.templateId.startsWith('local-template-') && !useAdvancedEditor ? (
+                // LOCAL TEMPLATES & AUTO TEMPLATES
+                (bookData.templateId.startsWith('local-template-') || bookData.templateId.startsWith('auto-template-')) && !useAdvancedEditor ? (
                   <LocalTemplatePageViewer
                     book={bookData as BookData}
                     onBack={() => setCurrentStep(2)}
@@ -391,7 +400,8 @@ export function GuidedBookBuilder({
                     onBack={() => {
                       if (
                         bookData.templateId === 'youth-archive-memories' ||
-                        bookData.templateId.startsWith('local-template-')
+                        bookData.templateId.startsWith('local-template-') ||
+                        bookData.templateId.startsWith('auto-template-')
                       ) {
                         setUseAdvancedEditor(false);
                       } else {

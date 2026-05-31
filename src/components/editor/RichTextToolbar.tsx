@@ -121,6 +121,7 @@ export function RichTextToolbar({
       {/* Text Formatting */}
       <div className="flex items-center gap-1">
         <button
+          onMouseDown={(e) => e.preventDefault()}
           onClick={toggleBold}
           className={`p-2 rounded-md transition-colors ${
             fontWeight === 'bold'
@@ -132,6 +133,7 @@ export function RichTextToolbar({
           <Bold className="w-4 h-4" />
         </button>
         <button
+          onMouseDown={(e) => e.preventDefault()}
           onClick={toggleItalic}
           className={`p-2 rounded-md transition-colors ${
             fontStyle === 'italic'
@@ -143,6 +145,7 @@ export function RichTextToolbar({
           <Italic className="w-4 h-4" />
         </button>
         <button
+          onMouseDown={(e) => e.preventDefault()}
           onClick={toggleUnderline}
           className={`p-2 rounded-md transition-colors ${
             textDecoration === 'underline'
@@ -160,6 +163,7 @@ export function RichTextToolbar({
       {/* Text Alignment */}
       <div className="flex items-center gap-1">
         <button
+          onMouseDown={(e) => e.preventDefault()}
           onClick={() => onTextAlignChange('left')}
           className={`p-2 rounded-md transition-colors ${
             textAlign === 'left'
@@ -171,6 +175,7 @@ export function RichTextToolbar({
           <AlignLeft className="w-4 h-4" />
         </button>
         <button
+          onMouseDown={(e) => e.preventDefault()}
           onClick={() => onTextAlignChange('center')}
           className={`p-2 rounded-md transition-colors ${
             textAlign === 'center'
@@ -182,6 +187,7 @@ export function RichTextToolbar({
           <AlignCenter className="w-4 h-4" />
         </button>
         <button
+          onMouseDown={(e) => e.preventDefault()}
           onClick={() => onTextAlignChange('right')}
           className={`p-2 rounded-md transition-colors ${
             textAlign === 'right'
@@ -193,6 +199,7 @@ export function RichTextToolbar({
           <AlignRight className="w-4 h-4" />
         </button>
         <button
+          onMouseDown={(e) => e.preventDefault()}
           onClick={() => onTextAlignChange('justify')}
           className={`p-2 rounded-md transition-colors ${
             textAlign === 'justify'
@@ -210,6 +217,7 @@ export function RichTextToolbar({
       {/* Color Picker */}
       <div className="relative">
         <button
+          onMouseDown={(e) => e.preventDefault()}
           onClick={() => setShowColorPicker(!showColorPicker)}
           className="flex items-center gap-2 px-3 py-1.5 border border-gray-300 rounded-md hover:border-gray-400 transition-colors"
           title="Text Color"
@@ -232,6 +240,7 @@ export function RichTextToolbar({
                 {PRESET_COLORS.map((presetColor) => (
                   <button
                     key={presetColor}
+                    onMouseDown={(e) => e.preventDefault()}
                     onClick={() => {
                       onColorChange(presetColor);
                       setShowColorPicker(false);
@@ -244,7 +253,7 @@ export function RichTextToolbar({
                   />
                 ))}
               </div>
-              <div className="flex items-center gap-2 pt-2 border-t border-gray-200">
+              <div className="flex items-center gap-2 pt-2 border-t border-gray-200" onMouseDown={(e) => e.stopPropagation()}>
                 <label className="text-sm text-gray-600">Custom:</label>
                 <input
                   type="color"

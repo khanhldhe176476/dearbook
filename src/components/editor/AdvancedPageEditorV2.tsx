@@ -317,6 +317,10 @@ export function AdvancedPageEditorV2({
     const newElements = [...elements, newElement];
     setEditorState(prev => ({ ...prev, elements: newElements }));
     setSelectedIds([newElement.id]);
+    setShowLayerPanel(true);
+    if (type === 'text') {
+      setEditingTextId(newElement.id);
+    }
     toast.success('Đã thêm phần tử mới');
   };
 
@@ -369,6 +373,7 @@ export function AdvancedPageEditorV2({
     }));
     setEditorState(prev => ({ ...prev, elements: newElements as PageElement[] }));
     setSelectedIds([]);
+    setShowLayerPanel(true);
     toast.success(`Đã áp dụng mẫu: ${template.name}`);
   };
 
@@ -391,6 +396,7 @@ export function AdvancedPageEditorV2({
       newElements.push(newEl as PageElement);
     });
     setEditorState(prev => ({ ...prev, elements: newElements as PageElement[] }));
+    setShowLayerPanel(true);
     toast.success(`Đã thêm: ${combination.name}`);
   };
 
@@ -800,7 +806,7 @@ export function AdvancedPageEditorV2({
       { position: 'se', cursor: 'nwse-resize', bottom: -6, right: -6 },
     ];
 
-    const resizeHandle = isSelected && !element.locked && element.type !== 'text' ? (
+    const resizeHandle = isSelected && !element.locked && !isEditing ? (
       <>
         {handles.map((h, i) => (
           <div
@@ -865,7 +871,7 @@ export function AdvancedPageEditorV2({
         };
 
         const handleTextBlur = (e: React.FocusEvent<HTMLDivElement>) => {
-          const newContent = e.currentTarget.textContent || '';
+          const newContent = e.currentTarget.innerText || '';
           if (newContent !== textEl.content) {
             handleUpdateElement(element.id, { content: newContent });
           }
@@ -876,62 +882,62 @@ export function AdvancedPageEditorV2({
           if (e.key === 'Escape') {
             e.preventDefault();
             setEditingTextId(null);
-            (e.target as HTMLDivElement).textContent = textEl.content;
-          } else if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            const newContent = (e.target as HTMLDivElement).textContent || '';
-            if (newContent !== textEl.content) {
-              handleUpdateElement(element.id, { content: newContent });
-            }
-            setEditingTextId(null);
+            (e.target as HTMLDivElement).innerText = textEl.content;
           }
         };
 
         content = (
           <div
-            contentEditable={isEditing}
-            suppressContentEditableWarning
-            style={{
-              ...commonStyle,
-              fontFamily: textEl.fontFamily,
-              fontSize: (textEl.fontSize || 24) * zoom,
-              fontWeight: textEl.fontWeight,
-              fontStyle: textEl.fontStyle,
-              color: textEl.color,
-              textAlign: textEl.textAlign,
-              lineHeight: textEl.lineHeight,
-              letterSpacing: (textEl.letterSpacing || 0) * zoom,
-              textDecoration: textEl.textDecoration,
-              textShadow: textEl.textShadow || 'none',
-              whiteSpace: 'pre-wrap',
-              wordBreak: 'break-word',
-              userSelect: isEditing ? 'text' : 'none',
-              padding: '8px',
-              outline: isEditing ? '2px solid #8C6E5D' : 'none',
-              background: isEditing ? 'rgba(140,110,93,0.05)' : 'transparent',
-              minHeight: isEditing ? '30px' : 'auto',
-            }}
+            style={commonStyle}
             onMouseDown={(e) => {
               if (!isEditing) {
                 handleMouseDown(e, element.id);
               }
             }}
             onDoubleClick={handleTextDoubleClick}
-            onBlur={handleTextBlur}
-            onKeyDown={handleTextKeyDown}
-            ref={(el) => {
-              if (isEditing && el) {
-                el.focus();
-                // Select all text when entering edit mode
-                const range = document.createRange();
-                const sel = window.getSelection();
-                range.selectNodeContents(el);
-                sel?.removeAllRanges();
-                sel?.addRange(range);
-              }
-            }}
           >
-            {textEl.content}
+            <div
+              contentEditable={isEditing}
+              suppressContentEditableWarning
+              style={{
+                width: '100%',
+                height: '100%',
+                fontFamily: textEl.fontFamily,
+                fontSize: (textEl.fontSize || 24) * zoom,
+                fontWeight: textEl.fontWeight,
+                fontStyle: textEl.fontStyle,
+                color: textEl.color,
+                textAlign: textEl.textAlign,
+                lineHeight: textEl.lineHeight,
+                letterSpacing: (textEl.letterSpacing || 0) * zoom,
+                textDecoration: textEl.textDecoration,
+                textShadow: textEl.textShadow || 'none',
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+                userSelect: isEditing ? 'text' : 'none',
+                padding: '8px',
+                outline: isEditing ? '2px solid #8C6E5D' : 'none',
+                background: isEditing ? 'rgba(140,110,93,0.05)' : 'transparent',
+                minHeight: isEditing ? '30px' : 'auto',
+                outlineOffset: '-2px',
+              }}
+              onBlur={handleTextBlur}
+              onKeyDown={handleTextKeyDown}
+              ref={(el) => {
+                if (isEditing && el) {
+                  el.focus();
+                  // Select all text when entering edit mode
+                  const range = document.createRange();
+                  const sel = window.getSelection();
+                  range.selectNodeContents(el);
+                  sel?.removeAllRanges();
+                  sel?.addRange(range);
+                }
+              }}
+            >
+              {textEl.content}
+            </div>
+            {resizeHandle}
           </div>
         );
         break;
@@ -1115,6 +1121,52 @@ export function AdvancedPageEditorV2({
         className="hidden"
         onChange={handleSlotFileChange}
       />
+      {/* Left Sidebar - Layer Panel (Desktop only) */}
+      {!isMobile && showLayerPanel && (
+        <div className="w-64 bg-white border-r border-gray-200 overflow-y-auto flex flex-col animate-in slide-in-from-left duration-200">
+          <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-purple-50 to-pink-50 sticky top-0 z-10 flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <Layers className="w-5 h-5 text-purple-600" />
+                <h3 className="font-semibold text-gray-900">Lớp (Layers)</h3>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                {elements.length} phần tử
+              </p>
+            </div>
+            <button
+              onClick={() => setShowLayerPanel(false)}
+              className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors text-gray-500 hover:text-gray-700"
+              title="Ẩn danh sách lớp"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+          <div className="flex-1 overflow-y-auto">
+            <LayerPanel
+              elements={elements}
+              selectedIds={selectedIds}
+              onSelectElement={handleSelectElement}
+              onReorder={handleReorderElement}
+              onDelete={handleDeleteElement}
+              onDuplicate={handleDuplicate}
+              onToggleVisibility={(id) => {
+                const element = elements.find((el) => el.id === id);
+                if (element) {
+                  handleUpdateElement(id, { visible: !element.visible });
+                }
+              }}
+              onToggleLock={(id) => {
+                const element = elements.find((el) => el.id === id);
+                if (element) {
+                  handleUpdateElement(id, { locked: !element.locked });
+                }
+              }}
+            />
+          </div>
+        </div>
+      )}
+
       {/* Left Sidebar - Asset Library (Desktop only) */}
       {!isMobile && showAssetLibrary && (
         <div className="w-72 bg-white border-r border-gray-200 overflow-y-auto animate-in slide-in-from-left duration-200">
@@ -1146,7 +1198,8 @@ export function AdvancedPageEditorV2({
             canRedo={canRedo}
             gridVisible={gridVisible}
             showLeftPanel={showAssetLibrary}
-            showRightPanel={showLayerPanel || showProperties}
+            showLayerPanel={showLayerPanel}
+            showRightPanel={showProperties}
             saveStatus={saveStatus as any}
             lastSavedAt={lastSavedAt || undefined}
             onBack={onBack}
@@ -1159,15 +1212,8 @@ export function AdvancedPageEditorV2({
             onExport={handleExportPageAsPDF}
             onSaveOrder={handleSaveOrder}
             onToggleLeftPanel={() => setShowAssetLibrary(!showAssetLibrary)}
-            onToggleRightPanel={() => {
-              if (showLayerPanel || showProperties) {
-                setShowLayerPanel(false);
-                setShowProperties(false);
-              } else {
-                setShowLayerPanel(true);
-                setShowProperties(true);
-              }
-            }}
+            onToggleLayerPanel={() => setShowLayerPanel(!showLayerPanel)}
+            onToggleRightPanel={() => setShowProperties(!showProperties)}
             onAddText={() =>
               handleAddElement('text', {
                 content: 'Nhập nội dung...',
@@ -1290,63 +1336,36 @@ export function AdvancedPageEditorV2({
         />
       </div>
 
-      {/* Right Sidebar - Layers & Properties (Desktop only) */}
-      {!isMobile && (showLayerPanel || showProperties) && (
+      {/* Right Sidebar - Properties (Desktop only) */}
+      {!isMobile && showProperties && selectedElement && (
         <div className="w-64 bg-white border-l border-gray-200 overflow-y-auto flex flex-col animate-in slide-in-from-right duration-200">
-          {showLayerPanel && (
-            <div className="border-b border-gray-200">
-              <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-purple-50 to-pink-50 sticky top-0 z-10">
-                <div className="flex items-center gap-2">
-                  <Layers className="w-5 h-5 text-purple-600" />
-                  <h3 className="font-semibold text-gray-900">Lớp</h3>
-                </div>
-                <p className="text-xs text-gray-500 mt-1">
-                  {elements.length} phần tử
-                </p>
+          <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-pink-50 to-rose-50 sticky top-0 z-10 flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <Settings className="w-5 h-5 text-pink-600" />
+                <h3 className="font-semibold text-gray-900">Thuộc tính</h3>
               </div>
-              <LayerPanel
-                elements={elements}
-                selectedIds={selectedIds}
-                onSelectElement={handleSelectElement}
-                onReorder={handleReorderElement}
-                onDelete={handleDeleteElement}
-                onDuplicate={handleDuplicate}
-                onToggleVisibility={(id) => {
-                  const element = elements.find((el) => el.id === id);
-                  if (element) {
-                    handleUpdateElement(id, { visible: !element.visible });
-                  }
-                }}
-                onToggleLock={(id) => {
-                  const element = elements.find((el) => el.id === id);
-                  if (element) {
-                    handleUpdateElement(id, { locked: !element.locked });
-                  }
-                }}
-              />
+              <p className="text-xs text-gray-500 mt-1 capitalize">
+                {selectedElement.type === 'text' ? '📝 Văn bản' : 
+                 selectedElement.type === 'image' ? '🖼️ Hình ảnh' : 
+                 selectedElement.type === 'shape' ? '⬛ Hình khối' : 
+                 selectedElement.type === 'sticker' ? '😊 Sticker' : '🎨 Phần tử'}
+              </p>
             </div>
-          )}
-
-          {showProperties && selectedElement && (
-            <div className="flex-1">
-              <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-pink-50 to-rose-50 sticky top-0 z-10">
-                <div className="flex items-center gap-2">
-                  <Settings className="w-5 h-5 text-pink-600" />
-                  <h3 className="font-semibold text-gray-900">Thuộc tính</h3>
-                </div>
-                <p className="text-xs text-gray-500 mt-1 capitalize">
-                  {selectedElement.type === 'text' ? '📝 Văn bản' : 
-                   selectedElement.type === 'image' ? '🖼️ Hình ảnh' : 
-                   selectedElement.type === 'shape' ? '⬛ Hình khối' : 
-                   selectedElement.type === 'sticker' ? '😊 Sticker' : '🎨 Phần tử'}
-                </p>
-              </div>
-              <PropertiesPanel
-                element={selectedElement}
-                onUpdate={(updates) => handleUpdateElement(selectedElement.id, updates)}
-              />
-            </div>
-          )}
+            <button
+              onClick={() => setShowProperties(false)}
+              className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors text-gray-500 hover:text-gray-700"
+              title="Ẩn thuộc tính"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+          <div className="flex-1 overflow-y-auto">
+            <PropertiesPanel
+              element={selectedElement}
+              onUpdate={(updates) => handleUpdateElement(selectedElement.id, updates)}
+            />
+          </div>
         </div>
       )}
 
