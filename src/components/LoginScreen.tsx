@@ -4,11 +4,12 @@ import { Mail, Lock, User, Sparkles, ShieldCheck, ArrowLeft, Loader2 } from 'luc
 interface LoginScreenProps {
   onLogin: (email: string, password: string, isSignup: boolean, name?: string) => Promise<{ needsOtp?: boolean } | void>;
   onVerifyOtp: (email: string, token: string, name?: string) => Promise<void>;
+  onBack?: () => void;
 }
 
 type GhostState = 'idle' | 'typing-email' | 'typing-password' | 'typing-name' | 'loading' | 'success' | 'error';
 
-export function LoginScreen({ onLogin, onVerifyOtp }: LoginScreenProps) {
+export function LoginScreen({ onLogin, onVerifyOtp, onBack }: LoginScreenProps) {
   const [isSignup, setIsSignup] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -686,7 +687,7 @@ export function LoginScreen({ onLogin, onVerifyOtp }: LoginScreenProps) {
         
         {/* ── Spooky Reels Header (Enforced contrast layout) ── */}
         <div className="spooky-header">
-          <button className="spooky-back-btn" onClick={() => window.history.back()}>
+          <button className="spooky-back-btn" onClick={() => onBack ? onBack() : window.history.back()}>
             <span style={{ fontSize: '1.25rem', lineHeight: '1' }}>&lt;</span>
             <span>Reels</span>
           </button>

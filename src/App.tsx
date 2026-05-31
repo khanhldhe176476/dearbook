@@ -280,7 +280,7 @@ function App() {
       )}
 
       {currentScreen === 'login' && (
-        <LoginScreen onLogin={handleLogin} onVerifyOtp={handleVerifyOtp} />
+        <LoginScreen onLogin={handleLogin} onVerifyOtp={handleVerifyOtp} onBack={() => setCurrentScreen('home')} />
       )}
 
       {currentScreen === 'library' && user && (

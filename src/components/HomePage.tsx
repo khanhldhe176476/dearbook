@@ -3,6 +3,16 @@ import hanoiImg from 'figma:asset/d7b475113023469e96cb19c4ee78d3ffb04dfa29.png';
 import loveImg from 'figma:asset/4f81f59175575b9ebba78ca1d45401cd109f1941.png';
 import familyImg from 'figma:asset/03ef3be4e5a9d3f6b0010356d756eeaf3c80bb4c.png';
 import { InteractiveLogoutButton } from './InteractiveLogoutButton';
+import {
+  Heart,
+  BookOpen,
+  Sparkles,
+  Star,
+  ArrowRight,
+  Check,
+  Gift,
+  HelpCircle,
+} from 'lucide-react';
 
 interface HomePageProps {
   user?: any;
@@ -32,8 +42,8 @@ const styles = `
     to { opacity: 1; transform: translateY(0); }
   }
   @keyframes pulseGlow {
-    0%, 100% { box-shadow: 0 0 20px rgba(175, 91, 106, 0.3); }
-    50% { box-shadow: 0 0 40px rgba(175, 91, 106, 0.6); }
+    0%, 100% { box-shadow: 0 0 20px rgba(185, 66, 58, 0.3); }
+    50% { box-shadow: 0 0 40px rgba(185, 66, 58, 0.6); }
   }
   @keyframes scaleIn {
     from { transform: scale(0.9); opacity: 0; }
@@ -46,11 +56,6 @@ const styles = `
   @keyframes slideInRight {
     from { transform: translateX(40px); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
-  }
-  @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
   }
 
   .animate-float-slow { animation: floatSlow 6s ease-in-out infinite; }
@@ -78,7 +83,7 @@ const styles = `
   }
   .product-card:hover {
     transform: translateY(-12px) scale(1.02);
-    box-shadow: 0 25px 60px -12px rgba(0,0,0,0.25), 0 0 30px rgba(175, 91, 106, 0.15);
+    box-shadow: 0 25px 60px -12px rgba(107, 75, 67, 0.15), 0 0 30px rgba(185, 66, 58, 0.15);
   }
   .product-card:hover::before {
     opacity: 1;
@@ -111,14 +116,14 @@ const styles = `
     position: absolute;
     bottom: 0; left: 50%;
     width: 0; height: 3px;
-    background: linear-gradient(90deg, #CD8F9A, #AF5B6A, #CD8F9A);
+    background: linear-gradient(90deg, #E6C7B8, #B9423A, #E6C7B8);
     transition: all 0.5s ease;
     transform: translateX(-50%);
     border-radius: 2px;
   }
   .tier-card:hover {
     transform: translateY(-16px);
-    box-shadow: 0 30px 60px -15px rgba(0,0,0,0.4), 0 0 40px rgba(175, 91, 106, 0.2);
+    box-shadow: 0 30px 60px -15px rgba(107, 75, 67, 0.25), 0 0 40px rgba(185, 66, 58, 0.2);
   }
   .tier-card:hover::after {
     width: 80%;
@@ -130,7 +135,7 @@ const styles = `
   }
   .book-mockup:hover {
     transform: translateY(-8px) rotate(-1deg);
-    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.35);
+    box-shadow: 0 20px 40px -10px rgba(107, 75, 67, 0.2);
   }
 
   /* ── Blind box hover ── */
@@ -143,14 +148,14 @@ const styles = `
     position: absolute;
     inset: -2px;
     border-radius: inherit;
-    background: linear-gradient(135deg, rgba(205,143,154,0.4), transparent, rgba(175,91,106,0.4));
+    background: linear-gradient(135deg, rgba(230,199,184,0.4), transparent, rgba(185,66,58,0.4));
     opacity: 0;
     transition: opacity 0.4s ease;
     z-index: -1;
   }
   .blind-box-card:hover {
     transform: translateY(-10px) scale(1.03);
-    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3);
+    box-shadow: 0 25px 50px -12px rgba(107, 75, 67, 0.2);
   }
   .blind-box-card:hover::after {
     opacity: 1;
@@ -166,12 +171,12 @@ const styles = `
     position: absolute;
     bottom: -4px; left: 0;
     width: 0; height: 2px;
-    background: linear-gradient(90deg, #AF5B6A, #CD8F9A);
+    background: linear-gradient(90deg, #B9423A, #E6C7B8);
     transition: width 0.3s ease;
     border-radius: 1px;
   }
   .nav-link:hover {
-    color: #AF5B6A;
+    color: #B9423A;
   }
   .nav-link:hover::after {
     width: 100%;
@@ -195,7 +200,7 @@ const styles = `
   }
   .cta-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(175, 91, 106, 0.4);
+    box-shadow: 0 10px 30px rgba(185, 66, 58, 0.4);
   }
   .cta-btn:hover::before {
     width: 300px; height: 300px;
@@ -203,7 +208,7 @@ const styles = `
 
   /* ── Shimmer text ── */
   .shimmer-text {
-    background: linear-gradient(90deg, #AF5B6A, #CD8F9A, #D4A5B0, #CD8F9A, #AF5B6A);
+    background: linear-gradient(90deg, #B9423A, #E6C7B8, #F7E2D4, #E6C7B8, #B9423A);
     background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -213,10 +218,10 @@ const styles = `
 
   /* ── Glassmorphism ── */
   .glass {
-    background: rgba(255, 255, 255, 0.75);
+    background: rgba(255, 248, 241, 0.9);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(230, 199, 184, 0.5);
   }
 
   /* ── Photo strip hover ── */
@@ -225,7 +230,7 @@ const styles = `
   }
   .photo-strip:hover {
     transform: rotate(0deg) translateY(-8px) !important;
-    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.2);
+    box-shadow: 0 20px 40px -10px rgba(107, 75, 67, 0.15);
   }
 
   /* ── Scroll reveal ── */
@@ -241,13 +246,13 @@ const styles = `
 
   /* ── Section divider ── */
   .section-divider {
-    background: linear-gradient(90deg, transparent, rgba(175, 91, 106, 0.3), transparent);
+    background: linear-gradient(90deg, transparent, rgba(185, 66, 58, 0.3), transparent);
     height: 1px;
   }
 
   /* ── Decorative dot pattern ── */
   .dot-pattern {
-    background-image: radial-gradient(circle, rgba(175, 91, 106, 0.08) 1px, transparent 1px);
+    background-image: radial-gradient(circle, rgba(185, 66, 58, 0.08) 1px, transparent 1px);
     background-size: 24px 24px;
   }
 `;
@@ -270,7 +275,6 @@ const PriceTag = ({ price, size = 'md' }: { price: string; size?: 'sm' | 'md' | 
         filter: 'drop-shadow(0 10px 18px rgba(84, 45, 25, 0.28))',
       }}
     >
-      {/* Chỉ đổi hình dạng tag: từ tròn sang tag hoa giống mẫu */}
       <svg
         className="absolute inset-0 w-full h-full"
         viewBox="0 0 100 100"
@@ -348,30 +352,29 @@ const PriceTag = ({ price, size = 'md' }: { price: string; size?: 'sm' | 'md' | 
   );
 };
 
-const ProductImage = ({ src, alt = '', className = '' }: { src: string; alt?: string; className?: string }) => (
-  <div className={`overflow-hidden ${className}`}>
-    <img src={src} className="w-full h-full object-cover img-zoom" alt={alt} />
-  </div>
-);
-
 const BlindBagCard = ({ imgUrl, title, subtitle }: { imgUrl: string; title: string; subtitle: string }) => (
-  <div className="blind-box-card w-52 bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer group"
-    style={{ border: '1px solid rgba(205,143,154,0.2)' }}>
-    {/* Top stripe */}
-    <div className="h-2" style={{ background: 'linear-gradient(90deg, #AF5B6A, #CD8F9A, #AF5B6A)' }} />
+  <div className="blind-box-card w-52 bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer group flex flex-col justify-between"
+    style={{ border: '1px solid #E6C7B8' }}>
+    <div>
+      {/* Top stripe */}
+      <div className="h-2 bg-[#B9423A]" />
 
-    <div className="p-4 flex flex-col items-center">
-      <div className="w-full h-36 rounded-xl overflow-hidden mb-3 shadow-inner"
-        style={{ border: '4px solid #F3E9D7' }}>
-        <img src={imgUrl} className="w-full h-full object-cover img-zoom" alt="" />
+      <div className="p-4 flex flex-col items-center">
+        <div className="w-full h-36 rounded-xl overflow-hidden mb-3 shadow-inner relative"
+          style={{ border: '4px solid #FFF8F1' }}>
+          <img src={imgUrl} className="w-full h-full object-cover img-zoom" alt="" />
+        </div>
+
+        <p className="text-xs text-[#6B4B43] tracking-widest uppercase mb-1">{subtitle}</p>
+        <p
+          className="text-2xl text-[#B9423A] text-center leading-tight"
+          style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', fontWeight: '400', fontSize: '1.6rem' }}
+        >{title}</p>
       </div>
-
-      <p className="text-xs text-gray-400 tracking-widest uppercase mb-1">{subtitle}</p>
-      <p className="font-handwriting text-2xl text-[#9A3540] text-center leading-tight">{title}</p>
     </div>
 
     {/* Bottom stripe */}
-    <div className="h-2" style={{ background: 'linear-gradient(90deg, #AF5B6A, #CD8F9A, #AF5B6A)' }} />
+    <div className="h-2 bg-[#B9423A]" />
   </div>
 );
 
@@ -386,7 +389,9 @@ const PhotoBoothStrip = ({ images, rotation }: { images: string[]; rotation: num
       ))}
     </div>
     <div className="text-center mt-4">
-      <p className="font-handwriting text-[#D498A7] text-xs">dear<br />memories</p>
+      <p
+        style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A', fontSize: '1rem', lineHeight: 1.2 }}
+      >dear<br />memories</p>
     </div>
   </div>
 );
@@ -439,7 +444,7 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
   }, []);
 
   return (
-    <div className="min-h-screen overflow-x-hidden font-primary" style={{ background: '#FAFAF8' }}>
+    <div className="min-h-screen overflow-x-hidden" style={{ background: '#FFF8F1', fontFamily: '"Lora", ui-serif, Georgia, serif' }}>
       <style>{styles}</style>
 
       {/* ── Navigation ── */}
@@ -453,12 +458,25 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
               style={{ height: '175px', margin: '-58.5px 0' }}
             />
           </div>
-          <div className="hidden md:flex items-center gap-4 text-[#555] text-sm font-medium">
+
+          <div className="hidden md:flex items-center gap-8 text-[#6B4B43] text-sm font-semibold">
+            <a href="#ptb-box" className="nav-link hover:text-[#B9423A] transition-colors">
+              PTB Box
+            </a>
+            <a href="#categories" className="nav-link hover:text-[#B9423A] transition-colors">
+              Danh mục
+            </a>
+            <a href="#themes" className="nav-link hover:text-[#B9423A] transition-colors">
+              Chủ đề
+            </a>
+          </div>
+
+          <div className="hidden md:flex items-center gap-4 text-[#6B4B43] text-sm font-medium">
             {user ? (
               <div className="flex items-center gap-3">
-                <span className="font-medium text-[#555] text-sm">Chào, <strong className="text-[#333]">{user.name}</strong></span>
+                <span className="font-medium text-[#6B4B43] text-sm">Chào, <strong className="text-[#3B2925]">{user.name}</strong></span>
                 <button onClick={onGetStarted}
-                  className="cta-btn bg-[#333] text-white px-5 py-2.5 rounded-full font-medium text-sm relative z-10">
+                  className="cta-btn bg-[#B9423A] text-white px-5 py-2.5 rounded-full font-medium text-sm relative z-10 hover:bg-[#96332E]">
                   Thư viện của tôi
                 </button>
                 <InteractiveLogoutButton
@@ -469,7 +487,7 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
             ) : (
               <div className="flex items-center gap-3">
                 <button onClick={onGetStarted}
-                  className="cta-btn bg-[#333] text-white px-5 py-2.5 rounded-full font-medium text-sm relative z-10">
+                  className="cta-btn bg-[#B9423A] text-white px-5 py-2.5 rounded-full font-medium text-sm relative z-10 hover:bg-[#96332E]">
                   Đăng nhập
                 </button>
               </div>
@@ -479,17 +497,17 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
       </nav>
 
       {/* ══════════════════════════════════════════════════════
-          SECTION 1 — Hero: Túi mù Keycard
+          SECTION 1 — Hero: Photobook Box
           ══════════════════════════════════════════════════════ */}
-      <section className="relative w-full min-h-[620px] overflow-hidden flex items-center"
+      <section id="ptb-box" className="relative w-full min-h-[620px] overflow-hidden flex items-center scroll-mt-24"
         style={{
-          background: 'linear-gradient(160deg, #FDFBFB 0%, #F6F0ED 40%, #F3E6E8 100%)',
+          background: 'linear-gradient(160deg, #FFF8F1 0%, #F7E2D4 40%, #FFF8F1 100%)',
         }}>
         {/* Decorative circles */}
         <div className="absolute top-[-100px] right-[-80px] w-[400px] h-[400px] rounded-full opacity-10"
-          style={{ background: 'radial-gradient(circle, #CD8F9A, transparent 70%)' }} />
+          style={{ background: 'radial-gradient(circle, #E6C7B8, transparent 70%)' }} />
         <div className="absolute bottom-[-60px] left-[-60px] w-[300px] h-[300px] rounded-full opacity-8"
-          style={{ background: 'radial-gradient(circle, #AF5B6A, transparent 70%)' }} />
+          style={{ background: 'radial-gradient(circle, #B9423A, transparent 70%)' }} />
 
         {/* Dot pattern overlay */}
         <div className="absolute inset-0 dot-pattern opacity-50 pointer-events-none" />
@@ -500,65 +518,68 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
             {/* Left content */}
             <div className="flex-1 animate-slide-left" style={{ animationDelay: '0.2s' }}>
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6"
-                style={{ background: 'rgba(175, 91, 106, 0.1)', border: '1px solid rgba(175, 91, 106, 0.2)' }}>
-                <span className="w-2 h-2 rounded-full bg-[#AF5B6A] animate-pulse" />
-                <span className="text-sm font-medium text-[#AF5B6A]">Sản phẩm hot</span>
+                style={{ background: 'rgba(185, 66, 58, 0.1)', border: '1px solid rgba(185, 66, 58, 0.2)' }}>
+                <span className="w-2 h-2 rounded-full bg-[#B9423A] animate-pulse" />
+                <span className="text-sm font-semibold text-[#B9423A]">Photobook Box</span>
               </div>
 
-              <h1 className="font-serif text-6xl lg:text-7xl leading-[0.95] mb-6">
-                <span className="text-[#333] block">GIFT</span>
+              <h1 className="leading-[0.95] mb-6">
                 <span
-                  className="shimmer-text block mt-1"
+                  className="block"
                   style={{
-                    fontFamily: '"Great Vibes", cursive',
-                    fontSize: 'clamp(4rem, 9vw, 8rem)',
-                    lineHeight: 1,
-                    WebkitTextFillColor: 'unset',
-                    color: 'transparent',
+                    fontFamily: '"Pinyon Script", "Great Vibes", cursive',
+                    fontSize: 'clamp(3.5rem, 9vw, 7.5rem)',
+                    lineHeight: 1.05,
+                    color: '#3B2925',
+                    letterSpacing: '0.01em',
                   }}
                 >
-                  Box
+                  Photobook Box
+                </span>
+                <span
+                  className="block mt-2"
+                  style={{
+                    fontFamily: '"Fraunces", "Cooper Black", "Cooper BT", Georgia, serif',
+                    fontSize: 'clamp(1.15rem, 2.6vw, 1.7rem)',
+                    lineHeight: 1.35,
+                    color: '#7A4A42',
+                    fontWeight: '900',
+                    fontStyle: 'italic',
+                    letterSpacing: '0.01em',
+                  }}
+                >
+                  nhỏ xinh nhưng đầy cảm xúc
                 </span>
               </h1>
 
-              <h2
-                className="text-[#AF5B6A] mb-6 rotate-[-1deg]"
-                style={{
-                  fontFamily: '"Great Vibes", cursive',
-                  fontSize: 'clamp(2.5rem, 5vw, 4rem)',
-                }}
-              >
-                Túi mù Keycard
-              </h2>
-
-              <div className="space-y-3 text-[#5A3B36] text-lg mb-8">
+              <div className="space-y-4 text-[#6B4B43] text-lg mb-8 font-serif">
                 <p className="flex items-center gap-3">
-                  <span className="w-6 h-6 rounded-full bg-[#AF5B6A]/10 flex items-center justify-center">
-                    <span className="w-2 h-2 rounded-full bg-[#AF5B6A]" />
+                  <span className="w-6 h-6 rounded-full bg-[#B9423A]/10 flex items-center justify-center flex-shrink-0">
+                    <span className="w-2 h-2 rounded-full bg-[#B9423A]" />
                   </span>
-                  1 Túi mù rỗng
+                  1 quyển PTB
                 </p>
                 <p className="flex items-center gap-3">
-                  <span className="w-6 h-6 rounded-full bg-[#AF5B6A]/10 flex items-center justify-center">
-                    <span className="w-2 h-2 rounded-full bg-[#AF5B6A]" />
+                  <span className="w-6 h-6 rounded-full bg-[#B9423A]/10 flex items-center justify-center flex-shrink-0">
+                    <span className="w-2 h-2 rounded-full bg-[#B9423A]" />
                   </span>
-                  1 Keycard mica + 2 ảnh in
+                  1 kẹo mút
                 </p>
                 <p className="flex items-center gap-3">
-                  <span className="w-6 h-6 rounded-full bg-[#AF5B6A]/10 flex items-center justify-center">
-                    <span className="w-2 h-2 rounded-full bg-[#AF5B6A]" />
+                  <span className="w-6 h-6 rounded-full bg-[#B9423A]/10 flex items-center justify-center flex-shrink-0">
+                    <span className="w-2 h-2 rounded-full bg-[#B9423A]" />
                   </span>
-                  Hộp quà + postcard tặng kèm
+                  1 thư cảm ơn
                 </p>
               </div>
 
               <button onClick={onGetStarted}
-                className="cta-btn px-8 py-3.5 rounded-full text-white font-semibold text-lg relative z-10"
+                className="cta-btn px-8 py-3.5 rounded-full text-white font-semibold text-lg relative z-10 hover:opacity-90 animate-pulse-glow"
                 style={{
-                  background: 'linear-gradient(135deg, #AF5B6A, #9A3540)',
-                  boxShadow: '0 8px 30px rgba(175, 91, 106, 0.4)',
+                  background: 'linear-gradient(135deg, #B9423A, #96332E)',
+                  boxShadow: '0 8px 30px rgba(185, 66, 58, 0.4)',
                 }}>
-                Đặt hàng ngay →
+                Tạo sách ngay →
               </button>
             </div>
 
@@ -566,7 +587,7 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
             <div className="flex-1 flex items-center justify-center gap-6 animate-slide-right" style={{ animationDelay: '0.4s' }}>
               <div className="relative">
                 <div className="absolute -top-10 -left-6 z-30">
-                  <PriceTag price="78K" size="lg" />
+                  <PriceTag price="249K" size="lg" />
                 </div>
                 <div className="flex gap-5 items-end">
                   <div className="animate-float-slow" style={{ animationDelay: '0s' }}>
@@ -587,172 +608,83 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
       <div className="section-divider" />
 
       {/* ══════════════════════════════════════════════════════
-          SECTION 2 — Museum Box
+          SECTION 2 — Danh mục loại PTB
           ══════════════════════════════════════════════════════ */}
-      <section className="relative w-full min-h-[650px] overflow-hidden flex items-center"
-        style={{ background: 'linear-gradient(160deg, #FDF9F7 0%, #F8EEF0 50%, #F3DDE1 100%)' }}>
-        {/* Decorative elements */}
-        <div className="absolute top-20 left-10 w-20 h-20 rounded-full opacity-10"
-          style={{ background: '#CD8F9A', filter: 'blur(30px)' }} />
-        <div className="absolute bottom-20 right-20 w-32 h-32 rounded-full opacity-10"
-          style={{ background: '#AF5B6A', filter: 'blur(40px)' }} />
-        <div className="absolute inset-0 dot-pattern opacity-30 pointer-events-none" />
-
-        <div className="max-w-7xl mx-auto w-full px-8 py-20 relative z-10">
-          {/* Header */}
-          <div className="reveal flex flex-col md:flex-row items-center justify-center gap-6 mb-14">
-            <div className="text-center md:text-right">
-              <h3 className="font-handwriting text-6xl lg:text-7xl text-[#AF5B6A] leading-none mb-2">Museum Box</h3>
-              <p className="font-serif text-xl text-[#555]">(trị giá 253k)</p>
-            </div>
-            <PriceTag price="208k" size="lg" />
-          </div>
-
-          {/* Product cards row */}
-          <div className="reveal flex flex-col md:flex-row gap-8 items-center justify-center">
-
-            {/* Frame Box */}
-            <div className="product-card w-64 h-80 bg-white rounded-2xl shadow-xl p-5 flex flex-col items-center cursor-pointer group"
-              style={{ border: '1px solid rgba(205,143,154,0.15)' }}>
-              <div className="w-full flex-1 rounded-xl overflow-hidden shadow-inner relative"
-                style={{ border: '3px solid #F3E9D7' }}>
-                <img src={loveImg} className="w-full h-full object-cover img-zoom" alt="" />
-                {/* Hover overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-3">
-                  <span className="text-white text-sm font-medium">Frame Box Basic</span>
-                </div>
-              </div>
-              <p className="font-handwriting text-2xl mt-4 text-[#333] font-bold group-hover:text-[#AF5B6A] transition-colors duration-300">
-                you're my world.
-              </p>
-            </div>
-
-            {/* Photo Strips */}
-            <div className="flex gap-3 relative group">
-              <PhotoBoothStrip images={[hanoiImg, hanoiImg]} rotation={-8} />
-              <PhotoBoothStrip images={[familyImg, loveImg]} rotation={5} />
-            </div>
-
-            {/* Love Badge Set */}
-            <div className="product-card w-56 h-72 bg-white rounded-2xl shadow-xl p-5 relative cursor-pointer group"
-              style={{ border: '1px solid rgba(205,143,154,0.15)' }}>
-              <h4 className="font-handwriting text-3xl text-[#AF5B6A] text-center mb-1 group-hover:scale-110 transition-transform duration-300">
-                Love Badge
-              </h4>
-              <p className="text-[8px] text-center tracking-widest text-gray-400 mb-4 uppercase">Button Pin Set</p>
-
-              <div className="relative h-40">
-                {/* Badge circles */}
-                <div className="absolute top-0 left-4 w-20 h-20 rounded-full shadow-xl overflow-hidden z-10 group-hover:translate-x-[-5px] group-hover:translate-y-[-3px] transition-transform duration-500"
-                  style={{ border: '4px solid #F3E9D7' }}>
-                  <img src={familyImg} className="w-full h-full object-cover" alt="" />
-                </div>
-                <div className="absolute top-12 right-4 w-24 h-24 rounded-full shadow-xl overflow-hidden z-20 group-hover:translate-x-[5px] group-hover:translate-y-[-3px] transition-transform duration-500"
-                  style={{ border: '4px solid #DFA3B1' }}>
-                  <img src={loveImg} className="w-full h-full object-cover" alt="" />
-                </div>
-
-                {/* Stars */}
-                <div className="absolute top-2 right-2 text-[#DFA3B1] text-xl group-hover:rotate-[72deg] transition-transform duration-700">★</div>
-                <div className="absolute bottom-2 left-2 text-[#DFA3B1] text-lg group-hover:rotate-[144deg] transition-transform duration-700">★</div>
-                <div className="absolute bottom-8 right-10 text-[#DFA3B1] text-sm group-hover:rotate-[216deg] transition-transform duration-700">★</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Includes list */}
-          <div className="reveal mt-12 flex flex-wrap justify-center gap-x-10 gap-y-3 text-[#5A3B36] text-base font-medium">
-            {['1 Frame Box basic', '2 Photobooth 10x15cm', '1 set Love Badge', 'Hộp quà + postcard tặng kèm'].map((item, i) => (
-              <p key={i} className="flex items-center gap-2">
-                <span className="w-5 h-5 rounded-full bg-[#AF5B6A]/10 flex items-center justify-center">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#AF5B6A]" />
-                </span>
-                {item}
-              </p>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════
-          SECTION 3 — Love Book Tiers
-          ══════════════════════════════════════════════════════ */}
-      <section className="w-full py-24 relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #2D2D2D 0%, #363636 30%, #3D3D3D 100%)' }}>
-        {/* Subtle dot pattern */}
-        <div className="absolute inset-0 pointer-events-none opacity-5"
-          style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
-
-        {/* Glow accents */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[2px]"
-          style={{ background: 'linear-gradient(90deg, transparent, rgba(205,143,154,0.5), transparent)' }} />
+      <section id="categories" className="w-full py-24 relative overflow-hidden scroll-mt-24" style={{ background: '#FFFDF9' }}>
+        <div className="absolute inset-0 pointer-events-none opacity-5 dot-pattern" />
 
         <div className="max-w-7xl mx-auto px-8 relative z-10">
           {/* Section title */}
           <div className="reveal text-center mb-16">
-            <p className="text-[#CD8F9A] text-sm tracking-[0.3em] uppercase mb-3 font-medium">Sách quà tặng</p>
-            <h2 className="font-handwriting text-6xl text-white mb-3">Love Book Collection</h2>
-            <p className="text-gray-400 text-lg">12 trang • Couche 160gsm • 14×18cm</p>
+            <p className="text-[#B9423A] text-sm tracking-[0.3em] uppercase mb-3 font-semibold">Bộ sưu tập sách</p>
+            <h2
+              className="text-[#3B2925] mb-3"
+              style={{ fontFamily: '"Lora", serif', fontSize: 'clamp(2.5rem, 5vw, 3.75rem)', fontWeight: '700', letterSpacing: '-0.01em' }}
+            >Danh mục loại PTB</h2>
+            <p className="text-[#6B4B43] text-lg">Nhiều lựa chọn phù hợp với nhu cầu và ngân sách của bạn</p>
           </div>
 
-          {/* Tier cards grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Categories Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {[
-              { id: 1, title: 'Tier 1', color: '#F4E5E6', accent: '#D44646', img: loveImg, secondImg: hanoiImg },
-              { id: 2, title: 'Tier 2', color: '#FFF', accent: '#333', img: hanoiImg, secondImg: familyImg },
-              { id: 3, title: 'Tier 3', color: '#E8EDE7', accent: '#445D40', img: familyImg, secondImg: loveImg },
-              { id: 4, title: 'Tier 4', color: '#F0E5E7', accent: '#742D35', img: loveImg, secondImg: hanoiImg },
-            ].map((tier) => (
-              <div key={tier.id}
-                className="tier-card rounded-2xl overflow-hidden cursor-pointer group"
+              { id: 1, title: 'PTB bìa mềm', description: 'Nhẹ nhàng, mỏng nhẹ, tinh tế. Dành cho các album ảnh thường ngày.', price: '149K', color: '#FFF', img: loveImg, secondImg: hanoiImg },
+              { id: 2, title: 'PTB bìa cứng', description: 'Bìa cứng cáp, bền bỉ, sang trọng. Phù hợp làm quà lưu niệm lâu dài.', price: '249K', color: '#F4E5E6', img: hanoiImg, secondImg: familyImg },
+              { id: 3, title: 'PTB bìa bồi liền mở phẳng', description: 'Trải rộng 180 độ không gáy, in sắc nét. Trải nghiệm xem ảnh trọn vẹn.', price: '399K', color: '#F0E5E7', img: familyImg, secondImg: loveImg },
+            ].map((category) => (
+              <div key={category.id}
+                className="tier-card rounded-2xl overflow-hidden cursor-pointer group flex flex-col justify-between"
                 onClick={onGetStarted}
                 style={{
-                  background: 'rgba(255,255,255,0.05)',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  backdropFilter: 'blur(10px)',
+                  background: '#FFF8F1',
+                  border: '1px solid #E6C7B8',
+                  boxShadow: '0 10px 30px rgba(107, 75, 67, 0.05)',
                 }}>
-                {/* Price tag */}
-                <div className="flex justify-between items-center p-4 pb-2">
-                  <PriceTag price="128k" size="sm" />
-                  <span className="text-white/40 text-xs font-mono tracking-widest">#{String(tier.id).padStart(2, '0')}</span>
-                </div>
+                <div>
+                  {/* Price tag */}
+                  <div className="flex justify-between items-center p-5 pb-2">
+                    <PriceTag price={category.price} size="sm" />
+                    <span className="text-[#6B4B43]/50 text-xs font-mono tracking-widest">#{String(category.id).padStart(2, '0')}</span>
+                  </div>
 
-                {/* Book preview */}
-                <div className="px-4 mb-4">
-                  <div className="book-mockup flex rounded-lg overflow-hidden shadow-lg"
-                    style={{ border: '1px solid rgba(255,255,255,0.1)' }}>
-                    {/* Left page */}
-                    <div className="w-1/2 h-44 overflow-hidden relative" style={{ backgroundColor: tier.color }}>
-                      <img src={tier.img} className="w-full h-full object-cover img-zoom" alt="" />
-                      <div className="absolute inset-y-0 right-0 w-3 bg-gradient-to-l from-black/15 to-transparent" />
+                  {/* Book preview */}
+                  <div className="px-5 mb-4">
+                    <div className="book-mockup flex rounded-lg overflow-hidden shadow-md"
+                      style={{ border: '1px solid #E6C7B8' }}>
+                      {/* Left page */}
+                      <div className="w-1/2 h-44 overflow-hidden relative" style={{ backgroundColor: category.color }}>
+                        <img src={category.img} className="w-full h-full object-cover img-zoom" alt="" />
+                        <div className="absolute inset-y-0 right-0 w-3 bg-gradient-to-l from-black/15 to-transparent" />
+                      </div>
+                      {/* Right page */}
+                      <AutoFlipRightPage
+                        bgColor={category.id === 3 ? '#68252C' : '#FFF'}
+                        pages={
+                          category.id === 1 ? [
+                            <div className="p-4 h-full bg-white"><p className="font-handwriting text-3xl text-pink-500 mb-2">Begin again</p><img src={hanoiImg} className="w-full h-24 object-cover rounded shadow" alt="" /></div>,
+                            <div className="p-4 h-full bg-white"><p className="font-handwriting text-2xl text-rose-500 mb-2">My story</p><img src={loveImg} className="w-full h-24 object-cover rounded shadow" alt="" /></div>,
+                          ] : category.id === 2 ? [
+                            <div className="grid grid-cols-2 gap-2 p-3 h-full bg-white"><img src={hanoiImg} className="w-full h-20 object-cover rounded" alt="" /><img src={familyImg} className="w-full h-20 object-cover rounded" alt="" /><img src={loveImg} className="w-full h-20 object-cover rounded" alt="" /><div className="w-full h-20 bg-gray-100 rounded" /></div>,
+                            <div className="p-4 h-full bg-white flex items-center justify-center"><img src={familyImg} className="w-28 h-28 rounded-full object-cover shadow-lg border-4 border-gray-100" alt="" /></div>,
+                          ] : [
+                            <div className="p-5 h-full bg-[#68252C]"><div className="w-full h-full bg-[#E5D2BA] shadow-inner p-3 rounded"><p className="text-xs font-serif text-center text-[#E5D2BA]">Mở phẳng 180°...</p></div></div>,
+                            <div className="p-5 h-full bg-[#68252C]"><div className="w-full h-full bg-[#E5D2BA] shadow-inner p-3 rounded flex justify-center items-center"><img src={loveImg} className="w-20 h-20 rounded-full border-2 border-white" alt="" /></div></div>,
+                          ]
+                        }
+                      />
                     </div>
-                    {/* Right page */}
-                    <AutoFlipRightPage
-                      bgColor={tier.id === 4 ? '#68252C' : '#FFF'}
-                      pages={
-                        tier.id === 1 ? [
-                          <div className="p-4 h-full bg-white"><p className="font-handwriting text-3xl text-red-500 mb-2">i love you</p><img src={hanoiImg} className="w-full h-24 object-cover rounded shadow" alt="" /></div>,
-                          <div className="p-4 h-full bg-white"><p className="font-handwriting text-2xl text-pink-500 mb-2">my everything</p><img src={loveImg} className="w-full h-24 object-cover rounded shadow" alt="" /></div>,
-                        ] : tier.id === 2 ? [
-                          <div className="grid grid-cols-2 gap-2 p-3 h-full bg-white"><img src={hanoiImg} className="w-full h-20 object-cover rounded" alt="" /><img src={familyImg} className="w-full h-20 object-cover rounded" alt="" /><img src={loveImg} className="w-full h-20 object-cover rounded" alt="" /><div className="w-full h-20 bg-gray-100 rounded" /></div>,
-                          <div className="p-4 h-full bg-white flex items-center justify-center"><img src={familyImg} className="w-28 h-28 rounded-full object-cover shadow-lg border-4 border-gray-100" alt="" /></div>,
-                        ] : tier.id === 3 ? [
-                          <div className="w-full h-full bg-[#677761] p-4 flex items-end"><p className="font-handwriting text-3xl text-white">Forever</p></div>,
-                          <div className="w-full h-full bg-[#677761] p-4"><p className="font-serif text-white text-sm mt-4">Together we make a family.</p></div>,
-                        ] : [
-                          <div className="p-5 h-full bg-[#68252C]"><div className="w-full h-full bg-[#E5D2BA] shadow-inner p-3 rounded"><p className="text-xs font-serif text-center">Nơi lưu giữ tình yêu...</p></div></div>,
-                          <div className="p-5 h-full bg-[#68252C]"><div className="w-full h-full bg-[#E5D2BA] shadow-inner p-3 rounded flex justify-center items-center"><img src={loveImg} className="w-20 h-20 rounded-full border-2 border-white" alt="" /></div></div>,
-                        ]
-                      }
-                    />
                   </div>
                 </div>
 
                 {/* Info */}
-                <div className="p-4 pt-0 text-center">
-                  <h4 className="font-handwriting text-3xl text-white mb-1 group-hover:text-[#CD8F9A] transition-colors duration-300">
-                    {tier.title}
+                <div className="p-5 pt-0 text-center">
+                  <h4 className="font-serif text-2xl text-[#3B2925] mb-2 group-hover:text-[#B9423A] transition-colors duration-300 font-bold">
+                    {category.title}
                   </h4>
-                  <p className="text-gray-400 text-xs">Nhận in mẫu riêng của khách</p>
+                  <p className="text-[#6B4B43] text-sm mb-4 leading-relaxed">{category.description}</p>
+                  <button onClick={(e) => { e.stopPropagation(); onGetStarted(); }}
+                    className="w-full py-2.5 rounded-xl border border-[#B9423A] text-[#B9423A] bg-white hover:bg-[#B9423A] hover:text-white font-semibold transition duration-300">
+                    Chọn loại này
+                  </button>
                 </div>
               </div>
             ))}
@@ -760,124 +692,92 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
         </div>
       </section>
 
+      {/* ── Divider ── */}
+      <div className="section-divider" />
+
       {/* ══════════════════════════════════════════════════════
-          SECTION 4 — Blind Box & Phụ kiện
+          SECTION 3 — Chủ đề
           ══════════════════════════════════════════════════════ */}
-      <section className="w-full py-24 relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #3D3D3D 0%, #363636 50%, #2D2D2D 100%)' }}>
-        <div className="absolute inset-0 pointer-events-none opacity-5"
-          style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
+      <section id="themes" className="w-full py-24 relative overflow-hidden scroll-mt-24" style={{ background: '#F7E2D4' }}>
+        <div className="absolute inset-0 pointer-events-none opacity-5 dot-pattern" />
 
         <div className="max-w-7xl mx-auto px-8 relative z-10">
           {/* Section title */}
           <div className="reveal text-center mb-16">
-            <p className="text-[#CD8F9A] text-sm tracking-[0.3em] uppercase mb-3 font-medium">Sưu tầm & trang trí</p>
-            <h2 className="font-handwriting text-6xl text-white mb-3">Blind Box</h2>
-            <p className="text-gray-400 text-lg">9.5 × 7.5 × 6.2cm • Giấy Couche cao cấp</p>
+            <p className="text-[#B9423A] text-sm tracking-[0.3em] uppercase mb-3 font-semibold">Chủ đề thiết kế</p>
+            <h2
+              className="text-[#3B2925] mb-3"
+              style={{ fontFamily: '"Lora", serif', fontSize: 'clamp(2.5rem, 5vw, 3.75rem)', fontWeight: '700', letterSpacing: '-0.01em' }}
+            >Chủ đề</h2>
+            <p className="text-[#6B4B43] text-lg">Mỗi chủ đề đều mang một câu chuyện và xúc cảm trọn vẹn riêng biệt</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-20">
+          {/* Themes Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              { id: 'love', title: 'Tình yêu', emoji: '💕', description: 'Hâm nóng tình cảm với câu chuyện lãng mạn.', color: 'from-pink-400 to-rose-500', image: loveImg },
+              { id: 'friends', title: 'Bạn bè', emoji: '🎉', description: 'Lưu giữ kỷ niệm thanh xuân, bạn bè thân thương.', color: 'from-cyan-400 to-blue-400', image: hanoiImg },
+              { id: 'family', title: 'Gia đình', emoji: '👨‍👩‍👧‍👦', description: 'Ấm áp tình thân, những khoảnh khắc sum vầy.', color: 'from-orange-400 to-rose-400', image: familyImg },
+              { id: 'travel', title: 'Du lịch', emoji: '✈️', description: 'Ghi lại hành trình khám phá những vùng đất mới.', color: 'from-emerald-400 to-teal-500', image: hanoiImg },
+              { id: 'graduation', title: 'Tốt nghiệp', emoji: '🎓', description: 'Kỷ niệm ngày tốt nghiệp, bạn bè và mái trường.', color: 'from-indigo-400 to-purple-500', image: familyImg },
+              { id: 'birthday', title: 'Sinh nhật', emoji: '🎂', description: 'Món quà bất ngờ dành riêng cho ngày tuổi mới.', color: 'from-amber-400 to-orange-500', image: loveImg },
+            ].map((theme) => (
+              <div key={theme.id}
+                className="blind-box-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer group flex flex-col justify-between"
+                onClick={onGetStarted}
+                style={{
+                  border: '1px solid #E6C7B8',
+                  transition: 'all 0.4s ease',
+                }}>
+                <div>
+                  {/* Top stripe */}
+                  <div className="h-2 bg-[#B9423A]" />
 
-            {/* Blind Box 1 — Dark Red */}
-            <div className="reveal flex flex-col items-center">
-              <div className="relative mb-8 w-full max-w-sm">
-                <div className="absolute -top-4 -left-4 z-20"><PriceTag price="38k" size="sm" /></div>
-
-                <div className="product-card rounded-2xl overflow-hidden cursor-pointer group"
-                  style={{ background: '#5E1921', border: '1px solid rgba(255,255,255,0.05)' }}>
-                  <div className="p-6 flex flex-col items-center text-center">
-                    <p className="font-serif text-[10px] text-white/50 tracking-widest uppercase mb-2">anh & em</p>
-                    <p className="font-serif text-sm text-white tracking-[0.2em] mb-1 uppercase">Happy</p>
-                    <p className="font-handwriting text-3xl text-white mb-3">anniversary</p>
-
-                    <div className="w-36 h-28 rounded-2xl overflow-hidden mb-4 shadow-lg group-hover:shadow-2xl transition-shadow duration-500"
-                      style={{ border: '3px solid rgba(255,255,255,0.2)' }}>
-                      <img src={familyImg} className="w-full h-full object-cover img-zoom" alt="" />
-                    </div>
-
-                    <p className="font-handwriting text-2xl text-red-400 group-hover:text-red-300 transition-colors duration-300">
-                      all we need is Love
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <ul className="text-white/70 font-serif space-y-2 text-sm">
-                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#CD8F9A]" /> Nhận từ 2 hộp</li>
-                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#CD8F9A]" /> 4 hộp: 150k gồm đế</li>
-                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#CD8F9A]" /> Cán màng +5k/box</li>
-              </ul>
-            </div>
-
-            {/* Blind Box 2 — Cream */}
-            <div className="reveal flex flex-col items-center" style={{ animationDelay: '0.2s' }}>
-              <div className="relative mb-8 w-full max-w-sm">
-                <div className="absolute -top-4 -left-4 z-20"><PriceTag price="38k" size="sm" /></div>
-
-                <div className="product-card rounded-2xl overflow-hidden cursor-pointer group"
-                  style={{ background: '#FFF5E6', border: '1px solid rgba(141,52,62,0.1)' }}>
-                  <div className="p-6 flex flex-col items-center text-center">
-                    <p className="font-handwriting text-3xl text-[#8D343E] leading-none mb-1">Happy</p>
-                    <p className="font-serif text-[10px] uppercase text-[#8D343E] tracking-widest mb-4">Birthday</p>
-
-                    <div className="w-36 h-28 rounded-2xl overflow-hidden mb-4 shadow-lg group-hover:shadow-2xl transition-shadow duration-500"
-                      style={{ border: '3px solid rgba(141,52,62,0.15)' }}>
-                      <img src={loveImg} className="w-full h-full object-cover img-zoom" alt="" />
-                    </div>
-
-                    {/* Mini calendar */}
-                    <div className="w-full px-4 text-[#8D343E] text-[9px] font-serif">
-                      <div className="grid grid-cols-7 text-center gap-y-1.5 gap-x-1">
-                        {Array.from({ length: 30 }, (_, i) => (
-                          <span key={i} className={`${i + 1 === 24 ? 'bg-[#8D343E] text-white rounded-full w-5 h-5 flex items-center justify-center mx-auto' : ''}`}>
-                            {i + 1}
-                          </span>
-                        ))}
+                  <div className="p-6">
+                    <div className="w-full h-44 rounded-xl overflow-hidden mb-4 shadow-inner relative">
+                      <img src={theme.image} className="w-full h-full object-cover img-zoom" alt={theme.title} />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#3B2925]/60 to-transparent flex items-end p-4">
+                        <span className="text-4xl filter drop-shadow-md">{theme.emoji}</span>
                       </div>
                     </div>
+
+                    <h3 className="font-serif text-2xl text-[#3B2925] font-bold mb-2 group-hover:text-[#B9423A] transition-colors duration-300">
+                      {theme.title}
+                    </h3>
+                    <p className="text-[#6B4B43] text-sm leading-relaxed">{theme.description}</p>
                   </div>
                 </div>
-              </div>
 
-              <ul className="text-white/70 font-serif space-y-2 text-sm">
-                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#CD8F9A]" /> Nhận từ 2 hộp</li>
-                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#CD8F9A]" /> 4 hộp: 150k gồm đế</li>
-                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#CD8F9A]" /> Cán màng +5k/box</li>
-              </ul>
-            </div>
-
-          </div>
-
-          {/* ── Accessories Row ── */}
-          <div className="reveal border-t border-white/10 pt-12">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-              <div className="flex items-center gap-6">
-                <h3 className="font-handwriting text-5xl text-white">Keycard</h3>
-                <p className="text-white/50 font-serif text-sm">10.5 × 6.8cm</p>
+                <div className="p-6 pt-0">
+                  <button onClick={(e) => { e.stopPropagation(); onGetStarted(); }}
+                    className="w-full py-2 rounded-xl bg-[#B9423A] text-white hover:bg-[#96332E] font-semibold transition duration-300 text-sm">
+                    Dùng chủ đề này
+                  </button>
+                </div>
               </div>
-              <PriceTag price="35k" size="sm" />
-              <div className="flex items-center gap-6">
-                <h3 className="font-handwriting text-5xl text-white text-right">Love badge</h3>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
+      {/* ── Divider ── */}
+      <div className="section-divider" />
+
       {/* ══════════════════════════════════════════════════════
           FOOTER
           ══════════════════════════════════════════════════════ */}
-      <footer className="py-12" style={{ background: '#1a1a1a' }}>
+      <footer className="py-12" style={{ background: '#3B2925' }}>
         <div className="max-w-7xl mx-auto px-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center" style={{ height: '40px', overflow: 'visible' }}>
               <img src="/logo.png" alt="dearmemories" className="object-contain block"
                 style={{ height: '120px', margin: '-40px 0', filter: 'brightness(1.5)' }} />
             </div>
-            <p className="text-gray-500 text-sm">© 2026 Dear Memories. Made with ❤️ in Vietnam</p>
-            <div className="flex gap-6 text-gray-500 text-sm">
-              <a href="#" className="nav-link hover:text-white transition-colors">Chính sách</a>
-              <a href="#" className="nav-link hover:text-white transition-colors">Điều khoản</a>
-              <a href="#" className="nav-link hover:text-white transition-colors">Liên hệ</a>
+            <p className="text-[#E6C7B8] text-sm">© 2026 Dear Memories. All rights reserved. Made with ❤️ in Vietnam</p>
+            <div className="flex gap-6 text-[#E6C7B8] text-sm font-semibold">
+              <a href="#ptb-box" className="nav-link hover:text-[#B9423A] transition-colors">PTB Box</a>
+              <a href="#categories" className="nav-link hover:text-[#B9423A] transition-colors">Danh mục</a>
+              <a href="#themes" className="nav-link hover:text-[#B9423A] transition-colors">Chủ đề</a>
             </div>
           </div>
         </div>
