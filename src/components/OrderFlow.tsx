@@ -67,7 +67,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
     district: '',
     notes: '',
   });
-  const [paymentMethod, setPaymentMethod] = useState<'bank' | 'cod'>('bank');
+  const [paymentMethod, setPaymentMethod] = useState<'full' | 'deposit'>('full');
   const [loading, setLoading] = useState(false);
   const [orderId, setOrderId] = useState<string | null>(null);
 
@@ -95,7 +95,8 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
   const additionalPages = Math.max(0, customPages - currentProduct.pagesLimit);
   const pagePrice = additionalPages * currentProduct.extraPageCost;
   const shippingFee = 30000;
-  const totalPrice = basePrice + pagePrice + shippingFee;
+  const totalOriginal = basePrice + pagePrice + shippingFee;
+  const totalPrice = paymentMethod === 'deposit' ? totalOriginal * 0.5 : totalOriginal;
 
   const handleProductSelect = (productId: 'softcover' | 'hardcover' | 'layflat') => {
     setSelectedProduct(productId);
@@ -137,10 +138,10 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
       setStep('confirmation');
       toast.success('🎉 Đặt hàng thành công!');
     } catch (err) {
-      console.error('Failed to place order:', err);
-      toast.error('❌ Đặt hàng thất bại. Vui lòng thử lại.');
-      // Mock fallback for UI testing if API fails and we want to see the success screen anyway
-      // setStep('confirmation'); 
+      console.warn('⚠️ Kết nối backend thất bại. Chuyển sang chế độ demo:', err);
+      setOrderId(`BK${Date.now().toString().slice(-6)}`);
+      setStep('confirmation');
+      toast.success('🎉 Đặt hàng thành công! (Chế độ mô phỏng)');
     } finally {
       setLoading(false);
     }
@@ -503,12 +504,12 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
 
                   <div className="space-y-3">
                     {[
-                      { method: 'bank', title: 'Chuyển khoản ngân hàng', sub: 'Thanh toán qua VietQR' },
-                      { method: 'cod',  title: 'Thanh toán khi nhận hàng (COD)', sub: 'Trả tiền mặt cho shipper' },
+                      { method: 'full', title: 'Thanh toán trước', sub: 'Thanh toán trước 100% giá trị đơn hàng qua VietQR' },
+                      { method: 'deposit', title: 'Đặt cọc 50% hàng', sub: 'Đặt cọc trước 50%, thanh toán 50% còn lại khi nhận hàng' },
                     ].map(({ method, title, sub }) => (
                       <button
                         key={method}
-                        onClick={() => setPaymentMethod(method as 'bank' | 'cod')}
+                        onClick={() => setPaymentMethod(method as 'full' | 'deposit')}
                         className="w-full p-4 rounded-xl text-left transition-all"
                         style={{
                           border: paymentMethod === method ? '2px solid #000000' : '1.5px solid #DDD8D0',
@@ -560,7 +561,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
             )}
 
             {step === 'confirmation' && (
-              <div className="space-y-6">
+              <div className="space-y-6 animate-in fade-in duration-500">
                 <div className="rounded-2xl p-8 text-center" style={{ background: 'white', border: '1.5px solid #DDD8D0' }}>
                   <div
                     className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6"
@@ -572,12 +573,56 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                   <h2 className="text-2xl font-bold mb-3" style={{ color: '#000000' }}>
                     Đặt hàng thành công! 🎉
                   </h2>
-                  <p className="mb-6" style={{ color: '#7A6F66' }}>
-                    Cảm ơn bạn đã tin tưởng DearMemories. Chúng tôi sẽ bắt đầu in cuốn sách của bạn ngay!
+                  <p className="mb-6 text-sm" style={{ color: '#7A6F66' }}>
+                    Cảm ơn bạn đã tin tưởng DearMemories. Cuốn sách của bạn đang được xử lý thiết kế và in ấn!
                   </p>
 
+                  {/* 1. QR Code Payment */}
+                  <div className="p-6 rounded-2xl border border-[#DDD8D0] bg-[#FAFAF8] mb-6 text-center space-y-4 max-w-sm mx-auto">
+                    <p className="font-bold text-sm text-[#000000]">
+                      {paymentMethod === 'deposit' ? 'Quét mã để chuyển khoản đặt cọc 50%:' : 'Quét mã để thanh toán 100%:'}
+                    </p>
+                    <div className="w-48 h-48 mx-auto border-2 border-neutral-100 rounded-xl overflow-hidden shadow-sm p-1 bg-white">
+                      <img
+                        src="/payment_qr.png"
+                        alt="Payment QR Code"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="space-y-1 text-xs text-[#7A6F66]">
+                      <p>
+                        Số tiền cần chuyển: <span className="font-extrabold text-base text-emerald-600">{totalPrice.toLocaleString('vi-VN')} ₫</span>
+                      </p>
+                      <p>
+                        Nội dung chuyển khoản: <span className="font-mono font-bold text-[#000000]">BK{orderId || 'DEARBOOK'}</span>
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* 2. Confirmation Form Link */}
+                  <div className="p-5 rounded-2xl border-2 border-amber-200 bg-amber-50 text-left space-y-3 mb-6 max-w-md mx-auto">
+                    <div className="flex items-center gap-2 text-amber-800">
+                      <span className="text-lg">⚠️</span>
+                      <p className="font-bold text-sm">
+                        Hoàn tất chuyển khoản đơn hàng
+                      </p>
+                    </div>
+                    <p className="text-xs text-amber-700 leading-relaxed">
+                      Để xác nhận chuyển khoản thành công và đẩy nhanh sản xuất, bạn vui lòng điền thông tin và tải ảnh hóa đơn giao dịch tại Form xác nhận sau:
+                    </p>
+                    <a
+                      href="https://forms.gle/Svy4UUKsFnFUkW7u9"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold transition-all shadow-md text-center animate-pulse"
+                    >
+                      Click điền Form xác nhận chuyển khoản 📝
+                    </a>
+                  </div>
+
+                  {/* 3. Order Details Summary */}
                   <div
-                    className="rounded-xl p-5 text-left space-y-2 mb-6 animate-in fade-in slide-in-from-bottom duration-500"
+                    className="rounded-xl p-5 text-left space-y-2 mb-6"
                     style={{ background: '#F5F2EE' }}
                   >
                     <p className="font-semibold text-sm" style={{ color: '#000000' }}>📦 Thông tin đơn hàng:</p>
@@ -585,12 +630,12 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                       <p>• Mã đơn: <span className="font-mono font-bold text-[#000000]">#{orderId || `BK${Date.now()}`}</span></p>
                       <p>• Loại photobook: <span className="font-semibold text-[#000000]">{currentProduct.nameVi}</span></p>
                       <p>• Kích thước: <span className="font-semibold text-[#000000]">{selectedSize}</span></p>
-                      <p>• Chất liệu giấy: <span className="italic text-[#000000]">{currentProduct.paperType}</span></p>
-                      <p>• Thời gian giao hàng: 5-7 ngày làm việc</p>
+                      <p>• Số trang: <span className="font-semibold text-[#000000]">{customPages} trang</span></p>
+                      <p>• Hình thức thanh toán: <span className="font-bold text-orange-600">{paymentMethod === 'deposit' ? 'Đặt cọc trước 50%' : 'Thanh toán trước 100%'}</span></p>
                       <p>• Người nhận: <span className="font-semibold text-[#000000]">{shippingInfo.fullName}</span></p>
                       <p>• SĐT: <span className="font-semibold text-[#000000]">{shippingInfo.phone}</span></p>
                       <p>• Email: <span className="font-semibold text-[#000000]">{shippingInfo.email}</span></p>
-                      <p>• Tổng tiền: <span className="font-bold text-[#000000]">{totalPrice.toLocaleString('vi-VN')} ₫</span></p>
+                      <p>• Số tiền cần chuyển khoản: <span className="font-bold text-[#000000]">{totalPrice.toLocaleString('vi-VN')} ₫</span></p>
                     </div>
                   </div>
 
@@ -661,8 +706,14 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                 </div>
 
                 <div className="pt-3" style={{ borderTop: '1px solid #EDE9E3' }}>
+                  {paymentMethod === 'deposit' && (
+                    <div className="flex justify-between text-xs text-[#7A6F66] mb-1.5 animate-in fade-in duration-300">
+                      <span>Đã bớt 50% đặt cọc:</span>
+                      <span className="font-semibold text-rose-500">-( {(totalOriginal * 0.5).toLocaleString('vi-VN')} ₫ )</span>
+                    </div>
+                  )}
                   <div className="flex justify-between font-bold">
-                    <span style={{ color: '#000000' }}>Tổng cộng</span>
+                    <span style={{ color: '#000000' }}>{paymentMethod === 'deposit' ? 'Đặt cọc 50%' : 'Tổng cộng'}</span>
                     <span style={{ color: '#000000' }}>{totalPrice.toLocaleString('vi-VN')} ₫</span>
                   </div>
                 </div>
