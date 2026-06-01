@@ -1,8 +1,8 @@
-spring:
+﻿spring:
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/dearbook}
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -13,7 +13,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update  # NOTE: update only in dev — create a proper migration SQL for production
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -26,9 +26,15 @@ server:
     include-stacktrace: never
 
 app:
+  admin:
+    username: admin
+    password: Mh123#@!
+    jwt:
+      secret: dearbook-admin-secret-key-32chars!!
   jwt:
-    secret: ${JWT_SECRET:your-256-bit-secret-your-256-bit-secret-for-local-dev-only}
+    secret: your-256-bit-secret-your-256-bit-secret-for-local-dev-only
     expiration-ms: 86400000
+
 google:
   client-id: ${GOOGLE_CLIENT_ID:your-google-client-id.apps.googleusercontent.com}
   aws:
