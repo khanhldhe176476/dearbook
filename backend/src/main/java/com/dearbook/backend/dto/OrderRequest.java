@@ -1,4 +1,6 @@
 package com.dearbook.backend.dto;
+
+import java.util.List;
 import java.util.UUID;
 
 public record OrderRequest(
@@ -15,5 +17,6 @@ public record OrderRequest(
     String productType,
     String productSize,
     Integer customPages,
-    String paymentMethod
+    String paymentMethod,
+    List<String> selectedPageIds
 ) {}

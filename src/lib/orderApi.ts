@@ -7,6 +7,7 @@ export interface OrderRequest {
   address: string;
   city: string;
   paymentMethod: string;
+  selectedPageIds?: string[];
 }
 
 export interface OrderResponse {

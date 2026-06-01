@@ -4,7 +4,7 @@ import {
   Image, AlertTriangle
 } from 'lucide-react';
 import { exportBookAsPDF, exportPageAsImage, downloadBlob, ExportQuality } from '../utils/pdfExport';
-import { dbGetImageSync } from '../utils/dbStorage';
+import { getPagePreview, hasTemplateFrame } from '../utils/pagePreview';
 import { toast } from 'sonner@2.0.3';
 
 interface ExportModalProps {
@@ -359,33 +359,6 @@ export function ExportModal({ title, pages, book, onClose }: ExportModalProps) {
 }
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
-
-function getPagePreview(page: any): string | null {
-  if (!page?.elements) return null;
-  for (const el of page.elements) {
-    if (el.type === 'image' && el.visible !== false && el.src) {
-      const resolved = el.src.startsWith('dearbook_image_')
-        ? (dbGetImageSync(el.src) || null)
-        : (el.src.startsWith('data:') || el.src.startsWith('http') || el.src.startsWith('/') ? el.src : null);
-      if (resolved) return resolved;
-    }
-  }
-  // Fallback: background image
-  if (page.background?.type === 'image' && page.background.value) {
-    const bg = page.background.value;
-    if (bg.startsWith('dearbook_image_')) {
-      const resolved = dbGetImageSync(bg);
-      if (resolved) return resolved;
-    }
-    if (bg.startsWith('data:') || bg.startsWith('http') || bg.startsWith('/')) return bg;
-  }
-  return null;
-}
-
-function hasTemplateFrame(page: any): boolean {
-  if (!page?.elements) return false;
-  return page.elements.some((el: any) => el.id?.startsWith('template-frame-'));
-}
 
 function estimateSize(pageCount: number, quality: ExportQuality): string {
   const perPage: Record<ExportQuality, number> = { standard: 1.0, high: 2.0, print: 4.5 };
