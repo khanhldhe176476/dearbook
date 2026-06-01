@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, type ReactNode } from 'react';
 import {
   BookHeart, Plus, Search, Edit, Copy, Trash2, Clock,
   FileText, Grid3x3, Rows3, Sparkles, Box, BookOpen,
-  TrendingUp, ChevronRight
+  TrendingUp, ChevronRight, Pencil, Check, X, Camera
 } from 'lucide-react';
 import { BookData, User } from '../App';
 import { GoogleUserProfile } from './GoogleUserProfile';
@@ -13,6 +13,7 @@ import { useBookTemplates } from '../hooks/useBookTemplates';
 import { toast } from 'sonner@2.0.3';
 import { bookApi } from '../lib/bookApi';
 import { Loader2 } from 'lucide-react';
+import { getAllBooks, saveBook, deleteBook, getBooksSync, isIndexedDBAvailable } from '../utils/bookStorage';
 
 interface MyBooksLibraryPortfolioProps {
   user: User;
@@ -47,34 +48,50 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
 
   const loadBooks = async () => {
     setLoading(true);
-    const localBooks = JSON.parse(localStorage.getItem('dearbook_books') || '[]');
     try {
-      const apiBooks = await bookApi.getMyBooks(userId);
-      const mappedApiBooks: BookData[] = apiBooks.map(b => {
-        const localMatch = localBooks.find((l: BookData) => l.id === b.id);
-        return {
-          id: b.id, title: b.title,
-          status: b.status.toLowerCase() as any,
-          updatedAt: b.updatedAt, createdAt: b.updatedAt,
-          theme: (localMatch?.theme || 'love') as any,
-          templateId: b.templateId,
-          pages: localMatch?.pages || [],
-          character: localMatch?.character
-        };
-      });
-      const mergedBooks = [...mappedApiBooks];
-      localBooks.forEach((l: BookData) => {
-        if (!mergedBooks.find(m => m.id === l.id)) mergedBooks.push(l);
-      });
-      setBooks(mergedBooks); setError(null);
+      // Primary: đọc từ IndexedDB
+      let booksSource: BookData[] = [];
+      if (isIndexedDBAvailable()) {
+        booksSource = await getAllBooks();
+      }
+      // Fallback: localStorage nếu IndexedDB trống hoặc không khả dụng
+      if (booksSource.length === 0) {
+        booksSource = getBooksSync();
+      }
+
+      // Đồng bộ với backend API (non-blocking)
+      try {
+        const apiBooks = await bookApi.getMyBooks(userId);
+        const mergedBooks = [...booksSource];
+        for (const apiBook of apiBooks) {
+          if (!mergedBooks.find(m => m.id === apiBook.id)) {
+            mergedBooks.push({
+              id: apiBook.id,
+              title: apiBook.title,
+              status: apiBook.status.toLowerCase() as any,
+              updatedAt: apiBook.updatedAt,
+              createdAt: apiBook.updatedAt,
+              theme: 'love' as any,
+              templateId: apiBook.templateId,
+              pages: [],
+            });
+          }
+        }
+        setBooks(mergedBooks);
+      } catch {
+        // Backend không khả dụng, dùng local data
+        setBooks(booksSource);
+      }
+      setError(null);
     } catch (err) {
-      console.error('Failed to fetch books from API:', err);
-      setError('Không thể kết nối máy chủ. Hiển thị từ bộ nhớ cục bộ.');
-      setBooks(localBooks);
+      console.error('Failed to load books:', err);
+      setError('Không thể tải sách. Hiển thị từ bộ nhớ cục bộ.');
+      // Last resort: localStorage
+      setBooks(getBooksSync());
     } finally { setLoading(false); }
   };
 
-  const handleDuplicate = (book: BookData) => {
+  const handleDuplicate = async (book: BookData) => {
     const duplicated: BookData = {
       ...book,
       id: `book-${Date.now()}`,
@@ -83,9 +100,12 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
-    const allBooks = JSON.parse(localStorage.getItem('dearbook_books') || '[]');
-    allBooks.push(duplicated);
-    localStorage.setItem('dearbook_books', JSON.stringify(allBooks));
+    // Lưu vào IndexedDB
+    try {
+      await saveBook(duplicated, userId);
+    } catch (err) {
+      console.error('Failed to save duplicated book to IndexedDB:', err);
+    }
     loadBooks();
     toast.success('✅ Đã thêm sách mẫu vào thư viện!', { description: `"${duplicated.title}" sẵn sàng chỉnh sửa`, duration: 3000 });
     setHighlightedBookId(duplicated.id);
@@ -97,10 +117,13 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
     setDeleteDialog({ isOpen: true, bookId, bookTitle });
   };
 
-  const handleDeleteConfirm = () => {
-    const allBooks = JSON.parse(localStorage.getItem('dearbook_books') || '[]');
-    const filtered = allBooks.filter((b: BookData) => b.id !== deleteDialog.bookId);
-    localStorage.setItem('dearbook_books', JSON.stringify(filtered));
+  const handleDeleteConfirm = async () => {
+    // Xóa khỏi IndexedDB
+    try {
+      await deleteBook(deleteDialog.bookId);
+    } catch (err) {
+      console.error('Failed to delete book from IndexedDB:', err);
+    }
     loadBooks();
     setDeleteDialog({ isOpen: false, bookId: '', bookTitle: '' });
     toast.success('🗑️ Đã xóa sách thành công', { duration: 2000 });
@@ -134,95 +157,210 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
   const formatDate = (dateString: string) =>
     new Date(dateString).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
+  // Lấy theme chính xác từ templateId (ưu tiên book.theme, fallback suy từ templateId)
+  const getBookTheme = (book: BookData): keyof typeof themeData => {
+    if (book.theme && themeData[book.theme]) return book.theme;
+    const tid = book.templateId || '';
+    if (tid.includes('love') || tid.includes('romantic')) return 'love';
+    if (tid.includes('family') || tid.includes('gia-dinh')) return 'family';
+    if (tid.includes('birthday') || tid.includes('sinh-nhat')) return 'birthday';
+    if (tid.includes('friend') || tid.includes('ban-be')) return 'friendship';
+    return 'love'; // fallback
+  };
+
+  // Lấy ảnh preview đầu tiên từ sách (nếu có)
+  const getBookPreviewImage = (book: BookData): string | null => {
+    if (!book.pages || book.pages.length === 0) return null;
+    const firstPage = book.pages[0] as any;
+    // EditorPage format: background image
+    if (firstPage.background?.type === 'image' && firstPage.background.value) {
+      return firstPage.background.value;
+    }
+    // PageData format: images
+    if (firstPage.images && typeof firstPage.images === 'object') {
+      const firstImg = Object.values(firstPage.images)[0];
+      if (firstImg && typeof firstImg === 'string') return firstImg;
+    }
+    // auto-template format: imageUrl
+    if (firstPage.imageUrl) return firstPage.imageUrl;
+    return null;
+  };
+
+  // Rename book handler
+  const handleRename = async (book: BookData, newTitle: string) => {
+    if (!newTitle.trim()) return;
+    const updated = { ...book, title: newTitle.trim(), updatedAt: new Date().toISOString() };
+    try {
+      await saveBook(updated, userId);
+      loadBooks();
+      toast.success('✅ Đã đổi tên sách');
+    } catch (err) {
+      console.error('Rename failed:', err);
+      toast.error('Không thể đổi tên sách');
+    }
+  };
+
   // ─── Book Card (User's books) ───────────────────────────────────────────────
   const BookCard = ({ book }: { book: BookData }) => {
-    const theme = themeData[book.theme] ?? themeData['love'];
+    const theme = themeData[getBookTheme(book)] ?? themeData['love'];
     const isHighlighted = highlightedBookId === book.id;
+    const [isRenaming, setIsRenaming] = useState(false);
+    const [renameValue, setRenameValue] = useState(book.title || '');
+    const previewImage = getBookPreviewImage(book);
+
+    const onRenameConfirm = () => {
+      if (renameValue.trim() && renameValue.trim() !== (book.title || '')) {
+        handleRename(book, renameValue.trim());
+      }
+      setIsRenaming(false);
+    };
+
+    const onRenameCancel = () => {
+      setRenameValue(book.title || '');
+      setIsRenaming(false);
+    };
 
     return (
       <div
         className={`group relative flex flex-col overflow-hidden transition-all duration-500
-          hover:-translate-y-2 hover:shadow-2xl cursor-pointer
-          ${isHighlighted ? 'ring-2 ring-black/20 ring-offset-2' : ''}`}
+          hover:-translate-y-2 hover:shadow-2xl
+          ${isHighlighted ? 'ring-2 ring-amber-400/60 ring-offset-2' : ''}`}
         style={{
           background: '#ffffff',
           borderRadius: '24px',
-          border: '1px solid rgba(0,0,0,0.03)',
+          border: '1px solid rgba(0,0,0,0.04)',
           boxShadow: isHighlighted
             ? '0 12px 48px rgba(0,0,0,0.16)'
-            : '0 8px 30px rgba(0,0,0,0.04)',
+            : '0 4px 24px rgba(0,0,0,0.05)',
         }}
       >
-        {/* Cover */}
-        <div className={`relative h-56 flex-shrink-0 overflow-hidden bg-gradient-to-br ${theme.grad}`}>
-          {/* Pattern overlay */}
-          <div className="absolute inset-0 opacity-[0.15] mix-blend-overlay"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Ccircle cx='7' cy='7' r='2'/%3E%3Ccircle cx='37' cy='7' r='2'/%3E%3Ccircle cx='7' cy='37' r='2'/%3E%3Ccircle cx='37' cy='37' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            }}
-          />
-          {/* Dark gradient bottom */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
-          
-          {/* Glassmorphism Icon Container */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <div className="relative z-10 w-20 h-20 mb-3 flex items-center justify-center rounded-[1.5rem] bg-white/20 backdrop-blur-md shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/30 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3">
-              <span className="text-4xl drop-shadow-lg">{theme.emoji}</span>
+        {/* ── Cover Area ─────────────────────────────────────────────────── */}
+        <div className="relative h-52 flex-shrink-0 overflow-hidden">
+          {/* Background gradient based on theme */}
+          <div className={`absolute inset-0 bg-gradient-to-br ${theme.grad}`} />
+
+          {/* Show first page preview if available */}
+          {previewImage ? (
+            <>
+              <img
+                src={previewImage}
+                alt=""
+                className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-overlay"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent" />
+            </>
+          ) : (
+            <>
+              {/* Decorative pattern when no preview */}
+              <div className="absolute inset-0 opacity-[0.12]"
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff'%3E%3Ccircle cx='5' cy='5' r='1.5'/%3E%3Ccircle cx='25' cy='5' r='1.5'/%3E%3Ccircle cx='5' cy='25' r='1.5'/%3E%3Ccircle cx='25' cy='25' r='1.5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/5 to-transparent" />
+            </>
+          )}
+
+          {/* Theme icon + title */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center px-4">
+            <div className="relative z-10 w-16 h-16 mb-2 flex items-center justify-center rounded-[1.25rem] bg-white/20 backdrop-blur-md border border-white/30 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3"
+              style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.1)' }}>
+              <span className="text-3xl drop-shadow-lg">{theme.emoji}</span>
             </div>
-            <h3 className="text-sm font-bold text-white drop-shadow-lg line-clamp-2 leading-snug px-4 text-center z-10">
+            <h3 className="text-sm font-bold text-white drop-shadow-lg line-clamp-2 leading-snug text-center z-10 max-w-[90%]">
               {book.title || <span className="opacity-60 italic">Chưa đặt tên</span>}
             </h3>
           </div>
 
-          {/* Status badge top-left */}
-          <div className="absolute top-4 left-4 flex gap-1.5 z-20">
-            {book.status === 'draft' && (
-              <span className="px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-full"
-                style={{ background: 'rgba(255,255,255,0.95)', color: '#666', backdropFilter: 'blur(8px)', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}>
-                Nháp
+          {/* Status badge */}
+          <div className="absolute top-3 left-3 z-20">
+            {book.status === 'draft' ? (
+              <span className="px-2.5 py-1 text-[10px] font-bold tracking-wide uppercase rounded-full"
+                style={{ background: 'rgba(255,255,255,0.92)', color: '#555', backdropFilter: 'blur(6px)' }}>
+                📝 Nháp
               </span>
-            )}
-            {book.status === 'completed' && (
-              <span className="px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-full flex items-center gap-1"
-                style={{ background: 'rgba(34,197,94,0.95)', color: '#fff', backdropFilter: 'blur(8px)', boxShadow: '0 4px 12px rgba(34,197,94,0.3)' }}>
-                ✓ Hoàn thành
+            ) : (
+              <span className="px-2.5 py-1 text-[10px] font-bold tracking-wide uppercase rounded-full"
+                style={{ background: 'rgba(34,197,94,0.9)', color: '#fff', backdropFilter: 'blur(6px)' }}>
+                ✓ Xong
               </span>
             )}
           </div>
-          {/* Pages badge top-right */}
-          <div className="absolute top-4 right-4 z-20">
-            <span className="px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-full"
-              style={{ background: 'rgba(0,0,0,0.6)', color: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(8px)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
-              {book.pages?.length || 0} trang
+
+          {/* Pages count */}
+          <div className="absolute top-3 right-3 z-20">
+            <span className="px-2.5 py-1 text-[10px] font-bold rounded-full"
+              style={{ background: 'rgba(0,0,0,0.55)', color: '#fff', backdropFilter: 'blur(6px)' }}>
+              📄 {book.pages?.length || 0}
             </span>
           </div>
 
-          {/* Hover action overlay */}
-          <div className="absolute inset-0 flex items-center justify-center gap-3 z-30
+          {/* Hover actions */}
+          <div className="absolute inset-0 flex items-center justify-center gap-2.5 z-30
             opacity-0 group-hover:opacity-100 transition-all duration-300"
-            style={{ background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)' }}>
+            style={{ background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(6px)' }}>
             <ActionBtn onClick={() => setShow3DBook(book)} title="Xem 3D" icon={<Box className="w-4 h-4" />} dark />
-            <ActionBtn onClick={() => onEditBook(book)} title="Chỉnh sửa" icon={<Edit className="w-4 h-4" />} />
+            <ActionBtn onClick={() => onEditBook(book)} title="Chỉnh sửa" icon={<Edit className="w-4 h-4" />} primary />
             <ActionBtn onClick={() => handleDuplicate(book)} title="Nhân bản" icon={<Copy className="w-4 h-4" />} />
             <ActionBtn onClick={() => handleDeleteClick(book.id, book.title || 'Sách')} title="Xóa" icon={<Trash2 className="w-4 h-4" />} danger />
           </div>
         </div>
 
-        {/* Info */}
-        <div className="flex flex-col flex-1 p-5 gap-3">
-          {/* Title */}
-          <p className="font-bold text-base leading-snug line-clamp-1 transition-colors group-hover:text-amber-700" style={{ color: '#1a1a1a' }}>
-            {book.title || <span style={{ color: '#ccc', fontStyle: 'italic' }}>Chưa đặt tên</span>}
-          </p>
-          {/* Meta row */}
-          <div className="flex items-center justify-between mt-auto">
-            <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[12px] font-semibold border ${theme.badge}`}>
-              {theme.emoji} {theme.name}
-            </span>
-            <div className="flex items-center gap-1.5 text-[12px] font-medium" style={{ color: '#888' }}>
-              <Clock className="w-3.5 h-3.5 text-gray-400" />
-              <span>{formatDate(book.updatedAt)}</span>
+        {/* ── Info Area ──────────────────────────────────────────────────── */}
+        <div className="flex flex-col flex-1 p-4 gap-2.5">
+          {/* Title row (with rename) */}
+          {isRenaming ? (
+            <div className="flex items-center gap-1.5">
+              <input
+                type="text"
+                value={renameValue}
+                onChange={e => setRenameValue(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') onRenameConfirm(); if (e.key === 'Escape') onRenameCancel(); }}
+                className="flex-1 px-2.5 py-1.5 text-sm font-bold outline-none rounded-lg border-2 border-amber-400 bg-amber-50/50"
+                style={{ color: '#1a1a1a' }}
+                autoFocus
+              />
+              <button onClick={onRenameConfirm} className="p-1.5 rounded-lg bg-green-500 text-white hover:bg-green-600 transition-colors" title="Lưu">
+                <Check className="w-3.5 h-3.5" />
+              </button>
+              <button onClick={onRenameCancel} className="p-1.5 rounded-lg bg-gray-200 text-gray-500 hover:bg-gray-300 transition-colors" title="Hủy">
+                <X className="w-3.5 h-3.5" />
+              </button>
             </div>
+          ) : (
+            <div className="flex items-start gap-1.5 group/title">
+              <p
+                className="font-bold text-sm leading-snug line-clamp-2 flex-1 cursor-pointer transition-colors hover:text-amber-600"
+                style={{ color: '#1a1a1a' }}
+                onClick={() => { setRenameValue(book.title || ''); setIsRenaming(true); }}
+                title="Click để đổi tên"
+              >
+                {book.title || <span style={{ color: '#ccc', fontStyle: 'italic' }}>Chưa đặt tên</span>}
+              </p>
+              <button
+                onClick={() => { setRenameValue(book.title || ''); setIsRenaming(true); }}
+                className="p-1 rounded-md opacity-0 group-hover/title:opacity-100 transition-all hover:bg-gray-100 flex-shrink-0"
+                title="Đổi tên sách"
+              >
+                <Pencil className="w-3 h-3 text-gray-400" />
+              </button>
+            </div>
+          )}
+
+          {/* Theme badge */}
+          <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-semibold border w-fit ${theme.badge}`}>
+            {theme.emoji} {theme.name}
+          </span>
+
+          {/* Creation date */}
+          <div className="flex items-center gap-1.5 text-[11px] font-medium mt-auto" style={{ color: '#999' }}>
+            <Clock className="w-3 h-3" />
+            <span>Tạo {formatDate(book.createdAt)}</span>
+            {book.updatedAt !== book.createdAt && (
+              <span className="text-[10px]" style={{ color: '#ccc' }}>
+                · Cập nhật {formatDate(book.updatedAt)}
+              </span>
+            )}
           </div>
         </div>
       </div>
@@ -683,9 +821,9 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
 
 // ── Tiny helper component ────────────────────────────────────────────────────
 function ActionBtn({
-  onClick, title, icon, dark, danger
+  onClick, title, icon, dark, danger, primary
 }: {
-  onClick: () => void; title: string; icon: ReactNode; dark?: boolean; danger?: boolean;
+  onClick: () => void; title: string; icon: ReactNode; dark?: boolean; danger?: boolean; primary?: boolean;
 }) {
   return (
     <button
@@ -693,8 +831,8 @@ function ActionBtn({
       title={title}
       className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95"
       style={{
-        background: danger ? '#b45d5d' : dark ? '#111' : '#fff',
-        color: (dark || danger) ? '#fff' : '#111',
+        background: danger ? '#ef4444' : primary ? '#f59e0b' : dark ? '#1a1a1a' : '#fff',
+        color: (dark || danger || primary) ? '#fff' : '#1a1a1a',
         boxShadow: '0 2px 8px rgba(0,0,0,0.18)',
       }}
     >

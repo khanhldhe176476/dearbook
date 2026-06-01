@@ -25,7 +25,7 @@ export interface LocalTemplatePage {
 
 interface LocalTemplatePageViewerProps {
   book: Partial<BookData>;
-  onBack: () => void;
+  onBack?: () => void;
   onFinish: () => void;
   onAdvancedEdit: () => void;
 }

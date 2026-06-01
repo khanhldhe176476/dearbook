@@ -30,7 +30,7 @@ interface EditorToolbarCompactProps {
   gridVisible: boolean;
   showLeftPanel: boolean;
   showLayerPanel: boolean;
-  showRightPanel: boolean;
+  showRightPanel?: boolean;
   saveStatus: 'saved' | 'saving' | 'unsaved';
   lastSavedAt?: Date;
   onBack?: () => void;
@@ -44,7 +44,7 @@ interface EditorToolbarCompactProps {
   onSaveOrder?: () => void;
   onToggleLeftPanel: () => void;
   onToggleLayerPanel: () => void;
-  onToggleRightPanel: () => void;
+  onToggleRightPanel?: () => void;
   onAddText?: () => void;
   onAddImage?: () => void;
   onAddShape?: () => void;

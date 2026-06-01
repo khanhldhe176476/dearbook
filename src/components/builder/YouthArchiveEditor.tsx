@@ -17,7 +17,7 @@ interface YouthArchiveEditorProps {
   book: BookData;
   pages: PageData[];
   onChange: (pages: PageData[], title: string) => void;
-  onBack: () => void;
+  onBack?: () => void;
   onFinish: () => void;
   onAdvancedEdit: () => void;
 }

@@ -4,6 +4,7 @@ import {
   Sparkles, GripVertical, LayoutTemplate,
 } from 'lucide-react';
 import { PageElement } from '../../types/editor';
+import { dbGetImageSync } from '../../utils/dbStorage';
 
 interface LayerPanelProps {
   elements: PageElement[];
@@ -67,7 +68,7 @@ export function LayerPanel({
     const src = (element as any).src || '';
     if (!src) return null;
     if (src.startsWith('dearbook_image_')) {
-      return localStorage.getItem(src) || null;
+      return dbGetImageSync(src) || null;
     }
     return src;
   };

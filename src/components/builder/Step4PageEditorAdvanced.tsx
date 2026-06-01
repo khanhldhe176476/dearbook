@@ -15,7 +15,7 @@ interface Step4PageEditorAdvancedProps {
   character?: CharacterData;
   title?: string;
   onChange: (pages: PageData[], title: string) => void;
-  onBack: () => void;
+  onBack?: () => void;
   onFinish: () => void;
 }
 
@@ -34,6 +34,13 @@ export function Step4PageEditorAdvanced({
   const [localPages, setLocalPages] = useState(pages);
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [show3DView, setShow3DView] = useState(false);
+
+  // Đồng bộ localPages khi pages prop thay đổi (vd: khi load sách từ IndexedDB)
+  useEffect(() => {
+    if (pages && pages.length > 0) {
+      setLocalPages(pages);
+    }
+  }, [pages]);
 
 
   // Canvas dimensions (must match AdvancedPageEditorV2)
@@ -60,33 +67,48 @@ export function Step4PageEditorAdvanced({
       return [];
     }
 
-    // ── LOCAL TEMPLATES (local-template-1/2/3) ──────────────────────────────
-    // Mỗi trang lưu URL ảnh gốc trong images.pageImage.
-    // Trong editor, ảnh đó trở thành background của canvas; elements rỗng để user tự thêm.
+    // ── LOCAL TEMPLATES & AUTO TEMPLATES ──────────────────────────────────
+    // Các trang dùng ảnh template làm nền. Editor cho phép user thêm elements lên trên.
     if (templateId.startsWith('local-template-') || templateId.startsWith('auto-template-')) {
       return localPages.map((page) => {
         let elements = page.elements ? [...page.elements] : [];
         let background = page.background;
 
-        // Convert the old format (template as background) to new format (template as foreground overlay)
-        if (!page.elements || (background?.type === 'image' && background?.value === page.images?.pageImage)) {
-          const maxZ = elements.length > 0 ? Math.max(...elements.map((e: any) => e.zIndex || 0)) : 0;
-          elements.push({
-            id: `template-frame-${page.id}`,
-            type: 'image',
-            src: page.images?.pageImage || '',
-            x: 0,
-            y: 0,
-            width: PAGE_W,
-            height: PAGE_H,
-            rotation: 0,
-            opacity: 1,
-            locked: true, // Không cho click chọn
-            visible: true,
-            zIndex: maxZ + 10, // Luôn đè lên các elements có sẵn
-            objectFit: 'fill'
-          });
-          background = { type: 'color', value: '#FFFFFF' };
+        // Lấy URL ảnh template từ nhiều nguồn khác nhau
+        const templateImageUrl =
+          (page as any).imageUrl ||                          // autoTemplates.json format
+          page.images?.pageImage ||                          // PageData format
+          (page as any).images?.pageImage ||                 // biến thể
+          '';
+
+        // Tìm template frame có sẵn trong elements (từ session trước)
+        const existingFrame = elements.find(
+          (el: any) => el.id && el.id.startsWith('template-frame-')
+        );
+        const frameImageUrl = (existingFrame as any)?.src || templateImageUrl;
+
+        // TH1: Lần đầu convert - chưa có elements → tạo template frame + background
+        if (!page.elements || page.elements.length === 0) {
+          if (frameImageUrl) {
+            const maxZ = elements.length > 0 ? Math.max(...elements.map((e: any) => e.zIndex || 0)) : 0;
+            elements.push({
+              id: `template-frame-${page.id}`,
+              type: 'image',
+              src: frameImageUrl,
+              x: 0, y: 0,
+              width: PAGE_W, height: PAGE_H,
+              rotation: 0, opacity: 1,
+              locked: true, visible: true,
+              zIndex: maxZ + 10,
+              objectFit: 'fill'
+            });
+          }
+        }
+
+        // TH2: Đã có elements nhưng background là màu trắng → lấy ảnh từ template frame làm background
+        // (Xảy ra với sách đã lưu từ phiên bản cũ - background bị set thành màu trắng)
+        if (background?.type !== 'image' && frameImageUrl) {
+          background = { type: 'image', value: frameImageUrl };
         }
 
         return {
@@ -403,13 +425,13 @@ export function Step4PageEditorAdvanced({
             onUpdatePage={handlePageUpdate}
             onSave={handleEditorSave}
             onPreview={() => setShow3DView(true)}
-            onBack={() => {
+            onBack={onBack ? () => {
               if (templateId.startsWith('local-template-') || templateId.startsWith('auto-template-') || templateId === 'youth-archive-memories') {
                 onBack();
               } else {
                 setMode('simple');
               }
-            }}
+            } : undefined}
             onAddPage={handleAddPage}
             onDeletePage={handleDeletePage}
             onDuplicatePage={handleDuplicatePage}
@@ -447,6 +469,7 @@ export function Step4PageEditorAdvanced({
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
+        {onBack && (
         <button
           onClick={onBack}
           className="flex items-center gap-2 px-4 py-2 rounded-xl transition-all text-sm font-medium"
@@ -457,6 +480,7 @@ export function Step4PageEditorAdvanced({
           <ArrowLeft className="w-5 h-5" />
           <span className="hidden sm:inline">Quay lại</span>
         </button>
+        )}
 
         <div className="flex items-center gap-2">
           <button

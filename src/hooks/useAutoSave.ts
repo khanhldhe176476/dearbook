@@ -13,7 +13,7 @@ export type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
 interface UseAutoSaveReturn {
   saveStatus: SaveStatus;
   lastSavedAt: Date | null;
-  forceSave: () => void;
+  forceSave: () => Promise<void>;
   isSaving: boolean;
 }
 
@@ -27,11 +27,12 @@ export function useAutoSave<T>({
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
   const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-  
+
   const dataRef = useRef(data);
   const lastSavedDataRef = useRef<string>(JSON.stringify(data));
-  const saveTimeoutRef = useRef<NodeJS.Timeout>();
-  const debounceTimeoutRef = useRef<NodeJS.Timeout>();
+  const saveTimeoutRef = useRef<ReturnType<typeof setInterval>>();
+  const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const isSavingRef = useRef(false);
 
   // Update data ref when data changes
   useEffect(() => {
@@ -39,7 +40,7 @@ export function useAutoSave<T>({
   }, [data]);
 
   const performSave = useCallback(async () => {
-    if (isSaving) return;
+    if (isSavingRef.current) return;
 
     const currentData = dataRef.current;
     const currentDataString = JSON.stringify(currentData);
@@ -51,40 +52,42 @@ export function useAutoSave<T>({
     }
 
     try {
+      isSavingRef.current = true;
       setIsSaving(true);
       setSaveStatus('saving');
-      
+
       await onSave(currentData);
-      
+
       lastSavedDataRef.current = currentDataString;
       setLastSavedAt(new Date());
       setSaveStatus('saved');
-      
+
       // Reset to idle after 2 seconds
       setTimeout(() => {
-        setSaveStatus('idle');
+        setSaveStatus((prev) => (prev === 'saved' ? 'idle' : prev));
       }, 2000);
     } catch (error) {
       console.error('Auto-save failed:', error);
       setSaveStatus('error');
-      
+
       // Reset to idle after 3 seconds
       setTimeout(() => {
-        setSaveStatus('idle');
+        setSaveStatus((prev) => (prev === 'error' ? 'idle' : prev));
       }, 3000);
     } finally {
+      isSavingRef.current = false;
       setIsSaving(false);
     }
-  }, [onSave, isSaving]);
+  }, [onSave]);
 
-  const forceSave = useCallback(() => {
+  const forceSave = useCallback(async () => {
     if (debounceTimeoutRef.current) {
       clearTimeout(debounceTimeoutRef.current);
     }
     if (saveTimeoutRef.current) {
-      clearTimeout(saveTimeoutRef.current);
+      clearInterval(saveTimeoutRef.current);
     }
-    performSave();
+    await performSave();
   }, [performSave]);
 
   // Debounced save on data change
@@ -115,7 +118,7 @@ export function useAutoSave<T>({
 
     saveTimeoutRef.current = setInterval(() => {
       const currentDataString = JSON.stringify(dataRef.current);
-      if (currentDataString !== lastSavedDataRef.current && !isSaving) {
+      if (currentDataString !== lastSavedDataRef.current && !isSavingRef.current) {
         performSave();
       }
     }, interval);
@@ -125,19 +128,31 @@ export function useAutoSave<T>({
         clearInterval(saveTimeoutRef.current);
       }
     };
-  }, [enabled, interval, performSave, isSaving]);
+  }, [enabled, interval, performSave]);
 
-  // Save before unload
+  // Save before unload — đồng bộ vào localStorage làm backup
+  // (IndexedDB là async nên không đảm bảo kịp khi tab đóng)
   useEffect(() => {
     if (!enabled) return;
 
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       const currentDataString = JSON.stringify(dataRef.current);
       if (currentDataString !== lastSavedDataRef.current) {
+        // Backup đồng bộ vào localStorage
+        try {
+          const key = 'dearbook_autosave_backup';
+          localStorage.setItem(key, JSON.stringify({
+            data: dataRef.current,
+            timestamp: Date.now(),
+          }));
+        } catch {
+          // localStorage có thể đầy, bỏ qua
+        }
+
         e.preventDefault();
         e.returnValue = 'Bạn có thay đổi chưa được lưu. Bạn có chắc muốn rời đi?';
-        
-        // Try to save synchronously (best effort)
+
+        // Thử async save (best effort)
         onSave(dataRef.current);
       }
     };
@@ -145,6 +160,27 @@ export function useAutoSave<T>({
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [enabled, onSave]);
+
+  // Restore backup nếu có (khi hook mount)
+  useEffect(() => {
+    try {
+      const backupRaw = localStorage.getItem('dearbook_autosave_backup');
+      if (backupRaw) {
+        const backup = JSON.parse(backupRaw);
+        if (backup.data && backup.timestamp) {
+          // Chỉ restore nếu backup mới hơn last saved
+          const backupStr = JSON.stringify(backup.data);
+          if (backupStr !== lastSavedDataRef.current) {
+            console.log('📦 Found auto-save backup from', new Date(backup.timestamp).toLocaleString());
+            // Không tự động restore — để component cha quyết định
+          }
+        }
+        localStorage.removeItem('dearbook_autosave_backup');
+      }
+    } catch {
+      // Bỏ qua
+    }
+  }, []);
 
   return {
     saveStatus,

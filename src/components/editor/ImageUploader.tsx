@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { Upload, Image as ImageIcon, X, Loader2 } from 'lucide-react';
 import { ImageCropModal } from './ImageCropModal';
+import { dbStoreImage } from '../../utils/dbStorage';
 
 interface ImageUploaderProps {
   onImageUpload: (imageUrl: string) => void;
@@ -53,18 +54,19 @@ export function ImageUploader({
       try {
         // Convert file to data URL
         const reader = new FileReader();
-        reader.onload = (e) => {
+        reader.onload = async (e) => {
           const dataUrl = e.target?.result as string;
 
           if (enableCrop) {
             setImageForCrop(dataUrl);
           } else {
-            const imageKey = `dearbook_image_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
             try {
-              localStorage.setItem(imageKey, dataUrl);
+              // Lưu vào IndexedDB (primary storage, không giới hạn ~5MB)
+              const imageKey = await dbStoreImage(dataUrl);
               onImageUpload(imageKey);
             } catch (err) {
-              console.warn('Failed to save to localStorage:', err);
+              console.warn('Failed to save to IndexedDB, fallback to dataUrl:', err);
+              // Fallback: dùng raw dataUrl (kém hiệu quả nhưng không mất ảnh)
               onImageUpload(dataUrl);
             }
           }
@@ -121,14 +123,13 @@ export function ImageUploader({
     }
   };
 
-  const handleCropComplete = (croppedImageUrl: string) => {
-    // Store cropped image in localStorage
-    const imageKey = `dearbook_image_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  const handleCropComplete = async (croppedImageUrl: string) => {
+    // Lưu ảnh đã crop vào IndexedDB
     try {
-      localStorage.setItem(imageKey, croppedImageUrl);
+      const imageKey = await dbStoreImage(croppedImageUrl);
       onImageUpload(imageKey);
     } catch (err) {
-      console.warn('Failed to save cropped image to localStorage:', err);
+      console.warn('Failed to save cropped image to IndexedDB, fallback to dataUrl:', err);
       onImageUpload(croppedImageUrl);
     }
     setImageForCrop(null);

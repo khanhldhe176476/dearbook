@@ -2,12 +2,11 @@ import { useState, useRef, useEffect } from 'react';
 import { PageElement, TextElement, ImageElement, ShapeElement, StickerElement, IconElement, FrameElement } from '../../types/editor';
 import { AssetLibrary } from './AssetLibrary';
 import { LayerPanel } from './LayerPanel';
-import { PropertiesPanel } from './PropertiesPanel';
 import { EditorToolbar } from './EditorToolbar';
-import { RichTextToolbar } from './RichTextToolbar';
 import { ImageUploader } from './ImageUploader';
 import { SaveIndicator } from '../SaveIndicator';
-import { ExportDownloadMenu } from '../ExportDownloadMenu';
+import { ExportModal } from '../ExportModal';
+import { dbGetImageSync } from '../../utils/dbStorage';
 import { MobileEditorToolbar } from '../MobileEditorToolbar';
 import { EditorToolbarCompact } from './EditorToolbarCompact';
 import { CoverTemplateSelector } from './CoverTemplateSelector';
@@ -31,7 +30,6 @@ import {
   ZoomOut,
   Grid3x3,
   Layers,
-  Settings,
   Upload,
   Type,
   Image as ImageIcon,
@@ -149,8 +147,7 @@ export function AdvancedPageEditorV2({
   const [gridVisible, setGridVisible] = useState(false);
   const [showAssetLibrary, setShowAssetLibrary] = useState(false);
   const [showLayerPanel, setShowLayerPanel] = useState(!isMobile);
-  const [showProperties, setShowProperties] = useState(!isMobile);
-  const [showExportMenu, setShowExportMenu] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
   const [showImageUploader, setShowImageUploader] = useState(false);
   const [showCoverSelector, setShowCoverSelector] = useState(false);
   const [showCoverGuide, setShowCoverGuide] = useState(false);
@@ -331,11 +328,8 @@ export function AdvancedPageEditorV2({
     setEditorState(prev => ({ ...prev, elements: newElements as PageElement[] }));
   };
 
-  const handleExportPageAsPDF = () => {
-    toast.info('Đang chuẩn bị bản in PDF...');
-    setTimeout(() => {
-      window.print();
-    }, 1000);
+  const handleExport = () => {
+    setShowExportModal(true);
   };
 
   const handleSaveOrder = () => {
@@ -509,7 +503,91 @@ export function AdvancedPageEditorV2({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedIds, forceSave, editingTextId]);
 
-  // Mouse handlers
+  // Global mouse handlers — bắt sự kiện trên toàn window để kéo/thả vượt ra ngoài canvas
+  useEffect(() => {
+    const isActive = draggedElement || resizingElement || rotatingElement;
+    if (!isActive) return;
+
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+      if (rotatingElement) {
+        const angle = Math.atan2(e.clientY - rotatingElement.centerY, e.clientX - rotatingElement.centerX);
+        let deltaRotation = (angle - rotatingElement.startAngle) * 180 / Math.PI;
+        handleUpdateElement(rotatingElement.id, { rotation: rotatingElement.startRotation + deltaRotation });
+        return;
+      }
+
+      // Get current element (React state in closure, use refs if stale)
+      if (resizingElement) {
+        const el = elements.find(el => el.id === resizingElement.id);
+        if (!el) return;
+
+        const angle = el.rotation || 0;
+        const rad = (angle * Math.PI) / 180;
+        const cos = Math.cos(rad);
+        const sin = Math.sin(rad);
+
+        const rawDeltaX = (e.clientX - resizingElement.startX) / zoom;
+        const rawDeltaY = (e.clientY - resizingElement.startY) / zoom;
+
+        const deltaX = rawDeltaX * cos + rawDeltaY * sin;
+        const deltaY = -rawDeltaX * sin + rawDeltaY * cos;
+
+        let newWidth = resizingElement.startWidth;
+        let newHeight = resizingElement.startHeight;
+        let deltaX_local = 0;
+        let deltaY_local = 0;
+
+        if (resizingElement.handle.includes('e')) newWidth = Math.max(20, resizingElement.startWidth + deltaX);
+        if (resizingElement.handle.includes('w')) { newWidth = Math.max(20, resizingElement.startWidth - deltaX); deltaX_local = resizingElement.startWidth - newWidth; }
+        if (resizingElement.handle.includes('s')) newHeight = Math.max(20, resizingElement.startHeight + deltaY);
+        if (resizingElement.handle.includes('n')) { newHeight = Math.max(20, resizingElement.startHeight - deltaY); deltaY_local = resizingElement.startHeight - newHeight; }
+
+        const localDeltaCenterX = deltaX_local + (newWidth - resizingElement.startWidth) / 2;
+        const localDeltaCenterY = deltaY_local + (newHeight - resizingElement.startHeight) / 2;
+        const globalDeltaCenterX = localDeltaCenterX * cos - localDeltaCenterY * sin;
+        const globalDeltaCenterY = localDeltaCenterX * sin + localDeltaCenterY * cos;
+        const startCenterGlobalX = resizingElement.elStartX + resizingElement.startWidth / 2;
+        const startCenterGlobalY = resizingElement.elStartY + resizingElement.startHeight / 2;
+        const newCenterGlobalX = startCenterGlobalX + globalDeltaCenterX;
+        const newCenterGlobalY = startCenterGlobalY + globalDeltaCenterY;
+
+        handleUpdateElement(resizingElement.id, {
+          x: newCenterGlobalX - newWidth / 2,
+          y: newCenterGlobalY - newHeight / 2,
+          width: newWidth,
+          height: newHeight,
+        });
+        return;
+      }
+
+      if (draggedElement) {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+        // Không giới hạn vị trí — cho phép kéo ra ngoài trang
+        handleUpdateElement(draggedElement.id, {
+          x: (mouseX - draggedElement.offsetX) / zoom,
+          y: (mouseY - draggedElement.offsetY) / zoom,
+        });
+      }
+    };
+
+    const handleGlobalMouseUp = () => {
+      setDraggedElement(null);
+      setResizingElement(null);
+      setRotatingElement(null);
+    };
+
+    window.addEventListener('mousemove', handleGlobalMouseMove);
+    window.addEventListener('mouseup', handleGlobalMouseUp);
+    return () => {
+      window.removeEventListener('mousemove', handleGlobalMouseMove);
+      window.removeEventListener('mouseup', handleGlobalMouseUp);
+    };
+  }, [draggedElement, resizingElement, rotatingElement, elements, zoom, handleUpdateElement]);
+
   const handleMouseDown = (e: React.MouseEvent, elementId: string) => {
     if (e.button !== 0) return;
 
@@ -528,89 +606,6 @@ export function AdvancedPageEditorV2({
     if (!selectedIds.includes(elementId)) {
       handleSelectElement(elementId, e.shiftKey);
     }
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (rotatingElement) {
-      const angle = Math.atan2(e.clientY - rotatingElement.centerY, e.clientX - rotatingElement.centerX);
-      let deltaRotation = (angle - rotatingElement.startAngle) * 180 / Math.PI;
-      handleUpdateElement(rotatingElement.id, { rotation: rotatingElement.startRotation + deltaRotation });
-      return;
-    }
-
-    if (resizingElement) {
-      const el = elements.find(el => el.id === resizingElement.id);
-      if (!el) return;
-      
-      const angle = el.rotation || 0;
-      const rad = (angle * Math.PI) / 180;
-      const cos = Math.cos(rad);
-      const sin = Math.sin(rad);
-
-      const rawDeltaX = (e.clientX - resizingElement.startX) / zoom;
-      const rawDeltaY = (e.clientY - resizingElement.startY) / zoom;
-
-      const deltaX = rawDeltaX * cos + rawDeltaY * sin;
-      const deltaY = -rawDeltaX * sin + rawDeltaY * cos;
-
-      let newWidth = resizingElement.startWidth;
-      let newHeight = resizingElement.startHeight;
-      let deltaX_local = 0;
-      let deltaY_local = 0;
-
-      if (resizingElement.handle.includes('e')) {
-        newWidth = Math.max(20, resizingElement.startWidth + deltaX);
-      }
-      if (resizingElement.handle.includes('w')) {
-        newWidth = Math.max(20, resizingElement.startWidth - deltaX);
-        deltaX_local = resizingElement.startWidth - newWidth;
-      }
-      if (resizingElement.handle.includes('s')) {
-        newHeight = Math.max(20, resizingElement.startHeight + deltaY);
-      }
-      if (resizingElement.handle.includes('n')) {
-        newHeight = Math.max(20, resizingElement.startHeight - deltaY);
-        deltaY_local = resizingElement.startHeight - newHeight;
-      }
-
-      const localDeltaCenterX = deltaX_local + (newWidth - resizingElement.startWidth) / 2;
-      const localDeltaCenterY = deltaY_local + (newHeight - resizingElement.startHeight) / 2;
-
-      const globalDeltaCenterX = localDeltaCenterX * cos - localDeltaCenterY * sin;
-      const globalDeltaCenterY = localDeltaCenterX * sin + localDeltaCenterY * cos;
-
-      const startCenterGlobalX = resizingElement.elStartX + resizingElement.startWidth / 2;
-      const startCenterGlobalY = resizingElement.elStartY + resizingElement.startHeight / 2;
-
-      const newCenterGlobalX = startCenterGlobalX + globalDeltaCenterX;
-      const newCenterGlobalY = startCenterGlobalY + globalDeltaCenterY;
-
-      const newX = newCenterGlobalX - newWidth / 2;
-      const newY = newCenterGlobalY - newHeight / 2;
-
-      handleUpdateElement(resizingElement.id, { x: newX, y: newY, width: newWidth, height: newHeight });
-      return;
-    }
-
-    if (!draggedElement) return;
-
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const rect = canvas.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-
-    const newX = Math.max(0, Math.min((mouseX - draggedElement.offsetX) / zoom, PAGE_WIDTH));
-    const newY = Math.max(0, Math.min((mouseY - draggedElement.offsetY) / zoom, PAGE_HEIGHT));
-
-    handleUpdateElement(draggedElement.id, { x: newX, y: newY });
-  };
-
-  const handleMouseUp = () => {
-    setDraggedElement(null);
-    setResizingElement(null);
-    setRotatingElement(null);
   };
 
   // ─── Drop-Into-Frame: Universal rule for all templates ───────────────────────
@@ -760,7 +755,6 @@ export function AdvancedPageEditorV2({
   };
 
   const selectedElement = selectedIds.length === 1 ? elements.find((el) => el.id === selectedIds[0]) : null;
-  const isTextSelected = selectedElement?.type === 'text';
 
   // Handle cover selection
   const handleSelectCover = (cover: BookPage) => {
@@ -948,7 +942,7 @@ export function AdvancedPageEditorV2({
         const isDragTarget = dragOverSlotId === element.id;
         const imgSrc = imgEl.src
           ? (imgEl.src.startsWith('dearbook_image_')
-            ? localStorage.getItem(imgEl.src) || imgEl.src
+            ? dbGetImageSync(imgEl.src) || imgEl.src
             : imgEl.src)
           : '';
         content = (
@@ -1121,52 +1115,6 @@ export function AdvancedPageEditorV2({
         className="hidden"
         onChange={handleSlotFileChange}
       />
-      {/* Left Sidebar - Layer Panel (Desktop only) */}
-      {!isMobile && showLayerPanel && (
-        <div className="w-64 bg-white border-r border-gray-200 overflow-y-auto flex flex-col animate-in slide-in-from-left duration-200">
-          <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-purple-50 to-pink-50 sticky top-0 z-10 flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-2">
-                <Layers className="w-5 h-5 text-purple-600" />
-                <h3 className="font-semibold text-gray-900">Lớp (Layers)</h3>
-              </div>
-              <p className="text-xs text-gray-500 mt-1">
-                {elements.length} phần tử
-              </p>
-            </div>
-            <button
-              onClick={() => setShowLayerPanel(false)}
-              className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors text-gray-500 hover:text-gray-700"
-              title="Ẩn danh sách lớp"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-          <div className="flex-1 overflow-y-auto">
-            <LayerPanel
-              elements={elements}
-              selectedIds={selectedIds}
-              onSelectElement={handleSelectElement}
-              onReorder={handleReorderElement}
-              onDelete={handleDeleteElement}
-              onDuplicate={handleDuplicate}
-              onToggleVisibility={(id) => {
-                const element = elements.find((el) => el.id === id);
-                if (element) {
-                  handleUpdateElement(id, { visible: !element.visible });
-                }
-              }}
-              onToggleLock={(id) => {
-                const element = elements.find((el) => el.id === id);
-                if (element) {
-                  handleUpdateElement(id, { locked: !element.locked });
-                }
-              }}
-            />
-          </div>
-        </div>
-      )}
-
       {/* Left Sidebar - Asset Library (Desktop only) */}
       {!isMobile && showAssetLibrary && (
         <div className="w-72 bg-white border-r border-gray-200 overflow-y-auto animate-in slide-in-from-left duration-200">
@@ -1199,7 +1147,6 @@ export function AdvancedPageEditorV2({
             gridVisible={gridVisible}
             showLeftPanel={showAssetLibrary}
             showLayerPanel={showLayerPanel}
-            showRightPanel={showProperties}
             saveStatus={saveStatus as any}
             lastSavedAt={lastSavedAt || undefined}
             onBack={onBack}
@@ -1209,11 +1156,10 @@ export function AdvancedPageEditorV2({
             onZoomOut={() => setZoom(Math.max(0.5, zoom - 0.1))}
             onToggleGrid={() => setGridVisible(!gridVisible)}
             onPreview={onPreview}
-            onExport={handleExportPageAsPDF}
+            onExport={handleExport}
             onSaveOrder={handleSaveOrder}
             onToggleLeftPanel={() => setShowAssetLibrary(!showAssetLibrary)}
             onToggleLayerPanel={() => setShowLayerPanel(!showLayerPanel)}
-            onToggleRightPanel={() => setShowProperties(!showProperties)}
             onAddText={() =>
               handleAddElement('text', {
                 content: 'Nhập nội dung...',
@@ -1225,44 +1171,12 @@ export function AdvancedPageEditorV2({
           />
         )}
 
-        {/* Rich Text Toolbar (when text is selected) */}
-        {!isMobile && isTextSelected && selectedElement && (
-          <div className="bg-gradient-to-r from-pink-50 to-purple-50 border-b border-pink-100 p-2 shadow-sm animate-in slide-in-from-top duration-200">
-            <RichTextToolbar
-              fontFamily={(selectedElement as TextElement).fontFamily}
-              fontSize={(selectedElement as TextElement).fontSize}
-              fontWeight={(selectedElement as TextElement).fontWeight as any}
-              fontStyle={(selectedElement as TextElement).fontStyle}
-              textDecoration={(selectedElement as TextElement).textDecoration}
-              textAlign={(selectedElement as TextElement).textAlign}
-              color={(selectedElement as TextElement).color}
-              textShadow={(selectedElement as TextElement).textShadow}
-              onFontFamilyChange={(value) =>
-                handleUpdateElement(selectedElement.id, { fontFamily: value })
-              }
-              onFontSizeChange={(value) =>
-                handleUpdateElement(selectedElement.id, { fontSize: value })
-              }
-              onFontWeightChange={(value) =>
-                handleUpdateElement(selectedElement.id, { fontWeight: value as any })
-              }
-              onFontStyleChange={(value) =>
-                handleUpdateElement(selectedElement.id, { fontStyle: value as any })
-              }
-              onTextDecorationChange={(value) =>
-                handleUpdateElement(selectedElement.id, { textDecoration: value as any })
-              }
-              onTextAlignChange={(value) =>
-                handleUpdateElement(selectedElement.id, { textAlign: value as any })
-              }
-              onColorChange={(value) =>
-                handleUpdateElement(selectedElement.id, { color: value })
-              }
-              onTextShadowChange={(value) =>
-                handleUpdateElement(selectedElement.id, { textShadow: value })
-              }
-            />
-          </div>
+        {/* Contextual Element Properties Bar */}
+        {!isMobile && selectedElement && (
+          <ElementPropertiesBar
+            element={selectedElement}
+            onUpdate={(updates) => handleUpdateElement(selectedElement.id, updates)}
+          />
         )}
 
         {/* Canvas Area */}
@@ -1282,9 +1196,7 @@ export function AdvancedPageEditorV2({
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',
             }}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
+            // Mouse drag/resize/rotate handled globally via window listeners
             // ✅ Drop-Into-Frame handlers
             onDragOver={handleCanvasDragOver}
             onDragLeave={() => setDragOverSlotId(null)}
@@ -1336,34 +1248,47 @@ export function AdvancedPageEditorV2({
         />
       </div>
 
-      {/* Right Sidebar - Properties (Desktop only) */}
-      {!isMobile && showProperties && selectedElement && (
+      {/* Right Sidebar - Layer Panel (Desktop only) */}
+      {!isMobile && showLayerPanel && (
         <div className="w-64 bg-white border-l border-gray-200 overflow-y-auto flex flex-col animate-in slide-in-from-right duration-200">
-          <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-pink-50 to-rose-50 sticky top-0 z-10 flex items-center justify-between">
+          <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-purple-50 to-pink-50 sticky top-0 z-10 flex items-center justify-between">
             <div>
               <div className="flex items-center gap-2">
-                <Settings className="w-5 h-5 text-pink-600" />
-                <h3 className="font-semibold text-gray-900">Thuộc tính</h3>
+                <Layers className="w-5 h-5 text-purple-600" />
+                <h3 className="font-semibold text-gray-900">Lớp (Layers)</h3>
               </div>
-              <p className="text-xs text-gray-500 mt-1 capitalize">
-                {selectedElement.type === 'text' ? '📝 Văn bản' : 
-                 selectedElement.type === 'image' ? '🖼️ Hình ảnh' : 
-                 selectedElement.type === 'shape' ? '⬛ Hình khối' : 
-                 selectedElement.type === 'sticker' ? '😊 Sticker' : '🎨 Phần tử'}
+              <p className="text-xs text-gray-500 mt-1">
+                {elements.length} phần tử
               </p>
             </div>
             <button
-              onClick={() => setShowProperties(false)}
+              onClick={() => setShowLayerPanel(false)}
               className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors text-gray-500 hover:text-gray-700"
-              title="Ẩn thuộc tính"
+              title="Ẩn danh sách lớp"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
           <div className="flex-1 overflow-y-auto">
-            <PropertiesPanel
-              element={selectedElement}
-              onUpdate={(updates) => handleUpdateElement(selectedElement.id, updates)}
+            <LayerPanel
+              elements={elements}
+              selectedIds={selectedIds}
+              onSelectElement={handleSelectElement}
+              onReorder={handleReorderElement}
+              onDelete={handleDeleteElement}
+              onDuplicate={handleDuplicate}
+              onToggleVisibility={(id) => {
+                const element = elements.find((el) => el.id === id);
+                if (element) {
+                  handleUpdateElement(id, { visible: !element.visible });
+                }
+              }}
+              onToggleLock={(id) => {
+                const element = elements.find((el) => el.id === id);
+                if (element) {
+                  handleUpdateElement(id, { locked: !element.locked });
+                }
+              }}
             />
           </div>
         </div>
@@ -1377,7 +1302,7 @@ export function AdvancedPageEditorV2({
           onUndo={undo}
           onRedo={redo}
           onSave={forceSave}
-          onExport={() => setShowExportMenu(true)}
+          onExport={() => setShowExportModal(true)}
           onAddText={() =>
             handleAddElement('text', {
               content: 'Nhập nội dung...',
@@ -1386,7 +1311,6 @@ export function AdvancedPageEditorV2({
           }
           onAddImage={() => setShowImageUploader(true)}
           onShowLayers={() => setShowLayerPanel(true)}
-          onShowProperties={() => setShowProperties(true)}
           isSaving={isSaving}
         />
       )}
@@ -1401,12 +1325,13 @@ export function AdvancedPageEditorV2({
         />
       )}
 
-      {/* Export Menu Modal */}
-      {showExportMenu && (
-        <ExportDownloadMenu
-          book={book}
+      {/* Export Modal */}
+      {showExportModal && (
+        <ExportModal
+          title={book.title || 'Cuốn sách của tôi'}
           pages={pages}
-          onClose={() => setShowExportMenu(false)}
+          book={book}
+          onClose={() => setShowExportModal(false)}
         />
       )}
 
@@ -1465,6 +1390,245 @@ export function AdvancedPageEditorV2({
           onDismiss={handleDismissCoverGuide}
         />
       )}
+    </div>
+  );
+}
+
+// ── Element Properties Bar ─────────────────────────────────────────────────
+// Hiển thị thuộc tính của element đang được chọn ngay trên thanh toolbar
+
+function ElementPropertiesBar({
+  element,
+  onUpdate,
+}: {
+  element: PageElement;
+  onUpdate: (updates: Partial<PageElement>) => void;
+}) {
+  const typeLabel = {
+    text: '📝 Văn bản',
+    image: '🖼️ Hình ảnh',
+    shape: '⬛ Hình khối',
+    sticker: '😊 Sticker',
+    icon: '🔷 Icon',
+    frame: '🖼️ Khung',
+  }[element.type] || 'Phần tử';
+
+  return (
+    <div className="bg-white border-b border-gray-200 px-3 py-2 flex items-center gap-3 overflow-x-auto shadow-sm">
+      {/* Type badge */}
+      <span className="text-[11px] font-bold text-gray-500 whitespace-nowrap flex-shrink-0">
+        {typeLabel}
+      </span>
+      <div className="w-px h-6 bg-gray-200 flex-shrink-0" />
+
+      {/* Position & Size */}
+      <div className="flex items-center gap-1 text-[11px] text-gray-500">
+        <span className="text-gray-400">X</span>
+        <input
+          type="number"
+          value={Math.round(element.x)}
+          onChange={e => onUpdate({ x: Number(e.target.value) })}
+          className="w-12 px-1 py-0.5 border border-gray-200 rounded text-center text-[11px]"
+        />
+        <span className="text-gray-400 ml-1">Y</span>
+        <input
+          type="number"
+          value={Math.round(element.y)}
+          onChange={e => onUpdate({ y: Number(e.target.value) })}
+          className="w-12 px-1 py-0.5 border border-gray-200 rounded text-center text-[11px]"
+        />
+        <span className="text-gray-400 ml-1">W</span>
+        <input
+          type="number"
+          value={Math.round(element.width)}
+          onChange={e => onUpdate({ width: Math.max(10, Number(e.target.value)) })}
+          className="w-12 px-1 py-0.5 border border-gray-200 rounded text-center text-[11px]"
+        />
+        <span className="text-gray-400 ml-1">H</span>
+        <input
+          type="number"
+          value={Math.round(element.height)}
+          onChange={e => onUpdate({ height: Math.max(10, Number(e.target.value)) })}
+          className="w-12 px-1 py-0.5 border border-gray-200 rounded text-center text-[11px]"
+        />
+      </div>
+
+      <div className="w-px h-6 bg-gray-200 flex-shrink-0" />
+
+      {/* Rotation + Opacity (chung cho mọi loại) */}
+      <div className="flex items-center gap-1 text-[11px] text-gray-500">
+        <span className="text-gray-400">↻</span>
+        <input
+          type="number"
+          value={Math.round(element.rotation || 0)}
+          onChange={e => onUpdate({ rotation: Number(e.target.value) })}
+          className="w-12 px-1 py-0.5 border border-gray-200 rounded text-center text-[11px]"
+          min={-180} max={180}
+        />
+        <span className="text-gray-400 ml-1">°</span>
+        <span className="text-gray-400 ml-2">Opacity</span>
+        <input
+          type="range"
+          value={(element.opacity ?? 1) * 100}
+          onChange={e => onUpdate({ opacity: Number(e.target.value) / 100 })}
+          className="w-16 h-4"
+          min={0} max={100}
+        />
+        <span className="text-[10px] text-gray-400 w-7">{Math.round((element.opacity ?? 1) * 100)}%</span>
+      </div>
+
+      {/* Text-specific properties */}
+      {element.type === 'text' && (
+        <>
+          <div className="w-px h-6 bg-gray-200 flex-shrink-0" />
+          <div className="flex items-center gap-1.5">
+            <select
+              value={(element as TextElement).fontFamily || 'Poppins'}
+              onChange={e => onUpdate({ fontFamily: e.target.value })}
+              className="px-1.5 py-0.5 border border-gray-200 rounded text-[11px] bg-white"
+            >
+              <option value="Poppins">Poppins</option>
+              <option value="Dancing Script">Dancing Script</option>
+              <option value="Playfair Display">Playfair Display</option>
+              <option value="Inter">Inter</option>
+              <option value="Arial">Arial</option>
+              <option value="Times New Roman">Times New Roman</option>
+            </select>
+            <input
+              type="number"
+              value={(element as TextElement).fontSize || 16}
+              onChange={e => onUpdate({ fontSize: Math.max(8, Number(e.target.value)) })}
+              className="w-12 px-1 py-0.5 border border-gray-200 rounded text-center text-[11px]"
+              min={8}
+            />
+            <span className="text-[10px] text-gray-400">px</span>
+            <button
+              onClick={() => onUpdate({ fontWeight: (element as TextElement).fontWeight === 'bold' ? 'normal' : 'bold' })}
+              className={`px-2 py-0.5 rounded text-[11px] font-bold border transition-colors ${
+                (element as TextElement).fontWeight === 'bold' ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-200'
+              }`}
+            >B</button>
+            <button
+              onClick={() => onUpdate({ fontStyle: (element as TextElement).fontStyle === 'italic' ? 'normal' : 'italic' })}
+              className={`px-2 py-0.5 rounded text-[11px] italic border transition-colors ${
+                (element as TextElement).fontStyle === 'italic' ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-200'
+              }`}
+            >I</button>
+            <button
+              onClick={() => onUpdate({ textDecoration: (element as TextElement).textDecoration === 'underline' ? 'none' : 'underline' })}
+              className={`px-2 py-0.5 rounded text-[11px] underline border transition-colors ${
+                (element as TextElement).textDecoration === 'underline' ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-200'
+              }`}
+            >U</button>
+            <div className="flex items-center gap-0.5 border border-gray-200 rounded overflow-hidden">
+              {(['left', 'center', 'right'] as const).map(align => (
+                <button
+                  key={align}
+                  onClick={() => onUpdate({ textAlign: align })}
+                  className={`px-1.5 py-0.5 text-[10px] transition-colors ${
+                    (element as TextElement).textAlign === align ? 'bg-gray-200 text-gray-800' : 'bg-white text-gray-400'
+                  }`}
+                >{align === 'left' ? '≡' : align === 'center' ? '≡' : '≡'}</button>
+              ))}
+            </div>
+            <input
+              type="color"
+              value={(element as TextElement).color || '#000000'}
+              onChange={e => onUpdate({ color: e.target.value })}
+              className="w-6 h-6 rounded border border-gray-200 cursor-pointer p-0"
+              title="Màu chữ"
+            />
+          </div>
+        </>
+      )}
+
+      {/* Image-specific properties */}
+      {element.type === 'image' && (
+        <>
+          <div className="w-px h-6 bg-gray-200 flex-shrink-0" />
+          <div className="flex items-center gap-1.5">
+            <select
+              value={(element as ImageElement).objectFit || 'cover'}
+              onChange={e => onUpdate({ objectFit: e.target.value as any })}
+              className="px-1.5 py-0.5 border border-gray-200 rounded text-[11px] bg-white"
+            >
+              <option value="cover">Cover</option>
+              <option value="contain">Contain</option>
+              <option value="fill">Fill</option>
+            </select>
+            <input
+              type="number"
+              value={(element as ImageElement).borderRadius || 0}
+              onChange={e => onUpdate({ borderRadius: Math.max(0, Number(e.target.value)) })}
+              className="w-12 px-1 py-0.5 border border-gray-200 rounded text-center text-[11px]"
+              min={0}
+            />
+            <span className="text-[10px] text-gray-400">r px</span>
+          </div>
+        </>
+      )}
+
+      {/* Shape-specific properties */}
+      {element.type === 'shape' && (
+        <>
+          <div className="w-px h-6 bg-gray-200 flex-shrink-0" />
+          <div className="flex items-center gap-1.5">
+            <select
+              value={(element as ShapeElement).shape || 'rectangle'}
+              onChange={e => onUpdate({ shape: e.target.value as any })}
+              className="px-1.5 py-0.5 border border-gray-200 rounded text-[11px] bg-white"
+            >
+              <option value="rectangle">▬ Chữ nhật</option>
+              <option value="square">◼ Vuông</option>
+              <option value="circle">● Tròn</option>
+              <option value="triangle">▲ Tam giác</option>
+              <option value="star">★ Sao</option>
+              <option value="heart">♥ Tim</option>
+            </select>
+            <input
+              type="color"
+              value={(element as ShapeElement).fill || '#000000'}
+              onChange={e => onUpdate({ fill: e.target.value })}
+              className="w-6 h-6 rounded border border-gray-200 cursor-pointer p-0"
+              title="Màu nền"
+            />
+            <input
+              type="color"
+              value={(element as ShapeElement).stroke || '#000000'}
+              onChange={e => onUpdate({ stroke: e.target.value })}
+              className="w-6 h-6 rounded border border-gray-200 cursor-pointer p-0"
+              title="Màu viền"
+            />
+            <input
+              type="number"
+              value={(element as ShapeElement).strokeWidth || 1}
+              onChange={e => onUpdate({ strokeWidth: Math.max(0, Number(e.target.value)) })}
+              className="w-12 px-1 py-0.5 border border-gray-200 rounded text-center text-[11px]"
+              min={0}
+            />
+            <span className="text-[10px] text-gray-400">viền</span>
+          </div>
+        </>
+      )}
+
+      {/* Sticker-specific — chỉ hiện emoji */}
+      {element.type === 'sticker' && (
+        <>
+          <div className="w-px h-6 bg-gray-200 flex-shrink-0" />
+          <span className="text-lg">{(element as StickerElement).emoji}</span>
+        </>
+      )}
+
+      {/* Close button */}
+      <div className="flex-1" />
+      <button
+        onClick={() => {
+          // Deselect bằng cách click ra ngoài (handled elsewhere)
+        }}
+        className="text-[10px] text-gray-400 hover:text-gray-600 px-2 py-0.5"
+      >
+        ✕
+      </button>
     </div>
   );
 }

@@ -61,11 +61,15 @@ export function PageFilmstrip({
                   : 'border-gray-200 hover:border-gray-400'
               }`}
             >
-              <div 
-                className="w-full h-full bg-white flex items-center justify-center relative overflow-hidden"
+              <div
+                className="w-full h-full flex items-center justify-center relative overflow-hidden"
                 style={{
-                  background: page.background?.type === 'color' ? page.background.value : '#fff',
-                  backgroundImage: page.background?.type === 'image' ? `url(${page.background.value})` : 'none',
+                  backgroundColor: page.background?.type === 'color' ? page.background.value : '#fff',
+                  backgroundImage: page.background?.type === 'image' || page.background?.type === 'gradient'
+                    ? `url("${page.background.value}")`
+                    : page.background?.type === 'pattern'
+                      ? page.background.value
+                      : 'none',
                   backgroundSize: 'cover',
                   backgroundPosition: 'center'
                 }}

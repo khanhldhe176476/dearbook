@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, Check, HelpCircle, Book, Wallet, LogOut, Home } from 'lucide-react';
 import { BookData, User } from '../App';
 import { Step1ThemeSelection } from './builder/Step1ThemeSelection';
@@ -10,6 +10,7 @@ import { Book3DPreviewPanel } from './builder/Book3DPreviewPanel';
 import { BeginnerTutorial } from './BeginnerTutorial';
 import { HelpPanel } from './HelpPanel';
 import { InteractiveLogoutButton } from './InteractiveLogoutButton';
+import { preloadImages } from '../utils/dbStorage';
 
 interface GuidedBookBuilderProps {
   user: User;
@@ -43,14 +44,50 @@ export function GuidedBookBuilder({
     }
   );
 
-  // Determine starting step based on existing data
+  // Sách có sẵn (edit tiếp) → không cho quay lại chọn theme/template
+  // Dùng ref để giữ giá trị ban đầu, tránh bị thay đổi khi handleSaveBook cập nhật currentBook
+  const isExistingBookRef = useRef(!!initialBook);
+  const isExistingBook = isExistingBookRef.current;
+
+  // Determine starting step based on existing data (chỉ chạy 1 lần khi mount)
+  const initialStepDetermined = useRef(false);
   useEffect(() => {
+    if (initialStepDetermined.current) return;
     if (initialBook) {
+      initialStepDetermined.current = true;
       if (!initialBook.theme) setCurrentStep(1);
       else if (!initialBook.templateId) setCurrentStep(2);
       else setCurrentStep(3);
     }
   }, [initialBook]);
+
+  // Preload tất cả ảnh từ IndexedDB vào cache khi mở sách có sẵn
+  useEffect(() => {
+    const book = initialBook || bookData;
+    if (!book?.pages || book.pages.length === 0) return;
+
+    const imageKeys: string[] = [];
+    const collectKeys = (obj: any) => {
+      if (!obj || typeof obj !== 'object') return;
+      if (typeof obj === 'string' && obj.startsWith('dearbook_image_')) {
+        imageKeys.push(obj);
+        return;
+      }
+      if (Array.isArray(obj)) {
+        obj.forEach(collectKeys);
+        return;
+      }
+      Object.values(obj).forEach(collectKeys);
+    };
+
+    collectKeys(book.pages);
+    collectKeys(book.cover);
+
+    if (imageKeys.length > 0) {
+      console.log(`🖼️ Preloading ${imageKeys.length} images for book...`);
+      preloadImages(imageKeys);
+    }
+  }, [initialBook?.id, bookData.pages]);
 
   const steps = [
     { number: 1, title: 'Chọn chủ đề', subtitle: 'Dịp đặc biệt' },
@@ -60,9 +97,18 @@ export function GuidedBookBuilder({
 
   const handleStepComplete = (data: Partial<BookData>) => {
     const baseData = { ...bookData };
-    
+
     // Reset selected template and pages when theme is selected/changed
     if (data.theme !== undefined) {
+      // Lưu bản draft hiện tại trước khi xóa template/pages (tránh mất dữ liệu)
+      if (data.theme !== bookData.theme && bookData.id && bookData.templateId) {
+        const currentDraft = {
+          ...bookData,
+          updatedAt: new Date().toISOString(),
+        };
+        onSave(currentDraft as BookData);
+      }
+
       delete baseData.templateId;
       delete baseData.pages;
       setUseAdvancedEditor(false);
@@ -94,6 +140,10 @@ export function GuidedBookBuilder({
   };
 
   const canGoToStep = (step: Step): boolean => {
+    // Sách có sẵn: không cho quay lại step 1-2, chỉ ở step 3
+    if (isExistingBook) {
+      return step === 3;
+    }
     switch (step) {
       case 1:
         return true;
@@ -380,7 +430,7 @@ export function GuidedBookBuilder({
                 onSelect={(templateId, pages) =>
                   handleStepComplete({ templateId, pages })
                 }
-                onBack={() => setCurrentStep(1)}
+                onBack={isExistingBook ? undefined : () => setCurrentStep(1)}
               />
             )}
 
@@ -393,7 +443,7 @@ export function GuidedBookBuilder({
                 (bookData.templateId.startsWith('local-template-') || bookData.templateId.startsWith('auto-template-')) && !useAdvancedEditor ? (
                   <LocalTemplatePageViewer
                     book={bookData as BookData}
-                    onBack={() => setCurrentStep(2)}
+                    onBack={isExistingBook ? undefined : () => setCurrentStep(2)}
                     onFinish={handleFinish}
                     onAdvancedEdit={() => setUseAdvancedEditor(true)}
                   />
@@ -408,7 +458,7 @@ export function GuidedBookBuilder({
                         onSave(updated as BookData);
                       }
                     }}
-                    onBack={() => setCurrentStep(2)}
+                    onBack={isExistingBook ? undefined : () => setCurrentStep(2)}
                     onFinish={handleFinish}
                     onAdvancedEdit={() => setUseAdvancedEditor(true)}
                   />
@@ -426,17 +476,24 @@ export function GuidedBookBuilder({
                         onSave(updated as BookData);
                       }
                     }}
-                    onBack={() => {
-                      if (
-                        bookData.templateId === 'youth-archive-memories' ||
-                        bookData.templateId.startsWith('local-template-') ||
-                        bookData.templateId.startsWith('auto-template-')
-                      ) {
-                        setUseAdvancedEditor(false);
-                      } else {
-                        setCurrentStep(2);
-                      }
-                    }}
+                    onBack={isExistingBook
+                      ? (bookData.templateId === 'youth-archive-memories' ||
+                         bookData.templateId.startsWith('local-template-') ||
+                         bookData.templateId.startsWith('auto-template-'))
+                        ? () => setUseAdvancedEditor(false)
+                        : undefined  // Sách có sẵn + regular template → không có nút back
+                      : () => {
+                          if (
+                            bookData.templateId === 'youth-archive-memories' ||
+                            bookData.templateId.startsWith('local-template-') ||
+                            bookData.templateId.startsWith('auto-template-')
+                          ) {
+                            setUseAdvancedEditor(false);
+                          } else {
+                            setCurrentStep(2);
+                          }
+                        }
+                    }
                     onFinish={handleFinish}
                   />
                 )

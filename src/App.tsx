@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { HomePage } from './components/HomePage';
 import { LoginScreen } from './components/LoginScreen';
 import { MyBooksLibraryPortfolio } from './components/MyBooksLibraryPortfolio';
@@ -16,6 +16,15 @@ import {
   getCurrentSession,
 } from './lib/authApi';
 import { Toaster } from './components/ui/sonner';
+import {
+  saveBook,
+  getAllBooks,
+  migrateBooksFromLocalStorage,
+  isMigrationDone,
+  markMigrationDone,
+  isIndexedDBAvailable,
+} from './utils/bookStorage';
+import { dbMigrateFromLocalStorage } from './utils/dbStorage';
 
 export interface User {
   id?: string;
@@ -60,6 +69,15 @@ function App() {
   const [currentScreen, setCurrentScreen] = useState<AppScreen>('home');
   const [user, setUser] = useState<User | null>(null);
   const [currentBook, setCurrentBook] = useState<BookData | null>(null);
+
+  // Refs để track currentBook trong beforeunload và navigation guards
+  const currentBookRef = useRef<BookData | null>(null);
+  const isSavingRef = useRef(false);
+
+  // Đồng bộ currentBook vào ref
+  useEffect(() => {
+    currentBookRef.current = currentBook;
+  }, [currentBook]);
 
   const syncProfileToSupabase = async (authUser: {
     id: string;
@@ -131,6 +149,100 @@ function App() {
     checkSession();
   }, []);
 
+  // Migration: di trú sách và ảnh từ localStorage sang IndexedDB (chạy 1 lần)
+  useEffect(() => {
+    const runMigration = async () => {
+      if (isMigrationDone()) return;
+      if (!isIndexedDBAvailable()) {
+        console.warn('IndexedDB không khả dụng, bỏ qua migration');
+        return;
+      }
+
+      try {
+        console.log('🔄 Bắt đầu migration sang IndexedDB...');
+        const bookCount = await migrateBooksFromLocalStorage();
+        console.log(`✅ Đã migrate ${bookCount} sách`);
+
+        const imageCount = await dbMigrateFromLocalStorage();
+        console.log(`✅ Đã migrate ${imageCount} ảnh`);
+
+        markMigrationDone();
+        console.log('✅ Migration hoàn tất');
+      } catch (err) {
+        console.error('Migration thất bại:', err);
+        // Không chặn app — vẫn chạy bình thường với localStorage
+      }
+    };
+
+    runMigration();
+  }, []);
+
+  // beforeunload: backup đồng bộ vào localStorage khi đóng tab
+  useEffect(() => {
+    const handleBeforeUnload = (_e: BeforeUnloadEvent) => {
+      const book = currentBookRef.current;
+      if (book && book.id) {
+        try {
+          const books = JSON.parse(localStorage.getItem('dearbook_books') || '[]');
+          const idx = books.findIndex((b: BookData) => b.id === book.id);
+          if (idx >= 0) {
+            books[idx] = { ...book, updatedAt: new Date().toISOString() };
+          } else {
+            books.push({ ...book, updatedAt: new Date().toISOString() });
+          }
+          localStorage.setItem('dearbook_books', JSON.stringify(books));
+        } catch {
+          // Bỏ qua nếu localStorage đầy
+        }
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, []);
+
+  // Safe save helper — lưu sách vào IndexedDB, fallback localStorage
+  const safeSaveBook = useCallback(async (book: BookData): Promise<void> => {
+    if (isSavingRef.current) return;
+    isSavingRef.current = true;
+
+    try {
+      if (isIndexedDBAvailable()) {
+        const userId = user?.id || '00000000-0000-0000-0000-000000000000';
+        await saveBook(book, userId);
+      } else {
+        // Fallback localStorage nếu IDB không khả dụng
+        const books = JSON.parse(localStorage.getItem('dearbook_books') || '[]');
+        const existingIndex = books.findIndex((b: BookData) => b.id === book.id);
+        const updatedBook = { ...book, updatedAt: new Date().toISOString() };
+        if (existingIndex >= 0) {
+          books[existingIndex] = updatedBook;
+        } else {
+          books.push(updatedBook);
+        }
+        localStorage.setItem('dearbook_books', JSON.stringify(books));
+      }
+    } catch (err) {
+      console.error('safeSaveBook failed:', err);
+      // Fallback cuối cùng: localStorage
+      try {
+        const books = JSON.parse(localStorage.getItem('dearbook_books') || '[]');
+        const existingIndex = books.findIndex((b: BookData) => b.id === book.id);
+        const updatedBook = { ...book, updatedAt: new Date().toISOString() };
+        if (existingIndex >= 0) {
+          books[existingIndex] = updatedBook;
+        } else {
+          books.push(updatedBook);
+        }
+        localStorage.setItem('dearbook_books', JSON.stringify(books));
+      } catch {
+        console.error('Hoàn toàn không thể lưu sách');
+      }
+    } finally {
+      isSavingRef.current = false;
+    }
+  }, [user]);
+
   const handleLogin = async (
     email: string,
     password: string,
@@ -198,6 +310,15 @@ function App() {
   };
 
   const handleLogout = async () => {
+    // Lưu sách hiện tại trước khi logout
+    if (currentBook) {
+      try {
+        await safeSaveBook(currentBook);
+      } catch (err) {
+        console.error('Save before logout failed:', err);
+      }
+    }
+
     try {
       await supabaseSignOut();
     } catch (err) {
@@ -210,7 +331,15 @@ function App() {
     setCurrentScreen('login');
   };
 
-  const handleCreateNewBook = () => {
+  const handleCreateNewBook = async () => {
+    // Lưu sách hiện tại trước khi tạo mới
+    if (currentBook) {
+      try {
+        await safeSaveBook(currentBook);
+      } catch (err) {
+        console.error('Save before create new book failed:', err);
+      }
+    }
     setCurrentBook(null);
     setCurrentScreen('builder');
   };
@@ -221,36 +350,41 @@ function App() {
   };
 
   const handleSaveBook = async (book: BookData) => {
-    const books = JSON.parse(localStorage.getItem('dearbook_books') || '[]');
-    const existingIndex = books.findIndex((b: BookData) => b.id === book.id);
-    let finalBook = { ...book };
+    const updatedBook = {
+      ...book,
+      updatedAt: new Date().toISOString(),
+    };
+    setCurrentBook(updatedBook);
+    await safeSaveBook(updatedBook);
 
+    // Đồng bộ lên backend (non-blocking)
     const userId = user?.id || '00000000-0000-0000-0000-000000000000';
-
-    if (existingIndex >= 0) {
-      books[existingIndex] = finalBook;
-    } else {
-      try {
-        if (book.templateId) {
-          const apiBook = await bookApi.createBook(userId, {
+    try {
+      if (book.templateId) {
+        const books = JSON.parse(localStorage.getItem('dearbook_books') || '[]');
+        const existingIndex = books.findIndex((b: BookData) => b.id === book.id);
+        if (existingIndex < 0) {
+          // Sách mới — tạo trên backend
+          await bookApi.createBook(userId, {
             templateId: book.templateId,
             title: book.title || 'Sách mới',
           });
-
-          finalBook = { ...book, id: apiBook.id };
         }
-      } catch (err) {
-        console.error('Failed to create book on backend, using local draft:', err);
       }
-
-      books.push(finalBook);
+    } catch (err) {
+      console.error('Backend sync failed (non-critical):', err);
     }
-
-    localStorage.setItem('dearbook_books', JSON.stringify(books));
-    setCurrentBook(finalBook);
   };
 
-  const handleBackToLibrary = () => {
+  const handleBackToLibrary = async () => {
+    // Lưu sách hiện tại trước khi rời builder
+    if (currentBook) {
+      try {
+        await safeSaveBook(currentBook);
+      } catch (err) {
+        console.error('Save before back to library failed:', err);
+      }
+    }
     setCurrentBook(null);
     setCurrentScreen('library');
   };
@@ -260,7 +394,15 @@ function App() {
     setCurrentScreen('order');
   };
 
-  const handleOrderComplete = () => {
+  const handleOrderComplete = async () => {
+    // Lưu sách trước khi hoàn tất đơn hàng
+    if (currentBook) {
+      try {
+        await safeSaveBook(currentBook);
+      } catch (err) {
+        console.error('Save before order complete failed:', err);
+      }
+    }
     setCurrentBook(null);
     setCurrentScreen('library');
   };

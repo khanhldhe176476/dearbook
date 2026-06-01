@@ -3,6 +3,8 @@
  * Provides helper functions for image manipulation and management
  */
 
+import { dbGetImageSync } from './dbStorage';
+
 /**
  * Load image from localStorage key or URL
  */
@@ -14,9 +16,9 @@ export async function loadImage(src: string): Promise<HTMLImageElement> {
     img.onload = () => resolve(img);
     img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
 
-    // Check if it's a localStorage key
+    // Check if it's a localStorage/IndexedDB key
     if (src.startsWith('dearbook_image_')) {
-      const dataUrl = localStorage.getItem(src);
+      const dataUrl = dbGetImageSync(src);
       if (dataUrl) {
         img.src = dataUrl;
       } else {
@@ -37,9 +39,9 @@ export async function getImageDataURL(src: string): Promise<string> {
     return src;
   }
 
-  // LocalStorage key
+  // LocalStorage/IndexedDB key
   if (src.startsWith('dearbook_image_')) {
-    const dataUrl = localStorage.getItem(src);
+    const dataUrl = dbGetImageSync(src);
     if (dataUrl) {
       return dataUrl;
     }
@@ -291,7 +293,7 @@ export function getAllStoredImages(): Array<{ key: string; dataUrl: string }> {
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
     if (key && key.startsWith('dearbook_image_')) {
-      const dataUrl = localStorage.getItem(key);
+      const dataUrl = dbGetImageSync(key);
       if (dataUrl) {
         images.push({ key, dataUrl });
       }

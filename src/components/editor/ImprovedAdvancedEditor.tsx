@@ -3,6 +3,7 @@ import { PageElement, TextElement, ImageElement, ShapeElement, StickerElement, I
 import { BookData, BookPage } from '../../App';
 import { ImprovedEditorToolbar } from './ImprovedEditorToolbar';
 import { ImprovedPropertiesPanel } from './ImprovedPropertiesPanel';
+import { dbGetImageSync } from '../../utils/dbStorage';
 import { AssetLibrary } from './AssetLibrary';
 import { LayerPanel } from './LayerPanel';
 import { ImageUploader } from './ImageUploader';
@@ -411,7 +412,7 @@ export function ImprovedAdvancedEditor({
       case 'image':
         const imgEl = element as ImageElement;
         const imgSrc = imgEl.src.startsWith('dearbook_image_')
-          ? localStorage.getItem(imgEl.src) || imgEl.src
+          ? dbGetImageSync(imgEl.src) || imgEl.src
           : imgEl.src;
         content = (
           <div 
