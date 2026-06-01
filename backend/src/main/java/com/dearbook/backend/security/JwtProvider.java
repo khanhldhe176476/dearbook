@@ -20,12 +20,16 @@ public class JwtProvider {
     private int jwtExpirationMs;
 
     public String generateToken(UUID userId) {
+        return generateToken(userId.toString());
+    }
+
+    public String generateToken(String subject) {
         Key key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationMs);
 
         return Jwts.builder()
-                .setSubject(userId.toString())
+                .setSubject(subject)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(key)

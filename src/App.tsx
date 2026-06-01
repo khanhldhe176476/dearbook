@@ -4,6 +4,7 @@ import { LoginScreen } from './components/LoginScreen';
 import { MyBooksLibraryPortfolio } from './components/MyBooksLibraryPortfolio';
 import { GuidedBookBuilder } from './components/GuidedBookBuilder';
 import { OrderFlow } from './components/OrderFlow';
+import AdminArea from './components/AdminArea';
 import { EditorPage as BookPage } from './types/editor';
 import { bookApi } from './lib/bookApi';
 import { supabase } from './lib/supabase';
@@ -66,6 +67,10 @@ export interface PageData {
 export type AppScreen = 'home' | 'login' | 'library' | 'builder' | 'order';
 
 function App() {
+  if (window.location.pathname === '/admin') {
+    return <AdminArea />;
+  }
+
   const [currentScreen, setCurrentScreen] = useState<AppScreen>('home');
   const [user, setUser] = useState<User | null>(null);
   const [currentBook, setCurrentBook] = useState<BookData | null>(null);

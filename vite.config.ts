@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+﻿import { defineConfig } from 'vite';
   import react from '@vitejs/plugin-react-swc';
   import path from 'path';
   import { execSync } from 'child_process';
@@ -80,7 +80,7 @@ import { defineConfig } from 'vite';
       },
       proxy: {
         '/api': {
-          target: 'https://dearbook-backend-docker.onrender.com',
+          target: 'http://localhost:8080',
           changeOrigin: true,
           secure: false,
         },

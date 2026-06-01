@@ -31,7 +31,8 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/v1/public/**", "/api/v1/auth/**", "/actuator/health", "/error").permitAll()
+                .requestMatchers("/api/v1/public/**", "/api/v1/auth/**", "/api/admin/login", "/actuator/health", "/error").permitAll()
+                .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
                 .requestMatchers("/api/v1/**").authenticated()
                 .anyRequest().permitAll()
             )
@@ -45,7 +46,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("*")); // In production, replace * with your frontend domain
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-User-Id"));
         configuration.setExposedHeaders(List.of("Authorization"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

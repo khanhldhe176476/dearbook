@@ -30,26 +30,39 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Value("${app.jwt.secret:your-256-bit-secret-your-256-bit-secret}")
     private String jwtSecret;
 
+    @Value("${app.admin.jwt.secret:dearbook-admin-secret-key-32chars!!}")
+    private String adminJwtSecret;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         try {
             String jwt = getJwtFromRequest(request);
 
-            if (StringUtils.hasText(jwt) && validateToken(jwt)) {
-                String userIdString = getUserIdFromJwt(jwt);
-                UUID userId = UUID.fromString(userIdString);
+            if (StringUtils.hasText(jwt)) {
+                Claims claims = parseClaims(jwt);
+                String subjectString = claims.getSubject();
 
-                UserPrincipal userPrincipal = UserPrincipal.create(userId);
+                UserPrincipal userPrincipal;
+                if ("admin".equals(subjectString)) {
+                    userPrincipal = UserPrincipal.createAdmin();
+                } else {
+                    UUID userId = UUID.fromString(subjectString);
+                    userPrincipal = UserPrincipal.create(userId);
+                }
 
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userPrincipal, null, userPrincipal.getAuthorities());
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(
+                                userPrincipal,
+                                null,
+                                userPrincipal.getAuthorities()
+                        );
+
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception ex) {
-            log.error("Could not set user authentication in security context", ex);
+            log.error("Could not set user authentication in security context: {}", ex.getMessage());
         }
 
         filterChain.doFilter(request, response);
@@ -63,25 +76,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 
-    private boolean validateToken(String authToken) {
+    private Claims parseClaims(String token) {
         try {
-            Key key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(authToken);
-            return true;
-        } catch (Exception ex) {
-            log.error("Invalid JWT token: {}", ex.getMessage());
+            return parseClaimsWithSecret(token, jwtSecret);
+        } catch (Exception ignored) {
+            return parseClaimsWithSecret(token, adminJwtSecret);
         }
-        return false;
     }
 
-    private String getUserIdFromJwt(String token) {
-        Key key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
-        Claims claims = Jwts.parserBuilder()
+    private Claims parseClaimsWithSecret(String token, String secret) {
+        Key key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-
-        return claims.getSubject();
     }
 }

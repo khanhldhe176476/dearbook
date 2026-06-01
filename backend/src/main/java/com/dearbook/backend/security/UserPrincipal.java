@@ -18,7 +18,11 @@ public class UserPrincipal implements UserDetails {
     }
 
     public static UserPrincipal create(UUID id) {
-        return new UserPrincipal(id, Collections.emptyList());
+        return new UserPrincipal(id, Collections.singletonList(new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_USER")));
+    }
+
+    public static UserPrincipal createAdmin() {
+        return new UserPrincipal(null, Collections.singletonList(new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_ADMIN")));
     }
 
     public UUID getId() {
@@ -37,7 +41,7 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public String getUsername() {
-        return id.toString(); // We use the user's UUID as the principal username
+        return id == null ? "admin" : id.toString();
     }
 
     @Override
@@ -60,3 +64,4 @@ public class UserPrincipal implements UserDetails {
         return true;
     }
 }
+

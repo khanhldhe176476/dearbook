@@ -13,7 +13,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update  # NOTE: update only in dev — create a proper migration SQL for production
     show-sql: true
     properties:
       hibernate:
