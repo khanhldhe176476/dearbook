@@ -122,7 +122,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
   const handlePaymentSubmit = async () => {
     try {
       setLoading(true);
-      
+
       const orderData = {
         userBookId: book.id,
         recipientName: shippingInfo.fullName,
@@ -197,20 +197,20 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
             </div>
 
             {['pages', 'shipping', 'payment', 'confirmation'].map((s, index) => {
-              const isActive    = step === s;
+              const isActive = step === s;
               const isCompleted = (s === 'pages' && (step === 'shipping' || step === 'payment' || step === 'confirmation')) ||
-                                  (s === 'shipping' && (step === 'payment' || step === 'confirmation')) ||
-                                  (s === 'payment' && step === 'confirmation');
+                (s === 'shipping' && (step === 'payment' || step === 'confirmation')) ||
+                (s === 'payment' && step === 'confirmation');
               return (
                 <div key={s} className="relative flex flex-col items-center gap-2">
                   <div
                     className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all z-10"
                     style={{
-                      background:  isActive ? '#000000' : isCompleted ? '#EDE9E3' : '#EDE9E3',
-                      color:       isActive ? '#EDE9E3' : '#000000',
-                      border:      isCompleted && !isActive ? '2px solid #7A6F66' : isActive ? 'none' : '2px solid #DDD8D0',
-                      boxShadow:   isActive ? '0 4px 12px rgba(58,46,40,0.28)' : 'none',
-                      transform:   isActive ? 'scale(1.1)' : 'scale(1)',
+                      background: isActive ? '#000000' : isCompleted ? '#EDE9E3' : '#EDE9E3',
+                      color: isActive ? '#EDE9E3' : '#000000',
+                      border: isCompleted && !isActive ? '2px solid #7A6F66' : isActive ? 'none' : '2px solid #DDD8D0',
+                      boxShadow: isActive ? '0 4px 12px rgba(58,46,40,0.28)' : 'none',
+                      transform: isActive ? 'scale(1.1)' : 'scale(1)',
                     }}
                   >
                     {isCompleted ? '✓' : index + 1}
@@ -280,11 +280,10 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                         <div
                           key={prod.id}
                           onClick={() => handleProductSelect(prod.id)}
-                          className={`p-4 rounded-xl border-2 transition-all cursor-pointer flex flex-col justify-between hover:shadow-md relative overflow-hidden group ${
-                            isSelected
-                              ? 'border-[#000000] bg-[#FAFAF8] shadow-sm'
-                              : 'border-[#DDD8D0] bg-white hover:border-[#7A6F66]'
-                          }`}
+                          className={`p-4 rounded-xl border-2 transition-all cursor-pointer flex flex-col justify-between hover:shadow-md relative overflow-hidden group ${isSelected
+                            ? 'border-[#000000] bg-[#FAFAF8] shadow-sm'
+                            : 'border-[#DDD8D0] bg-white hover:border-[#7A6F66]'
+                            }`}
                         >
                           {isSelected && (
                             <div className="absolute top-0 right-0 w-8 h-8 bg-black flex items-center justify-center text-[#EDE9E3] rounded-bl-xl text-xs font-bold">
@@ -338,13 +337,12 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                                         setSelectedProduct(prod.id);
                                         setSelectedSize(sz.value);
                                       }}
-                                      className={`px-2 py-0.5 rounded text-[10px] font-bold transition-all ${
-                                        isSizeSelected
-                                          ? 'bg-black text-[#EDE9E3]'
-                                          : isSelected
+                                      className={`px-2 py-0.5 rounded text-[10px] font-bold transition-all ${isSizeSelected
+                                        ? 'bg-black text-[#EDE9E3]'
+                                        : isSelected
                                           ? 'bg-[#EDE9E3] text-[#5A5049] hover:bg-[#DDD8D0]'
                                           : 'bg-[#FAFAF8] text-[#9B9088] hover:bg-[#EDE9E3]'
-                                      }`}
+                                        }`}
                                     >
                                       {sz.value}
                                     </button>
@@ -427,7 +425,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                             className="w-full pl-10 pr-4 py-3 rounded-xl outline-none text-sm transition-all"
                             style={{ border: '1.5px solid #DDD8D0', color: '#000000', background: '#FAFAF8' }}
                             onFocus={e => ((e.target as HTMLElement).style.borderColor = '#7A6F66')}
-                            onBlur={e  => ((e.target as HTMLElement).style.borderColor = '#DDD8D0')}
+                            onBlur={e => ((e.target as HTMLElement).style.borderColor = '#DDD8D0')}
                           />
                         </div>
                       </div>
@@ -443,7 +441,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                           className="w-full pl-10 pr-4 py-3 rounded-xl outline-none text-sm transition-all"
                           style={{ border: '1.5px solid #DDD8D0', color: '#000000', background: '#FAFAF8' }}
                           onFocus={e => ((e.target as HTMLElement).style.borderColor = '#7A6F66')}
-                          onBlur={e  => ((e.target as HTMLElement).style.borderColor = '#DDD8D0')}
+                          onBlur={e => ((e.target as HTMLElement).style.borderColor = '#DDD8D0')}
                         />
                       </div>
                     </div>
@@ -471,7 +469,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                         className="w-full px-4 py-3 rounded-xl outline-none text-sm transition-all"
                         style={{ border: '1.5px solid #DDD8D0', color: '#000000', background: '#FAFAF8' }}
                         onFocus={e => ((e.target as HTMLElement).style.borderColor = '#7A6F66')}
-                        onBlur={e  => ((e.target as HTMLElement).style.borderColor = '#DDD8D0')}
+                        onBlur={e => ((e.target as HTMLElement).style.borderColor = '#DDD8D0')}
                       />
                     </div>
 
@@ -484,7 +482,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                         className="w-full px-4 py-3 rounded-xl outline-none text-sm transition-all resize-none"
                         style={{ border: '1.5px solid #DDD8D0', color: '#000000', background: '#FAFAF8' }}
                         onFocus={e => ((e.target as HTMLElement).style.borderColor = '#7A6F66')}
-                        onBlur={e  => ((e.target as HTMLElement).style.borderColor = '#DDD8D0')}
+                        onBlur={e => ((e.target as HTMLElement).style.borderColor = '#DDD8D0')}
                       />
                     </div>
 
@@ -603,7 +601,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     </p>
                     <div className="w-48 h-48 mx-auto border-2 border-neutral-100 rounded-xl overflow-hidden shadow-sm p-1 bg-white">
                       <img
-                        src="/NgocjQR.png"
+                        src="/NgọcQR.jpg"
                         alt="Payment QR Code"
                         className="w-full h-full object-cover"
                       />
