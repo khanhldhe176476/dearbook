@@ -9,6 +9,7 @@ import {
   Sparkles,
   Star,
   ArrowRight,
+  ArrowLeft,
   Check,
   Gift,
   HelpCircle,
@@ -426,6 +427,8 @@ const AutoFlipRightPage = ({ pages, bgColor }: { pages: any[]; bgColor: string }
    ═══════════════════════════════════════════════════════════ */
 
 export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
+  const [showAbout, setShowAbout] = useState(false);
+
   // Intersection observer for scroll reveal
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -441,7 +444,17 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     return () => observer.disconnect();
-  }, []);
+  }, [showAbout]);
+
+  const handleNavClick = (targetId: string) => {
+    setShowAbout(false);
+    setTimeout(() => {
+      const element = document.getElementById(targetId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  };
 
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ background: '#FFF8F1', fontFamily: '"Lora", ui-serif, Georgia, serif' }}>
@@ -450,7 +463,14 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
       {/* ── Navigation ── */}
       <nav className="glass sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-8 py-3">
-          <div className="flex items-center" style={{ height: '58px', overflow: 'visible' }}>
+          <div 
+            className="flex items-center cursor-pointer" 
+            style={{ height: '58px', overflow: 'visible' }}
+            onClick={() => {
+              setShowAbout(false);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          >
             <img
               src="/logo.png"
               alt="dearmemories"
@@ -460,15 +480,35 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
           </div>
 
           <div className="hidden md:flex items-center gap-8 text-[#6B4B43] text-sm font-semibold">
-            <a href="#ptb-box" className="nav-link hover:text-[#B9423A] transition-colors">
-              PTB Box
-            </a>
-            <a href="#categories" className="nav-link hover:text-[#B9423A] transition-colors">
+            <button
+              onClick={() => handleNavClick('ptb-box')}
+              className="nav-link hover:text-[#B9423A] transition-colors focus:outline-none"
+            >
+              Photobook Box
+            </button>
+            <button
+              onClick={() => handleNavClick('categories')}
+              className="nav-link hover:text-[#B9423A] transition-colors focus:outline-none"
+            >
               Danh mục
-            </a>
-            <a href="#themes" className="nav-link hover:text-[#B9423A] transition-colors">
+            </button>
+            <button
+              onClick={() => handleNavClick('themes')}
+              className="nav-link hover:text-[#B9423A] transition-colors focus:outline-none"
+            >
               Chủ đề
-            </a>
+            </button>
+            <button
+              onClick={() => {
+                setShowAbout(true);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className={`nav-link hover:text-[#B9423A] transition-colors focus:outline-none ${
+                showAbout ? 'text-[#B9423A] font-bold' : ''
+              }`}
+            >
+              Giới thiệu
+            </button>
           </div>
 
           <div className="hidden md:flex items-center gap-4 text-[#6B4B43] text-sm font-medium">
@@ -496,10 +536,116 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
         </div>
       </nav>
 
-      {/* ══════════════════════════════════════════════════════
-          SECTION 1 — Hero: Photobook Box
-          ══════════════════════════════════════════════════════ */}
-      <section id="ptb-box" className="relative w-full min-h-[620px] overflow-hidden flex items-center scroll-mt-24"
+      {showAbout && (
+        <div 
+          className="w-full min-h-[calc(100vh-180px)] py-16 px-4 md:px-8 relative overflow-hidden flex items-center justify-center animate-fade-in-up"
+          style={{
+            background: 'linear-gradient(160deg, #FFF8F1 0%, #F7E2D4 40%, #FFF8F1 100%)',
+          }}
+        >
+          {/* Decorative circles */}
+          <div className="absolute top-[-100px] right-[-80px] w-[300px] h-[300px] rounded-full opacity-10 pointer-events-none"
+            style={{ background: 'radial-gradient(circle, #E6C7B8, transparent 70%)' }} />
+          <div className="absolute bottom-[-60px] left-[-60px] w-[250px] h-[250px] rounded-full opacity-8 pointer-events-none"
+            style={{ background: 'radial-gradient(circle, #B9423A, transparent 70%)' }} />
+          <div className="absolute inset-0 dot-pattern opacity-40 pointer-events-none" />
+
+          <div className="max-w-5xl w-full flex flex-col md:flex-row items-center gap-12 relative z-10">
+            
+            {/* Left: Beautiful stacked polaroids/photo cards */}
+            <div className="flex-1 flex justify-center items-center relative min-h-[320px] md:min-h-[400px]">
+              <div className="relative w-64 h-80">
+                {/* Polaroid 1 (bottom layer) */}
+                <div 
+                  className="absolute top-0 left-0 bg-white p-3 pb-8 rounded shadow-md border border-[#E6C7B8]/30 transform -rotate-12 transition-all duration-500 hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer"
+                  style={{ width: '180px' }}
+                >
+                  <div className="aspect-square bg-[#FFF8F1] overflow-hidden rounded-sm">
+                    <img src={loveImg} className="w-full h-full object-cover" alt="" />
+                  </div>
+                  <p className="text-center mt-3" style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A', fontSize: '1.2rem', lineHeight: 1 }}>love stories</p>
+                </div>
+
+                {/* Polaroid 2 (middle layer) */}
+                <div 
+                  className="absolute top-8 left-16 bg-white p-3 pb-8 rounded shadow-lg border border-[#E6C7B8]/30 transform rotate-6 transition-all duration-500 hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer"
+                  style={{ width: '190px' }}
+                >
+                  <div className="aspect-square bg-[#FFF8F1] overflow-hidden rounded-sm">
+                    <img src={familyImg} className="w-full h-full object-cover" alt="" />
+                  </div>
+                  <p className="text-center mt-3" style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A', fontSize: '1.2rem', lineHeight: 1 }}>family moments</p>
+                </div>
+
+                {/* Polaroid 3 (top layer) */}
+                <div 
+                  className="absolute top-20 left-4 bg-white p-3 pb-8 rounded shadow-xl border border-[#E6C7B8]/30 transform -rotate-3 transition-all duration-500 hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer"
+                  style={{ width: '180px' }}
+                >
+                  <div className="aspect-square bg-[#FFF8F1] overflow-hidden rounded-sm">
+                    <img src={hanoiImg} className="w-full h-full object-cover" alt="" />
+                  </div>
+                  <p className="text-center mt-3" style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A', fontSize: '1.2rem', lineHeight: 1 }}>dear memories</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Premium Glassmorphism content card */}
+            <div className="flex-1 bg-white/70 backdrop-blur-md p-8 md:p-10 rounded-3xl shadow-xl border border-[#E6C7B8]/40">
+              <div className="text-center md:text-left mb-6">
+                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#B9423A] block mb-2">Giới thiệu</span>
+                <h2 
+                  className="text-[#3B2925] leading-none mb-2"
+                  style={{
+                    fontFamily: '"Pinyon Script", "Great Vibes", cursive',
+                    fontSize: '4.5rem',
+                  }}
+                >
+                  About Us
+                </h2>
+                <h3 
+                  className="text-lg font-serif italic text-[#7A4A42] font-semibold mt-2"
+                >
+                  Every memory deserves a place to stay.
+                </h3>
+              </div>
+
+              <div className="space-y-4 text-[#543A34] text-base leading-relaxed font-serif text-justify md:text-left">
+                <p>
+                  <strong className="text-[#B9423A] font-sans">dearmemories.</strong> là nền tảng photobook cá nhân hóa được tạo ra để giúp bạn lưu giữ những khoảnh khắc đáng nhớ theo cách riêng của mình. Chúng tôi tin rằng mỗi bức ảnh đều mang theo một câu chuyện và mỗi câu chuyện đều xứng đáng được lưu giữ lâu dài thay vì bị lãng quên trong thư viện ảnh của điện thoại.
+                </p>
+                <p>
+                  Thông qua những mẫu thiết kế được chọn lọc sẵn cùng trải nghiệm tùy chỉnh đơn giản, <strong className="text-[#B9423A] font-sans">dearmemories.</strong> giúp bạn dễ dàng biến những kỷ niệm, cảm xúc và câu chuyện cá nhân thành một cuốn photobook mang dấu ấn riêng.
+                </p>
+              </div>
+
+              <div className="mt-8 flex justify-center md:justify-start">
+                <button
+                  onClick={() => {
+                    setShowAbout(false);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="cta-btn px-6 py-3 rounded-full text-white font-semibold text-sm flex items-center gap-2 hover:opacity-90 transition duration-300"
+                  style={{
+                    background: 'linear-gradient(135deg, #B9423A, #96332E)',
+                    boxShadow: '0 4px 15px rgba(185, 66, 58, 0.3)',
+                  }}
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  Quay lại trang chủ
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      <div className={showAbout ? 'hidden' : ''}>
+        {/* ══════════════════════════════════════════════════════
+            SECTION 1 — Hero: Photobook Box
+            ══════════════════════════════════════════════════════ */}
+        <section id="ptb-box" className="relative w-full min-h-[620px] overflow-hidden flex items-center scroll-mt-24"
         style={{
           background: 'linear-gradient(160deg, #FFF8F1 0%, #F7E2D4 40%, #FFF8F1 100%)',
         }}>
@@ -627,8 +773,8 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
           {/* Categories Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {[
-              { id: 1, title: 'PTB bìa mềm', description: 'Nhẹ nhàng, mỏng nhẹ, tinh tế. Dành cho các album ảnh thường ngày.', price: '149K', color: '#FFF', img: loveImg, secondImg: hanoiImg },
-              { id: 2, title: 'PTB bìa cứng', description: 'Bìa cứng cáp, bền bỉ, sang trọng. Phù hợp làm quà lưu niệm lâu dài.', price: '249K', color: '#F4E5E6', img: hanoiImg, secondImg: familyImg },
+              { id: 1, title: 'PTB bìa mềm', description: 'Nhẹ nhàng, mỏng nhẹ, tinh tế. Dành cho các album ảnh thường ngày.', price: '245K', color: '#FFF', img: loveImg, secondImg: hanoiImg },
+              { id: 2, title: 'PTB bìa cứng', description: 'Bìa cứng cáp, bền bỉ, sang trọng. Phù hợp làm quà lưu niệm lâu dài.', price: '375K', color: '#F4E5E6', img: hanoiImg, secondImg: familyImg },
               { id: 3, title: 'PTB bìa bồi liền mở phẳng', description: 'Trải rộng 180 độ không gáy, in sắc nét. Trải nghiệm xem ảnh trọn vẹn.', price: '399K', color: '#F0E5E7', img: familyImg, secondImg: loveImg },
             ].map((category) => (
               <div key={category.id}
@@ -762,6 +908,7 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
 
       {/* ── Divider ── */}
       <div className="section-divider" />
+      </div>
 
       {/* ══════════════════════════════════════════════════════
           FOOTER
@@ -769,15 +916,34 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
       <footer className="py-12" style={{ background: '#3B2925' }}>
         <div className="max-w-7xl mx-auto px-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="flex items-center" style={{ height: '40px', overflow: 'visible' }}>
+            <div 
+              className="flex items-center cursor-pointer" 
+              style={{ height: '40px', overflow: 'visible' }}
+              onClick={() => {
+                setShowAbout(false);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+            >
               <img src="/logo.png" alt="dearmemories" className="object-contain block"
                 style={{ height: '120px', margin: '-40px 0', filter: 'brightness(1.5)' }} />
             </div>
             <p className="text-[#E6C7B8] text-sm">© 2026 Dear Memories. All rights reserved. Made with ❤️ in Vietnam</p>
-            <div className="flex gap-6 text-[#E6C7B8] text-sm font-semibold">
-              <a href="#ptb-box" className="nav-link hover:text-[#B9423A] transition-colors">PTB Box</a>
-              <a href="#categories" className="nav-link hover:text-[#B9423A] transition-colors">Danh mục</a>
-              <a href="#themes" className="nav-link hover:text-[#B9423A] transition-colors">Chủ đề</a>
+            <div className="flex items-center gap-6 text-[#E6C7B8] text-sm font-semibold">
+              <button onClick={() => handleNavClick('ptb-box')} className="nav-link hover:text-[#B9423A] transition-colors focus:outline-none">
+                Photobook Box
+              </button>
+              <button onClick={() => handleNavClick('categories')} className="nav-link hover:text-[#B9423A] transition-colors focus:outline-none">
+                Danh mục
+              </button>
+              <button onClick={() => handleNavClick('themes')} className="nav-link hover:text-[#B9423A] transition-colors focus:outline-none">
+                Chủ đề
+              </button>
+              <button onClick={() => {
+                setShowAbout(true);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }} className={`nav-link hover:text-[#B9423A] transition-colors focus:outline-none ${showAbout ? 'text-[#B9423A]' : ''}`}>
+                Giới thiệu
+              </button>
             </div>
           </div>
         </div>

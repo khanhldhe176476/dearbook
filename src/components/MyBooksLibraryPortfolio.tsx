@@ -14,6 +14,8 @@ import { toast } from 'sonner@2.0.3';
 import { bookApi } from '../lib/bookApi';
 import { Loader2 } from 'lucide-react';
 import { getAllBooks, saveBook, deleteBook, getBooksSync, isIndexedDBAvailable } from '../utils/bookStorage';
+import sampleBook1 from '../assets/sample_book_1.jpg';
+import sampleBook2 from '../assets/sample_book_2.jpg';
 
 interface MyBooksLibraryPortfolioProps {
   user: User;
@@ -668,51 +670,25 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
                 Các mẫu đã được thiết kế sẵn nội dung chuyên nghiệp
               </p>
             </div>
-            {templatesLoading && <Loader2 className="w-4 h-4 animate-spin ml-1 mt-1 flex-shrink-0" style={{ color: '#ccc' }} />}
           </div>
 
-          {/* Skeleton */}
-          {templatesLoading && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[1, 2, 3].map(i => (
-                <div key={i} className="animate-pulse overflow-hidden"
-                  style={{ borderRadius: '20px', border: '1px solid #eeece9', background: '#fff' }}>
-                  <div className="h-52" style={{ background: '#f0ede8' }} />
-                  <div className="p-5 space-y-3">
-                    <div className="h-4 rounded-lg" style={{ background: '#eee', width: '55%' }} />
-                    <div className="h-3 rounded-lg" style={{ background: '#f2f2f2', width: '90%' }} />
-                    <div className="h-3 rounded-lg" style={{ background: '#f2f2f2', width: '70%' }} />
-                    <div className="h-9 rounded-xl mt-4" style={{ background: '#eee' }} />
-                  </div>
-                </div>
-              ))}
+          {/* Sách Mẫu Tham Khảo Images */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <div className="group overflow-hidden rounded-3xl shadow-lg border border-[#eeece9] bg-white">
+              <img 
+                src={sampleBook1} 
+                alt="Sách mẫu 1" 
+                className="w-full h-auto object-cover"
+              />
             </div>
-          )}
-
-          {/* Error */}
-          {!templatesLoading && templatesError && (
-            <div className="p-5 text-center rounded-2xl" style={{ background: '#fff5f5', border: '1px solid #fecaca' }}>
-              <p className="text-sm font-medium" style={{ color: '#b91c1c' }}>⚠️ Không thể tải mẫu sách</p>
-              <p className="text-xs mt-1" style={{ color: '#aaa' }}>{templatesError}</p>
+            <div className="group overflow-hidden rounded-3xl shadow-lg border border-[#eeece9] bg-white">
+              <img 
+                src={sampleBook2} 
+                alt="Sách mẫu 2" 
+                className="w-full h-auto object-cover"
+              />
             </div>
-          )}
-
-          {/* Empty */}
-          {!templatesLoading && !templatesError && supabaseTemplates.length === 0 && (
-            <div className="p-8 text-center rounded-2xl" style={{ background: '#faf8f5', border: '1px dashed #e0dbd3' }}>
-              <BookOpen className="w-10 h-10 mx-auto mb-3" style={{ color: '#ddd' }} />
-              <p className="text-sm" style={{ color: '#bbb' }}>
-                Chưa có mẫu sách. Thêm dữ liệu vào bảng <code className="text-xs px-1 py-0.5 rounded" style={{ background: '#f0ede8' }}>book_templates</code> trên Supabase.
-              </p>
-            </div>
-          )}
-
-          {/* Template grid */}
-          {!templatesLoading && !templatesError && supabaseTemplates.length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {supabaseTemplates.map(tpl => <TemplateCard key={tpl.id} tpl={tpl} />)}
-            </div>
-          )}
+          </div>
         </section>
 
         {/* ── User Books Section ───────────────────────────────────────────── */}
