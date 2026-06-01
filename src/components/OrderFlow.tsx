@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { ArrowLeft, Package, CreditCard, CheckCircle, MapPin, Phone, Mail, User, Loader2, BookOpen, Layers, Ruler } from 'lucide-react';
+import { ArrowLeft, Package, CreditCard, CheckCircle, MapPin, Phone, Mail, User, Loader2, BookOpen, Layers, Ruler, AlertTriangle } from 'lucide-react';
 import { BookData, User as UserData } from '../App';
 import { orderApi } from '../lib/orderApi';
+import { PageSelectionStep } from './PageSelectionStep';
 import { toast } from 'sonner@2.0.3';
 
 const products = [
@@ -57,7 +58,7 @@ interface OrderFlowProps {
 }
 
 export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
-  const [step, setStep] = useState<'shipping' | 'payment' | 'confirmation'>('shipping');
+  const [step, setStep] = useState<'pages' | 'shipping' | 'payment' | 'confirmation'>('pages');
   const [shippingInfo, setShippingInfo] = useState({
     fullName: user.name,
     phone: '',
@@ -77,26 +78,27 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
   const [selectedProduct, setSelectedProduct] = useState<'softcover' | 'hardcover' | 'layflat'>('hardcover');
   const [selectedSize, setSelectedSize] = useState<'A4' | '20x20'>('A4');
 
-  // Align book pages to even pages and set starting point
-  const getInitialPages = (productId: 'softcover' | 'hardcover' | 'layflat') => {
-    const prod = products.find(p => p.id === productId) || products[1];
-    const rawPages = book.pages?.length || 0;
-    const minLimit = prod.pagesLimit;
-    const initialPages = Math.max(rawPages, minLimit);
-    return initialPages % 2 === 0 ? initialPages : initialPages + 1;
-  };
-
-  const [customPages, setCustomPages] = useState<number>(() => getInitialPages('hardcover'));
+  // Page selection state - initialized from book pages (all selected by default)
+  const [selectedPageIds, setSelectedPageIds] = useState<string[]>(() => {
+    const allPages = book.pages || [];
+    return allPages.map((p, i) => p?.id || p?.templatePageId || `page-${i}`);
+  });
+  const selectedPageCount = selectedPageIds.length;
 
   const currentProduct = products.find(p => p.id === selectedProduct) || products[1];
   const sizeConfig = currentProduct.sizes.find(s => s.value === selectedSize) || currentProduct.sizes[0];
 
   const basePrice = sizeConfig.price;
-  const additionalPages = Math.max(0, customPages - currentProduct.pagesLimit);
+  const additionalPages = Math.max(0, selectedPageCount - currentProduct.pagesLimit);
   const pagePrice = additionalPages * currentProduct.extraPageCost;
   const shippingFee = 30000;
   const totalOriginal = basePrice + pagePrice + shippingFee;
   const totalPrice = paymentMethod === 'deposit' ? totalOriginal * 0.5 : totalOriginal;
+
+  // Check if selected page count meets the current product's minimum
+  const isBelowMinimum = selectedPageCount < currentProduct.pagesLimit;
+  // Find which products are compatible with the selected page count
+  const compatibleProducts = products.filter(p => selectedPageCount >= p.pagesLimit);
 
   const handleProductSelect = (productId: 'softcover' | 'hardcover' | 'layflat') => {
     setSelectedProduct(productId);
@@ -105,14 +107,11 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
     if (!sizeSupported) {
       setSelectedSize(prod.sizes[0].value);
     }
-    // Set pages count based on new product requirements
-    setCustomPages(prev => {
-      const minLimit = prod.pagesLimit;
-      if (prev < minLimit) {
-        return minLimit;
-      }
-      return prev;
-    });
+  };
+
+  const handlePagesSubmit = (pageIds: string[]) => {
+    setSelectedPageIds(pageIds);
+    setStep('shipping');
   };
 
   const handleShippingSubmit = (e: React.FormEvent) => {
@@ -131,6 +130,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
         address: shippingInfo.address,
         city: shippingInfo.city,
         paymentMethod: paymentMethod.toUpperCase(),
+        selectedPageIds: selectedPageIds,
       };
 
       const response = await orderApi.placeOrder(userId, orderData);
@@ -190,15 +190,16 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
               <div
                 className="h-full rounded-full transition-all duration-500"
                 style={{
-                  width: step === 'shipping' ? '0%' : step === 'payment' ? '50%' : '100%',
+                  width: step === 'pages' ? '0%' : step === 'shipping' ? '33%' : step === 'payment' ? '66%' : '100%',
                   background: '#000000',
                 }}
               />
             </div>
 
-            {['shipping', 'payment', 'confirmation'].map((s, index) => {
+            {['pages', 'shipping', 'payment', 'confirmation'].map((s, index) => {
               const isActive    = step === s;
-              const isCompleted = (s === 'shipping' && (step === 'payment' || step === 'confirmation')) ||
+              const isCompleted = (s === 'pages' && (step === 'shipping' || step === 'payment' || step === 'confirmation')) ||
+                                  (s === 'shipping' && (step === 'payment' || step === 'confirmation')) ||
                                   (s === 'payment' && step === 'confirmation');
               return (
                 <div key={s} className="relative flex flex-col items-center gap-2">
@@ -215,7 +216,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     {isCompleted ? '✓' : index + 1}
                   </div>
                   <p className="text-xs font-medium" style={{ color: isActive ? '#000000' : '#9B9088' }}>
-                    {s === 'shipping' ? 'Giao hàng' : s === 'payment' ? 'Thanh toán' : 'Hoàn tất'}
+                    {s === 'pages' ? 'Chọn trang' : s === 'shipping' ? 'Giao hàng' : s === 'payment' ? 'Thanh toán' : 'Hoàn tất'}
                   </p>
                 </div>
               );
@@ -228,6 +229,15 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Left: Form */}
           <div className="lg:col-span-2">
+            {step === 'pages' && (
+              <PageSelectionStep
+                pages={book.pages || []}
+                cover={book.cover}
+                onNext={handlePagesSubmit}
+                onBack={onBack}
+              />
+            )}
+
             {step === 'shipping' && (
               <form onSubmit={handleShippingSubmit} className="space-y-6">
                 {/* 1. Chọn loại sách & chất liệu giấy */}
@@ -242,9 +252,30 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     Vui lòng chọn 1 trong 3 loại photobook cao cấp dưới đây:
                   </p>
 
+                  {/* Minimum page count warning for current product */}
+                  {isBelowMinimum && (
+                    <div className="flex items-start gap-3 p-4 rounded-xl border-2 border-amber-200 bg-amber-50">
+                      <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#d97706' }} />
+                      <div>
+                        <p className="text-sm font-bold" style={{ color: '#92400e' }}>
+                          Không đủ số trang tối thiểu cho {currentProduct.nameVi}
+                        </p>
+                        <p className="text-xs mt-0.5" style={{ color: '#a16207' }}>
+                          Bạn đã chọn <span className="font-bold">{selectedPageCount} trang</span>, nhưng {currentProduct.nameVi} yêu cầu tối thiểu <span className="font-bold">{currentProduct.pagesLimit} trang</span>.
+                          {compatibleProducts.length > 0 ? (
+                            <span> Vui lòng chọn loại sách khác phù hợp hơn: <span className="font-bold text-green-700">{compatibleProducts.map(p => p.nameVi).join(', ')}</span>.</span>
+                          ) : (
+                            <span> Vui lòng quay lại bước chọn trang để chọn thêm ít nhất {currentProduct.pagesLimit - selectedPageCount} trang nữa.</span>
+                          )}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="grid sm:grid-cols-3 gap-4">
                     {products.map((prod) => {
                       const isSelected = selectedProduct === prod.id;
+                      const isProdBelowMin = selectedPageCount < prod.pagesLimit;
                       return (
                         <div
                           key={prod.id}
@@ -275,6 +306,12 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                               <p className="flex items-center gap-1.5 font-medium">
                                 <BookOpen className="w-3.5 h-3.5 flex-shrink-0" style={{ color: '#7A6F66' }} />
                                 <span>{prod.pagesLabel}</span>
+                                {isProdBelowMin && (
+                                  <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-100 text-amber-700 border border-amber-200">
+                                    <AlertTriangle className="w-2.5 h-2.5" />
+                                    Cần tối thiểu {prod.pagesLimit} trang
+                                  </span>
+                                )}
                               </p>
                               <p className="text-[10px] leading-relaxed text-[#7A6F66] border-t border-[#EDE9E3] pt-1.5 mt-1.5">
                                 <Layers className="w-3.5 h-3.5 inline mr-1 flex-shrink-0" style={{ color: '#9B9088' }} />
@@ -332,38 +369,20 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     })}
                   </div>
 
-                  {/* 2. Tùy chỉnh số trang */}
+                  {/* Page count info (derived from selection) */}
                   <div className="pt-6 border-t border-[#EDE9E3] space-y-4">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                       <div>
                         <h3 className="text-sm font-bold text-[#000000] flex items-center gap-1.5">
-                          Tùy chỉnh số trang của cuốn sách
+                          Số trang đã chọn để in
                         </h3>
                         <p className="text-xs text-[#7A6F66]">
-                          Số trang tối thiểu: {currentProduct.pagesLimit} trang. Điều chỉnh tăng/giảm bằng nút bên phải.
+                          Số trang bạn đã chọn ở bước trước. Tối thiểu {currentProduct.pagesLimit} trang đã bao gồm trong giá cơ bản.
                         </p>
                       </div>
-
-                      <div className="flex items-center gap-3 self-start sm:self-auto">
-                        <button
-                          type="button"
-                          disabled={customPages <= currentProduct.pagesLimit}
-                          onClick={() => setCustomPages(prev => Math.max(currentProduct.pagesLimit, prev - 2))}
-                          className="w-10 h-10 rounded-xl bg-[#EDE9E3] text-[#5A5049] hover:bg-[#DDD8D0] disabled:opacity-50 disabled:cursor-not-allowed font-bold text-lg flex items-center justify-center transition-all"
-                        >
-                          -
-                        </button>
-                        <div className="text-center px-4">
-                          <p className="text-lg font-bold text-[#000000] leading-none">{customPages} trang</p>
-                          <p className="text-[10px] text-[#7A6F66] mt-1 font-semibold">{customPages / 2} tờ</p>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => setCustomPages(prev => prev + 2)}
-                          className="w-10 h-10 rounded-xl bg-black text-[#EDE9E3] hover:bg-neutral-800 font-bold text-lg flex items-center justify-center transition-all"
-                        >
-                          +
-                        </button>
+                      <div className="text-center px-4">
+                        <p className="text-lg font-bold text-[#000000] leading-none">{selectedPageCount} trang</p>
+                        <p className="text-[10px] text-[#7A6F66] mt-1 font-semibold">{Math.ceil(selectedPageCount / 2)} tờ</p>
                       </div>
                     </div>
 
@@ -371,13 +390,13 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                       <p>
                         • Số trang mặc định đi kèm: <span className="font-semibold text-[#000000]">{currentProduct.pagesLimit} trang</span> (đã bao gồm trong giá cơ bản).
                       </p>
-                      {customPages > currentProduct.pagesLimit ? (
+                      {selectedPageCount > currentProduct.pagesLimit ? (
                         <p className="text-[#10b981] font-semibold">
-                          • Bạn đang thêm: {(customPages - currentProduct.pagesLimit)} trang ({(customPages - currentProduct.pagesLimit) / 2} tờ). Phụ phí: +{pagePrice.toLocaleString('vi-VN')} ₫.
+                          • Bạn đang in thêm: {(selectedPageCount - currentProduct.pagesLimit)} trang ({Math.ceil((selectedPageCount - currentProduct.pagesLimit) / 2)} tờ). Phụ phí: +{pagePrice.toLocaleString('vi-VN')} ₫.
                           {currentProduct.id !== 'layflat' ? ' (12.000 ₫/tờ C150)' : ' (30.000 ₫/tờ Lay-flat)'}
                         </p>
                       ) : (
-                        <p>• Chưa thêm trang nào ngoài số trang tiêu chuẩn.</p>
+                        <p>• Số trang trong giới hạn tiêu chuẩn, không phát sinh phụ phí.</p>
                       )}
                     </div>
                   </div>
@@ -584,7 +603,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     </p>
                     <div className="w-48 h-48 mx-auto border-2 border-neutral-100 rounded-xl overflow-hidden shadow-sm p-1 bg-white">
                       <img
-                        src="/payment_qr.png"
+                        src="/NgocjQR.png"
                         alt="Payment QR Code"
                         className="w-full h-full object-cover"
                       />
@@ -630,7 +649,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                       <p>• Mã đơn: <span className="font-mono font-bold text-[#000000]">#{orderId || `BK${Date.now()}`}</span></p>
                       <p>• Loại photobook: <span className="font-semibold text-[#000000]">{currentProduct.nameVi}</span></p>
                       <p>• Kích thước: <span className="font-semibold text-[#000000]">{selectedSize}</span></p>
-                      <p>• Số trang: <span className="font-semibold text-[#000000]">{customPages} trang</span></p>
+                      <p>• Số trang: <span className="font-semibold text-[#000000]">{selectedPageCount} trang</span></p>
                       <p>• Hình thức thanh toán: <span className="font-bold text-orange-600">{paymentMethod === 'deposit' ? 'Đặt cọc trước 50%' : 'Thanh toán trước 100%'}</span></p>
                       <p>• Người nhận: <span className="font-semibold text-[#000000]">{shippingInfo.fullName}</span></p>
                       <p>• SĐT: <span className="font-semibold text-[#000000]">{shippingInfo.phone}</span></p>
@@ -680,7 +699,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                       {currentProduct.nameVi}
                     </p>
                     <p className="text-[11px] mt-0.5" style={{ color: '#7A6F66' }}>
-                      Kích thước: {selectedSize} · {customPages} trang
+                      Kích thước: {selectedSize} · {selectedPageCount} trang
                     </p>
                     <p className="text-[10px] italic mt-0.5 leading-snug" style={{ color: '#9B9088' }}>
                       {currentProduct.paperType}

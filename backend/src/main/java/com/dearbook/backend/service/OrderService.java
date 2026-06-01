@@ -6,6 +6,7 @@ import com.dearbook.backend.entity.Order;
 import com.dearbook.backend.entity.OrderShipping;
 import com.dearbook.backend.entity.Payment;
 import com.dearbook.backend.repository.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,15 +20,17 @@ public class OrderService {
     private final UserBookRepository bookRepo;
     private final PaymentRepository paymentRepo;
     private final ProfileRepository profileRepo;
+    private final ObjectMapper objectMapper;
 
-    public OrderService(OrderRepository orderRepo, OrderShippingRepository shippingRepo, 
-                        UserBookRepository bookRepo, PaymentRepository paymentRepo, 
-                        ProfileRepository profileRepo) {
+    public OrderService(OrderRepository orderRepo, OrderShippingRepository shippingRepo,
+                        UserBookRepository bookRepo, PaymentRepository paymentRepo,
+                        ProfileRepository profileRepo, ObjectMapper objectMapper) {
         this.orderRepo = orderRepo;
         this.shippingRepo = shippingRepo;
         this.bookRepo = bookRepo;
         this.paymentRepo = paymentRepo;
         this.profileRepo = profileRepo;
+        this.objectMapper = objectMapper;
     }
 
     @Transactional
@@ -43,6 +46,17 @@ public class OrderService {
         order.setUserBook(book);
         order.setTotalAmount(amount);
         order.setStatus("PENDING");
+
+        // Save selected page IDs as JSON array
+        if (req.selectedPageIds() != null && !req.selectedPageIds().isEmpty()) {
+            try {
+                order.setSelectedPageIds(objectMapper.writeValueAsString(req.selectedPageIds()));
+            } catch (Exception e) {
+                // Non-critical: log and continue
+                e.printStackTrace();
+            }
+        }
+
         var savedOrder = orderRepo.save(order);
 
         // Save shipping info

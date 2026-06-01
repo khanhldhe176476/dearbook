@@ -13,6 +13,7 @@ public class Order {
     private String status = "PENDING";
     @Column(name = "created_at", insertable = false, updatable = false) private OffsetDateTime createdAt;
     @Column(name = "updated_at", insertable = false, updatable = false) private OffsetDateTime updatedAt;
+    @Column(name = "selected_page_ids", columnDefinition = "jsonb") private String selectedPageIds;
     // Getters and setters
     public UUID getId() { return id; } public void setId(UUID id) { this.id = id; }
     public Profile getUser() { return user; } public void setUser(Profile user) { this.user = user; }
@@ -21,4 +22,5 @@ public class Order {
     public String getStatus() { return status; } public void setStatus(String status) { this.status = status; }
     public OffsetDateTime getCreatedAt() { return createdAt; } public void setCreatedAt(OffsetDateTime createdAt) { this.createdAt = createdAt; }
     public OffsetDateTime getUpdatedAt() { return updatedAt; } public void setUpdatedAt(OffsetDateTime updatedAt) { this.updatedAt = updatedAt; }
+    public String getSelectedPageIds() { return selectedPageIds; } public void setSelectedPageIds(String selectedPageIds) { this.selectedPageIds = selectedPageIds; }
 }
