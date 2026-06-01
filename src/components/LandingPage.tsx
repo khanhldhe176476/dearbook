@@ -1,9 +1,14 @@
+import { useState } from 'react';
+import hanoiImg from 'figma:asset/d7b475113023469e96cb19c4ee78d3ffb04dfa29.png';
+import loveImg from 'figma:asset/4f81f59175575b9ebba78ca1d45401cd109f1941.png';
+import familyImg from 'figma:asset/03ef3be4e5a9d3f6b0010356d756eeaf3c80bb4c.png';
 import {
   Heart,
   BookOpen,
   Sparkles,
   Star,
   ArrowRight,
+  ArrowLeft,
   Check,
   Gift,
   HelpCircle,
@@ -15,9 +20,21 @@ interface LandingPageProps {
 }
 
 export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
+  const [showAbout, setShowAbout] = useState(false);
+
+  const handleNavClick = (targetId: string) => {
+    setShowAbout(false);
+    setTimeout(() => {
+      const element = document.getElementById(targetId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  };
+
   const photobookBoxItems = [
     {
-      title: '1 quyển PTB',
+      title: '1 quyển Photobook',
       description: 'Một cuốn photobook cá nhân hoá, lưu giữ ảnh và câu chuyện của bạn.',
       icon: <BookOpen className="w-7 h-7" />,
       emoji: '📖',
@@ -39,21 +56,21 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
   const photobookCategories = [
     {
       id: 'hard-cover',
-      title: 'PTB bìa cứng',
+      title: 'Photobook bìa cứng',
       description: 'Cứng cáp, sang trọng, phù hợp làm quà kỷ niệm hoặc quà tặng đặc biệt.',
       image: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=600&h=700&fit=crop',
       badge: 'Sang trọng',
     },
     {
       id: 'soft-cover',
-      title: 'PTB bìa mềm',
+      title: 'Photobook bìa mềm',
       description: 'Nhẹ, dễ cầm, giá hợp lý, phù hợp cho các album ảnh nhỏ và quà tặng thân mật.',
       image: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=600&h=700&fit=crop',
       badge: 'Dễ chọn',
     },
     {
       id: 'layflat',
-      title: 'PTB bìa bồi liền mở phẳng',
+      title: 'Photobook bìa bồi liền mở phẳng',
       description: 'Mở phẳng đẹp mắt, xem ảnh toàn trang rõ hơn, phù hợp ảnh đôi và ảnh kỷ niệm lớn.',
       image: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?w=600&h=700&fit=crop',
       badge: 'Cao cấp',
@@ -96,7 +113,7 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
   ];
 
   const features = [
-    'Chọn loại PTB phù hợp với nhu cầu',
+    'Chọn loại Photobook phù hợp với nhu cầu',
     'Chỉnh sửa ảnh và nội dung dễ dàng',
     'Xem trước thiết kế trước khi in',
     'Đóng gói thành photobook box chỉn chu',
@@ -108,7 +125,7 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
     {
       name: 'Bìa mềm',
       price: '149K',
-      description: 'Phù hợp để tạo một cuốn PTB nhỏ gọn, dễ tặng.',
+      description: 'Phù hợp để tạo một cuốn Photobook nhỏ gọn, dễ tặng.',
       features: ['Chọn mẫu có sẵn', 'Tuỳ chỉnh nội dung', 'Upload ảnh', 'Xem trước bản thiết kế'],
       popular: false,
     },
@@ -131,11 +148,11 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
   const faqs = [
     {
       question: 'Photobook box gồm những gì?',
-      answer: 'Photobook box gồm 1 quyển PTB, 1 kẹo mút và 1 thư cảm ơn được đóng gói chỉn chu.',
+      answer: 'Photobook box gồm 1 quyển Photobook, 1 kẹo mút và 1 thư cảm ơn được đóng gói chỉn chu.',
     },
     {
-      question: 'Có những loại PTB nào?',
-      answer: 'Hiện có 3 loại chính: PTB bìa cứng, PTB bìa mềm và PTB bìa bồi liền mở phẳng.',
+      question: 'Có những loại Photobook nào?',
+      answer: 'Hiện có 3 loại chính: Photobook bìa cứng, Photobook bìa mềm và Photobook bìa bồi liền mở phẳng.',
     },
     {
       question: 'Tôi có được xem trước sách trước khi in không?',
@@ -153,7 +170,13 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
       <header className="sticky top-0 z-50 bg-[#FFF8F1]/95 backdrop-blur-md border-b border-[#E7B8A8]">
         <div className="container-custom">
           <div className="flex items-center justify-between h-20">
-            <div className="flex items-center gap-2">
+            <div 
+              className="flex items-center gap-2 cursor-pointer"
+              onClick={() => {
+                setShowAbout(false);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+            >
               <div className="w-10 h-10 bg-[#B9423A] rounded-xl flex items-center justify-center shadow-lg">
                 <BookOpen className="w-6 h-6 text-white" />
               </div>
@@ -161,15 +184,33 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
             </div>
 
             <nav className="hidden md:flex items-center gap-3">
-              <a href="#ptb-box" className="px-4 py-2 rounded-full text-[#5B4038] hover:bg-[#F7D9CF] hover:text-[#B9423A] font-semibold transition">
-                PTB Box
-              </a>
-              <a href="#categories" className="px-4 py-2 rounded-full text-[#5B4038] hover:bg-[#F7D9CF] hover:text-[#B9423A] font-semibold transition">
+              <button 
+                onClick={() => handleNavClick('ptb-box')} 
+                className="px-4 py-2 rounded-full text-[#5B4038] hover:bg-[#F7D9CF] hover:text-[#B9423A] font-semibold transition focus:outline-none"
+              >
+                Photobook Box
+              </button>
+              <button 
+                onClick={() => handleNavClick('categories')} 
+                className="px-4 py-2 rounded-full text-[#5B4038] hover:bg-[#F7D9CF] hover:text-[#B9423A] font-semibold transition focus:outline-none"
+              >
                 Danh mục
-              </a>
-              <a href="#themes" className="px-4 py-2 rounded-full text-[#5B4038] hover:bg-[#F7D9CF] hover:text-[#B9423A] font-semibold transition">
+              </button>
+              <button 
+                onClick={() => handleNavClick('themes')} 
+                className="px-4 py-2 rounded-full text-[#5B4038] hover:bg-[#F7D9CF] hover:text-[#B9423A] font-semibold transition focus:outline-none"
+              >
                 Chủ đề
-              </a>
+              </button>
+              <button 
+                onClick={() => {
+                  setShowAbout(true);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }} 
+                className={`px-4 py-2 rounded-full text-[#5B4038] hover:bg-[#F7D9CF] hover:text-[#B9423A] font-semibold transition focus:outline-none ${showAbout ? 'text-[#B9423A] bg-[#F7D9CF]' : ''}`}
+              >
+                Giới thiệu
+              </button>
             </nav>
 
             <div className="flex items-center gap-4">
@@ -189,8 +230,116 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
         </div>
       </header>
 
-      {/* Section 1: PTB Box */}
-      <section id="ptb-box" className="section-padding relative overflow-hidden scroll-mt-24 bg-[#FFF8F1]">
+      {showAbout && (
+        <div 
+          className="w-full min-h-[calc(100vh-180px)] py-16 px-4 md:px-8 relative overflow-hidden flex items-center justify-center"
+          style={{
+            background: 'linear-gradient(160deg, #FFF8F1 0%, #F7E2D4 40%, #FFF8F1 100%)',
+          }}
+        >
+          {/* Decorative circles */}
+          <div className="absolute top-[-100px] right-[-80px] w-[300px] h-[300px] rounded-full opacity-10 pointer-events-none"
+            style={{ background: 'radial-gradient(circle, #E6C7B8, transparent 70%)' }} />
+          <div className="absolute bottom-[-60px] left-[-60px] w-[250px] h-[250px] rounded-full opacity-8 pointer-events-none"
+            style={{ background: 'radial-gradient(circle, #B9423A, transparent 70%)' }} />
+          <div className="absolute inset-0 dot-pattern opacity-40 pointer-events-none"
+            style={{ backgroundImage: 'radial-gradient(circle, rgba(185, 66, 58, 0.08) 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+
+          <div className="max-w-5xl w-full flex flex-col md:flex-row items-center gap-12 relative z-10">
+            
+            {/* Left: Beautiful stacked polaroids/photo cards */}
+            <div className="flex-1 flex justify-center items-center relative min-h-[320px] md:min-h-[400px]">
+              <div className="relative w-64 h-80">
+                {/* Polaroid 1 (bottom layer) */}
+                <div 
+                  className="absolute top-0 left-0 bg-white p-3 pb-8 rounded shadow-md border border-[#E6C7B8]/30 transform -rotate-12 transition-all duration-500 hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer"
+                  style={{ width: '180px' }}
+                >
+                  <div className="aspect-square bg-[#FFF8F1] overflow-hidden rounded-sm">
+                    <img src={loveImg} className="w-full h-full object-cover" alt="" />
+                  </div>
+                  <p className="text-center mt-3" style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A', fontSize: '1.2rem', lineHeight: 1 }}>love stories</p>
+                </div>
+
+                {/* Polaroid 2 (middle layer) */}
+                <div 
+                  className="absolute top-8 left-16 bg-white p-3 pb-8 rounded shadow-lg border border-[#E6C7B8]/30 transform rotate-6 transition-all duration-500 hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer"
+                  style={{ width: '190px' }}
+                >
+                  <div className="aspect-square bg-[#FFF8F1] overflow-hidden rounded-sm">
+                    <img src={familyImg} className="w-full h-full object-cover" alt="" />
+                  </div>
+                  <p className="text-center mt-3" style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A', fontSize: '1.2rem', lineHeight: 1 }}>family moments</p>
+                </div>
+
+                {/* Polaroid 3 (top layer) */}
+                <div 
+                  className="absolute top-20 left-4 bg-white p-3 pb-8 rounded shadow-xl border border-[#E6C7B8]/30 transform -rotate-3 transition-all duration-500 hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer"
+                  style={{ width: '180px' }}
+                >
+                  <div className="aspect-square bg-[#FFF8F1] overflow-hidden rounded-sm">
+                    <img src={hanoiImg} className="w-full h-full object-cover" alt="" />
+                  </div>
+                  <p className="text-center mt-3" style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A', fontSize: '1.2rem', lineHeight: 1 }}>dear memories</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Premium Glassmorphism content card */}
+            <div className="flex-1 bg-white/70 backdrop-blur-md p-8 md:p-10 rounded-3xl shadow-xl border border-[#E6C7B8]/40">
+              <div className="text-center md:text-left mb-6">
+                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#B9423A] block mb-2">Giới thiệu</span>
+                <h2 
+                  className="text-[#3B2925] leading-none mb-2"
+                  style={{
+                    fontFamily: '"Pinyon Script", "Great Vibes", cursive',
+                    fontSize: '4.5rem',
+                  }}
+                >
+                  About Us
+                </h2>
+                <h3 
+                  className="text-lg font-serif italic text-[#7A4A42] font-semibold mt-2"
+                  style={{ fontFamily: 'ui-serif, Georgia, serif' }}
+                >
+                  Every memory deserves a place to stay.
+                </h3>
+              </div>
+
+              <div className="space-y-4 text-[#543A34] text-base leading-relaxed text-justify md:text-left" style={{ fontFamily: 'ui-serif, Georgia, serif' }}>
+                <p>
+                  <strong className="text-[#B9423A] font-sans">dearmemories.</strong> là nền tảng photobook cá nhân hóa được tạo ra để giúp bạn lưu giữ những khoảnh khắc đáng nhớ theo cách riêng của mình. Chúng tôi tin rằng mỗi bức ảnh đều mang theo một câu chuyện và mỗi câu chuyện đều xứng đáng được lưu giữ lâu dài thay vì bị lãng quên trong thư viện ảnh của điện thoại.
+                </p>
+                <p>
+                  Thông qua những mẫu thiết kế được chọn lọc sẵn cùng trải nghiệm tùy chỉnh đơn giản, <strong className="text-[#B9423A] font-sans">dearmemories.</strong> giúp bạn dễ dàng biến những kỷ niệm, cảm xúc và câu chuyện cá nhân thành một cuốn photobook mang dấu ấn riêng.
+                </p>
+              </div>
+
+              <div className="mt-8 flex justify-center md:justify-start">
+                <button
+                  onClick={() => {
+                    setShowAbout(false);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="px-6 py-3 rounded-full text-white font-semibold text-sm flex items-center gap-2 hover:opacity-90 transition duration-300 shadow-md"
+                  style={{
+                    background: 'linear-gradient(135deg, #B9423A, #96332E)',
+                    boxShadow: '0 4px 15px rgba(185, 66, 58, 0.3)',
+                  }}
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  Quay lại trang chủ
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      <div className={showAbout ? 'hidden' : ''}>
+        {/* Section 1: Photobook Box */}
+        <section id="ptb-box" className="section-padding relative overflow-hidden scroll-mt-24 bg-[#FFF8F1]">
         <div className="absolute inset-0 bg-[radial-gradient(#E9B7AA_1px,transparent_1px)] [background-size:24px_24px] opacity-45"></div>
 
         <div className="container-custom relative z-10">
@@ -209,17 +358,17 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
             </h1>
 
             <p className="text-xl text-[#7A5C53] mb-8 max-w-2xl mx-auto animate-fade-in">
-              Mỗi hộp quà gồm 1 quyển PTB, 1 kẹo mút và 1 thư cảm ơn. Tất cả được chuẩn bị để người nhận cảm thấy món quà thật riêng và thật đáng nhớ.
+              Mỗi hộp quà gồm 1 quyển Photobook, 1 kẹo mút và 1 thư cảm ơn. Tất cả được chuẩn bị để người nhận cảm thấy món quà thật riêng và thật đáng nhớ.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in">
               <button onClick={onGetStarted} className="btn bg-[#B9423A] text-white hover:bg-[#96332E] btn-lg">
-                Tạo PTB của bạn
+                Tạo Photobook của bạn
                 <ArrowRight className="w-5 h-5" />
               </button>
-              <a href="#categories" className="btn border border-[#B9423A] text-[#B9423A] bg-white hover:bg-[#F7D9CF] btn-lg">
-                Xem danh mục PTB
-              </a>
+              <button onClick={() => handleNavClick('categories')} className="btn border border-[#B9423A] text-[#B9423A] bg-white hover:bg-[#F7D9CF] btn-lg focus:outline-none">
+                Xem danh mục Photobook
+              </button>
             </div>
           </div>
 
@@ -244,7 +393,7 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
         <div className="container-custom">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Danh mục <span style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A' }}>loại PTB</span>
+              Danh mục <span style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A' }}>loại Photobook</span>
             </h2>
             <p className="text-xl text-[#7A5C53] max-w-3xl mx-auto">
               Chọn kiểu photobook phù hợp với ngân sách, phong cách và mức độ chỉn chu bạn muốn dành cho món quà.
@@ -422,7 +571,7 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
               Câu hỏi <span style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A' }}>thường gặp</span>
             </h2>
-            <p className="text-xl text-[#7A5C53]">Một vài thông tin quan trọng trước khi bạn bắt đầu tạo PTB</p>
+            <p className="text-xl text-[#7A5C53]">Một vài thông tin quan trọng trước khi bạn bắt đầu tạo Photobook</p>
           </div>
 
           <div className="max-w-4xl mx-auto space-y-4">
@@ -453,12 +602,20 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
         </div>
       </section>
 
+      </div>
+
       {/* Footer */}
       <footer className="bg-[#3E2A25] text-white py-12">
         <div className="container-custom">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <div className="flex items-center gap-2 mb-4">
+              <div 
+                className="flex items-center gap-2 mb-4 cursor-pointer"
+                onClick={() => {
+                  setShowAbout(false);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+              >
                 <div className="w-10 h-10 bg-gradient-to-br from-[#D86F62] to-[#B9423A] rounded-xl flex items-center justify-center">
                   <BookOpen className="w-6 h-6 text-white" />
                 </div>
@@ -471,28 +628,32 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
 
             <div>
               <h3 className="font-bold mb-4">Sản phẩm</h3>
-              <ul className="space-y-2 text-[#E8D7CF]">
-                <li><a href="#ptb-box" className="hover:text-white transition">PTB Box</a></li>
-                <li><a href="#categories" className="hover:text-white transition">Danh mục</a></li>
-                <li><a href="#themes" className="hover:text-white transition">Chủ đề</a></li>
+              <ul className="space-y-2 text-[#E8D7CF] flex flex-col items-start">
+                <li><button onClick={() => handleNavClick('ptb-box')} className="hover:text-white transition focus:outline-none text-left">Photobook Box</button></li>
+                <li><button onClick={() => handleNavClick('categories')} className="hover:text-white transition focus:outline-none text-left">Danh mục</button></li>
+                <li><button onClick={() => handleNavClick('themes')} className="hover:text-white transition focus:outline-none text-left">Chủ đề</button></li>
+                <li><button onClick={() => {
+                  setShowAbout(true);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }} className="hover:text-white transition focus:outline-none text-left">Giới thiệu</button></li>
               </ul>
             </div>
 
             <div>
-              <h3 className="font-bold mb-4">Danh mục PTB</h3>
-              <ul className="space-y-2 text-[#E8D7CF]">
-                <li><a href="#categories" className="hover:text-white transition">Bìa cứng</a></li>
-                <li><a href="#categories" className="hover:text-white transition">Bìa mềm</a></li>
-                <li><a href="#categories" className="hover:text-white transition">Bìa bồi liền mở phẳng</a></li>
+              <h3 className="font-bold mb-4">Danh mục Photobook</h3>
+              <ul className="space-y-2 text-[#E8D7CF] flex flex-col items-start">
+                <li><button onClick={() => handleNavClick('categories')} className="hover:text-white transition focus:outline-none text-left">Bìa cứng</button></li>
+                <li><button onClick={() => handleNavClick('categories')} className="hover:text-white transition focus:outline-none text-left">Bìa mềm</button></li>
+                <li><button onClick={() => handleNavClick('categories')} className="hover:text-white transition focus:outline-none text-left">Bìa bồi liền mở phẳng</button></li>
               </ul>
             </div>
 
             <div>
               <h3 className="font-bold mb-4">Hỗ trợ</h3>
-              <ul className="space-y-2 text-[#E8D7CF]">
-                <li><a href="#ptb-box" className="hover:text-white transition">Trong hộp có gì?</a></li>
-                <li><a href="#themes" className="hover:text-white transition">Chọn chủ đề</a></li>
-                <li><a href="#categories" className="hover:text-white transition">Chọn loại PTB</a></li>
+              <ul className="space-y-2 text-[#E8D7CF] flex flex-col items-start">
+                <li><button onClick={() => handleNavClick('ptb-box')} className="hover:text-white transition focus:outline-none text-left">Trong hộp có gì?</button></li>
+                <li><button onClick={() => handleNavClick('themes')} className="hover:text-white transition focus:outline-none text-left">Chọn chủ đề</button></li>
+                <li><button onClick={() => handleNavClick('categories')} className="hover:text-white transition focus:outline-none text-left">Chọn loại Photobook</button></li>
               </ul>
             </div>
           </div>

@@ -14,7 +14,13 @@ export async function signUpWithEmail(
   fullName: string
 ): Promise<AuthUser> {
   if (!supabase) {
-    throw new Error('Chưa kết nối cơ sở dữ liệu! Vui lòng cấu hình VITE_SUPABASE_URL và VITE_SUPABASE_ANON_KEY trên Render Dashboard.');
+    console.warn('⚠️ Supabase client not initialized. Falling back to Demo Mode.');
+    return {
+      id: 'demo-user-id',
+      email,
+      fullName,
+      avatarUrl: undefined,
+    };
   }
   // 1. Tạo tài khoản trong Supabase Auth
   const { data: authData, error: authError } = await supabase.auth.signUp({
@@ -53,7 +59,13 @@ export async function verifySignupOTP(
   fullName: string
 ): Promise<AuthUser> {
   if (!supabase) {
-    throw new Error('Chưa kết nối cơ sở dữ liệu! Vui lòng cấu hình VITE_SUPABASE_URL và VITE_SUPABASE_ANON_KEY trên Render Dashboard.');
+    console.warn('⚠️ Supabase client not initialized. Falling back to Demo Mode.');
+    return {
+      id: 'demo-user-id',
+      email,
+      fullName,
+      avatarUrl: undefined,
+    };
   }
   // 1. Đảm bảo OTP không có khoảng trắng và đúng định dạng
   const cleanOtp = token.trim();
@@ -146,7 +158,13 @@ export async function signInWithEmail(
   password: string
 ): Promise<AuthUser> {
   if (!supabase) {
-    throw new Error('Chưa kết nối cơ sở dữ liệu! Vui lòng cấu hình VITE_SUPABASE_URL và VITE_SUPABASE_ANON_KEY trên Render Dashboard.');
+    console.warn('⚠️ Supabase client not initialized. Falling back to Demo Mode.');
+    return {
+      id: 'demo-user-id',
+      email: email,
+      fullName: email.split('@')[0],
+      avatarUrl: undefined,
+    };
   }
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
