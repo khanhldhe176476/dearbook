@@ -30,6 +30,14 @@ type SortBy = 'recent' | 'oldest' | 'name' | 'theme';
 
 export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBook, onBackToHome }: MyBooksLibraryPortfolioProps) {
   const { templates: supabaseTemplates, loading: templatesLoading, error: templatesError } = useBookTemplates();
+  const displayTemplates = supabaseTemplates.filter(tpl => 
+    tpl.id !== 'a1b2c3d4-0000-0000-0000-000000000001' &&
+    tpl.id !== 'a1b2c3d4-0000-0000-0000-000000000002' &&
+    tpl.id !== 'a1b2c3d4-0000-0000-0000-000000000003' &&
+    tpl.name !== 'Phong cách Vintage' &&
+    tpl.name !== 'Phong cách Hiện đại' &&
+    tpl.name !== 'Phong cách Tối giản'
+  );
   const [books, setBooks] = useState<BookData[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
@@ -151,9 +159,13 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
 
   const themeData = {
     love:       { name: 'Tình yêu', emoji: '💕', grad: 'from-rose-400 to-pink-500',     badge: 'bg-rose-50 text-rose-600 border-rose-100'   },
+    romantic:   { name: 'Tình yêu', emoji: '💕', grad: 'from-rose-400 to-pink-500',     badge: 'bg-rose-50 text-rose-600 border-rose-100'   },
     family:     { name: 'Gia đình', emoji: '👨‍👩‍👧', grad: 'from-sky-400 to-blue-500',     badge: 'bg-sky-50 text-sky-600 border-sky-100'       },
     birthday:   { name: 'Sinh nhật', emoji: '🎂', grad: 'from-amber-400 to-orange-500', badge: 'bg-amber-50 text-amber-600 border-amber-100'  },
     friendship: { name: 'Tình bạn', emoji: '🤝', grad: 'from-emerald-400 to-teal-500', badge: 'bg-emerald-50 text-emerald-600 border-emerald-100' },
+    travel:     { name: 'Du lịch',   emoji: '✈️', grad: 'from-cyan-400 to-blue-500',     badge: 'bg-cyan-50 text-cyan-600 border-cyan-100'     },
+    wedding:    { name: 'Đám cưới',  emoji: '💍', grad: 'from-purple-400 to-indigo-500', badge: 'bg-purple-50 text-purple-600 border-purple-100' },
+    kids:       { name: 'Trẻ em',    emoji: '👶', grad: 'from-yellow-300 to-amber-500',  badge: 'bg-yellow-50 text-yellow-600 border-yellow-100' },
   };
 
   const formatDate = (dateString: string) =>
@@ -386,27 +398,19 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
       >
         {/* Image Area */}
         <div className="relative h-60 flex-shrink-0 overflow-hidden bg-gray-50">
-          {tpl.cover_image_url ? (
-            <img
-              src={tpl.cover_image_url}
-              alt={tpl.name}
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-            />
-          ) : (
-            <div className={`w-full h-full flex items-center justify-center relative overflow-hidden bg-gradient-to-br ${td.grad}`}>
-              {/* Premium overlay pattern */}
-              <div className="absolute inset-0 opacity-[0.15] mix-blend-overlay"
-                style={{
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Ccircle cx='7' cy='7' r='2'/%3E%3Ccircle cx='37' cy='7' r='2'/%3E%3Ccircle cx='7' cy='37' r='2'/%3E%3Ccircle cx='37' cy='37' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-                }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-              {/* Glassmorphism Icon Container */}
-              <div className="relative z-10 w-24 h-24 flex items-center justify-center rounded-[2rem] bg-white/20 backdrop-blur-md shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/30 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3">
-                <span className="text-5xl drop-shadow-lg">{td.emoji}</span>
-              </div>
-            </div>
-          )}
+          <img
+            src={tpl.cover_image_url || (
+              themeKey === 'love' || themeKey === 'romantic' || themeKey === 'wedding'
+                ? sampleBook1
+                : themeKey === 'family' || themeKey === 'kids'
+                ? sampleBook2
+                : themeKey === 'friendship' || themeKey === 'travel'
+                ? '/Bạn Bè/Vintage Style/aatbio_com_image_export_May_21_2026 (1).png'
+                : '/Cá nhân/Dust & Soul/aatbio_com_image_export_May_23_2026 (1).png'
+            )}
+            alt={tpl.name}
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          />
           
           {/* Badges */}
           <div className="absolute top-4 left-4 z-20">
