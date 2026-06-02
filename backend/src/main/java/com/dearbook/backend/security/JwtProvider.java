@@ -16,6 +16,9 @@ public class JwtProvider {
     @Value("${app.jwt.secret:your-256-bit-secret-your-256-bit-secret-for-local-dev-only}")
     private String jwtSecret;
 
+    @Value("${app.admin.jwt.secret:dearbook-admin-secret-key-32chars!!}")
+    private String adminJwtSecret;
+
     @Value("${app.jwt.expiration-ms:86400000}") // Default 1 day
     private int jwtExpirationMs;
 
@@ -24,7 +27,8 @@ public class JwtProvider {
     }
 
     public String generateToken(String subject) {
-        Key key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+        String secret = "admin".equals(subject) ? adminJwtSecret : jwtSecret;
+        Key key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationMs);
 

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.UUID;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "orders")
@@ -44,6 +46,7 @@ public class Order {
     @Column(name = "custom_pages")
     private Integer customPages;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "selected_page_ids", columnDefinition = "jsonb")
     private String selectedPageIds;
 

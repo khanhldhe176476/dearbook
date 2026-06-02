@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 public record OrderRequest(
-    UUID userBookId,
+    String userBookId,
     String customerName,
     String recipientName,
     String phone,
@@ -18,5 +18,5 @@ public record OrderRequest(
     String productSize,
     Integer customPages,
     String paymentMethod,
-    List<String> selectedPageIds
+    Object designPages
 ) {}

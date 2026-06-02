@@ -27,7 +27,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static final Logger log = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
-    @Value("${app.jwt.secret:your-256-bit-secret-your-256-bit-secret}")
+    @Value("${app.jwt.secret:your-256-bit-secret-your-256-bit-secret-for-local-dev-only}")
     private String jwtSecret;
 
     @Value("${app.admin.jwt.secret:dearbook-admin-secret-key-32chars!!}")

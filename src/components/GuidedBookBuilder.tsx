@@ -439,8 +439,8 @@ export function GuidedBookBuilder({
               bookData.theme &&
               bookData.templateId &&
               bookData.pages && (
-                // LOCAL TEMPLATES & AUTO TEMPLATES
-                (bookData.templateId.startsWith('local-template-') || bookData.templateId.startsWith('auto-template-')) && !useAdvancedEditor ? (
+                // LOCAL TEMPLATES & AUTO TEMPLATES & SUPABASE TEMPLATES
+                (bookData.templateId.startsWith('local-template-') || bookData.templateId.startsWith('auto-template-') || !bookData.templateId.includes('youth-archive-memories')) && !useAdvancedEditor ? (
                   <LocalTemplatePageViewer
                     book={bookData as BookData}
                     onBack={isExistingBook ? undefined : () => setCurrentStep(2)}

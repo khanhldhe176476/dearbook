@@ -47,11 +47,19 @@ public class OrderService {
 
     @Transactional
     public OrderResponse placeOrder(UUID userId, OrderRequest req) {
-        var user = profileRepo.findById(userId).orElseThrow();
-        var book = bookRepo.findById(req.userBookId()).orElseThrow();
+        var user = userId != null ? profileRepo.findById(userId).orElse(null) : null;
+        UUID parsedBookId = null;
+        if (req.userBookId() != null) {
+            try {
+                parsedBookId = UUID.fromString(req.userBookId());
+            } catch (IllegalArgumentException e) {
+                // Ignore fake ID
+            }
+        }
+        var book = parsedBookId != null ? bookRepo.findById(parsedBookId).orElse(null) : null;
 
         int quantity = req.quantity() != null ? req.quantity() : 1;
-        BigDecimal basePrice = book.getTemplate().getPrice() != null
+        BigDecimal basePrice = book != null && book.getTemplate() != null && book.getTemplate().getPrice() != null
                 ? book.getTemplate().getPrice()
                 : BigDecimal.valueOf(150000);
 
@@ -61,19 +69,19 @@ public class OrderService {
         order.setUser(user);
         order.setUserBook(book);
         order.setCustomerName(req.customerName() != null ? req.customerName() : req.recipientName());
-        order.setEmail(req.email() != null ? req.email() : user.getEmail());
+        order.setEmail(req.email() != null ? req.email() : (user != null ? user.getEmail() : ""));
         order.setQuantity(quantity);
         order.setNote(req.note());
-        order.setCollectionName(req.collectionName() != null ? req.collectionName() : book.getTemplate().getName());
+        order.setCollectionName(req.collectionName() != null ? req.collectionName() : (book != null && book.getTemplate() != null ? book.getTemplate().getName() : "Photobook"));
         order.setProductType(req.productType() != null ? req.productType() : "hardcover");
         order.setProductSize(req.productSize() != null ? req.productSize() : "20x20");
         order.setCustomPages(req.customPages());
         order.setTotalAmount(totalAmount);
         order.setStatus("PENDING");
 
-        if (req.selectedPageIds() != null && !req.selectedPageIds().isEmpty()) {
+        if (req.designPages() != null) {
             try {
-                order.setSelectedPageIds(objectMapper.writeValueAsString(req.selectedPageIds()));
+                order.setSelectedPageIds(objectMapper.writeValueAsString(req.designPages()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -155,9 +163,10 @@ public class OrderService {
         var shipping = shippingRepo.findByOrderId(o.getId()).orElse(null);
         var book = o.getUserBook();
 
-        List<AdminOrderResponse.PageData> pages = List.of();
-
-        if (book != null) {
+        Object pages = null;
+        if (o.getSelectedPageIds() != null && !o.getSelectedPageIds().isBlank()) {
+            pages = parseJsonSafely(o.getSelectedPageIds());
+        } else if (book != null) {
             pages = userBookPageRepo.findByUserBookIdOrderByPageNumberAsc(book.getId())
                     .stream()
                     .map(p -> new AdminOrderResponse.PageData(
@@ -180,7 +189,7 @@ public class OrderService {
                         : (book != null && book.getTemplate() != null ? book.getTemplate().getName() : ""),
                 o.getProductType() != null ? o.getProductType() : "hardcover",
                 o.getProductSize() != null ? o.getProductSize() : "20x20",
-                o.getCustomPages() != null ? o.getCustomPages() : pages.size(),
+                o.getCustomPages() != null ? o.getCustomPages() : (pages instanceof List ? ((List<?>) pages).size() : 0),
                 o.getQuantity() != null ? o.getQuantity() : 1,
                 o.getNote(),
                 book != null ? book.getId() : null,

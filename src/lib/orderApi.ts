@@ -2,12 +2,20 @@ import { apiGet, apiPost } from './api';
 
 export interface OrderRequest {
   userBookId: string;
-  recipientName: string;
+  customerName?: string;
+  recipientName?: string;
   phone: string;
+  email?: string;
   address: string;
   city: string;
+  note?: string;
+  collectionName?: string;
+  productType?: string;
+  productSize?: string;
+  quantity?: number;
+  customPages?: number;
   paymentMethod: string;
-  selectedPageIds?: string[];
+  designPages?: any[];
 }
 
 export interface OrderResponse {

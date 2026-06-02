@@ -123,15 +123,32 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
     try {
       setLoading(true);
 
+      // Collect the actual designed pages data
+      const allPages = book.pages || [];
+      const designPages = allPages.filter((p, i) => {
+        const id = p?.id || p?.templatePageId || `page-${i}`;
+        return selectedPageIds.includes(id);
+      });
+
       const orderData = {
         userBookId: book.id,
+        customerName: shippingInfo.fullName,
         recipientName: shippingInfo.fullName,
         phone: shippingInfo.phone,
+        email: shippingInfo.email,
         address: shippingInfo.address,
         city: shippingInfo.city,
+        note: shippingInfo.notes,
+        collectionName: book.title || book.templateName || 'Photobook',
+        productType: selectedProduct,
+        productSize: selectedSize,
+        quantity: 1,
+        customPages: selectedPageCount,
         paymentMethod: paymentMethod.toUpperCase(),
-        selectedPageIds: selectedPageIds,
+        designPages: designPages,
       };
+
+      console.log('[OrderFlow] Submitting order:', orderData);
 
       const response = await orderApi.placeOrder(userId, orderData);
       setOrderId(response.id);

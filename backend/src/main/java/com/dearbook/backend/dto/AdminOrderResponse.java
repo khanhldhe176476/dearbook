@@ -22,7 +22,7 @@ public record AdminOrderResponse(
     // Book/design data
     UUID bookId,
     String bookTitle,
-    List<PageData> pages,
+    Object pages,
     // Order state
     BigDecimal totalAmount,
     String status,

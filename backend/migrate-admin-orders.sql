@@ -10,7 +10,8 @@ ALTER TABLE orders
   ADD COLUMN IF NOT EXISTS collection_name TEXT,
   ADD COLUMN IF NOT EXISTS product_type TEXT,
   ADD COLUMN IF NOT EXISTS product_size TEXT,
-  ADD COLUMN IF NOT EXISTS custom_pages INTEGER;
+  ADD COLUMN IF NOT EXISTS custom_pages INTEGER,
+  ADD COLUMN IF NOT EXISTS selected_page_ids JSONB;
 
 ALTER TABLE order_shipping
   ADD COLUMN IF NOT EXISTS email TEXT;

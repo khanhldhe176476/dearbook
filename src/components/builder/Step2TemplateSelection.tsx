@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { ArrowLeft, Eye, Check, Layout, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ArrowLeft, Eye, Check, Layout, X, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { PageData } from '../../App';
 import autoData from '../../data/autoTemplates.json';
+import { supabase } from '../../lib/supabase';
 
 export interface LocalTemplate {
   id: string;
@@ -149,8 +150,93 @@ export function Step2TemplateSelection({
   onBack,
 }: Step2TemplateSelectionProps) {
   const [previewTemplate, setPreviewTemplate] = useState<LocalTemplate | null>(null);
+  const [supabaseTemplates, setSupabaseTemplates] = useState<LocalTemplate[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const templates = autoData.themes.find(t => t.id === theme)?.templates || [];
+  useEffect(() => {
+    const loadSupabaseTemplates = async () => {
+      if (!supabase) return;
+      try {
+        setLoading(true);
+        console.log(`📡 Fetching Supabase templates for theme: ${theme}`);
+        // 1. Fetch categories to find the ID corresponding to selected theme slug
+        const { data: catData, error: catError } = await supabase
+          .from('book_categories')
+          .select('id, slug')
+          .eq('slug', theme)
+          .single();
+
+        if (catError || !catData) {
+          console.warn('⚠️ Category not found in Supabase:', catError);
+          setSupabaseTemplates([]);
+          return;
+        }
+
+        const categoryId = catData.id;
+
+        // 2. Fetch templates for this category
+        const { data: tplData, error: tplError } = await supabase
+          .from('book_templates')
+          .select('*')
+          .eq('category_id', categoryId)
+          .eq('is_active', true);
+
+        if (tplError || !tplData || tplData.length === 0) {
+          console.log('No templates found in Supabase for category:', categoryId);
+          setSupabaseTemplates([]);
+          return;
+        }
+
+        // 3. For each template, fetch its template_pages
+        const formattedTemplates: LocalTemplate[] = [];
+        for (const tpl of tplData) {
+          const { data: pageData, error: pageError } = await supabase
+            .from('template_pages')
+            .select('*')
+            .eq('template_id', tpl.id)
+            .order('page_number', { ascending: true });
+
+          if (pageError) {
+            console.error('Error fetching template pages:', pageError);
+            continue;
+          }
+
+          const mappedPages = (pageData || []).map((p: any) => {
+            const defContent = p.default_content || {};
+            return {
+              id: p.id,
+              imageUrl: defContent.backgroundImage || defContent.imageUrl || tpl.cover_image_url || '',
+              label: p.page_number === 1 ? 'Trang bìa' : `Trang ${p.page_number - 1}`
+            };
+          });
+
+          formattedTemplates.push({
+            id: tpl.id,
+            name: tpl.name,
+            description: tpl.description || 'Mẫu thiết kế cao cấp.',
+            thumbnail: tpl.cover_image_url || (mappedPages[0]?.imageUrl || ''),
+            pages: mappedPages
+          });
+        }
+
+        console.log('✅ Loaded Supabase templates:', formattedTemplates);
+        setSupabaseTemplates(formattedTemplates);
+      } catch (err) {
+        console.error('❌ Exception loading Supabase templates:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadSupabaseTemplates();
+  }, [theme]);
+
+  // Combine local templates with Supabase templates
+  // Translate theme slug if needed (e.g. love -> tinh-yeu)
+  const mappedThemeId = theme === 'love' ? 'tinh-yeu' : (theme === 'friendship' ? 'ban-be' : (theme === 'family' ? 'gia-dinh' : theme));
+  const localTemplates = autoData.themes.find(t => t.id === mappedThemeId)?.templates || [];
+  
+  const templates = [...supabaseTemplates, ...localTemplates];
 
   const handleSelectTemplate = (template: LocalTemplate) => {
     // Chuyển đổi pages của local template sang PageData
@@ -209,8 +295,14 @@ export function Step2TemplateSelection({
       </div>
 
       {/* Template Grid */}
-      <div className="grid sm:grid-cols-3 gap-6 max-w-5xl mx-auto">
-        {templates.map((template) => {
+      {loading ? (
+        <div className="flex flex-col justify-center items-center py-16">
+          <Loader2 className="w-8 h-8 animate-spin text-amber-500" />
+          <span className="ml-2 mt-2 text-sm text-[#7a6f66]">Đang tải phong cách thiết kế từ Supabase...</span>
+        </div>
+      ) : (
+        <div className="grid sm:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          {templates.map((template) => {
           const isSelected = selectedTemplateId === template.id;
 
           return (
@@ -317,7 +409,8 @@ export function Step2TemplateSelection({
             </div>
           );
         })}
-      </div>
+        </div>
+      )}
 
       {/* Tip banner */}
       <div

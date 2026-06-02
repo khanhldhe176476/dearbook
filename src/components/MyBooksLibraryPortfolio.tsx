@@ -665,30 +665,31 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
               <Sparkles className="w-4 h-4" style={{ color: '#f3e9d7' }} />
             </div>
             <div>
-              <h3 className="text-xl font-bold leading-tight" style={{ color: '#111' }}>Sách Mẫu Tham Khảo</h3>
+              <h3 className="text-xl font-bold leading-tight" style={{ color: '#111' }}>Mẫu Thiết Kế Cá Nhân Hóa</h3>
               <p className="text-sm mt-0.5" style={{ color: '#aaa' }}>
-                Các mẫu đã được thiết kế sẵn nội dung chuyên nghiệp
+                Các mẫu sách chuyên nghiệp được đồng bộ từ tài khoản Supabase của bạn
               </p>
             </div>
           </div>
 
-          {/* Sách Mẫu Tham Khảo Images */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            <div className="group overflow-hidden rounded-3xl shadow-lg border border-[#eeece9] bg-white">
-              <img 
-                src={sampleBook1} 
-                alt="Sách mẫu 1" 
-                className="w-full h-auto object-cover"
-              />
+          {/* Sách Mẫu Tham Khảo Templates from Supabase */}
+          {templatesLoading ? (
+            <div className="flex flex-col justify-center items-center py-12">
+              <Loader2 className="w-8 h-8 animate-spin text-amber-500" />
+              <span className="mt-2 text-sm text-[#7a6f66]">Đang tải các mẫu thiết kế từ Supabase...</span>
             </div>
-            <div className="group overflow-hidden rounded-3xl shadow-lg border border-[#eeece9] bg-white">
-              <img 
-                src={sampleBook2} 
-                alt="Sách mẫu 2" 
-                className="w-full h-auto object-cover"
-              />
+          ) : supabaseTemplates && supabaseTemplates.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+              {supabaseTemplates.map(tpl => (
+                <TemplateCard key={tpl.id} tpl={tpl} />
+              ))}
             </div>
-          </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-10 text-center border border-dashed border-[#eeece9] rounded-3xl bg-white p-6">
+              <Sparkles className="w-8 h-8 text-gray-300 mb-2" />
+              <p className="text-sm text-gray-500">Chưa có mẫu thiết kế nào được kích hoạt trên Supabase.</p>
+            </div>
+          )}
         </section>
 
         {/* ── User Books Section ───────────────────────────────────────────── */}

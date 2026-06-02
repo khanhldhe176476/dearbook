@@ -42,16 +42,40 @@ export function LocalTemplatePageViewer({
   const [currentIdx, setCurrentIdx] = useState(0);
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
 
-  if (!template) {
+  let pages: LocalTemplatePage[] = [];
+  if (template) {
+    pages = template.pages;
+  } else if (book.pages && book.pages.length > 0) {
+    pages = book.pages.map((p: any, idx: number) => {
+      let img = '';
+      if (p.images && p.images.pageImage) img = p.images.pageImage;
+      else if (p.imageUrl) img = p.imageUrl;
+      else if (p.backgroundImage) img = p.backgroundImage;
+      else if (p.background?.value) img = p.background.value;
+      
+      return {
+        id: p.id || `p-${idx}`,
+        imageUrl: img,
+        label: idx === 0 ? 'Trang bìa' : `Trang ${idx}`,
+      };
+    });
+  }
+
+  if (pages.length === 0) {
     return (
       <div className="flex items-center justify-center py-24">
-        <p className="text-[#9b9088]">Không tìm thấy template.</p>
+        <p className="text-[#9b9088]">Không tìm thấy trang sách.</p>
       </div>
     );
   }
 
-  const pages: LocalTemplatePage[] = template.pages;
   const total = pages.length;
+
+  const displayTemplate = template || {
+    name: book.title || 'Mẫu thiết kế custom',
+    thumbnail: pages[0]?.imageUrl || '',
+    description: 'Mẫu thiết kế được cá nhân hóa.'
+  };
 
   const openLightbox = (idx: number) => setLightboxIdx(idx);
   const closeLightbox = () => setLightboxIdx(null);
@@ -129,8 +153,8 @@ export function LocalTemplatePageViewer({
         style={{ background: '#ffffff', border: '1px solid #EDE9E3', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}
       >
         <img
-          src={template.thumbnail}
-          alt={template.name}
+          src={displayTemplate.thumbnail}
+          alt={displayTemplate.name}
           className="w-14 h-20 object-cover rounded-xl flex-shrink-0 shadow-sm"
           style={{ border: '1px solid #EDE9E3' }}
         />
@@ -138,9 +162,9 @@ export function LocalTemplatePageViewer({
           <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: '#9b9088' }}>
             Phong cách đã chọn
           </p>
-          <h2 className="text-lg font-bold" style={{ color: '#111' }}>{template.name}</h2>
+          <h2 className="text-lg font-bold" style={{ color: '#111' }}>{displayTemplate.name}</h2>
           <p className="text-sm mt-0.5" style={{ color: '#7a6f66' }}>
-            {total} trang · {template.description.split('–')[0].trim()}
+            {total} trang · {displayTemplate.description.split('–')[0].trim()}
           </p>
         </div>
       </div>
