@@ -5,6 +5,7 @@ import { MyBooksLibraryPortfolio } from './components/MyBooksLibraryPortfolio';
 import { GuidedBookBuilder } from './components/GuidedBookBuilder';
 import { OrderFlow } from './components/OrderFlow';
 import AdminArea from './components/AdminArea';
+import { Footer } from './components/Footer';
 import { EditorPage as BookPage } from './types/editor';
 import { bookApi } from './lib/bookApi';
 import { supabase } from './lib/supabase';
@@ -413,53 +414,56 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: '#FAFAF8' }}>
-      <Toaster position="top-right" richColors />
+    <div className="min-h-screen flex flex-col justify-between" style={{ background: '#FAFAF8' }}>
+      <div className="flex-grow flex flex-col">
+        <Toaster position="top-right" richColors />
 
-      {currentScreen === 'home' && (
-        <HomePage
-          user={user}
-          onGetStarted={() =>
-            user ? setCurrentScreen('library') : setCurrentScreen('login')
-          }
-          onLogout={handleLogout}
-        />
-      )}
+        {currentScreen === 'home' && (
+          <HomePage
+            user={user}
+            onGetStarted={() =>
+              user ? setCurrentScreen('library') : setCurrentScreen('login')
+            }
+            onLogout={handleLogout}
+          />
+        )}
 
-      {currentScreen === 'login' && (
-        <LoginScreen onLogin={handleLogin} onVerifyOtp={handleVerifyOtp} onBack={() => setCurrentScreen('home')} />
-      )}
+        {currentScreen === 'login' && (
+          <LoginScreen onLogin={handleLogin} onVerifyOtp={handleVerifyOtp} onBack={() => setCurrentScreen('home')} />
+        )}
 
-      {currentScreen === 'library' && user && (
-        <MyBooksLibraryPortfolio
-          user={user}
-          onLogout={handleLogout}
-          onCreateNew={handleCreateNewBook}
-          onEditBook={handleEditBook}
-          onBackToHome={handleBackToLibrary}
-        />
-      )}
+        {currentScreen === 'library' && user && (
+          <MyBooksLibraryPortfolio
+            user={user}
+            onLogout={handleLogout}
+            onCreateNew={handleCreateNewBook}
+            onEditBook={handleEditBook}
+            onBackToHome={handleBackToLibrary}
+          />
+        )}
 
-      {currentScreen === 'builder' && user && (
-        <GuidedBookBuilder
-          user={user}
-          initialBook={currentBook}
-          onSave={handleSaveBook}
-          onBack={handleBackToLibrary}
-          onBackToHome={() => setCurrentScreen('home')}
-          onProceedToOrder={handleProceedToOrder}
-          onLogout={handleLogout}
-        />
-      )}
+        {currentScreen === 'builder' && user && (
+          <GuidedBookBuilder
+            user={user}
+            initialBook={currentBook}
+            onSave={handleSaveBook}
+            onBack={handleBackToLibrary}
+            onBackToHome={() => setCurrentScreen('home')}
+            onProceedToOrder={handleProceedToOrder}
+            onLogout={handleLogout}
+          />
+        )}
 
-      {currentScreen === 'order' && user && currentBook && (
-        <OrderFlow
-          user={user}
-          book={currentBook}
-          onBack={() => setCurrentScreen('builder')}
-          onComplete={handleOrderComplete}
-        />
-      )}
+        {currentScreen === 'order' && user && currentBook && (
+          <OrderFlow
+            user={user}
+            book={currentBook}
+            onBack={() => setCurrentScreen('builder')}
+            onComplete={handleOrderComplete}
+          />
+        )}
+      </div>
+      <Footer />
     </div>
   );
 }

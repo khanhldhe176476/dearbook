@@ -108,7 +108,7 @@ export function MyBooksLibrary({ user, onLogout, onCreateNew, onEditBook }: MyBo
                   src="/logo.png" 
                   alt="dearmemories" 
                   className="object-contain block" 
-                  style={{ height: '76px', margin: '-20px 0' }}
+                  style={{ height: '56px', margin: '-10px 0' }}
                 />
                 <p className="text-xs text-gray-600" style={{ marginTop: '-18px' }}>Sách tặng ý nghĩa</p>
               </div>

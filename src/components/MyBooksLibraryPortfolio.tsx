@@ -9,6 +9,7 @@ import { GoogleUserProfile } from './GoogleUserProfile';
 import { Test3DButton } from './Test3DButton';
 import { FlipBookReader } from './FlipBookReader';
 import { DeleteConfirmDialog } from './DeleteConfirmDialog';
+import { PhotobookNoticeDialog } from './PhotobookNoticeDialog';
 import { useBookTemplates } from '../hooks/useBookTemplates';
 import { toast } from 'sonner@2.0.3';
 import { bookApi } from '../lib/bookApi';
@@ -16,6 +17,8 @@ import { Loader2 } from 'lucide-react';
 import { getAllBooks, saveBook, deleteBook, getBooksSync, isIndexedDBAvailable } from '../utils/bookStorage';
 import sampleBook1 from '../assets/sample_book_1.jpg';
 import sampleBook2 from '../assets/sample_book_2.jpg';
+import templateHenryTran from '../assets/template_henry_tran.jpg';
+import templateYouthArchive from '../assets/template_youth_archive.jpg';
 
 interface MyBooksLibraryPortfolioProps {
   user: User;
@@ -24,6 +27,27 @@ interface MyBooksLibraryPortfolioProps {
   onEditBook: (book: BookData) => void;
   onBackToHome?: () => void;
 }
+
+const LOCAL_TEMPLATES = [
+  {
+    id: 'local-tpl-henry-tran',
+    name: 'Kỷ niệm dáng hình yêu dấu',
+    description: 'Một dấu ấn riêng, lưu giữ thanh xuân. Thiết kế tối giản, hiện đại và tinh tế.',
+    cover_image_url: templateHenryTran,
+    theme: 'romantic',
+    price: 299000,
+    page_count: 16
+  },
+  {
+    id: 'local-tpl-youth-archive',
+    name: 'Gói lại thanh xuân',
+    description: 'Lưu giữ những khoảnh khắc không thể quên. Phù hợp làm quà tặng bạn bè, kỷ niệm.',
+    cover_image_url: templateYouthArchive,
+    theme: 'friendship',
+    price: 299000,
+    page_count: 24
+  }
+];
 
 type ViewMode = 'grid' | 'masonry' | 'list';
 type SortBy = 'recent' | 'oldest' | 'name' | 'theme';
@@ -38,6 +62,10 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
     tpl.name !== 'Phong cách Hiện đại' &&
     tpl.name !== 'Phong cách Tối giản'
   );
+  const [showNoticeModal, setShowNoticeModal] = useState(false);
+  const handleCreateNewClick = () => {
+    setShowNoticeModal(true);
+  };
   const [books, setBooks] = useState<BookData[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
@@ -458,7 +486,7 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
           </div>
 
           <button
-            onClick={onCreateNew}
+            onClick={handleCreateNewClick}
             className="w-full py-3.5 rounded-xl text-[14px] font-bold transition-all duration-300
               hover:shadow-[0_8px_20px_rgba(0,0,0,0.12)] active:scale-[0.98] flex items-center justify-center gap-2 group/btn"
             style={{ background: '#1a1a1a', color: '#fff' }}
@@ -505,7 +533,7 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
                   src="/logo.png" 
                   alt="dearmemories" 
                   className="object-contain block transition-transform duration-300 group-hover:scale-105" 
-                  style={{ height: '96px', margin: '-28px 0' }}
+                  style={{ height: '64px', margin: '-12px 0' }}
                 />
               </div>
             </button>
@@ -539,7 +567,7 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
 
         {/* ── CTA Banner ──────────────────────────────────────────────────── */}
         <button
-          onClick={onCreateNew}
+          onClick={handleCreateNewClick}
           className="relative w-full overflow-hidden text-left transition-all duration-300
             hover:-translate-y-1 hover:shadow-2xl active:scale-[0.99] cursor-pointer group"
           style={{
@@ -660,41 +688,31 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
           </div>
         </div>
 
-        {/* ── Template Section ─────────────────────────────────────────────── */}
-        <section className="space-y-6">
-          {/* Section header */}
-          <div className="flex items-start gap-3">
-            <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-              style={{ background: '#111' }}>
-              <Sparkles className="w-4 h-4" style={{ color: '#f3e9d7' }} />
-            </div>
-            <div>
-              <h3 className="text-xl font-bold leading-tight" style={{ color: '#111' }}>Mẫu Thiết Kế Cá Nhân Hóa</h3>
-              <p className="text-sm mt-0.5" style={{ color: '#aaa' }}>
-                Các mẫu sách chuyên nghiệp được đồng bộ từ tài khoản Supabase của bạn
-              </p>
-            </div>
+      {/* ── Template Section ─────────────────────────────────────────────── */}
+      <section className="space-y-6">
+        {/* Section header */}
+        <div className="flex items-start gap-3">
+          <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
+            style={{ background: '#111' }}>
+            <Sparkles className="w-4 h-4" style={{ color: '#f3e9d7' }} />
           </div>
+          <div>
+            <h3 className="text-xl font-bold leading-tight" style={{ color: '#111' }}>Mẫu Thiết Kế Cá Nhân Hóa</h3>
+            <p className="text-sm mt-0.5" style={{ color: '#aaa' }}>
+              Các mẫu thiết kế quà tặng độc đáo, được cá nhân hóa trọn vẹn dành cho bạn
+            </p>
+          </div>
+        </div>
 
-          {/* Sách Mẫu Tham Khảo Templates from Supabase */}
-          {templatesLoading ? (
-            <div className="flex flex-col justify-center items-center py-12">
-              <Loader2 className="w-8 h-8 animate-spin text-amber-500" />
-              <span className="mt-2 text-sm text-[#7a6f66]">Đang tải các mẫu thiết kế từ Supabase...</span>
-            </div>
-          ) : supabaseTemplates && supabaseTemplates.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-              {supabaseTemplates.map(tpl => (
-                <TemplateCard key={tpl.id} tpl={tpl} />
-              ))}
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center py-10 text-center border border-dashed border-[#eeece9] rounded-3xl bg-white p-6">
-              <Sparkles className="w-8 h-8 text-gray-300 mb-2" />
-              <p className="text-sm text-gray-500">Chưa có mẫu thiết kế nào được kích hoạt trên Supabase.</p>
-            </div>
-          )}
-        </section>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="overflow-hidden rounded-3xl shadow-lg border border-[#eeece9] bg-white p-2">
+            <img src={templateHenryTran} alt="Kỷ niệm dáng hình yêu dấu" className="w-full h-auto object-cover rounded-2xl" />
+          </div>
+          <div className="overflow-hidden rounded-3xl shadow-lg border border-[#eeece9] bg-white p-2">
+            <img src={templateYouthArchive} alt="Gói lại thanh xuân" className="w-full h-auto object-cover rounded-2xl" />
+          </div>
+        </div>
+      </section>
 
         {/* ── User Books Section ───────────────────────────────────────────── */}
         <section ref={userBooksSectionRef} className="space-y-6">
@@ -730,7 +748,7 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
               </p>
               {!searchQuery && filterTheme === 'all' && (
                 <button
-                  onClick={onCreateNew}
+                  onClick={handleCreateNewClick}
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold transition-all hover:opacity-80"
                   style={{ background: '#111', color: '#fff' }}
                 >
@@ -789,6 +807,15 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
       {show3DBook && (
         <FlipBookReader book={show3DBook} onClose={() => setShow3DBook(null)} />
       )}
+
+      <PhotobookNoticeDialog
+        isOpen={showNoticeModal}
+        onConfirm={() => {
+          setShowNoticeModal(false);
+          onCreateNew();
+        }}
+        onCancel={() => setShowNoticeModal(false)}
+      />
 
       <DeleteConfirmDialog
         isOpen={deleteDialog.isOpen}

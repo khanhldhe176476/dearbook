@@ -475,7 +475,7 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
               src="/logo.png"
               alt="dearmemories"
               className="object-contain block"
-              style={{ height: '175px', margin: '-58.5px 0' }}
+              style={{ height: '100px', margin: '-21px 0' }}
             />
           </div>
 
@@ -909,45 +909,6 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
       {/* ── Divider ── */}
       <div className="section-divider" />
       </div>
-
-      {/* ══════════════════════════════════════════════════════
-          FOOTER
-          ══════════════════════════════════════════════════════ */}
-      <footer className="py-12" style={{ background: '#3B2925' }}>
-        <div className="max-w-7xl mx-auto px-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            <div 
-              className="flex items-center cursor-pointer" 
-              style={{ height: '40px', overflow: 'visible' }}
-              onClick={() => {
-                setShowAbout(false);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-            >
-              <img src="/logo.png" alt="dearmemories" className="object-contain block"
-                style={{ height: '120px', margin: '-40px 0', filter: 'brightness(1.5)' }} />
-            </div>
-            <p className="text-[#E6C7B8] text-sm">© 2026 Dear Memories. All rights reserved. Made with ❤️ in Vietnam</p>
-            <div className="flex items-center gap-6 text-[#E6C7B8] text-sm font-semibold">
-              <button onClick={() => handleNavClick('ptb-box')} className="nav-link hover:text-[#B9423A] transition-colors focus:outline-none">
-                Photobook Box
-              </button>
-              <button onClick={() => handleNavClick('categories')} className="nav-link hover:text-[#B9423A] transition-colors focus:outline-none">
-                Danh mục
-              </button>
-              <button onClick={() => handleNavClick('themes')} className="nav-link hover:text-[#B9423A] transition-colors focus:outline-none">
-                Chủ đề
-              </button>
-              <button onClick={() => {
-                setShowAbout(true);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }} className={`nav-link hover:text-[#B9423A] transition-colors focus:outline-none ${showAbout ? 'text-[#B9423A]' : ''}`}>
-                Giới thiệu
-              </button>
-            </div>
-          </div>
-        </div>
-      </footer>
 
     </div>
   );
