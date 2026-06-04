@@ -438,7 +438,7 @@ function App() {
             onLogout={handleLogout}
             onCreateNew={handleCreateNewBook}
             onEditBook={handleEditBook}
-            onBackToHome={handleBackToLibrary}
+            onBackToHome={() => setCurrentScreen('home')}
           />
         )}
 
