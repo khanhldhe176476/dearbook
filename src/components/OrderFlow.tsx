@@ -1,9 +1,11 @@
-import { useState } from 'react';
-import { ArrowLeft, Package, CreditCard, CheckCircle, MapPin, Phone, Mail, User, Loader2, BookOpen, Layers, Ruler, AlertTriangle } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { ArrowLeft, Package, CreditCard, CheckCircle, MapPin, Phone, Mail, User, Loader2, BookOpen, Layers, Ruler, AlertTriangle, Upload, FileText, X } from 'lucide-react';
 import { BookData, User as UserData } from '../App';
 import { orderApi } from '../lib/orderApi';
 import { PageSelectionStep } from './PageSelectionStep';
 import { toast } from 'sonner@2.0.3';
+
+const MAX_PDF_SIZE = 500 * 1024 * 1024; // 500MB
 
 const products = [
   {
@@ -72,6 +74,10 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
   const [loading, setLoading] = useState(false);
   const [orderId, setOrderId] = useState<string | null>(null);
 
+  // PDF file upload state
+  const [pdfFile, setPdfFile] = useState<File | null>(null);
+  const pdfInputRef = useRef<HTMLInputElement>(null);
+
   // Use the actual logged in user id or fallback
   const userId = user.id || '00000000-0000-0000-0000-000000000000';
 
@@ -116,12 +122,59 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
 
   const handleShippingSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Block progression if selected page count is below the product's minimum
+    if (isBelowMinimum) {
+      if (compatibleProducts.length > 0) {
+        toast.error(
+          `Không đủ ${currentProduct.pagesLimit} trang tối thiểu cho ${currentProduct.nameVi}. Vui lòng chọn: ${compatibleProducts.map(p => p.nameVi).join(' hoặc ')}.`,
+          { duration: 6000 }
+        );
+      } else {
+        toast.error(
+          `Cần tối thiểu ${currentProduct.pagesLimit} trang. Vui lòng quay lại bước chọn trang để thêm ít nhất ${currentProduct.pagesLimit - selectedPageCount} trang nữa.`,
+          { duration: 6000 }
+        );
+      }
+      return;
+    }
+
     setStep('payment');
+  };
+
+  // PDF upload handler with size validation
+  const handlePdfFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+      toast.error('Vui lòng chọn file PDF hợp lệ.');
+      // Reset input
+      if (pdfInputRef.current) pdfInputRef.current.value = '';
+      return;
+    }
+
+    // Validate file size (max 500MB)
+    if (file.size > MAX_PDF_SIZE) {
+      toast.error(`File quá lớn (${(file.size / 1024 / 1024).toFixed(1)}MB). Vui lòng chọn file PDF dưới 500MB.`);
+      if (pdfInputRef.current) pdfInputRef.current.value = '';
+      return;
+    }
+
+    setPdfFile(file);
+    toast.success(`Đã tải lên: ${file.name} (${(file.size / 1024 / 1024).toFixed(1)}MB)`);
+  };
+
+  const handleRemovePdf = () => {
+    setPdfFile(null);
+    if (pdfInputRef.current) pdfInputRef.current.value = '';
   };
 
   const handlePaymentSubmit = async () => {
     try {
       setLoading(true);
+      console.log('[OrderFlow] 1️⃣ Bắt đầu gửi đơn hàng...');
 
       // Collect the actual designed pages data
       const allPages = book.pages || [];
@@ -129,6 +182,24 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
         const id = p?.id || p?.templatePageId || `page-${i}`;
         return selectedPageIds.includes(id);
       });
+      console.log('[OrderFlow] 2️⃣ Design pages:', designPages.length, 'items');
+
+      // Read PDF file as base64 data URL if uploaded
+      let pdfFileData: string | null = null;
+      let pdfFileName: string | null = null;
+      if (pdfFile) {
+        pdfFileName = pdfFile.name;
+        console.log('[OrderFlow] 3️⃣ Đọc file PDF:', pdfFileName, `(${(pdfFile.size / 1024 / 1024).toFixed(1)}MB)`);
+        try {
+          pdfFileData = await readFileAsDataURL(pdfFile);
+          console.log('[OrderFlow] 3️⃣✅ Đọc xong PDF, base64 length:', (pdfFileData.length / 1024).toFixed(0), 'KB');
+        } catch (err) {
+          console.warn('[OrderFlow] 3️⃣❌ Không thể đọc file PDF:', err);
+          toast.warning('Không thể đọc file PDF. Đơn hàng sẽ được gửi không kèm file.');
+        }
+      } else {
+        console.log('[OrderFlow] 3️⃣ Không có file PDF đính kèm');
+      }
 
       const orderData = {
         userBookId: book.id,
@@ -146,19 +217,45 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
         customPages: selectedPageCount,
         paymentMethod: paymentMethod.toUpperCase(),
         designPages: designPages,
+        pdfFileName: pdfFileName,
+        pdfFileData: pdfFileData,
       };
+      console.log('[OrderFlow] 4️⃣ OrderData prepared, designPages:', designPages.length);
 
-      console.log('[OrderFlow] Submitting order:', orderData);
+      // Kiểm tra JSON.stringify không lỗi trước khi gửi
+      try {
+        const testJson = JSON.stringify(orderData);
+        console.log('[OrderFlow] 5️⃣ JSON.stringify OK, size:', (testJson.length / 1024).toFixed(0), 'KB');
+      } catch (jsonErr) {
+        console.error('[OrderFlow] 5️⃣❌ JSON.stringify FAILED:', jsonErr);
+        throw new Error('Dữ liệu đơn hàng quá lớn hoặc chứa nội dung không hợp lệ. Vui lòng thử lại.');
+      }
 
+      console.log('[OrderFlow] 6️⃣ Gọi API placeOrder...');
       const response = await orderApi.placeOrder(userId, orderData);
+      console.log('[OrderFlow] 7️⃣✅ API thành công:', response);
+
       setOrderId(response.id);
       setStep('confirmation');
       toast.success('🎉 Đặt hàng thành công!');
-    } catch (err) {
-      console.warn('⚠️ Kết nối backend thất bại. Chuyển sang chế độ demo:', err);
-      setOrderId(`BK${Date.now().toString().slice(-6)}`);
-      setStep('confirmation');
-      toast.success('🎉 Đặt hàng thành công! (Chế độ mô phỏng)');
+    } catch (err: any) {
+      console.error('[OrderFlow] ❌ Đặt hàng thất bại:', err);
+
+      // Trích xuất message lỗi cụ thể để hiển thị cho user
+      let errorDetail = '';
+      if (err?.message) {
+        // Lấy phần message sau "API error XXX: " nếu có
+        const match = err.message.match(/API error \d+:\s*(.+)/);
+        errorDetail = match ? match[1] : err.message;
+        // Cắt ngắn nếu quá dài
+        if (errorDetail.length > 200) errorDetail = errorDetail.substring(0, 200) + '...';
+      }
+
+      toast.error(
+        `Không thể gửi đơn hàng.${errorDetail ? `\nLỗi: ${errorDetail}` : ''}\nKiểm tra: Backend đã chạy chưa? (port 8080)`,
+        { duration: 10000 }
+      );
+      // Không chuyển sang confirmation — giữ user ở bước payment để thử lại
     } finally {
       setLoading(false);
     }
@@ -417,7 +514,73 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                   </div>
                 </div>
 
-                {/* 2. Thông tin giao hàng */}
+                {/* 2. Upload file PDF thiết kế */}
+                <div className="rounded-2xl p-6" style={{ background: 'white', border: '1.5px solid #DDD8D0' }}>
+                  <h2 className="text-lg font-bold mb-1 flex items-center gap-2" style={{ color: '#000000' }}>
+                    <FileText className="w-5 h-5" style={{ color: '#7A6F66' }} />
+                    File thiết kế PDF
+                  </h2>
+                  <p className="text-xs mb-4" style={{ color: '#7A6F66' }}>
+                    Tải lên file PDF bạn đã xuất từ bước chọn trang. File sẽ được gửi kèm đơn hàng để in ấn chính xác.
+                  </p>
+
+                  {/* Hidden file input */}
+                  <input
+                    ref={pdfInputRef}
+                    type="file"
+                    accept=".pdf,application/pdf"
+                    onChange={handlePdfFileChange}
+                    className="hidden"
+                  />
+
+                  {pdfFile ? (
+                    /* Uploaded file display */
+                    <div className="flex items-center justify-between p-4 rounded-xl border-2 border-green-200 bg-green-50/50">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0">
+                          <FileText className="w-5 h-5 text-red-500" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-sm font-bold text-[#000000] truncate">{pdfFile.name}</p>
+                          <p className="text-xs text-green-700 font-medium">
+                            ✓ Đã sẵn sàng · {(pdfFile.size / 1024 / 1024).toFixed(1)} MB
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleRemovePdf}
+                        className="p-2 rounded-lg hover:bg-red-100 transition-colors flex-shrink-0"
+                        title="Gỡ file"
+                      >
+                        <X className="w-4 h-4 text-red-500" />
+                      </button>
+                    </div>
+                  ) : (
+                    /* Upload prompt */
+                    <button
+                      type="button"
+                      onClick={() => pdfInputRef.current?.click()}
+                      className="w-full p-6 rounded-xl border-2 border-dashed border-[#C8C2BA] hover:border-[#7A6F66] bg-[#FAFAF8] hover:bg-[#F5F2EE] transition-all group"
+                    >
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="w-12 h-12 rounded-full bg-[#EDE9E3] flex items-center justify-center group-hover:bg-[#DDD8D0] transition-colors">
+                          <Upload className="w-6 h-6" style={{ color: '#7A6F66' }} />
+                        </div>
+                        <div>
+                          <p className="text-sm font-bold" style={{ color: '#000000' }}>
+                            Nhấn để tải lên file PDF
+                          </p>
+                          <p className="text-xs mt-0.5" style={{ color: '#9B9088' }}>
+                            Hỗ trợ file PDF · Tối đa 500MB
+                          </p>
+                        </div>
+                      </div>
+                    </button>
+                  )}
+                </div>
+
+                {/* 3. Thông tin giao hàng */}
                 <div className="rounded-2xl p-6" style={{ background: 'white', border: '1.5px solid #DDD8D0' }}>
                   <h2 className="text-lg font-bold mb-5 flex items-center gap-2" style={{ color: '#000000' }}>
                     <MapPin className="w-5 h-5" style={{ color: '#7A6F66' }} />
@@ -518,12 +681,15 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
 
                 <button
                   type="submit"
-                  className="w-full py-4 px-6 rounded-2xl font-bold transition-all hover:-translate-y-0.5"
+                  disabled={isBelowMinimum}
+                  className="w-full py-4 px-6 rounded-2xl font-bold transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                   style={{ background: '#000000', color: '#EDE9E3', boxShadow: '0 6px 20px rgba(58,46,40,0.22)' }}
-                  onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = '#000000')}
-                  onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#000000')}
+                  onMouseEnter={e => { if (!isBelowMinimum) (e.currentTarget as HTMLElement).style.background = '#1a1a1a'; }}
+                  onMouseLeave={e => { if (!isBelowMinimum) (e.currentTarget as HTMLElement).style.background = '#000000'; }}
                 >
-                  Tiếp tục thanh toán
+                  {isBelowMinimum
+                    ? `Cần tối thiểu ${currentProduct.pagesLimit} trang (hiện có: ${selectedPageCount})`
+                    : 'Tiếp tục thanh toán'}
                 </button>
               </form>
             )}
@@ -768,4 +934,14 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
       </div>
     </div>
   );
+}
+
+/** Đọc File thành data URL (base64) */
+function readFileAsDataURL(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => reject(new Error('Failed to read file'));
+    reader.readAsDataURL(file);
+  });
 }

@@ -23,6 +23,9 @@ public record AdminOrderResponse(
     UUID bookId,
     String bookTitle,
     Object pages,
+    // PDF file data
+    String pdfFileName,
+    String pdfFileData,
     // Order state
     BigDecimal totalAmount,
     String status,

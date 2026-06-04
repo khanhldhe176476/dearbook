@@ -50,16 +50,38 @@ public class Order {
     @Column(name = "selected_page_ids", columnDefinition = "jsonb")
     private String selectedPageIds;
 
+    @Column(name = "pdf_file_name")
+    private String pdfFileName;
+
+    @Column(name = "pdf_file_data", columnDefinition = "TEXT")
+    private String pdfFileData;
+
     @Column(name = "total_amount")
     private BigDecimal totalAmount;
 
     private String status = "PENDING";
 
-    @Column(name = "created_at", insertable = false, updatable = false)
+    @Column(name = "created_at", updatable = false)
     private OffsetDateTime createdAt;
 
-    @Column(name = "updated_at", insertable = false, updatable = false)
+    @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        OffsetDateTime now = OffsetDateTime.now();
+        if (createdAt == null) {
+            createdAt = now;
+        }
+        if (updatedAt == null) {
+            updatedAt = now;
+        }
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = OffsetDateTime.now();
+    }
 
     public UUID getId() { return id; }
     public void setId(UUID id) { this.id = id; }
@@ -96,6 +118,12 @@ public class Order {
 
     public String getSelectedPageIds() { return selectedPageIds; }
     public void setSelectedPageIds(String selectedPageIds) { this.selectedPageIds = selectedPageIds; }
+
+    public String getPdfFileName() { return pdfFileName; }
+    public void setPdfFileName(String pdfFileName) { this.pdfFileName = pdfFileName; }
+
+    public String getPdfFileData() { return pdfFileData; }
+    public void setPdfFileData(String pdfFileData) { this.pdfFileData = pdfFileData; }
 
     public BigDecimal getTotalAmount() { return totalAmount; }
     public void setTotalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount; }

@@ -16,6 +16,8 @@ export interface OrderRequest {
   customPages?: number;
   paymentMethod: string;
   designPages?: any[];
+  pdfFileName?: string | null;
+  pdfFileData?: string | null;
 }
 
 export interface OrderResponse {

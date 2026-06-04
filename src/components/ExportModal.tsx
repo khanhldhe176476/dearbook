@@ -12,6 +12,8 @@ interface ExportModalProps {
   pages: any[];
   book?: any;
   onClose: () => void;
+  /** Các trang được chọn sẵn khi mở modal (từ bên ngoài, ví dụ từ PageSelectionStep) */
+  initialSelectedPages?: Set<number>;
 }
 
 const QUALITY_OPTIONS: { value: ExportQuality; label: string; desc: string }[] = [
@@ -26,9 +28,11 @@ const PAGE_SIZES = [
   { value: 'letter' as const, label: 'Letter (215×279mm)' },
 ];
 
-export function ExportModal({ title, pages, book, onClose }: ExportModalProps) {
+export function ExportModal({ title, pages, book, onClose, initialSelectedPages }: ExportModalProps) {
   const [selectedPages, setSelectedPages] = useState<Set<number>>(
-    new Set(pages.map((_, i) => i))
+    initialSelectedPages
+      ? new Set(initialSelectedPages)
+      : new Set(pages.map((_, i) => i))
   );
   const [quality, setQuality] = useState<ExportQuality>('high');
   const [pageSize, setPageSize] = useState<'A4' | 'A5' | 'letter'>('A4');

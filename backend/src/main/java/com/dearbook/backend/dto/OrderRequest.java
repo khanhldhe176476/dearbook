@@ -1,8 +1,5 @@
 package com.dearbook.backend.dto;
 
-import java.util.List;
-import java.util.UUID;
-
 public record OrderRequest(
     String userBookId,
     String customerName,
@@ -18,5 +15,7 @@ public record OrderRequest(
     String productSize,
     Integer customPages,
     String paymentMethod,
-    Object designPages
+    Object designPages,
+    String pdfFileName,
+    String pdfFileData
 ) {}

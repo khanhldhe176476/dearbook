@@ -43,6 +43,8 @@ type AdminOrder = {
     pages?: PageData[];
     customPages?: PageData[];
     designPages?: PageData[];
+    pdfFileName?: string;
+    pdfFileData?: string;
 };
 
 const API_BASE = "/api/admin";
@@ -176,6 +178,7 @@ export default function AdminArea() {
     const [selectedOrder, setSelectedOrder] = useState<AdminOrder | null>(null);
     const [loadingOrders, setLoadingOrders] = useState(false);
     const [detailLoading, setDetailLoading] = useState(false);
+    const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
 
     const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState("ALL");
@@ -251,6 +254,7 @@ export default function AdminArea() {
             const data = await adminFetch("/orders");
             const list = Array.isArray(data) ? data : data.orders || data.content || [];
             setOrders(list);
+            setLastRefresh(new Date());
         } catch (err) {
             console.error(err);
         } finally {
@@ -300,6 +304,15 @@ export default function AdminArea() {
         if (isLoggedIn) {
             loadOrders();
         }
+    }, [isLoggedIn]);
+
+    // Auto-polling: refresh orders every 15 seconds to catch new submissions
+    useEffect(() => {
+        if (!isLoggedIn) return;
+        const interval = setInterval(() => {
+            loadOrders();
+        }, 15_000);
+        return () => clearInterval(interval);
     }, [isLoggedIn]);
 
     const stats = useMemo(() => {
@@ -421,12 +434,40 @@ export default function AdminArea() {
                         </p>
                     </div>
 
-                    <button
-                        onClick={handleLogout}
-                        className="rounded-xl border border-stone-300 px-4 py-2 font-semibold text-stone-700 hover:bg-stone-100"
-                    >
-                        Đăng xuất
-                    </button>
+                    <div className="flex items-center gap-4">
+                        {/* Refresh indicator */}
+                        <div className="hidden sm:flex items-center gap-2 text-xs text-stone-400">
+                            <span className="relative flex h-2 w-2">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                            </span>
+                            <span>
+                                {lastRefresh
+                                    ? `Cập nhật lúc ${lastRefresh.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`
+                                    : 'Đang tải...'}
+                            </span>
+                        </div>
+
+                        {/* Manual refresh button */}
+                        <button
+                            onClick={loadOrders}
+                            disabled={loadingOrders}
+                            className="flex items-center gap-2 rounded-xl border border-stone-300 px-3 py-1.5 text-sm font-semibold text-stone-700 hover:bg-stone-100 disabled:opacity-50 transition-all"
+                            title="Tải lại danh sách đơn hàng"
+                        >
+                            <svg className={`w-4 h-4 ${loadingOrders ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            <span className="hidden md:inline">Làm mới</span>
+                        </button>
+
+                        <button
+                            onClick={handleLogout}
+                            className="rounded-xl border border-stone-300 px-4 py-2 font-semibold text-stone-700 hover:bg-stone-100"
+                        >
+                            Đăng xuất
+                        </button>
+                    </div>
                 </div>
             </header>
 
@@ -636,6 +677,50 @@ export default function AdminArea() {
                                     <p className="whitespace-pre-wrap text-sm text-stone-700">
                                         {selectedOrder.note || "Không có ghi chú."}
                                     </p>
+                                </div>
+
+                                {/* File PDF thiết kế */}
+                                <div className="mt-6 rounded-2xl border p-5">
+                                    <h3 className="mb-3 font-bold flex items-center gap-2">
+                                        📄 File PDF thiết kế
+                                    </h3>
+                                    {selectedOrder.pdfFileName && selectedOrder.pdfFileData ? (
+                                        <div className="flex items-center justify-between p-4 rounded-xl bg-green-50 border border-green-200">
+                                            <div className="flex items-center gap-3 min-w-0">
+                                                <div className="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0">
+                                                    <span className="text-red-500 text-lg font-bold">PDF</span>
+                                                </div>
+                                                <div className="min-w-0">
+                                                    <p className="text-sm font-bold text-stone-900 truncate">
+                                                        {selectedOrder.pdfFileName}
+                                                    </p>
+                                                    <p className="text-xs text-green-700 font-medium">
+                                                        ✓ Đã tải lên · {((selectedOrder.pdfFileData?.length || 0) / 1024).toFixed(0)} KB
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <button
+                                                onClick={() => {
+                                                    const link = document.createElement('a');
+                                                    link.href = selectedOrder.pdfFileData!;
+                                                    link.download = selectedOrder.pdfFileName || 'design.pdf';
+                                                    document.body.appendChild(link);
+                                                    link.click();
+                                                    document.body.removeChild(link);
+                                                }}
+                                                className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-xl font-semibold text-sm hover:bg-stone-800 transition-colors flex-shrink-0"
+                                            >
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                </svg>
+                                                Tải xuống
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className="rounded-xl border border-dashed p-6 text-center text-stone-500">
+                                            <p className="text-sm">Khách hàng chưa tải lên file PDF thiết kế.</p>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="mt-6">
