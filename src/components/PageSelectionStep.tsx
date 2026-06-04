@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { ArrowLeft, Check, Lock, ImageOff, BookOpen, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, Check, Lock, ImageOff, BookOpen, AlertTriangle, FileText } from 'lucide-react';
 import { getPageThumbnail } from '../utils/pagePreview';
+import { ExportModal } from './ExportModal';
+import { toast } from 'sonner@2.0.3';
 
 interface PageSelectionStepProps {
   pages: any[];
@@ -14,6 +16,9 @@ export function PageSelectionStep({ pages, cover, onNext, onBack }: PageSelectio
   const [selectedIndices, setSelectedIndices] = useState<Set<number>>(
     new Set(pages.map((_, i) => i))
   );
+
+  // Export modal state
+  const [showExportModal, setShowExportModal] = useState(false);
 
   const totalPages = pages.length;
   const selectedCount = selectedIndices.size;
@@ -41,6 +46,11 @@ export function PageSelectionStep({ pages, cover, onNext, onBack }: PageSelectio
   };
 
   const handleContinue = () => {
+    if (isOdd) {
+      toast.error('Vui lòng chọn số trang chẵn để tiếp tục.');
+      return;
+    }
+
     const selectedPageIds = Array.from(selectedIndices)
       .sort((a, b) => a - b)
       .map(idx => {
@@ -196,29 +206,89 @@ export function PageSelectionStep({ pages, cover, onNext, onBack }: PageSelectio
       </div>
 
       {/* Action buttons */}
-      <div className="flex gap-3">
-        <button
-          type="button"
-          onClick={onBack}
-          className="flex-1 py-4 px-6 rounded-2xl font-semibold transition-all"
-          style={{ background: '#EDE9E3', color: '#5A5049' }}
-          onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = '#DDD8D0')}
-          onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#EDE9E3')}
-        >
-          Quay lại
-        </button>
-        <button
-          type="button"
-          onClick={handleContinue}
-          disabled={selectedCount === 0 || isOdd}
-          className="flex-1 py-4 px-6 rounded-2xl font-bold transition-all hover:-translate-y-0.5 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none"
-          style={{ background: '#000000', color: '#EDE9E3', boxShadow: '0 6px 20px rgba(58,46,40,0.22)' }}
-          onMouseEnter={e => { const t = e.currentTarget as HTMLElement; if (selectedCount > 0 && !isOdd) t.style.background = '#1a1a1a'; }}
-          onMouseLeave={e => { const t = e.currentTarget as HTMLElement; if (selectedCount > 0 && !isOdd) t.style.background = '#000000'; }}
-        >
-          {isOdd ? `Cần số trang chẵn (hiện tại: ${selectedCount})` : `Tiếp tục (${selectedCount} trang)`}
-        </button>
+      <div className="space-y-3">
+        {/* PDF Export Section — tùy chọn, kế thừa từ ExportModal của trang chỉnh sửa tự do */}
+        <div className="rounded-2xl p-6" style={{ background: 'white', border: '1.5px solid #DDD8D0' }}>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div
+                className="w-10 h-10 rounded-full flex items-center justify-center"
+                style={{ background: '#F5F2EE', color: '#5A5049' }}
+              >
+                <FileText className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-sm font-bold" style={{ color: '#000000' }}>
+                  Xuất file PDF
+                </p>
+                <p className="text-xs" style={{ color: '#7A6F66' }}>
+                  Tùy chọn: xuất sách ra PDF với chất lượng tùy chỉnh (in ấn lên đến 300 DPI).
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowExportModal(true)}
+              disabled={selectedCount === 0}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ background: '#000000', color: '#EDE9E3' }}
+              onMouseEnter={e => {
+                if (selectedCount > 0) (e.currentTarget as HTMLElement).style.background = '#1a1a1a';
+              }}
+              onMouseLeave={e => {
+                if (selectedCount > 0) (e.currentTarget as HTMLElement).style.background = '#000000';
+              }}
+            >
+              <FileText className="w-4 h-4" />
+              <span>Xuất PDF</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Continue buttons */}
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={onBack}
+            className="flex-1 py-4 px-6 rounded-2xl font-semibold transition-all"
+            style={{ background: '#EDE9E3', color: '#5A5049' }}
+            onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = '#DDD8D0')}
+            onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#EDE9E3')}
+          >
+            Quay lại
+          </button>
+          <button
+            type="button"
+            onClick={handleContinue}
+            disabled={selectedCount === 0 || isOdd}
+            className="flex-1 py-4 px-6 rounded-2xl font-bold transition-all hover:-translate-y-0.5 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none"
+            style={{ background: '#000000', color: '#EDE9E3', boxShadow: '0 6px 20px rgba(58,46,40,0.22)' }}
+            onMouseEnter={e => {
+              const t = e.currentTarget as HTMLElement;
+              if (selectedCount > 0 && !isOdd) t.style.background = '#1a1a1a';
+            }}
+            onMouseLeave={e => {
+              const t = e.currentTarget as HTMLElement;
+              if (selectedCount > 0 && !isOdd) t.style.background = '#000000';
+            }}
+          >
+            {isOdd
+              ? `Cần số trang chẵn (hiện tại: ${selectedCount})`
+              : `Tiếp tục (${selectedCount} trang)`}
+          </button>
+        </div>
       </div>
+
+      {/* Export Modal — kế thừa từ trang chỉnh sửa tự do, giữ nguyên các trang đã chọn */}
+      {showExportModal && (
+        <ExportModal
+          title={cover?.text || 'Photobook'}
+          pages={pages}
+          book={null}
+          initialSelectedPages={selectedIndices}
+          onClose={() => setShowExportModal(false)}
+        />
+      )}
     </div>
   );
 }

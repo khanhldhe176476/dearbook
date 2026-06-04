@@ -25,6 +25,7 @@ public class OrderService {
     private final PaymentRepository paymentRepo;
     private final ProfileRepository profileRepo;
     private final UserBookPageRepository userBookPageRepo;
+    private final PricingService pricingService;
     private final ObjectMapper objectMapper;
 
     public OrderService(
@@ -34,6 +35,7 @@ public class OrderService {
             PaymentRepository paymentRepo,
             ProfileRepository profileRepo,
             UserBookPageRepository userBookPageRepo,
+            PricingService pricingService,
             ObjectMapper objectMapper
     ) {
         this.orderRepo = orderRepo;
@@ -42,6 +44,7 @@ public class OrderService {
         this.paymentRepo = paymentRepo;
         this.profileRepo = profileRepo;
         this.userBookPageRepo = userBookPageRepo;
+        this.pricingService = pricingService;
         this.objectMapper = objectMapper;
     }
 
@@ -59,11 +62,19 @@ public class OrderService {
         var book = parsedBookId != null ? bookRepo.findById(parsedBookId).orElse(null) : null;
 
         int quantity = req.quantity() != null ? req.quantity() : 1;
-        BigDecimal basePrice = book != null && book.getTemplate() != null && book.getTemplate().getPrice() != null
-                ? book.getTemplate().getPrice()
-                : BigDecimal.valueOf(150000);
+        int customPages = req.customPages() != null ? req.customPages() : 0;
 
-        BigDecimal totalAmount = basePrice.multiply(BigDecimal.valueOf(quantity));
+        // Use PricingService to calculate the total consistently with the frontend
+        // Formula: basePrice(productType, size) + extraPages * extraPageCost + shippingFee
+        // With 50% discount if payment method is DEPOSIT
+        BigDecimal totalAmount = pricingService.calculateTotal(
+                req.productType(),
+                req.productSize(),
+                customPages,
+                req.paymentMethod()
+        );
+        // Multiply by quantity for multiple copies
+        totalAmount = totalAmount.multiply(BigDecimal.valueOf(quantity));
 
         Order order = new Order();
         order.setUser(user);
@@ -76,6 +87,8 @@ public class OrderService {
         order.setProductType(req.productType() != null ? req.productType() : "hardcover");
         order.setProductSize(req.productSize() != null ? req.productSize() : "20x20");
         order.setCustomPages(req.customPages());
+        order.setPdfFileName(req.pdfFileName());
+        order.setPdfFileData(req.pdfFileData());
         order.setTotalAmount(totalAmount);
         order.setStatus("PENDING");
 
@@ -195,6 +208,8 @@ public class OrderService {
                 book != null ? book.getId() : null,
                 book != null ? book.getTitle() : "",
                 pages,
+                o.getPdfFileName(),
+                o.getPdfFileData(),
                 o.getTotalAmount(),
                 o.getStatus(),
                 o.getCreatedAt(),

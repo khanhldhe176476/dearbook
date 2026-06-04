@@ -15,3 +15,7 @@ ALTER TABLE orders
 
 ALTER TABLE order_shipping
   ADD COLUMN IF NOT EXISTS email TEXT;
+
+ALTER TABLE orders
+  ADD COLUMN IF NOT EXISTS pdf_file_name TEXT,
+  ADD COLUMN IF NOT EXISTS pdf_file_data TEXT;

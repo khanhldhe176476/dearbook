@@ -12,7 +12,15 @@ public class OrderShipping {
     private String address;
     private String city;
     @Column(name = "tracking_number") private String trackingNumber;
-    @Column(name = "created_at", insertable = false, updatable = false) private OffsetDateTime createdAt;
+    @Column(name = "created_at", updatable = false) private OffsetDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        if (createdAt == null) {
+            createdAt = OffsetDateTime.now();
+        }
+    }
+
     // Getters and Setters
     public UUID getId() { return id; } public void setId(UUID id) { this.id = id; }
     public Order getOrder() { return order; } public void setOrder(Order order) { this.order = order; }

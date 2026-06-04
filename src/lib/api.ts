@@ -4,13 +4,31 @@ const API_BASE_URL =
     : "";
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    headers: {
+  const url = `${API_BASE_URL}${path}`;
+
+  let response: Response;
+  try {
+    // Merge headers: default Content-Type + caller's headers (caller overrides defaults)
+    const { headers: callerHeaders, ...restOptions } = options || {};
+    const mergedHeaders = {
       "Content-Type": "application/json",
-      ...(options?.headers || {}),
-    },
-    ...options,
-  });
+      ...(callerHeaders || {}),
+    };
+    response = await fetch(url, {
+      ...restOptions,
+      headers: mergedHeaders,
+    });
+  } catch (networkErr: any) {
+    // "Failed to fetch" = backend unreachable
+    if (networkErr?.message === 'Failed to fetch' || networkErr?.name === 'TypeError') {
+      throw new Error(
+        `Không thể kết nối tới backend (${url}).\n` +
+        'Hãy đảm bảo backend Spring Boot đang chạy ở port 8080.\n' +
+        'Chạy lệnh: cd backend && .\\mvnw.cmd spring-boot:run'
+      );
+    }
+    throw networkErr;
+  }
 
   if (!response.ok) {
     const text = await response.text();
@@ -34,10 +52,6 @@ export function apiPost<T>(path: string, body: unknown, options?: RequestInit) {
     ...options,
     method: "POST",
     body: JSON.stringify(body),
-    headers: {
-      "Content-Type": "application/json",
-      ...(options?.headers || {}),
-    },
   });
 }
 
@@ -46,10 +60,6 @@ export function apiPut<T>(path: string, body: unknown, options?: RequestInit) {
     ...options,
     method: "PUT",
     body: JSON.stringify(body),
-    headers: {
-      "Content-Type": "application/json",
-      ...(options?.headers || {}),
-    },
   });
 }
 
