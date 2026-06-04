@@ -184,22 +184,10 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
       });
       console.log('[OrderFlow] 2️⃣ Design pages:', designPages.length, 'items');
 
-      // Read PDF file as base64 data URL if uploaded
-      let pdfFileData: string | null = null;
-      let pdfFileName: string | null = null;
-      if (pdfFile) {
-        pdfFileName = pdfFile.name;
-        console.log('[OrderFlow] 3️⃣ Đọc file PDF:', pdfFileName, `(${(pdfFile.size / 1024 / 1024).toFixed(1)}MB)`);
-        try {
-          pdfFileData = await readFileAsDataURL(pdfFile);
-          console.log('[OrderFlow] 3️⃣✅ Đọc xong PDF, base64 length:', (pdfFileData.length / 1024).toFixed(0), 'KB');
-        } catch (err) {
-          console.warn('[OrderFlow] 3️⃣❌ Không thể đọc file PDF:', err);
-          toast.warning('Không thể đọc file PDF. Đơn hàng sẽ được gửi không kèm file.');
-        }
-      } else {
-        console.log('[OrderFlow] 3️⃣ Không có file PDF đính kèm');
-      }
+      // CHỈ gửi tên file PDF, KHÔNG gửi nội dung để tránh Connection Reset (100MB+ payload)
+      const pdfFileName = pdfFile ? pdfFile.name : null;
+      const pdfFileSize = pdfFile ? `${(pdfFile.size / 1024 / 1024).toFixed(1)}MB` : null;
+      console.log('[OrderFlow] 3️⃣ PDF file:', pdfFileName, pdfFileSize || '(không có)');
 
       const orderData = {
         userBookId: book.id,
@@ -209,7 +197,10 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
         email: shippingInfo.email,
         address: shippingInfo.address,
         city: shippingInfo.city,
-        note: shippingInfo.notes,
+        note: [
+          shippingInfo.notes,
+          pdfFileName ? `[PDF đính kèm: ${pdfFileName} - ${pdfFileSize}]` : null,
+        ].filter(Boolean).join(' | '),
         collectionName: book.title || book.templateName || 'Photobook',
         productType: selectedProduct,
         productSize: selectedSize,
@@ -218,7 +209,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
         paymentMethod: paymentMethod.toUpperCase(),
         designPages: designPages,
         pdfFileName: pdfFileName,
-        pdfFileData: pdfFileData,
+        pdfFileData: null, // Không gửi binary data để tránh payload quá lớn
       };
       console.log('[OrderFlow] 4️⃣ OrderData prepared, designPages:', designPages.length);
 
@@ -234,6 +225,12 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
       console.log('[OrderFlow] 6️⃣ Gọi API placeOrder...');
       const response = await orderApi.placeOrder(userId, orderData);
       console.log('[OrderFlow] 7️⃣✅ API thành công:', response);
+
+      if (pdfFile) {
+        toast.info('⏳ Đang tải file PDF thiết kế lên hệ thống...');
+        await orderApi.uploadPdf(response.id, userId, pdfFile);
+        console.log('[OrderFlow] 8️⃣✅ Tải file PDF thành công');
+      }
 
       setOrderId(response.id);
       setStep('confirmation');
@@ -260,6 +257,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
       setLoading(false);
     }
   };
+
 
   const handleComplete = () => {
     onComplete();
