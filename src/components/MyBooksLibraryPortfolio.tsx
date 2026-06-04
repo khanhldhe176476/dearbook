@@ -528,12 +528,12 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
               className="flex items-center group"
               title="Về trang chủ"
             >
-              <div className="flex flex-col justify-center leading-none" style={{ height: '40px', overflow: 'visible' }}>
+              <div className="flex flex-col justify-center leading-none" style={{ height: '58px', overflow: 'visible' }}>
                 <img 
                   src="/logo.png" 
                   alt="dearmemories" 
                   className="object-contain block transition-transform duration-300 group-hover:scale-105" 
-                  style={{ height: '64px', margin: '-12px 0' }}
+                  style={{ height: '140px', margin: '-41px 0' }}
                 />
               </div>
             </button>

@@ -1,4 +1,4 @@
-import { Instagram, Facebook, Mail, Phone, Clock, Send, Heart } from 'lucide-react';
+import { Facebook, Mail, Phone, Clock, Send, Heart } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner@2.0.3';
 
@@ -66,13 +66,27 @@ export function Footer() {
             {/* Social Icons */}
             <div className="flex items-center gap-4 pt-2">
               <a 
-                href="#instagram" 
+                href="https://www.tiktok.com/@dearmemories2026?is_from_webapp=1&sender_device=pc" 
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full border border-[#e6e1da] bg-white flex items-center justify-center text-[#7A6F66] hover:text-[#B9423A] hover:border-[#B9423A] hover:-translate-y-1 transition-all duration-300 shadow-sm"
               >
-                <Instagram className="w-4.5 h-4.5" />
+                <svg 
+                  className="w-4.5 h-4.5" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="2" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round"
+                >
+                  <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
+                </svg>
               </a>
               <a 
-                href="#facebook" 
+                href="https://www.facebook.com/share/1FRfXppSbc/?mibextid=wwXIfr" 
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full border border-[#e6e1da] bg-white flex items-center justify-center text-[#7A6F66] hover:text-[#B9423A] hover:border-[#B9423A] hover:-translate-y-1 transition-all duration-300 shadow-sm"
               >
                 <Facebook className="w-4.5 h-4.5" />
@@ -155,17 +169,21 @@ export function Footer() {
               Kết Nối & Bản Tin
             </h4>
             
-            <div className="space-y-3 text-xs text-[#7A6F66] font-serif">
+            <div className="space-y-3.5 text-sm text-[#7A6F66] font-serif">
               <p className="flex items-center gap-2.5">
-                <Mail className="w-4 h-4 text-[#B9423A]" />
-                <span>hello@dearmemories.vn</span>
+                <Mail className="w-4 h-4 text-[#B9423A] flex-shrink-0" />
+                <a href="mailto:dearmemories2026@gmail.com" className="hover:text-[#B9423A] transition-colors whitespace-nowrap">
+                  dearmemories2026@gmail.com
+                </a>
               </p>
               <p className="flex items-center gap-2.5">
-                <Phone className="w-4 h-4 text-[#B9423A]" />
-                <span className="font-semibold text-[#3B2925]">Hotline: 1900 8888</span>
+                <Phone className="w-4 h-4 text-[#B9423A] flex-shrink-0" />
+                <a href="tel:0961304858" className="font-semibold text-[#3B2925] hover:text-[#B9423A] transition-colors whitespace-nowrap">
+                  Hotline: 0961 304 858
+                </a>
               </p>
-              <p className="flex items-center gap-2.5">
-                <Clock className="w-4 h-4 text-[#B9423A]" />
+              <p className="flex items-start gap-2.5">
+                <Clock className="w-4 h-4 text-[#B9423A] flex-shrink-0 mt-1" />
                 <span>Giờ làm việc: 8:00 - 21:00 hàng ngày</span>
               </p>
             </div>
