@@ -11,8 +11,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
 
@@ -209,7 +218,7 @@ public class OrderService {
                 book != null ? book.getTitle() : "",
                 pages,
                 o.getPdfFileName(),
-                o.getPdfFileData(),
+                o.getPdfFileData() != null && !o.getPdfFileData().isBlank() ? "/api/orders/" + o.getId() + "/pdf/download" : null,
                 o.getTotalAmount(),
                 o.getStatus(),
                 o.getCreatedAt(),
@@ -227,5 +236,60 @@ public class OrderService {
         } catch (Exception e) {
             return json;
         }
+    }
+
+    @Transactional
+    public void savePdfFile(UUID orderId, MultipartFile file) {
+        Order order = orderRepo.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+        
+        try {
+            Path uploadPath = Paths.get("uploads", "pdf");
+            Files.createDirectories(uploadPath);
+            
+            String originalFilename = file.getOriginalFilename();
+            String fileExtension = "";
+            if (originalFilename != null && originalFilename.contains(".")) {
+                fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            }
+            String savedFileName = orderId.toString() + "_" + System.currentTimeMillis() + fileExtension;
+            Path filePath = uploadPath.resolve(savedFileName);
+            
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            
+            order.setPdfFileName(originalFilename);
+            order.setPdfFileData(filePath.toString());
+            orderRepo.save(order);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to store PDF file", e);
+        }
+    }
+
+    public Resource loadPdfFileAsResource(UUID orderId) {
+        Order order = orderRepo.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+        
+        String filePathString = order.getPdfFileData();
+        if (filePathString == null || filePathString.isBlank()) {
+            throw new IllegalArgumentException("No PDF file uploaded for this order");
+        }
+        
+        try {
+            Path filePath = Paths.get(filePathString);
+            Resource resource = new UrlResource(filePath.toUri());
+            if (resource.exists() || resource.isReadable()) {
+                return resource;
+            } else {
+                throw new IllegalArgumentException("File not found or not readable");
+            }
+        } catch (MalformedURLException e) {
+            throw new IllegalArgumentException("Invalid file path", e);
+        }
+    }
+
+    public String getPdfFileName(UUID orderId) {
+        Order order = orderRepo.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+        return order.getPdfFileName();
     }
 }
