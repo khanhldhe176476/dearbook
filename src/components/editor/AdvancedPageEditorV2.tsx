@@ -1,9 +1,117 @@
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { PageElement, TextElement, ImageElement, ShapeElement, StickerElement, IconElement, FrameElement } from '../../types/editor';
 import { AssetLibrary } from './AssetLibrary';
 import { LayerPanel } from './LayerPanel';
 import { EditorToolbar } from './EditorToolbar';
 import { ImageUploader } from './ImageUploader';
+
+const FONT_FAMILIES = [
+  { value: 'Poppins', label: 'Poppins' },
+  { value: 'Inter', label: 'Inter' },
+  { value: 'Dancing Script', label: 'Dancing Script' },
+  { value: 'Playfair Display', label: 'Playfair Display' },
+  { value: 'Merriweather', label: 'Merriweather' },
+  { value: 'Roboto', label: 'Roboto' },
+  { value: 'Open Sans', label: 'Open Sans' },
+  { value: 'Lora', label: 'Lora' },
+  { value: 'Montserrat', label: 'Montserrat' },
+  { value: 'Raleway', label: 'Raleway' },
+  { value: 'Pacifico', label: 'Pacifico' },
+  { value: 'Caveat', label: 'Caveat' },
+  { value: 'Great Vibes', label: 'Great Vibes' },
+  { value: 'Comfortaa', label: 'Comfortaa' },
+  { value: 'Lobster', label: 'Lobster' },
+  { value: 'Nunito', label: 'Nunito' },
+  { value: 'Arial', label: 'Arial' },
+  { value: 'Georgia', label: 'Georgia' },
+  { value: 'Times New Roman', label: 'Times New Roman' },
+  { value: 'Courier New', label: 'Courier New' },
+];
+
+// ── InlineTextEditor: component tách biệt ngăn React re-render khi đang gõ ──
+const InlineTextEditor = React.memo(
+  ({
+    textEl,
+    zoom,
+    onCommit,
+    onExit,
+  }: {
+    textEl: TextElement;
+    zoom: number;
+    onCommit: (id: string, content: string) => void;
+    onExit: () => void;
+  }) => {
+    const editorRef = useRef<HTMLDivElement>(null);
+    const initialContentRef = useRef(textEl.content);
+
+    useEffect(() => {
+      const el = editorRef.current;
+      if (el) {
+        el.innerText = textEl.content || '';
+        el.focus();
+        const range = document.createRange();
+        const sel = window.getSelection();
+        range.selectNodeContents(el);
+        range.collapse(false);
+        sel?.removeAllRanges();
+        sel?.addRange(range);
+      }
+    }, []); // Only mount — never re-run
+
+    const handleBlur = () => {
+      const newContent = editorRef.current?.innerText || '';
+      if (newContent !== initialContentRef.current) {
+        onCommit(textEl.id, newContent);
+      }
+      onExit();
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        if (editorRef.current) {
+          editorRef.current.innerText = initialContentRef.current;
+        }
+        onExit();
+      }
+    };
+
+    return (
+      <div
+        ref={editorRef}
+        contentEditable
+        suppressContentEditableWarning
+        onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
+        style={{
+          width: '100%',
+          height: '100%',
+          fontFamily: textEl.fontFamily,
+          fontSize: (textEl.fontSize || 24) * zoom,
+          fontWeight: textEl.fontWeight,
+          fontStyle: textEl.fontStyle,
+          color: textEl.color,
+          textAlign: textEl.textAlign,
+          lineHeight: textEl.lineHeight,
+          letterSpacing: (textEl.letterSpacing || 0) * zoom,
+          textDecoration: textEl.textDecoration,
+          textShadow: textEl.textShadow || 'none',
+          whiteSpace: 'pre-wrap',
+          wordBreak: 'break-word',
+          padding: '8px',
+          outline: '2px solid #8C6E5D',
+          background: 'rgba(140,110,93,0.05)',
+          minHeight: '30px',
+          outlineOffset: '-2px',
+        }}
+      />
+    );
+  },
+  // NEVER re-render — contentEditable DOM manages itself
+  () => true
+);
+InlineTextEditor.displayName = 'InlineTextEditor';
+
 import { SaveIndicator } from '../SaveIndicator';
 import { ExportModal } from '../ExportModal';
 import { dbGetImageSync } from '../../utils/dbStorage';
@@ -864,22 +972,6 @@ export function AdvancedPageEditorV2({
           setSelectedIds([element.id]);
         };
 
-        const handleTextBlur = (e: React.FocusEvent<HTMLDivElement>) => {
-          const newContent = e.currentTarget.innerText || '';
-          if (newContent !== textEl.content) {
-            handleUpdateElement(element.id, { content: newContent });
-          }
-          setEditingTextId(null);
-        };
-
-        const handleTextKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-          if (e.key === 'Escape') {
-            e.preventDefault();
-            setEditingTextId(null);
-            (e.target as HTMLDivElement).innerText = textEl.content;
-          }
-        };
-
         content = (
           <div
             style={commonStyle}
@@ -890,47 +982,37 @@ export function AdvancedPageEditorV2({
             }}
             onDoubleClick={handleTextDoubleClick}
           >
-            <div
-              contentEditable={isEditing}
-              suppressContentEditableWarning
-              style={{
-                width: '100%',
-                height: '100%',
-                fontFamily: textEl.fontFamily,
-                fontSize: (textEl.fontSize || 24) * zoom,
-                fontWeight: textEl.fontWeight,
-                fontStyle: textEl.fontStyle,
-                color: textEl.color,
-                textAlign: textEl.textAlign,
-                lineHeight: textEl.lineHeight,
-                letterSpacing: (textEl.letterSpacing || 0) * zoom,
-                textDecoration: textEl.textDecoration,
-                textShadow: textEl.textShadow || 'none',
-                whiteSpace: 'pre-wrap',
-                wordBreak: 'break-word',
-                userSelect: isEditing ? 'text' : 'none',
-                padding: '8px',
-                outline: isEditing ? '2px solid #8C6E5D' : 'none',
-                background: isEditing ? 'rgba(140,110,93,0.05)' : 'transparent',
-                minHeight: isEditing ? '30px' : 'auto',
-                outlineOffset: '-2px',
-              }}
-              onBlur={handleTextBlur}
-              onKeyDown={handleTextKeyDown}
-              ref={(el) => {
-                if (isEditing && el) {
-                  el.focus();
-                  // Select all text when entering edit mode
-                  const range = document.createRange();
-                  const sel = window.getSelection();
-                  range.selectNodeContents(el);
-                  sel?.removeAllRanges();
-                  sel?.addRange(range);
-                }
-              }}
-            >
-              {textEl.content}
-            </div>
+            {isEditing ? (
+              <InlineTextEditor
+                textEl={textEl}
+                zoom={zoom}
+                onCommit={(id, content) => handleUpdateElement(id, { content })}
+                onExit={() => setEditingTextId(null)}
+              />
+            ) : (
+              <div
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  fontFamily: textEl.fontFamily,
+                  fontSize: (textEl.fontSize || 24) * zoom,
+                  fontWeight: textEl.fontWeight,
+                  fontStyle: textEl.fontStyle,
+                  color: textEl.color,
+                  textAlign: textEl.textAlign,
+                  lineHeight: textEl.lineHeight,
+                  letterSpacing: (textEl.letterSpacing || 0) * zoom,
+                  textDecoration: textEl.textDecoration,
+                  textShadow: textEl.textShadow || 'none',
+                  whiteSpace: 'pre-wrap',
+                  wordBreak: 'break-word',
+                  userSelect: 'none',
+                  padding: '8px',
+                }}
+              >
+                {textEl.content}
+              </div>
+            )}
             {resizeHandle}
           </div>
         );
@@ -1486,13 +1568,11 @@ function ElementPropertiesBar({
               value={(element as TextElement).fontFamily || 'Poppins'}
               onChange={e => onUpdate({ fontFamily: e.target.value })}
               className="px-1.5 py-0.5 border border-gray-200 rounded text-[11px] bg-white"
+              style={{ fontFamily: (element as TextElement).fontFamily || 'Poppins' }}
             >
-              <option value="Poppins">Poppins</option>
-              <option value="Dancing Script">Dancing Script</option>
-              <option value="Playfair Display">Playfair Display</option>
-              <option value="Inter">Inter</option>
-              <option value="Arial">Arial</option>
-              <option value="Times New Roman">Times New Roman</option>
+              {FONT_FAMILIES.map(f => (
+                <option key={f.value} value={f.value} style={{ fontFamily: f.value }}>{f.label}</option>
+              ))}
             </select>
             <input
               type="number"
@@ -1538,6 +1618,17 @@ function ElementPropertiesBar({
               className="w-6 h-6 rounded border border-gray-200 cursor-pointer p-0"
               title="Màu chữ"
             />
+            {['#000000','#FF0000','#FF6B6B','#FF9800','#4CAF50','#2196F3','#9C27B0','#FFFFFF'].map(c => (
+              <button
+                key={c}
+                onClick={() => onUpdate({ color: c })}
+                className={`w-4 h-4 rounded-full border transition-transform hover:scale-125 ${
+                  (element as TextElement).color === c ? 'ring-1 ring-offset-1 ring-gray-400' : 'border-gray-300'
+                }`}
+                style={{ backgroundColor: c }}
+                title={c}
+              />
+            ))}
           </div>
         </>
       )}

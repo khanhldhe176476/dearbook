@@ -31,13 +31,17 @@ type AdminOrder = {
     phone?: string;
     email?: string;
     address?: string;
+    city?: string;
+    district?: string;
     collectionName?: string;
     productType?: string;
     productSize?: string;
     quantity?: number;
     note?: string;
-    status: OrderStatus | string;
+    paymentMethod?: string;
+    totalAmount?: number;
     totalPrice?: number;
+    status: OrderStatus | string;
     createdAt?: string;
     updatedAt?: string;
     pages?: PageData[];
@@ -351,12 +355,6 @@ export default function AdminArea() {
         });
     }, [orders, search, statusFilter]);
 
-    const selectedPages =
-        selectedOrder?.pages ||
-        selectedOrder?.customPages ||
-        selectedOrder?.designPages ||
-        [];
-
     if (!isLoggedIn) {
         return (
             <div className="min-h-screen bg-[#faf7f2] px-4 py-16">
@@ -566,7 +564,7 @@ export default function AdminArea() {
                                                 </div>
                                             </td>
                                             <td className="py-4 pr-4">{order.quantity || 1}</td>
-                                            <td className="py-4 pr-4">{formatMoney(order.totalPrice)}</td>
+                                            <td className="py-4 pr-4 font-semibold">{formatMoney(order.totalAmount ?? order.totalPrice)}</td>
                                             <td className="py-4 pr-4">
                                                 <StatusBadge status={order.status} />
                                             </td>
@@ -626,7 +624,7 @@ export default function AdminArea() {
                                                 <b>Email:</b> {selectedOrder.email || "—"}
                                             </p>
                                             <p>
-                                                <b>Địa chỉ:</b> {selectedOrder.address || "—"}
+                                                <b>Địa chỉ:</b> {[selectedOrder.address, selectedOrder.district, selectedOrder.city].filter(Boolean).join(", ") || "—"}
                                             </p>
                                         </div>
                                     </div>
@@ -647,7 +645,15 @@ export default function AdminArea() {
                                                 <b>Số lượng:</b> {selectedOrder.quantity || 1}
                                             </p>
                                             <p>
-                                                <b>Tổng tiền:</b> {formatMoney(selectedOrder.totalPrice)}
+                                                <b>Phương thức TT:</b>{" "}
+                                                {selectedOrder.paymentMethod === "DEPOSIT"
+                                                    ? "Đặt cọc 50%"
+                                                    : selectedOrder.paymentMethod === "FULL"
+                                                        ? "Thanh toán 100%"
+                                                        : selectedOrder.paymentMethod || "—"}
+                                            </p>
+                                            <p>
+                                                <b>Tổng tiền:</b> <span className="font-bold text-emerald-600">{formatMoney(selectedOrder.totalAmount ?? selectedOrder.totalPrice)}</span>
                                             </p>
                                         </div>
                                     </div>
@@ -672,12 +678,16 @@ export default function AdminArea() {
                                     </div>
                                 </div>
 
-                                <div className="mt-6 rounded-2xl border p-5">
-                                    <h3 className="mb-3 font-bold">Ghi chú của khách hàng</h3>
-                                    <p className="whitespace-pre-wrap text-sm text-stone-700">
-                                        {selectedOrder.note || "Không có ghi chú."}
-                                    </p>
-                                </div>
+                                {selectedOrder.note && (
+                                    <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5">
+                                        <h3 className="mb-3 font-bold flex items-center gap-2 text-amber-800">
+                                            📝 Ghi chú của khách hàng
+                                        </h3>
+                                        <p className="whitespace-pre-wrap text-sm text-amber-900">
+                                            {selectedOrder.note}
+                                        </p>
+                                    </div>
+                                )}
 
                                 {/* File PDF thiết kế */}
                                 <div className="mt-6 rounded-2xl border p-5">
@@ -723,21 +733,6 @@ export default function AdminArea() {
                                     )}
                                 </div>
 
-                                <div className="mt-6">
-                                    <h3 className="mb-4 font-bold">Preview thiết kế photobook</h3>
-
-                                    {selectedPages.length === 0 ? (
-                                        <div className="rounded-2xl border border-dashed p-10 text-center text-stone-500">
-                                            Chưa có dữ liệu thiết kế để preview.
-                                        </div>
-                                    ) : (
-                                        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-                                            {selectedPages.map((page, index) => (
-                                                <PagePreview key={index} page={page} index={index} />
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
                             </>
                         )}
                     </section>

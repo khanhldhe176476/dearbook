@@ -7,6 +7,21 @@ import { toast } from 'sonner@2.0.3';
 
 const MAX_PDF_SIZE = 500 * 1024 * 1024; // 500MB
 
+// 63 tỉnh thành Việt Nam
+const VIETNAM_PROVINCES = [
+  'An Giang', 'Bà Rịa - Vũng Tàu', 'Bạc Liêu', 'Bắc Giang', 'Bắc Kạn', 'Bắc Ninh',
+  'Bến Tre', 'Bình Dương', 'Bình Định', 'Bình Phước', 'Bình Thuận', 'Cà Mau',
+  'Cao Bằng', 'Cần Thơ', 'Đà Nẵng', 'Đắk Lắk', 'Đắk Nông', 'Điện Biên',
+  'Đồng Nai', 'Đồng Tháp', 'Gia Lai', 'Hà Giang', 'Hà Nam', 'Hà Nội',
+  'Hà Tĩnh', 'Hải Dương', 'Hải Phòng', 'Hậu Giang', 'Hòa Bình', 'TP. Hồ Chí Minh',
+  'Hưng Yên', 'Khánh Hòa', 'Kiên Giang', 'Kon Tum', 'Lai Châu', 'Lạng Sơn',
+  'Lào Cai', 'Lâm Đồng', 'Long An', 'Nam Định', 'Nghệ An', 'Ninh Bình',
+  'Ninh Thuận', 'Phú Thọ', 'Phú Yên', 'Quảng Bình', 'Quảng Nam', 'Quảng Ngãi',
+  'Quảng Ninh', 'Quảng Trị', 'Sóc Trăng', 'Sơn La', 'Tây Ninh', 'Thái Bình',
+  'Thái Nguyên', 'Thanh Hóa', 'Thừa Thiên Huế', 'Tiền Giang', 'Trà Vinh',
+  'Tuyên Quang', 'Vĩnh Long', 'Vĩnh Phúc', 'Yên Bái',
+];
+
 const products = [
   {
     id: 'softcover' as const,
@@ -74,6 +89,18 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
   const [loading, setLoading] = useState(false);
   const [orderId, setOrderId] = useState<string | null>(null);
 
+  // Phone validation
+  const [phoneError, setPhoneError] = useState('');
+  const validatePhone = (phone: string): boolean => {
+    if (!phone) { setPhoneError(''); return false; }
+    if (!/^0\d{9}$/.test(phone)) {
+      setPhoneError('Số điện thoại phải gồm 10 chữ số và bắt đầu bằng 0');
+      return false;
+    }
+    setPhoneError('');
+    return true;
+  };
+
   // PDF file upload state
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const pdfInputRef = useRef<HTMLInputElement>(null);
@@ -139,6 +166,36 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
       return;
     }
 
+    // Validate required fields
+    if (!shippingInfo.fullName.trim()) {
+      toast.error('Vui lòng nhập họ và tên.');
+      return;
+    }
+    if (!shippingInfo.phone.trim()) {
+      toast.error('Vui lòng nhập số điện thoại.');
+      return;
+    }
+    if (!validatePhone(shippingInfo.phone)) {
+      toast.error(phoneError || 'Số điện thoại không hợp lệ.');
+      return;
+    }
+    if (!shippingInfo.email.trim()) {
+      toast.error('Vui lòng nhập email.');
+      return;
+    }
+    if (!shippingInfo.city) {
+      toast.error('Vui lòng chọn tỉnh/thành phố.');
+      return;
+    }
+    if (!shippingInfo.district.trim()) {
+      toast.error('Vui lòng nhập quận/huyện.');
+      return;
+    }
+    if (!shippingInfo.address.trim()) {
+      toast.error('Vui lòng nhập địa chỉ chi tiết.');
+      return;
+    }
+
     setStep('payment');
   };
 
@@ -184,22 +241,10 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
       });
       console.log('[OrderFlow] 2️⃣ Design pages:', designPages.length, 'items');
 
-      // Read PDF file as base64 data URL if uploaded
-      let pdfFileData: string | null = null;
-      let pdfFileName: string | null = null;
-      if (pdfFile) {
-        pdfFileName = pdfFile.name;
-        console.log('[OrderFlow] 3️⃣ Đọc file PDF:', pdfFileName, `(${(pdfFile.size / 1024 / 1024).toFixed(1)}MB)`);
-        try {
-          pdfFileData = await readFileAsDataURL(pdfFile);
-          console.log('[OrderFlow] 3️⃣✅ Đọc xong PDF, base64 length:', (pdfFileData.length / 1024).toFixed(0), 'KB');
-        } catch (err) {
-          console.warn('[OrderFlow] 3️⃣❌ Không thể đọc file PDF:', err);
-          toast.warning('Không thể đọc file PDF. Đơn hàng sẽ được gửi không kèm file.');
-        }
-      } else {
-        console.log('[OrderFlow] 3️⃣ Không có file PDF đính kèm');
-      }
+      // CHỈ gửi tên file PDF, KHÔNG gửi nội dung để tránh Connection Reset (100MB+ payload)
+      const pdfFileName = pdfFile ? pdfFile.name : null;
+      const pdfFileSize = pdfFile ? `${(pdfFile.size / 1024 / 1024).toFixed(1)}MB` : null;
+      console.log('[OrderFlow] 3️⃣ PDF file:', pdfFileName, pdfFileSize || '(không có)');
 
       const orderData = {
         userBookId: book.id,
@@ -209,7 +254,8 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
         email: shippingInfo.email,
         address: shippingInfo.address,
         city: shippingInfo.city,
-        note: shippingInfo.notes,
+        district: shippingInfo.district,
+        note: shippingInfo.notes || null,
         collectionName: book.title || book.templateName || 'Photobook',
         productType: selectedProduct,
         productSize: selectedSize,
@@ -218,7 +264,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
         paymentMethod: paymentMethod.toUpperCase(),
         designPages: designPages,
         pdfFileName: pdfFileName,
-        pdfFileData: pdfFileData,
+        pdfFileData: null, // Không gửi binary data để tránh payload quá lớn
       };
       console.log('[OrderFlow] 4️⃣ OrderData prepared, designPages:', designPages.length);
 
@@ -234,6 +280,12 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
       console.log('[OrderFlow] 6️⃣ Gọi API placeOrder...');
       const response = await orderApi.placeOrder(userId, orderData);
       console.log('[OrderFlow] 7️⃣✅ API thành công:', response);
+
+      if (pdfFile) {
+        toast.info('⏳ Đang tải file PDF thiết kế lên hệ thống...');
+        await orderApi.uploadPdf(response.id, userId, pdfFile);
+        console.log('[OrderFlow] 8️⃣✅ Tải file PDF thành công');
+      }
 
       setOrderId(response.id);
       setStep('confirmation');
@@ -260,6 +312,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
       setLoading(false);
     }
   };
+
 
   const handleComplete = () => {
     onComplete();
@@ -588,28 +641,61 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                   </h2>
 
                   <div className="grid sm:grid-cols-2 gap-4">
-                    {[
-                      { label: 'Họ và tên *', type: 'text', key: 'fullName', icon: User, placeholder: '' },
-                      { label: 'Số điện thoại *', type: 'tel', key: 'phone', icon: Phone, placeholder: '0123456789' },
-                    ].map(({ label, type, key, icon: Icon, placeholder }) => (
-                      <div key={key}>
-                        <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>{label}</label>
-                        <div className="relative">
-                          <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9B9088' }} />
-                          <input
-                            type={type}
-                            required
-                            value={(shippingInfo as any)[key]}
-                            onChange={e => setShippingInfo({ ...shippingInfo, [key]: e.target.value })}
-                            placeholder={placeholder}
-                            className="w-full pl-10 pr-4 py-3 rounded-xl outline-none text-sm transition-all"
-                            style={{ border: '1.5px solid #DDD8D0', color: '#000000', background: '#FAFAF8' }}
-                            onFocus={e => ((e.target as HTMLElement).style.borderColor = '#7A6F66')}
-                            onBlur={e => ((e.target as HTMLElement).style.borderColor = '#DDD8D0')}
-                          />
-                        </div>
+                    <div>
+                      <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Họ và tên *</label>
+                      <div className="relative">
+                        <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9B9088' }} />
+                        <input
+                          type="text"
+                          required
+                          value={shippingInfo.fullName}
+                          onChange={e => setShippingInfo({ ...shippingInfo, fullName: e.target.value })}
+                          placeholder="Nguyễn Văn A"
+                          className="w-full pl-10 pr-4 py-3 rounded-xl outline-none text-sm transition-all"
+                          style={{ border: '1.5px solid #DDD8D0', color: '#000000', background: '#FAFAF8' }}
+                          onFocus={e => ((e.target as HTMLElement).style.borderColor = '#7A6F66')}
+                          onBlur={e => ((e.target as HTMLElement).style.borderColor = '#DDD8D0')}
+                        />
                       </div>
-                    ))}
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Số điện thoại *</label>
+                      <div className="relative">
+                        <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9B9088' }} />
+                        <input
+                          type="tel"
+                          required
+                          value={shippingInfo.phone}
+                          onChange={e => {
+                            const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+                            setShippingInfo({ ...shippingInfo, phone: val });
+                            if (val) validatePhone(val);
+                          }}
+                          onBlur={() => {
+                            if (shippingInfo.phone) validatePhone(shippingInfo.phone);
+                          }}
+                          placeholder="0123456789"
+                          className={`w-full pl-10 pr-4 py-3 rounded-xl outline-none text-sm transition-all ${
+                            phoneError ? 'border-red-400 focus:border-red-500' : ''
+                          }`}
+                          style={{
+                            border: phoneError ? '2px solid #f87171' : '1.5px solid #DDD8D0',
+                            color: '#000000',
+                            background: '#FAFAF8',
+                          }}
+                          onFocus={e => {
+                            (e.target as HTMLElement).style.borderColor = phoneError ? '#ef4444' : '#7A6F66';
+                          }}
+                          onBlur={e => {
+                            (e.target as HTMLElement).style.borderColor = phoneError ? '#f87171' : '#DDD8D0';
+                          }}
+                        />
+                      </div>
+                      {phoneError && (
+                        <p className="text-xs mt-1" style={{ color: '#ef4444' }}>{phoneError}</p>
+                      )}
+                    </div>
 
                     <div className="sm:col-span-2">
                       <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Email *</label>
@@ -627,17 +713,17 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Thành phố *</label>
+                      <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Tỉnh/Thành phố *</label>
                       <select
                         required value={shippingInfo.city}
                         onChange={e => setShippingInfo({ ...shippingInfo, city: e.target.value })}
                         className="w-full px-4 py-3 rounded-xl outline-none text-sm transition-all"
                         style={{ border: '1.5px solid #DDD8D0', color: '#000000', background: '#FAFAF8' }}
                       >
-                        <option value="">Chọn thành phố</option>
-                        <option value="Hà Nội">Hà Nội</option>
-                        <option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option>
-                        <option value="Đà Nẵng">Đà Nẵng</option>
+                        <option value="">Chọn tỉnh/thành phố</option>
+                        {VIETNAM_PROVINCES.map(province => (
+                          <option key={province} value={province}>{province}</option>
+                        ))}
                       </select>
                     </div>
 

@@ -8,6 +8,7 @@ public record OrderRequest(
     String email,
     String address,
     String city,
+    String district,
     Integer quantity,
     String note,
     String collectionName,

@@ -1,10 +1,56 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { PageElement, TextElement, ImageElement, ShapeElement } from '../../types/editor';
-import { 
+import {
   Settings, Type, Image, Square, Smile, Paintbrush,
   Move, RotateCw, Eye, Lock, Unlock, Copy, Trash2,
   ChevronDown, ChevronRight, Sliders
 } from 'lucide-react';
+
+// ── Danh sách font chữ phong phú ──
+const FONT_FAMILIES = [
+  { value: 'Poppins', label: 'Poppins (Hiện đại)' },
+  { value: 'Inter', label: 'Inter (Tinh gọn)' },
+  { value: 'Dancing Script', label: 'Dancing Script (Viết tay)' },
+  { value: 'Playfair Display', label: 'Playfair Display (Thanh lịch)' },
+  { value: 'Merriweather', label: 'Merriweather (Trang trọng)' },
+  { value: 'Roboto', label: 'Roboto (Phổ biến)' },
+  { value: 'Open Sans', label: 'Open Sans (Dễ đọc)' },
+  { value: 'Lora', label: 'Lora (Cổ điển)' },
+  { value: 'Montserrat', label: 'Montserrat (Mạnh mẽ)' },
+  { value: 'Raleway', label: 'Raleway (Thanh mảnh)' },
+  { value: 'Pacifico', label: 'Pacifico (Vui tươi)' },
+  { value: 'Caveat', label: 'Caveat (Tự nhiên)' },
+  { value: 'Great Vibes', label: 'Great Vibes (Thư pháp)' },
+  { value: 'Comfortaa', label: 'Comfortaa (Tròn trịa)' },
+  { value: 'Quicksand', label: 'Quicksand (Nhẹ nhàng)' },
+  { value: 'Josefin Sans', label: 'Josefin Sans (Hình học)' },
+  { value: 'Amatic SC', label: 'Amatic SC (Nghệ thuật)' },
+  { value: 'Bebas Neue', label: 'Bebas Neue (Tiêu đề)' },
+  { value: 'Lobster', label: 'Lobster (Nổi bật)' },
+  { value: 'Nunito', label: 'Nunito (Thân thiện)' },
+  { value: 'Arial', label: 'Arial' },
+  { value: 'Georgia', label: 'Georgia' },
+  { value: 'Times New Roman', label: 'Times New Roman' },
+  { value: 'Courier New', label: 'Courier New (Mono)' },
+];
+
+// ── Bảng màu đa dạng ──
+const PRESET_COLORS = [
+  // Đen trắng cơ bản
+  '#000000', '#333333', '#666666', '#999999', '#CCCCCC', '#FFFFFF',
+  // Đỏ - Hồng
+  '#FF0000', '#FF4444', '#FF6B6B', '#FF1493', '#E91E63', '#F06292',
+  // Cam - Vàng
+  '#FF9800', '#FFA726', '#FFC107', '#FFD54F', '#FFEB3B', '#FFF176',
+  // Xanh lá
+  '#4CAF50', '#66BB6A', '#81C784', '#2E7D32', '#00E676', '#69F0AE',
+  // Xanh dương
+  '#2196F3', '#42A5F5', '#64B5F6', '#1565C0', '#448AFF', '#82B1FF',
+  // Tím
+  '#9C27B0', '#AB47BC', '#CE93D8', '#7C4DFF', '#B388FF', '#E040FB',
+  // Nâu - Xám đặc biệt
+  '#795548', '#8D6E63', '#A1887F', '#607D8B', '#90A4AE', '#546E7A',
+];
 
 interface ImprovedPropertiesPanelProps {
   element: PageElement | null;
@@ -13,15 +59,51 @@ interface ImprovedPropertiesPanelProps {
   onDelete?: () => void;
 }
 
-export function ImprovedPropertiesPanel({ 
-  element, 
+export function ImprovedPropertiesPanel({
+  element,
   onUpdate,
   onDuplicate,
-  onDelete 
+  onDelete
 }: ImprovedPropertiesPanelProps) {
   const [expandedSections, setExpandedSections] = useState<string[]>([
     'transform', 'appearance', 'content'
   ]);
+
+  // ── Local text editing state — KHÔNG re-render canvas khi đang gõ ──
+  const [localTextContent, setLocalTextContent] = useState('');
+  const textCommitRef = useRef<string | null>(null);
+
+  // Sync local state khi chọn element khác
+  useEffect(() => {
+    if (element?.type === 'text') {
+      setLocalTextContent((element as TextElement).content || '');
+    }
+  }, [element?.id]);
+
+  // Commit text content CHỈ KHI BLUR — không debounce, không re-render giữa chừng
+  const handleTextChange = useCallback((newContent: string) => {
+    setLocalTextContent(newContent);
+    textCommitRef.current = newContent;
+  }, []);
+
+  const handleTextBlur = useCallback(() => {
+    if (textCommitRef.current !== null
+        && element?.type === 'text'
+        && textCommitRef.current !== (element as TextElement).content) {
+      onUpdate({ content: textCommitRef.current });
+    }
+  }, [element, onUpdate]);
+
+  // Commit khi unmount hoặc chuyển sang element khác (tránh mất dữ liệu)
+  useEffect(() => {
+    return () => {
+      if (textCommitRef.current !== null
+          && element?.type === 'text'
+          && textCommitRef.current !== (element as TextElement).content) {
+        onUpdate({ content: textCommitRef.current });
+      }
+    };
+  }, [element?.id]);
 
   const toggleSection = (section: string) => {
     setExpandedSections(prev =>
@@ -280,11 +362,16 @@ export function ImprovedPropertiesPanel({
                   Văn bản
                 </label>
                 <textarea
-                  value={(element as TextElement).content}
-                  onChange={(e) => onUpdate({ content: e.target.value })}
+                  value={localTextContent}
+                  onChange={(e) => handleTextChange(e.target.value)}
+                  onBlur={handleTextBlur}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[80px] resize-y"
                   placeholder="Nhập nội dung..."
+                  style={{ fontFamily: (element as TextElement).fontFamily }}
                 />
+                <p className="text-[10px] text-gray-400 mt-1">
+                  Gõ mượt không giật — tự động lưu khi click ra ngoài
+                </p>
               </div>
 
               <div>
@@ -295,13 +382,13 @@ export function ImprovedPropertiesPanel({
                   value={(element as TextElement).fontFamily}
                   onChange={(e) => onUpdate({ fontFamily: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  style={{ fontFamily: (element as TextElement).fontFamily }}
                 >
-                  <option value="Poppins">Poppins</option>
-                  <option value="Inter">Inter</option>
-                  <option value="Dancing Script">Dancing Script</option>
-                  <option value="Arial">Arial</option>
-                  <option value="Georgia">Georgia</option>
-                  <option value="Times New Roman">Times New Roman</option>
+                  {FONT_FAMILIES.map((font) => (
+                    <option key={font.value} value={font.value} style={{ fontFamily: font.value }}>
+                      {font.label}
+                    </option>
+                  ))}
                 </select>
               </div>
 
@@ -323,12 +410,46 @@ export function ImprovedPropertiesPanel({
                   <label className="block text-xs font-medium text-gray-700 mb-1">
                     Màu chữ
                   </label>
-                  <input
-                    type="color"
-                    value={(element as TextElement).color}
-                    onChange={(e) => onUpdate({ color: e.target.value })}
-                    className="w-full h-10 border border-gray-300 rounded-lg cursor-pointer"
-                  />
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="color"
+                      value={(element as TextElement).color}
+                      onChange={(e) => onUpdate({ color: e.target.value })}
+                      className="w-10 h-10 border border-gray-300 rounded-lg cursor-pointer flex-shrink-0"
+                    />
+                    <input
+                      type="text"
+                      value={(element as TextElement).color}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (/^#[0-9a-fA-F]{0,6}$/.test(val)) onUpdate({ color: val });
+                      }}
+                      className="flex-1 px-2 py-2 border border-gray-300 rounded-lg text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="#000000"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Preset Color Palette */}
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-2">
+                  Bảng màu nhanh
+                </label>
+                <div className="grid grid-cols-12 gap-1">
+                  {PRESET_COLORS.map((presetColor) => (
+                    <button
+                      key={presetColor}
+                      onClick={() => onUpdate({ color: presetColor })}
+                      className={`w-6 h-6 rounded transition-transform hover:scale-125 ${
+                        (element as TextElement).color === presetColor
+                          ? 'ring-2 ring-offset-1 ring-blue-500 scale-110'
+                          : 'hover:ring-1 hover:ring-gray-300'
+                      }`}
+                      style={{ backgroundColor: presetColor }}
+                      title={presetColor}
+                    />
+                  ))}
                 </div>
               </div>
 

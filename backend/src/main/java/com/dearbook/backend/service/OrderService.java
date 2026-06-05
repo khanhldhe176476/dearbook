@@ -9,15 +9,29 @@ import com.dearbook.backend.entity.Payment;
 import com.dearbook.backend.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.domain.Sort;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 public class OrderService {
+
+    private static final Logger log = LoggerFactory.getLogger(OrderService.class);
 
     private final OrderRepository orderRepo;
     private final OrderShippingRepository shippingRepo;
@@ -27,6 +41,9 @@ public class OrderService {
     private final UserBookPageRepository userBookPageRepo;
     private final PricingService pricingService;
     private final ObjectMapper objectMapper;
+
+    @Value("${app.upload.dir:uploads}")
+    private String uploadDir;
 
     public OrderService(
             OrderRepository orderRepo,
@@ -108,6 +125,7 @@ public class OrderService {
         shipping.setPhone(req.phone());
         shipping.setAddress(req.address());
         shipping.setCity(req.city());
+        shipping.setDistrict(req.district());
         shippingRepo.save(shipping);
 
         Payment payment = new Payment();
@@ -155,18 +173,20 @@ public class OrderService {
         Order order = orderRepo.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found"));
 
+        String previousStatus = order.getStatus();
         order.setStatus(status);
 
-        List<Payment> payments = paymentRepo.findByOrderId(id);
-        if (payments != null) {
-            for (Payment payment : payments) {
-                if ("COMPLETED".equals(status)) {
-                    payment.setStatus("COMPLETED");
-                } else if ("CANCELLED".equals(status)) {
-                    payment.setStatus("FAILED");
-                }
-                paymentRepo.save(payment);
-            }
+        // Atomic update: all payments for this order in a single query
+        if ("COMPLETED".equals(status)) {
+            int updated = paymentRepo.updateStatusByOrderId(id, "COMPLETED");
+            log.info("Order {}: status changed from {} → {} | {} payment(s) updated to COMPLETED",
+                    id, previousStatus, status, updated);
+        } else if ("CANCELLED".equals(status)) {
+            int updated = paymentRepo.updateStatusByOrderId(id, "FAILED");
+            log.info("Order {}: status changed from {} → {} | {} payment(s) updated to FAILED",
+                    id, previousStatus, status, updated);
+        } else {
+            log.info("Order {}: status changed from {} → {}", id, previousStatus, status);
         }
 
         return mapToAdminOrderResponse(orderRepo.save(order));
@@ -175,6 +195,8 @@ public class OrderService {
     private AdminOrderResponse mapToAdminOrderResponse(Order o) {
         var shipping = shippingRepo.findByOrderId(o.getId()).orElse(null);
         var book = o.getUserBook();
+        var payments = paymentRepo.findByOrderId(o.getId());
+        String paymentMethod = (payments != null && !payments.isEmpty()) ? payments.get(0).getPaymentMethod() : null;
 
         Object pages = null;
         if (o.getSelectedPageIds() != null && !o.getSelectedPageIds().isBlank()) {
@@ -197,6 +219,7 @@ public class OrderService {
                 o.getEmail() != null ? o.getEmail() : (o.getUser() != null ? o.getUser().getEmail() : ""),
                 shipping != null ? shipping.getAddress() : "",
                 shipping != null ? shipping.getCity() : "",
+                shipping != null ? shipping.getDistrict() : "",
                 o.getCollectionName() != null
                         ? o.getCollectionName()
                         : (book != null && book.getTemplate() != null ? book.getTemplate().getName() : ""),
@@ -209,8 +232,9 @@ public class OrderService {
                 book != null ? book.getTitle() : "",
                 pages,
                 o.getPdfFileName(),
-                o.getPdfFileData(),
+                o.getPdfFileData() != null && !o.getPdfFileData().isBlank() ? "/api/orders/" + o.getId() + "/pdf/download" : null,
                 o.getTotalAmount(),
+                paymentMethod,
                 o.getStatus(),
                 o.getCreatedAt(),
                 o.getUpdatedAt()
@@ -227,5 +251,66 @@ public class OrderService {
         } catch (Exception e) {
             return json;
         }
+    }
+
+    @Transactional
+    public void savePdfFile(UUID orderId, MultipartFile file) {
+        Order order = orderRepo.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+
+        try {
+            Path uploadPath = Paths.get(uploadDir, "pdf");
+            Files.createDirectories(uploadPath);
+
+            String originalFilename = file.getOriginalFilename();
+            String fileExtension = "";
+            if (originalFilename != null && originalFilename.contains(".")) {
+                fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            }
+            String savedFileName = orderId.toString() + "_" + System.currentTimeMillis() + fileExtension;
+            Path filePath = uploadPath.resolve(savedFileName);
+
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+            order.setPdfFileName(originalFilename);
+            // Store relative path for portability (uploadDir/pdf/filename)
+            order.setPdfFileData(Paths.get("pdf", savedFileName).toString());
+            orderRepo.save(order);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to store PDF file", e);
+        }
+    }
+
+    public Resource loadPdfFileAsResource(UUID orderId) {
+        Order order = orderRepo.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+
+        String filePathString = order.getPdfFileData();
+        if (filePathString == null || filePathString.isBlank()) {
+            throw new IllegalArgumentException("No PDF file uploaded for this order");
+        }
+
+        try {
+            // Resolve relative path against configured upload directory
+            Path filePath = Paths.get(uploadDir).resolve(filePathString).normalize();
+            // Security: ensure resolved path is still under uploadDir
+            if (!filePath.toAbsolutePath().startsWith(Paths.get(uploadDir).toAbsolutePath())) {
+                throw new IllegalArgumentException("Invalid file path (path traversal)");
+            }
+            Resource resource = new UrlResource(filePath.toUri());
+            if (resource.exists() && resource.isReadable()) {
+                return resource;
+            } else {
+                throw new IllegalArgumentException("File not found or not readable");
+            }
+        } catch (MalformedURLException e) {
+            throw new IllegalArgumentException("Invalid file path", e);
+        }
+    }
+
+    public String getPdfFileName(UUID orderId) {
+        Order order = orderRepo.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+        return order.getPdfFileName();
     }
 }

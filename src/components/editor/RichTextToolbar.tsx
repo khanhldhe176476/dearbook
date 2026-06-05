@@ -40,13 +40,34 @@ const FONT_FAMILIES = [
   { value: 'Roboto', label: 'Roboto' },
   { value: 'Open Sans', label: 'Open Sans' },
   { value: 'Lora', label: 'Lora' },
+  { value: 'Montserrat', label: 'Montserrat' },
+  { value: 'Raleway', label: 'Raleway' },
+  { value: 'Pacifico', label: 'Pacifico' },
+  { value: 'Caveat', label: 'Caveat' },
+  { value: 'Great Vibes', label: 'Great Vibes' },
+  { value: 'Comfortaa', label: 'Comfortaa' },
+  { value: 'Quicksand', label: 'Quicksand' },
+  { value: 'Josefin Sans', label: 'Josefin Sans' },
+  { value: 'Amatic SC', label: 'Amatic SC' },
+  { value: 'Bebas Neue', label: 'Bebas Neue' },
+  { value: 'Lobster', label: 'Lobster' },
+  { value: 'Nunito', label: 'Nunito' },
+  { value: 'Arial', label: 'Arial' },
+  { value: 'Georgia', label: 'Georgia' },
+  { value: 'Times New Roman', label: 'Times New Roman' },
+  { value: 'Courier New', label: 'Courier New' },
 ];
 
 const FONT_SIZES = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 42, 48, 56, 64, 72];
 
 const PRESET_COLORS = [
-  '#000000', '#FFFFFF', '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A',
-  '#98D8C8', '#F7DC6F', '#BB8FCE', '#85929E', '#F8B400', '#FF1493',
+  '#000000', '#333333', '#666666', '#999999', '#CCCCCC', '#FFFFFF',
+  '#FF0000', '#FF4444', '#FF6B6B', '#FF1493', '#E91E63', '#F06292',
+  '#FF9800', '#FFA726', '#FFC107', '#FFD54F', '#FFEB3B', '#FFF176',
+  '#4CAF50', '#66BB6A', '#81C784', '#2E7D32', '#00E676', '#69F0AE',
+  '#2196F3', '#42A5F5', '#64B5F6', '#1565C0', '#448AFF', '#82B1FF',
+  '#9C27B0', '#AB47BC', '#CE93D8', '#7C4DFF', '#B388FF', '#E040FB',
+  '#795548', '#8D6E63', '#A1887F', '#607D8B', '#90A4AE', '#546E7A',
 ];
 
 export function RichTextToolbar({
