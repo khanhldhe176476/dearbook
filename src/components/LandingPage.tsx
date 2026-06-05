@@ -177,8 +177,8 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
             >
-              <div className="w-10 h-10 bg-[#B9423A] rounded-xl flex items-center justify-center shadow-lg">
-                <BookOpen className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 bg-[#B9423A] rounded-xl flex items-center justify-center shadow-lg">
+                <BookOpen className="w-7 h-7 text-white" />
               </div>
               <span className="text-3xl font-bold font-handwriting text-[#B9423A]">dearmemories.</span>
             </div>
@@ -608,8 +608,8 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
               >
-                <div className="w-10 h-10 bg-gradient-to-br from-[#D86F62] to-[#B9423A] rounded-xl flex items-center justify-center">
-                  <BookOpen className="w-6 h-6 text-white" />
+                <div className="w-12 h-12 bg-gradient-to-br from-[#D86F62] to-[#B9423A] rounded-xl flex items-center justify-center">
+                  <BookOpen className="w-7 h-7 text-white" />
                 </div>
                 <span className="text-2xl font-bold font-handwriting">dearmemories.</span>
               </div>
