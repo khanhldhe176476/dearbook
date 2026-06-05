@@ -15,7 +15,7 @@ export function SaveIndicator({ saveStatus, lastSavedAt, className = '' }: SaveI
       case 'saving':
         return {
           icon: <Loader2 className="w-4 h-4 animate-spin" />,
-          text: 'ang lu...',
+          text: 'Đang lưu...',
           color: 'text-blue-600',
           bgColor: 'bg-blue-50',
         };
@@ -23,15 +23,15 @@ export function SaveIndicator({ saveStatus, lastSavedAt, className = '' }: SaveI
         return {
           icon: <Check className="w-4 h-4" />,
           text: lastSavedAt
-            ? ` lu ${formatDistanceToNow(lastSavedAt, { addSuffix: true, locale: vi })}`
-            : ' lu',
+            ? `Đã lưu ${formatDistanceToNow(lastSavedAt, { addSuffix: true, locale: vi })}`
+            : 'Đã lưu',
           color: 'text-green-600',
           bgColor: 'bg-green-50',
         };
       case 'error':
         return {
           icon: <AlertCircle className="w-4 h-4" />,
-          text: 'Li lu',
+          text: 'Lỗi lưu',
           color: 'text-red-600',
           bgColor: 'bg-red-50',
         };
@@ -40,7 +40,7 @@ export function SaveIndicator({ saveStatus, lastSavedAt, className = '' }: SaveI
           icon: <Cloud className="w-4 h-4" />,
           text: lastSavedAt
             ? `${formatDistanceToNow(lastSavedAt, { addSuffix: true, locale: vi })}`
-            : 'Cha lu',
+            : 'Chưa lưu',
           color: 'text-gray-600',
           bgColor: 'bg-gray-50',
         };

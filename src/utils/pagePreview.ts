@@ -1,13 +1,13 @@
 import { dbGetImageSync } from './dbStorage';
 
 /**
- * Tr v URL nh preview u tin tm thy trong page (dng cho thumbnail).
- * H tr c 2 format: EditorPage (c elements) v PageData (c images).
+ * Trả về URL ảnh preview đầu tiên tìm thấy trong page (dùng cho thumbnail).
+ * Hỗ trợ cả 2 format: EditorPage (có elements) và PageData (có images).
  */
 export function getPagePreview(page: any): string | null {
   if (!page) return null;
 
-  // Format 1: EditorPage - tm nh u tin trong elements
+  // Format 1: EditorPage - tìm ảnh đầu tiên trong elements
   if (page.elements) {
     for (const el of page.elements) {
       if (el.type === 'image' && el.visible !== false && el.src) {
@@ -17,7 +17,7 @@ export function getPagePreview(page: any): string | null {
     }
   }
 
-  // Format 2: PageData - dng images.pageImage hoc image u tin
+  // Format 2: PageData - dùng images.pageImage hoặc image đầu tiên
   if (page.images) {
     const imgUrl = page.images.pageImage || Object.values(page.images)[0];
     if (imgUrl && typeof imgUrl === 'string') {
@@ -42,7 +42,7 @@ export function getPagePreview(page: any): string | null {
 }
 
 /**
- * Tr v thng tin thumbnail cho mt page, h tr c 2 format.
+ * Trả về thông tin thumbnail cho một page, hỗ trợ cả 2 format.
  */
 export function getPageThumbnail(page: any): {
   imageUrl: string | null;
@@ -78,7 +78,7 @@ export function getPageThumbnail(page: any): {
 }
 
 /**
- * Kim tra page c cha template frame element khng.
+ * Kiểm tra page có chứa template frame element không.
  */
 export function hasTemplateFrame(page: any): boolean {
   if (!page?.elements) return false;
@@ -86,14 +86,14 @@ export function hasTemplateFrame(page: any): boolean {
 }
 
 /**
- * Kim tra page thuc EditorPage format (c elements array).
+ * Kiểm tra page thuộc EditorPage format (có elements array).
  */
 export function isEditorPage(page: any): boolean {
   return !!(page?.elements && Array.isArray(page.elements));
 }
 
 /**
- * Resolve image URL: IndexedDB key, data URL, HTTP URL, hoc relative path.
+ * Resolve image URL: IndexedDB key, data URL, HTTP URL, hoặc relative path.
  */
 function resolveImageUrl(src: string): string | null {
   if (!src) return null;

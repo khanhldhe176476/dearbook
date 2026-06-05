@@ -42,19 +42,19 @@ export function LoadingProgress({ loaded, total, message }: LoadingProgressProps
 
         {/* Title */}
         <h3 className="text-2xl font-bold text-gray-900 text-center mb-2">
-          ang ti ni dung 3D
+          Đang tải nội dung 3D
         </h3>
 
         {/* Message */}
         <p className="text-gray-600 text-center mb-6">
-          {message || 'Vui lng ch trong giy lt...'}
+          {message || 'Vui lòng chờ trong giây lát...'}
         </p>
 
         {/* Progress Bar */}
         <div className="mb-4">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-medium text-gray-700">
-              Tin 
+              Tiến độ
             </span>
             <span className="text-sm font-bold text-rose-600">
               {percentage}%
@@ -72,7 +72,7 @@ export function LoadingProgress({ loaded, total, message }: LoadingProgressProps
 
         {/* Status */}
         <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
-          <span> ti:</span>
+          <span>Đã tải:</span>
           <span className="font-semibold text-gray-700">
             {loaded} / {total} trang
           </span>

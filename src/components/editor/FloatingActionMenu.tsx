@@ -19,7 +19,7 @@ export function FloatingActionMenu({
   const actions = [
     {
       icon: Type,
-      label: 'Thm ch',
+      label: 'Thêm chữ',
       color: 'from-pink-500 to-rose-500',
       onClick: () => {
         onAddText();
@@ -28,7 +28,7 @@ export function FloatingActionMenu({
     },
     {
       icon: ImageIcon,
-      label: 'Thm nh',
+      label: 'Thêm ảnh',
       color: 'from-blue-500 to-cyan-500',
       onClick: () => {
         onAddImage();
@@ -37,7 +37,7 @@ export function FloatingActionMenu({
     },
     {
       icon: Shapes,
-      label: 'Thm hnh',
+      label: 'Thêm hình',
       color: 'from-purple-500 to-pink-500',
       onClick: () => {
         onAddShape();
@@ -46,7 +46,7 @@ export function FloatingActionMenu({
     },
     {
       icon: Smile,
-      label: 'Thm sticker',
+      label: 'Thêm sticker',
       color: 'from-amber-500 to-orange-500',
       onClick: () => {
         onAddSticker();

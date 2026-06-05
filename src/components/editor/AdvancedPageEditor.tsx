@@ -84,7 +84,7 @@ export function AdvancedPageEditor({
         newElement = {
           ...baseElement,
           type: 'text',
-          content: data.content || 'Nhp ni dung...',
+          content: data.content || 'Nhập nội dung...',
           fontFamily: data.fontFamily || 'Poppins',
           fontSize: data.fontSize || 24,
           fontWeight: data.fontWeight || 'normal',

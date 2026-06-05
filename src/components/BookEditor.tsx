@@ -28,7 +28,7 @@ export function BookEditor({ book, user, onSave, onBack, onLogout }: BookEditorP
   const handleSave = () => {
     onSave(currentBook);
     // Show success notification
-    alert(' lu thnh cng! ');
+    alert('Đã lưu thành công! ✅');
   };
 
   const handleUndo = () => {
@@ -101,7 +101,7 @@ export function BookEditor({ book, user, onSave, onBack, onLogout }: BookEditorP
 
   const handleDeletePage = (pageIndex: number) => {
     if (currentBook.pages.length <= 1) {
-      alert('Khng th xa trang cui cng!');
+      alert('Không thể xóa trang cuối cùng!');
       return;
     }
     const updatedPages = currentBook.pages.filter((_, i) => i !== pageIndex);
@@ -119,7 +119,7 @@ export function BookEditor({ book, user, onSave, onBack, onLogout }: BookEditorP
           <button
             onClick={onBack}
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            title="Quay li"
+            title="Quay lại"
           >
             <ArrowLeft className="w-5 h-5 text-gray-600" />
           </button>
@@ -162,7 +162,7 @@ export function BookEditor({ book, user, onSave, onBack, onLogout }: BookEditorP
             onClick={handleUndo}
             disabled={historyIndex === 0}
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            title="Hon tc"
+            title="Hoàn tác"
           >
             <Undo className="w-5 h-5" />
           </button>
@@ -170,7 +170,7 @@ export function BookEditor({ book, user, onSave, onBack, onLogout }: BookEditorP
             onClick={handleRedo}
             disabled={historyIndex === history.length - 1}
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            title="Lm li"
+            title="Làm lại"
           >
             <Redo className="w-5 h-5" />
           </button>
@@ -183,7 +183,7 @@ export function BookEditor({ book, user, onSave, onBack, onLogout }: BookEditorP
             className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors flex items-center gap-2"
           >
             <Eye className="w-4 h-4" />
-            Xem trc
+            Xem trước
           </button>
 
           {/* Save */}
@@ -192,7 +192,7 @@ export function BookEditor({ book, user, onSave, onBack, onLogout }: BookEditorP
             className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:shadow-lg transition-all flex items-center gap-2"
           >
             <Save className="w-4 h-4" />
-            Lu
+            Lưu
           </button>
 
           <div className="w-px h-6 bg-gray-300" />
@@ -205,7 +205,7 @@ export function BookEditor({ book, user, onSave, onBack, onLogout }: BookEditorP
             <button
               onClick={onLogout}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-              title="ng xut"
+              title="Đăng xuất"
             >
               <LogOut className="w-4 h-4" />
             </button>
@@ -254,12 +254,12 @@ export function BookEditor({ book, user, onSave, onBack, onLogout }: BookEditorP
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-auto">
             <div className="p-6 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-white z-10">
-              <h3 className="text-xl font-bold text-gray-800">Xem trc sch</h3>
+              <h3 className="text-xl font-bold text-gray-800">Xem trước sách</h3>
               <button
                 onClick={() => setShowPreview(false)}
                 className="w-10 h-10 rounded-xl hover:bg-gray-100 flex items-center justify-center transition-colors"
               >
-                
+                ✕
               </button>
             </div>
             <div className="p-6 space-y-6">

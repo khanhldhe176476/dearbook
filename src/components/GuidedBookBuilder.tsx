@@ -44,12 +44,12 @@ export function GuidedBookBuilder({
     }
   );
 
-  // Sch c sn (edit tip)  khng cho quay li chn theme/template
-  // Dng ref  gi gi tr ban u, trnh b thay i khi handleSaveBook cp nht currentBook
+  // Sách có sẵn (edit tiếp) → không cho quay lại chọn theme/template
+  // Dùng ref để giữ giá trị ban đầu, tránh bị thay đổi khi handleSaveBook cập nhật currentBook
   const isExistingBookRef = useRef(!!initialBook);
   const isExistingBook = isExistingBookRef.current;
 
-  // Determine starting step based on existing data (ch chy 1 ln khi mount)
+  // Determine starting step based on existing data (chỉ chạy 1 lần khi mount)
   const initialStepDetermined = useRef(false);
   useEffect(() => {
     if (initialStepDetermined.current) return;
@@ -61,7 +61,7 @@ export function GuidedBookBuilder({
     }
   }, [initialBook]);
 
-  // Preload tt c nh t IndexedDB vo cache khi m sch c sn
+  // Preload tất cả ảnh từ IndexedDB vào cache khi mở sách có sẵn
   useEffect(() => {
     const book = initialBook || bookData;
     if (!book?.pages || book.pages.length === 0) return;
@@ -84,15 +84,15 @@ export function GuidedBookBuilder({
     collectKeys(book.cover);
 
     if (imageKeys.length > 0) {
-      console.log(` Preloading ${imageKeys.length} images for book...`);
+      console.log(`🖼️ Preloading ${imageKeys.length} images for book...`);
       preloadImages(imageKeys);
     }
   }, [initialBook?.id, bookData.pages]);
 
   const steps = [
-    { number: 1, title: 'Chn ch ', subtitle: 'Dp c bit' },
-    { number: 2, title: 'Chn mu', subtitle: 'Phong cch thit k' },
-    { number: 3, title: 'Ni dung', subtitle: 'Chnh sa trang' },
+    { number: 1, title: 'Chọn chủ đề', subtitle: 'Dịp đặc biệt' },
+    { number: 2, title: 'Chọn mẫu', subtitle: 'Phong cách thiết kế' },
+    { number: 3, title: 'Nội dung', subtitle: 'Chỉnh sửa trang' },
   ];
 
   const handleStepComplete = (data: Partial<BookData>) => {
@@ -100,7 +100,7 @@ export function GuidedBookBuilder({
 
     // Reset selected template and pages when theme is selected/changed
     if (data.theme !== undefined) {
-      // Lu bn draft hin ti trc khi xa template/pages (trnh mt d liu)
+      // Lưu bản draft hiện tại trước khi xóa template/pages (tránh mất dữ liệu)
       if (data.theme !== bookData.theme && bookData.id && bookData.templateId) {
         const currentDraft = {
           ...bookData,
@@ -140,7 +140,7 @@ export function GuidedBookBuilder({
   };
 
   const canGoToStep = (step: Step): boolean => {
-    // Sch c sn: khng cho quay li step 1-2, ch  step 3
+    // Sách có sẵn: không cho quay lại step 1-2, chỉ ở step 3
     if (isExistingBook) {
       return step === 3;
     }
@@ -174,10 +174,10 @@ export function GuidedBookBuilder({
 
   // Theme styling mapping for personalized details in header
   const themeData = {
-    love:       { name: 'Tnh yu', emoji: '', bg: '#fdf2f2', border: '#fde2e4', text: '#e11d48' },
-    family:     { name: 'Gia nh', emoji: '', bg: '#eff6ff', border: '#dbeafe', text: '#2563eb' },
-    birthday:   { name: 'Sinh nht', emoji: '', bg: '#fffbeb', border: '#fef3c7', text: '#d97706' },
-    friendship: { name: 'Tnh bn', emoji: '', bg: '#f0fdf4', border: '#dcfce7', text: '#059669' },
+    love:       { name: 'Tình yêu', emoji: '💕', bg: '#fdf2f2', border: '#fde2e4', text: '#e11d48' },
+    family:     { name: 'Gia đình', emoji: '👨‍👩‍👧', bg: '#eff6ff', border: '#dbeafe', text: '#2563eb' },
+    birthday:   { name: 'Sinh nhật', emoji: '🎂', bg: '#fffbeb', border: '#fef3c7', text: '#d97706' },
+    friendship: { name: 'Tình bạn', emoji: '🤝', bg: '#f0fdf4', border: '#dcfce7', text: '#059669' },
   };
 
   const currentTheme = bookData.theme ? themeData[bookData.theme] : null;
@@ -226,7 +226,7 @@ export function GuidedBookBuilder({
                     e.currentTarget.style.background = '#ffffff';
                     e.currentTarget.style.borderColor = '#eeece9';
                   }}
-                  title="V trang ch"
+                  title="Về trang chủ"
                 >
                   <Home className="w-4 h-4 transition-transform group-hover:scale-110" />
                 </button>
@@ -252,7 +252,7 @@ export function GuidedBookBuilder({
               }}
             >
               <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
-              <span className="hidden sm:inline">Quay li</span>
+              <span className="hidden sm:inline">Quay lại</span>
             </button>
             </div>
 
@@ -261,7 +261,7 @@ export function GuidedBookBuilder({
               <div className="flex items-center justify-center gap-2 max-w-xs sm:max-w-md mx-auto">
                 <Book className="w-4 h-4 text-[#8c6e5d] flex-shrink-0" />
                 <h1 className="text-sm sm:text-base font-bold text-[#111] truncate">
-                  {bookData.title || 'Sch ca ti'}
+                  {bookData.title || 'Sách của tôi'}
                 </h1>
                 {currentTheme && (
                   <span 
@@ -277,7 +277,7 @@ export function GuidedBookBuilder({
                 )}
               </div>
               <p className="text-[11px] font-medium mt-0.5" style={{ color: '#9b9088' }}>
-                Tin trnh thit k  Bc {currentStep}/3
+                Tiến trình thiết kế · Bước {currentStep}/3
               </p>
             </div>
 
@@ -294,9 +294,9 @@ export function GuidedBookBuilder({
                 <Wallet className="w-4 h-4 text-emerald-600" />
                 <div className="text-left">
                   <p className="text-xs font-bold leading-none text-emerald-600">
-                    {estimatedPrice.toLocaleString('vi-VN')} 
+                    {estimatedPrice.toLocaleString('vi-VN')} ₫
                   </p>
-                  <p className="text-[9px] mt-0.5 text-[#9b9088] leading-none">D kin</p>
+                  <p className="text-[9px] mt-0.5 text-[#9b9088] leading-none">Dự kiến</p>
                 </div>
               </div>
 
@@ -481,7 +481,7 @@ export function GuidedBookBuilder({
                          bookData.templateId.startsWith('local-template-') ||
                          bookData.templateId.startsWith('auto-template-'))
                         ? () => setUseAdvancedEditor(false)
-                        : undefined  // Sch c sn + regular template  khng c nt back
+                        : undefined  // Sách có sẵn + regular template → không có nút back
                       : () => {
                           if (
                             bookData.templateId === 'youth-archive-memories' ||

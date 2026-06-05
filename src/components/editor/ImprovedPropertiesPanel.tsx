@@ -6,49 +6,49 @@ import {
   ChevronDown, ChevronRight, Sliders
 } from 'lucide-react';
 
-//  Danh sch font ch phong ph 
+// ── Danh sách font chữ phong phú ──
 const FONT_FAMILIES = [
-  { value: 'Poppins', label: 'Poppins (Hin i)' },
-  { value: 'Inter', label: 'Inter (Tinh gn)' },
-  { value: 'Dancing Script', label: 'Dancing Script (Vit tay)' },
-  { value: 'Playfair Display', label: 'Playfair Display (Thanh lch)' },
-  { value: 'Merriweather', label: 'Merriweather (Trang trng)' },
-  { value: 'Roboto', label: 'Roboto (Ph bin)' },
-  { value: 'Open Sans', label: 'Open Sans (D c)' },
-  { value: 'Lora', label: 'Lora (C in)' },
-  { value: 'Montserrat', label: 'Montserrat (Mnh m)' },
-  { value: 'Raleway', label: 'Raleway (Thanh mnh)' },
-  { value: 'Pacifico', label: 'Pacifico (Vui ti)' },
-  { value: 'Caveat', label: 'Caveat (T nhin)' },
-  { value: 'Great Vibes', label: 'Great Vibes (Th php)' },
-  { value: 'Comfortaa', label: 'Comfortaa (Trn tra)' },
-  { value: 'Quicksand', label: 'Quicksand (Nh nhng)' },
-  { value: 'Josefin Sans', label: 'Josefin Sans (Hnh hc)' },
-  { value: 'Amatic SC', label: 'Amatic SC (Ngh thut)' },
-  { value: 'Bebas Neue', label: 'Bebas Neue (Tiu )' },
-  { value: 'Lobster', label: 'Lobster (Ni bt)' },
-  { value: 'Nunito', label: 'Nunito (Thn thin)' },
+  { value: 'Poppins', label: 'Poppins (Hiện đại)' },
+  { value: 'Inter', label: 'Inter (Tinh gọn)' },
+  { value: 'Dancing Script', label: 'Dancing Script (Viết tay)' },
+  { value: 'Playfair Display', label: 'Playfair Display (Thanh lịch)' },
+  { value: 'Merriweather', label: 'Merriweather (Trang trọng)' },
+  { value: 'Roboto', label: 'Roboto (Phổ biến)' },
+  { value: 'Open Sans', label: 'Open Sans (Dễ đọc)' },
+  { value: 'Lora', label: 'Lora (Cổ điển)' },
+  { value: 'Montserrat', label: 'Montserrat (Mạnh mẽ)' },
+  { value: 'Raleway', label: 'Raleway (Thanh mảnh)' },
+  { value: 'Pacifico', label: 'Pacifico (Vui tươi)' },
+  { value: 'Caveat', label: 'Caveat (Tự nhiên)' },
+  { value: 'Great Vibes', label: 'Great Vibes (Thư pháp)' },
+  { value: 'Comfortaa', label: 'Comfortaa (Tròn trịa)' },
+  { value: 'Quicksand', label: 'Quicksand (Nhẹ nhàng)' },
+  { value: 'Josefin Sans', label: 'Josefin Sans (Hình học)' },
+  { value: 'Amatic SC', label: 'Amatic SC (Nghệ thuật)' },
+  { value: 'Bebas Neue', label: 'Bebas Neue (Tiêu đề)' },
+  { value: 'Lobster', label: 'Lobster (Nổi bật)' },
+  { value: 'Nunito', label: 'Nunito (Thân thiện)' },
   { value: 'Arial', label: 'Arial' },
   { value: 'Georgia', label: 'Georgia' },
   { value: 'Times New Roman', label: 'Times New Roman' },
   { value: 'Courier New', label: 'Courier New (Mono)' },
 ];
 
-//  Bng mu a dng 
+// ── Bảng màu đa dạng ──
 const PRESET_COLORS = [
-  // en trng c bn
+  // Đen trắng cơ bản
   '#000000', '#333333', '#666666', '#999999', '#CCCCCC', '#FFFFFF',
-  //  - Hng
+  // Đỏ - Hồng
   '#FF0000', '#FF4444', '#FF6B6B', '#FF1493', '#E91E63', '#F06292',
-  // Cam - Vng
+  // Cam - Vàng
   '#FF9800', '#FFA726', '#FFC107', '#FFD54F', '#FFEB3B', '#FFF176',
-  // Xanh l
+  // Xanh lá
   '#4CAF50', '#66BB6A', '#81C784', '#2E7D32', '#00E676', '#69F0AE',
-  // Xanh dng
+  // Xanh dương
   '#2196F3', '#42A5F5', '#64B5F6', '#1565C0', '#448AFF', '#82B1FF',
-  // Tm
+  // Tím
   '#9C27B0', '#AB47BC', '#CE93D8', '#7C4DFF', '#B388FF', '#E040FB',
-  // Nu - Xm c bit
+  // Nâu - Xám đặc biệt
   '#795548', '#8D6E63', '#A1887F', '#607D8B', '#90A4AE', '#546E7A',
 ];
 
@@ -69,18 +69,18 @@ export function ImprovedPropertiesPanel({
     'transform', 'appearance', 'content'
   ]);
 
-  //  Local text editing state  KHNG re-render canvas khi ang g 
+  // ── Local text editing state — KHÔNG re-render canvas khi đang gõ ──
   const [localTextContent, setLocalTextContent] = useState('');
   const textCommitRef = useRef<string | null>(null);
 
-  // Sync local state khi chn element khc
+  // Sync local state khi chọn element khác
   useEffect(() => {
     if (element?.type === 'text') {
       setLocalTextContent((element as TextElement).content || '');
     }
   }, [element?.id]);
 
-  // Commit text content CH KHI BLUR  khng debounce, khng re-render gia chng
+  // Commit text content CHỈ KHI BLUR — không debounce, không re-render giữa chừng
   const handleTextChange = useCallback((newContent: string) => {
     setLocalTextContent(newContent);
     textCommitRef.current = newContent;
@@ -94,7 +94,7 @@ export function ImprovedPropertiesPanel({
     }
   }, [element, onUpdate]);
 
-  // Commit khi unmount hoc chuyn sang element khc (trnh mt d liu)
+  // Commit khi unmount hoặc chuyển sang element khác (tránh mất dữ liệu)
   useEffect(() => {
     return () => {
       if (textCommitRef.current !== null
@@ -120,10 +120,10 @@ export function ImprovedPropertiesPanel({
           <Settings className="w-8 h-8 text-purple-400" />
         </div>
         <h3 className="font-semibold text-gray-900 mb-2">
-          Cha chn phn t
+          Chưa chọn phần tử
         </h3>
         <p className="text-sm text-gray-500">
-          Click vo mt phn t trn canvas  xem thuc tnh
+          Click vào một phần tử trên canvas để xem thuộc tính
         </p>
       </div>
     );
@@ -163,9 +163,9 @@ export function ImprovedPropertiesPanel({
           {element.type === 'sticker' && <Smile className="w-5 h-5 text-yellow-600" />}
           
           <span className="font-bold text-gray-900">
-            {element.type === 'text' && 'Vn bn'}
-            {element.type === 'image' && 'Hnh nh'}
-            {element.type === 'shape' && 'Hnh khi'}
+            {element.type === 'text' && 'Văn bản'}
+            {element.type === 'image' && 'Hình ảnh'}
+            {element.type === 'shape' && 'Hình khối'}
             {element.type === 'sticker' && 'Sticker'}
           </span>
         </div>
@@ -179,11 +179,11 @@ export function ImprovedPropertiesPanel({
                 ? 'bg-orange-100 text-orange-700 border border-orange-200'
                 : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
             }`}
-            title={element.locked ? 'M kha' : 'Kha'}
+            title={element.locked ? 'Mở khóa' : 'Khóa'}
           >
             {element.locked ? <Lock className="w-3.5 h-3.5" /> : <Unlock className="w-3.5 h-3.5" />}
             <span className="text-xs font-medium">
-              {element.locked ? ' kha' : 'Kha'}
+              {element.locked ? 'Đã khóa' : 'Khóa'}
             </span>
           </button>
 
@@ -194,11 +194,11 @@ export function ImprovedPropertiesPanel({
                 ? 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
                 : 'bg-gray-100 text-gray-500 border border-gray-200'
             }`}
-            title={element.visible ? 'n' : 'Hin'}
+            title={element.visible ? 'Ẩn' : 'Hiện'}
           >
             <Eye className="w-3.5 h-3.5" />
             <span className="text-xs font-medium">
-              {element.visible ? 'Hin' : 'n'}
+              {element.visible ? 'Hiện' : 'Ẩn'}
             </span>
           </button>
 
@@ -206,7 +206,7 @@ export function ImprovedPropertiesPanel({
             <button
               onClick={onDuplicate}
               className="flex items-center justify-center gap-1.5 px-3 py-2 bg-white text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-              title="Nhn i"
+              title="Nhân đôi"
             >
               <Copy className="w-3.5 h-3.5" />
             </button>
@@ -216,7 +216,7 @@ export function ImprovedPropertiesPanel({
             <button
               onClick={onDelete}
               className="flex items-center justify-center gap-1.5 px-3 py-2 bg-white text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition-colors"
-              title="Xa"
+              title="Xóa"
             >
               <Trash2 className="w-3.5 h-3.5" />
             </button>
@@ -228,7 +228,7 @@ export function ImprovedPropertiesPanel({
       <div className="border-b border-gray-200">
         {renderSectionHeader(
           <Move className="w-4 h-4 text-purple-600" />,
-          'V tr & Kch thc',
+          'Vị trí & Kích thước',
           'transform'
         )}
         
@@ -248,7 +248,7 @@ export function ImprovedPropertiesPanel({
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-700 mb-1">
-                  Y (dc)
+                  Y (dọc)
                 </label>
                 <input
                   type="number"
@@ -262,7 +262,7 @@ export function ImprovedPropertiesPanel({
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="block text-xs font-medium text-gray-700 mb-1">
-                  Rng
+                  Rộng
                 </label>
                 <input
                   type="number"
@@ -291,7 +291,7 @@ export function ImprovedPropertiesPanel({
                   Xoay
                 </span>
                 <span className="text-purple-600 font-semibold">
-                  {element.rotation}
+                  {element.rotation}°
                 </span>
               </label>
               <input
@@ -303,8 +303,8 @@ export function ImprovedPropertiesPanel({
                 className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-purple-500"
               />
               <div className="flex justify-between text-xs text-gray-500 mt-1">
-                <span>0</span>
-                <span>360</span>
+                <span>0°</span>
+                <span>360°</span>
               </div>
             </div>
           </div>
@@ -315,7 +315,7 @@ export function ImprovedPropertiesPanel({
       <div className="border-b border-gray-200">
         {renderSectionHeader(
           <Sliders className="w-4 h-4 text-pink-600" />,
-          'Giao din',
+          'Giao diện',
           'appearance'
         )}
         
@@ -323,7 +323,7 @@ export function ImprovedPropertiesPanel({
           <div className="p-4 space-y-4 bg-white">
             <div>
               <label className="flex items-center justify-between text-xs font-medium text-gray-700 mb-2">
-                <span> m</span>
+                <span>Độ mờ</span>
                 <span className="text-pink-600 font-semibold">
                   {Math.round(element.opacity * 100)}%
                 </span>
@@ -351,7 +351,7 @@ export function ImprovedPropertiesPanel({
         <div className="border-b border-gray-200">
           {renderSectionHeader(
             <Type className="w-4 h-4 text-blue-600" />,
-            'Ni dung vn bn',
+            'Nội dung văn bản',
             'content'
           )}
           
@@ -359,24 +359,24 @@ export function ImprovedPropertiesPanel({
             <div className="p-4 space-y-4 bg-white">
               <div>
                 <label className="block text-xs font-medium text-gray-700 mb-1">
-                  Vn bn
+                  Văn bản
                 </label>
                 <textarea
                   value={localTextContent}
                   onChange={(e) => handleTextChange(e.target.value)}
                   onBlur={handleTextBlur}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[80px] resize-y"
-                  placeholder="Nhp ni dung..."
+                  placeholder="Nhập nội dung..."
                   style={{ fontFamily: (element as TextElement).fontFamily }}
                 />
                 <p className="text-[10px] text-gray-400 mt-1">
-                  G mt khng git  t ng lu khi click ra ngoi
+                  Gõ mượt không giật — tự động lưu khi click ra ngoài
                 </p>
               </div>
 
               <div>
                 <label className="block text-xs font-medium text-gray-700 mb-1">
-                  Font ch
+                  Font chữ
                 </label>
                 <select
                   value={(element as TextElement).fontFamily}
@@ -395,7 +395,7 @@ export function ImprovedPropertiesPanel({
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-medium text-gray-700 mb-1">
-                    C ch
+                    Cỡ chữ
                   </label>
                   <input
                     type="number"
@@ -408,7 +408,7 @@ export function ImprovedPropertiesPanel({
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-700 mb-1">
-                    Mu ch
+                    Màu chữ
                   </label>
                   <div className="flex items-center gap-2">
                     <input
@@ -434,7 +434,7 @@ export function ImprovedPropertiesPanel({
               {/* Preset Color Palette */}
               <div>
                 <label className="block text-xs font-medium text-gray-700 mb-2">
-                  Bng mu nhanh
+                  Bảng màu nhanh
                 </label>
                 <div className="grid grid-cols-12 gap-1">
                   {PRESET_COLORS.map((presetColor) => (
@@ -455,7 +455,7 @@ export function ImprovedPropertiesPanel({
 
               <div>
                 <label className="block text-xs font-medium text-gray-700 mb-1">
-                  Cn chnh
+                  Căn chỉnh
                 </label>
                 <div className="grid grid-cols-3 gap-2">
                   {['left', 'center', 'right'].map((align) => (
@@ -468,9 +468,9 @@ export function ImprovedPropertiesPanel({
                           : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                       }`}
                     >
-                      {align === 'left' && 'Tri'}
-                      {align === 'center' && 'Gia'}
-                      {align === 'right' && 'Phi'}
+                      {align === 'left' && 'Trái'}
+                      {align === 'center' && 'Giữa'}
+                      {align === 'right' && 'Phải'}
                     </button>
                   ))}
                 </div>
@@ -484,7 +484,7 @@ export function ImprovedPropertiesPanel({
         <div className="border-b border-gray-200">
           {renderSectionHeader(
             <Paintbrush className="w-4 h-4 text-green-600" />,
-            'Mu sc',
+            'Màu sắc',
             'content'
           )}
           
@@ -492,7 +492,7 @@ export function ImprovedPropertiesPanel({
             <div className="p-4 space-y-4 bg-white">
               <div>
                 <label className="block text-xs font-medium text-gray-700 mb-2">
-                  Mu nn
+                  Màu nền
                 </label>
                 <input
                   type="color"
@@ -510,7 +510,7 @@ export function ImprovedPropertiesPanel({
         <div className="border-b border-gray-200">
           {renderSectionHeader(
             <Image className="w-4 h-4 text-indigo-600" />,
-            'Hnh nh',
+            'Hình ảnh',
             'content'
           )}
           
@@ -518,16 +518,16 @@ export function ImprovedPropertiesPanel({
             <div className="p-4 space-y-4 bg-white">
               <div>
                 <label className="block text-xs font-medium text-gray-700 mb-1">
-                  Cch hin th
+                  Cách hiển thị
                 </label>
                 <select
                   value={(element as ImageElement).objectFit}
                   onChange={(e) => onUpdate({ objectFit: e.target.value as any })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                 >
-                  <option value="cover">Ph kn</option>
-                  <option value="contain">Va khung</option>
-                  <option value="fill">Ko gin</option>
+                  <option value="cover">Phủ kín</option>
+                  <option value="contain">Vừa khung</option>
+                  <option value="fill">Kéo giãn</option>
                 </select>
               </div>
             </div>

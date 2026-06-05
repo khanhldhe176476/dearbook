@@ -27,10 +27,10 @@ export function Preview3DEmpty({ onBackToEditor }: Preview3DEmptyProps) {
         {/* Empty Message */}
         <div className="space-y-3">
           <h2 className="text-3xl font-bold text-gray-900">
-            Cha c ni dung  xem
+            Chưa có nội dung để xem
           </h2>
           <p className="text-lg text-gray-600">
-            Cun sch ca bn cha c trang no. Hy quay li Editor  thm ni dung!
+            Cuốn sách của bạn chưa có trang nào. Hãy quay lại Editor để thêm nội dung!
           </p>
         </div>
 
@@ -45,7 +45,7 @@ export function Preview3DEmpty({ onBackToEditor }: Preview3DEmptyProps) {
             </div>
             
             <p className="text-sm text-gray-500">
-              Khng c trang no  hin th
+              Không có trang nào để hiển thị
             </p>
           </div>
         </div>
@@ -57,25 +57,25 @@ export function Preview3DEmpty({ onBackToEditor }: Preview3DEmptyProps) {
             className="group w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-semibold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
           >
             <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-            <span>Quay li Editor</span>
+            <span>Quay lại Editor</span>
           </button>
 
           <p className="text-sm text-gray-500">
-            Thm trang v ni dung vo sch ca bn
+            Thêm trang và nội dung vào sách của bạn
           </p>
         </div>
 
         {/* Tips */}
         <div className="card p-6 bg-gradient-to-br from-purple-50 to-blue-50 border border-purple-200/50">
           <div className="flex items-start gap-3">
-            <div className="text-2xl"></div>
+            <div className="text-2xl">✨</div>
             <div className="text-left">
-              <p className="font-semibold text-purple-900 mb-2">Gi :</p>
+              <p className="font-semibold text-purple-900 mb-2">Gợi ý:</p>
               <ul className="text-sm text-purple-700 space-y-1.5">
-                <li> Thm t nht 1 trang  xem Preview 3D</li>
-                <li> S dng Editor  to ni dung</li>
-                <li> Thm text, nh v sticker vo trang</li>
-                <li> Sau  quay li y  xem 3D!</li>
+                <li>• Thêm ít nhất 1 trang để xem Preview 3D</li>
+                <li>• Sử dụng Editor để tạo nội dung</li>
+                <li>• Thêm text, ảnh và sticker vào trang</li>
+                <li>• Sau đó quay lại đây để xem 3D!</li>
               </ul>
             </div>
           </div>

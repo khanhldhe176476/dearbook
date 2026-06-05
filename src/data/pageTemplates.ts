@@ -12,14 +12,14 @@ export interface PageTemplate {
 export const pageTemplates: PageTemplate[] = [
   {
     id: 'text-center',
-    name: 'Vn bn trung tm',
-    description: 'Mt khi vn bn ln nm gia trang',
+    name: 'Văn bản trung tâm',
+    description: 'Một khối văn bản lớn nằm giữa trang',
     thumbnail: 'https://images.unsplash.com/photo-1516414447565-b14be0adf13e?w=200&h=300&fit=crop',
     elements: [
       {
         id: 'temp-text-1',
         type: 'text',
-        content: 'Cu chuyn ca chng ta',
+        content: 'Câu chuyện của chúng ta',
         x: 50,
         y: 250,
         width: 300,
@@ -39,8 +39,8 @@ export const pageTemplates: PageTemplate[] = [
   },
   {
     id: 'image-full',
-    name: 'nh trn vin',
-    description: 'Mt hnh nh ln chim ton b khng gian trang',
+    name: 'Ảnh tràn viền',
+    description: 'Một hình ảnh lớn chiếm toàn bộ không gian trang',
     thumbnail: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=300&fit=crop',
     elements: [
       {
@@ -62,8 +62,8 @@ export const pageTemplates: PageTemplate[] = [
   },
   {
     id: 'classic-photo-text',
-    name: 'nh & Ch c in',
-    description: 'nh  trn v vn bn m t  di',
+    name: 'Ảnh & Chữ cổ điển',
+    description: 'Ảnh ở trên và văn bản mô tả ở dưới',
     thumbnail: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=200&h=300&fit=crop',
     elements: [
       {
@@ -84,7 +84,7 @@ export const pageTemplates: PageTemplate[] = [
       {
         id: 'temp-text-1',
         type: 'text',
-        content: 'Khonh khc ng nh',
+        content: 'Khoảnh khắc đáng nhớ',
         x: 40,
         y: 420,
         width: 320,
@@ -105,7 +105,7 @@ export const pageTemplates: PageTemplate[] = [
   {
     id: 'scrapbook',
     name: 'Scrapbook',
-    description: 'Phong cch ct dn vi nhiu lp',
+    description: 'Phong cách cắt dán với nhiều lớp',
     thumbnail: 'https://images.unsplash.com/photo-1531685229751-783f1e39196b?w=200&h=300&fit=crop',
     elements: [
       {
@@ -141,7 +141,7 @@ export const pageTemplates: PageTemplate[] = [
       {
         id: 'temp-sticker-1',
         type: 'sticker',
-        emoji: '',
+        emoji: '✨',
         x: 320,
         y: 50,
         width: 60,
@@ -155,7 +155,7 @@ export const pageTemplates: PageTemplate[] = [
       {
         id: 'temp-text-1',
         type: 'text',
-        content: 'Mi mi bn nhau',
+        content: 'Mãi mãi bên nhau',
         x: 50,
         y: 420,
         width: 300,
@@ -175,8 +175,8 @@ export const pageTemplates: PageTemplate[] = [
   },
   {
     id: 'quote-page',
-    name: 'Trang Trch dn',
-    description: 'Mt cu ni hay trn nn mu ngh thut',
+    name: 'Trang Trích dẫn',
+    description: 'Một câu nói hay trên nền màu nghệ thuật',
     thumbnail: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=200&h=300&fit=crop',
     elements: [
       {
@@ -197,7 +197,7 @@ export const pageTemplates: PageTemplate[] = [
       {
         id: 'temp-text-1',
         type: 'text',
-        content: '"Yu thng khng phi l nhn nhau, m l cng nhn v mt hng"',
+        content: '"Yêu thương không phải là nhìn nhau, mà là cùng nhìn về một hướng"',
         x: 40,
         y: 200,
         width: 320,
@@ -215,7 +215,7 @@ export const pageTemplates: PageTemplate[] = [
       {
         id: 'temp-text-2',
         type: 'text',
-        content: ' Antoine de Saint-Exupry',
+        content: '— Antoine de Saint-Exupéry',
         x: 40,
         y: 400,
         width: 320,
@@ -235,8 +235,8 @@ export const pageTemplates: PageTemplate[] = [
   },
   {
     id: 'grid-3-photos',
-    name: 'Li 3 nh',
-    description: 'B cc hin i vi 3 khung hnh khc nhau',
+    name: 'Lưới 3 ảnh',
+    description: 'Bố cục hiện đại với 3 khung hình khác nhau',
     thumbnail: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=200&h=300&fit=crop',
     elements: [
       {
@@ -287,7 +287,7 @@ export const pageTemplates: PageTemplate[] = [
       {
         id: 'temp-text-1',
         type: 'text',
-        content: 'HNH TRNH KHM PH',
+        content: 'HÀNH TRÌNH KHÁM PHÁ',
         x: 20,
         y: 520,
         width: 360,
@@ -309,8 +309,8 @@ export const pageTemplates: PageTemplate[] = [
   },
   {
     id: 'polaroid-style',
-    name: 'Phong cch Polaroid',
-    description: 'nh vi vin trng c in v ch vit tay',
+    name: 'Phong cách Polaroid',
+    description: 'Ảnh với viền trắng cổ điển và chữ viết tay',
     thumbnail: 'https://images.unsplash.com/photo-1520156584121-4b74c5ad406b?w=200&h=300&fit=crop',
     elements: [
       {
@@ -367,7 +367,7 @@ export const pageTemplates: PageTemplate[] = [
   {
     id: 'scrapbook-vintage-camera',
     name: 'Vintage Scrapbook',
-    description: 'B cc a khung hnh vi phong cch giy x v my nh c in',
+    description: 'Bố cục đa khung hình với phong cách giấy xé và máy ảnh cổ điển',
     thumbnail: 'https://images.unsplash.com/photo-1526285845740-96edca63f03a?w=200&h=300&fit=crop',
     elements: [
       { id: 'bg-1', type: 'shape', shape: 'rectangle', fill: '#D2B48C', x: 0, y: 0, width: 400, height: 150, zIndex: 1, rotation: 0, opacity: 1, locked: true, visible: true },
@@ -376,14 +376,14 @@ export const pageTemplates: PageTemplate[] = [
       { id: 'img-small-1', type: 'image', src: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=300&h=300&fit=crop', x: 40, y: 280, width: 140, height: 140, zIndex: 4, rotation: 3, opacity: 1, locked: false, visible: true, objectFit: 'cover' },
       { id: 'img-small-2', type: 'image', src: 'https://images.unsplash.com/photo-1452784444945-3f422708fe5e?w=300&h=300&fit=crop', x: 220, y: 280, width: 140, height: 140, zIndex: 4, rotation: -1, opacity: 1, locked: false, visible: true, objectFit: 'cover' },
       { id: 'sticker-camera', type: 'icon', iconName: 'Camera', color: '#3A2E28', x: 280, y: 480, width: 80, height: 80, zIndex: 5, rotation: 10, opacity: 1, locked: false, visible: true },
-      { id: 'text-1', type: 'text', content: 'K nim kh qun', x: 40, y: 450, width: 220, height: 60, fontSize: 24, fontFamily: 'Dancing Script', color: '#5A5049', textAlign: 'left', zIndex: 5, rotation: 0, opacity: 1, locked: false, visible: true }
+      { id: 'text-1', type: 'text', content: 'Kỷ niệm khó quên', x: 40, y: 450, width: 220, height: 60, fontSize: 24, fontFamily: 'Dancing Script', color: '#5A5049', textAlign: 'left', zIndex: 5, rotation: 0, opacity: 1, locked: false, visible: true }
     ],
     backgroundColor: '#E8D5C4'
   },
   {
     id: 'scrapbook-road-trip',
     name: 'Road Trip Journey',
-    description: 'Phong cch hnh trnh vi xe c v cc mu giy dn',
+    description: 'Phong cách hành trình với xe cổ và các mẩu giấy dán',
     thumbnail: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=200&h=300&fit=crop',
     elements: [
       { id: 'bg-grid', type: 'shape', shape: 'rectangle', fill: '#F0F9FF', x: 0, y: 0, width: 400, height: 600, zIndex: 1, rotation: 0, opacity: 1, locked: true, visible: true },
@@ -397,21 +397,21 @@ export const pageTemplates: PageTemplate[] = [
   },
   {
     id: 'journal-letter',
-    name: 'Th tay & Bo c',
-    description: 'Trang nht k vi phong cch bo c v khng gian vit th',
+    name: 'Thư tay & Báo cũ',
+    description: 'Trang nhật ký với phong cách báo cũ và không gian viết thư',
     thumbnail: 'https://images.unsplash.com/photo-1516414447565-b14be0adf13e?w=200&h=300&fit=crop',
     elements: [
       { id: 'bg-paper', type: 'shape', shape: 'rectangle', fill: '#FDFCF0', x: 0, y: 0, width: 400, height: 600, zIndex: 1, rotation: 0, opacity: 1, locked: true, visible: true },
       { id: 'news-clip', type: 'image', src: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400&h=400&fit=crop', x: 20, y: 400, width: 180, height: 180, zIndex: 2, rotation: -5, opacity: 0.8, locked: false, visible: true, objectFit: 'cover' },
       { id: 'envelope', type: 'icon', iconName: 'Mail', color: '#8B4513', x: 40, y: 40, width: 120, height: 100, zIndex: 3, rotation: 10, opacity: 0.9, locked: false, visible: true },
-      { id: 'text-main', type: 'text', content: 'Gi ngi ti yu...\n\nNhng dng ch ny c vit t tn y lng, gi gm tt c nhng k nim p nht ca chng ta qua nm thng.', x: 180, y: 100, width: 200, height: 400, fontSize: 18, fontFamily: 'Dancing Script', color: '#3A2E28', textAlign: 'left', zIndex: 4, rotation: 0, opacity: 1, locked: false, visible: true }
+      { id: 'text-main', type: 'text', content: 'Gửi người tôi yêu...\n\nNhững dòng chữ này được viết từ tận đáy lòng, gửi gắm tất cả những kỷ niệm đẹp nhất của chúng ta qua năm tháng.', x: 180, y: 100, width: 200, height: 400, fontSize: 18, fontFamily: 'Dancing Script', color: '#3A2E28', textAlign: 'left', zIndex: 4, rotation: 0, opacity: 1, locked: false, visible: true }
     ],
     backgroundColor: '#F5F5DC'
   },
   {
     id: 'memories-2025',
     name: 'Memories 2025',
-    description: 'Di phim v sticker hin i cho nhng k nim mi',
+    description: 'Dải phim và sticker hiện đại cho những kỷ niệm mới',
     thumbnail: 'https://images.unsplash.com/photo-1533105079780-92b9be482077?w=200&h=300&fit=crop',
     elements: [
       { id: 'bg-dark', type: 'shape', shape: 'rectangle', fill: '#3A2E28', x: 0, y: 0, width: 400, height: 600, zIndex: 1, rotation: 0, opacity: 1, locked: true, visible: true },
@@ -426,7 +426,7 @@ export const pageTemplates: PageTemplate[] = [
   {
     id: 'travel-van-picnic',
     name: 'Travel & Picnic',
-    description: 'B cc khung ca s v xe van cho nhng chuyn i d ngoi',
+    description: 'Bố cục khung cửa sổ và xe van cho những chuyến đi dã ngoại',
     thumbnail: 'https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?w=200&h=300&fit=crop',
     elements: [
       { id: 'bg-paper', type: 'shape', shape: 'rectangle', fill: '#F5E6D3', x: 0, y: 0, width: 400, height: 600, zIndex: 1, rotation: 0, opacity: 1, locked: true, visible: true },
@@ -437,7 +437,7 @@ export const pageTemplates: PageTemplate[] = [
       { id: 'img-3', type: 'image', src: 'https://images.unsplash.com/photo-1519046904884-53103b34b206?w=200&h=200&fit=crop', x: 60, y: 195, width: 135, height: 135, zIndex: 4, rotation: 0, opacity: 1, locked: false, visible: true, objectFit: 'cover' },
       { id: 'img-4', type: 'image', src: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=200&h=200&fit=crop', x: 205, y: 195, width: 135, height: 135, zIndex: 4, rotation: 0, opacity: 1, locked: false, visible: true, objectFit: 'cover' },
       { id: 'sticker-sun', type: 'icon', iconName: 'Sun', color: '#F59E0B', x: 20, y: 20, width: 60, height: 60, zIndex: 5, rotation: 0, opacity: 1, locked: false, visible: true },
-      { id: 'text-bottom', type: 'text', content: 'Chuyn i ca thanh xun', x: 50, y: 520, width: 300, height: 50, fontSize: 24, fontFamily: 'Dancing Script', color: '#7C2D12', textAlign: 'center', zIndex: 5, rotation: 0, opacity: 1, locked: false, visible: true }
+      { id: 'text-bottom', type: 'text', content: 'Chuyến đi của thanh xuân', x: 50, y: 520, width: 300, height: 50, fontSize: 24, fontFamily: 'Dancing Script', color: '#7C2D12', textAlign: 'center', zIndex: 5, rotation: 0, opacity: 1, locked: false, visible: true }
     ],
     backgroundColor: '#FDF8F3'
   }

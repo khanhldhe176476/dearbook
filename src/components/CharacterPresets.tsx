@@ -73,9 +73,9 @@ export function CharacterPresets({ onSelect, currentCharacter }: CharacterPreset
   return (
     <div className="space-y-4">
       <div>
-        <h3 className="font-semibold text-gray-800 mb-2">Chn nhanh nhn vt mu</h3>
+        <h3 className="font-semibold text-gray-800 mb-2">Chọn nhanh nhân vật mẫu</h3>
         <p className="text-sm text-gray-600">
-          Hoc ty chnh chi tit bn di
+          Hoặc tùy chỉnh chi tiết bên dưới
         </p>
       </div>
 
@@ -109,11 +109,11 @@ export function CharacterPresets({ onSelect, currentCharacter }: CharacterPreset
             )}
 
             <p className="text-xs text-gray-600 text-center mt-2">
-              {preset.gender === 'female' ? 'N' : 'Nam'}  {' '}
-              {preset.hairColor === 'black' ? 'en' :
-               preset.hairColor === 'brown' ? 'Nu' :
-               preset.hairColor === 'blonde' ? 'Vng' :
-               preset.hairColor === 'red' ? '' : 'Xm'}
+              {preset.gender === 'female' ? 'Nữ' : 'Nam'} · {' '}
+              {preset.hairColor === 'black' ? 'Đen' :
+               preset.hairColor === 'brown' ? 'Nâu' :
+               preset.hairColor === 'blonde' ? 'Vàng' :
+               preset.hairColor === 'red' ? 'Đỏ' : 'Xám'}
             </p>
           </button>
         ))}

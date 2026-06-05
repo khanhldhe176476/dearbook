@@ -23,33 +23,33 @@ export default function Book2DPreview({ book, onBack, onOrder }: Book2DPreviewPr
   // Generate sample content based on theme
   const getSampleContent = (pageNum: number) => {
     const themes: Record<string, string[]> = {
-      'K nim gia nh': [
-        'Nhng khonh khc ng nh...',
-        'Gia nh l ni yu thng...',
-        'K nim ngt ngo bn nhau...',
-        'Hnh phc gin n mi ngy...'
+      'Kỷ niệm gia đình': [
+        'Những khoảnh khắc đáng nhớ...',
+        'Gia đình là nơi yêu thương...',
+        'Kỷ niệm ngọt ngào bên nhau...',
+        'Hạnh phúc giản đơn mỗi ngày...'
       ],
-      'Tnh yu': [
-        'T khi gp em...',
-        'Yu thng khng li...',
-        'Nhng ngy bn nhau...',
-        'Mi mi bn em...'
+      'Tình yêu': [
+        'Từ khi gặp em...',
+        'Yêu thương không lời...',
+        'Những ngày bên nhau...',
+        'Mãi mãi bên em...'
       ],
-      'Du lch': [
-        'Hnh trnh khm ph...',
-        'Nhng ni  n...',
-        'K nim du lch...',
-        'Th gii rng ln...'
+      'Du lịch': [
+        'Hành trình khám phá...',
+        'Những nơi đã đến...',
+        'Kỷ niệm du lịch...',
+        'Thế giới rộng lớn...'
       ],
-      'Tt nghip': [
-        'K nim tui hc tr...',
-        'Nhng ngi bn...',
-        'c m tng lai...',
-        'Khi u mi...'
+      'Tốt nghiệp': [
+        'Kỷ niệm tuổi học trò...',
+        'Những người bạn...',
+        'Ước mơ tương lai...',
+        'Khởi đầu mới...'
       ]
     };
     
-    const content = themes[book.theme] || themes['K nim gia nh'];
+    const content = themes[book.theme] || themes['Kỷ niệm gia đình'];
     return content[pageNum % content.length];
   };
 
@@ -86,7 +86,7 @@ export default function Book2DPreview({ book, onBack, onOrder }: Book2DPreviewPr
       <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-2 px-4 text-center text-sm">
         <span className="inline-flex items-center gap-2">
           <Sparkles className="w-4 h-4" />
-          ang s dng ch  xem 2D ti u  H tr xoay, zoom v lt trang mt m
+          Đang sử dụng chế độ xem 2D tối ưu • Hỗ trợ xoay, zoom và lật trang mượt mà
         </span>
       </div>
       
@@ -99,7 +99,7 @@ export default function Book2DPreview({ book, onBack, onOrder }: Book2DPreviewPr
               className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
-              <span className="font-medium">Quay li</span>
+              <span className="font-medium">Quay lại</span>
             </button>
             
             <h1 className="text-xl font-bold text-gray-900">{book.title}</h1>
@@ -109,7 +109,7 @@ export default function Book2DPreview({ book, onBack, onOrder }: Book2DPreviewPr
               className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-xl font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200"
             >
               <ShoppingCart className="w-5 h-5" />
-              t hng
+              Đặt hàng
             </button>
           </div>
         </div>
@@ -182,7 +182,7 @@ export default function Book2DPreview({ book, onBack, onOrder }: Book2DPreviewPr
                         </div>
                         <h3 className="text-3xl font-bold text-gray-900 mb-4">{book.title}</h3>
                         <p className="text-gray-600 text-lg">{book.theme}</p>
-                        <div className="mt-8 text-sm text-gray-400">Trang ba</div>
+                        <div className="mt-8 text-sm text-gray-400">Trang bìa</div>
                       </div>
                     ) : (
                       <div className="text-center space-y-6 w-full max-w-lg mx-auto px-8">
@@ -202,14 +202,14 @@ export default function Book2DPreview({ book, onBack, onOrder }: Book2DPreviewPr
                               <div className="w-16 h-16 mx-auto mb-2 bg-white/50 rounded-full flex items-center justify-center">
                                 <Sparkles className="w-8 h-8 text-pink-500" />
                               </div>
-                              <p className="text-sm text-gray-600">Hnh nh ca bn</p>
+                              <p className="text-sm text-gray-600">Hình ảnh của bạn</p>
                             </div>
                           </div>
                           
                           {/* Sample text content */}
                           <p className="text-gray-700 leading-relaxed text-left">
-                            Ni dung vn bn ca bn s c hin th  y. Bn c th ty chnh
-                            hon ton font ch, mu sc v b cc theo  mun trong phn chnh sa.
+                            Nội dung văn bản của bạn sẽ được hiển thị ở đây. Bạn có thể tùy chỉnh
+                            hoàn toàn font chữ, màu sắc và bố cục theo ý muốn trong phần chỉnh sửa.
                           </p>
                         </div>
                         
@@ -227,7 +227,7 @@ export default function Book2DPreview({ book, onBack, onOrder }: Book2DPreviewPr
               {viewMode === 'pages' && (
                 <div className="absolute top-6 left-6 px-4 py-2 bg-white/90 backdrop-blur-md rounded-xl shadow-lg">
                   <p className="text-sm font-semibold text-gray-900">
-                    {currentPage === 0 ? 'Ba' : `Trang ${currentPage}`} / {totalPages}
+                    {currentPage === 0 ? 'Bìa' : `Trang ${currentPage}`} / {totalPages}
                   </p>
                 </div>
               )}
@@ -243,7 +243,7 @@ export default function Book2DPreview({ book, onBack, onOrder }: Book2DPreviewPr
                     className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-pink-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                   >
                     <ChevronLeft className="w-5 h-5" />
-                    <span className="hidden sm:inline">Trang trc</span>
+                    <span className="hidden sm:inline">Trang trước</span>
                   </button>
                   
                   <div className="flex items-center gap-3">
@@ -251,7 +251,7 @@ export default function Book2DPreview({ book, onBack, onOrder }: Book2DPreviewPr
                       {currentPage} / {totalPages}
                     </span>
                     <div className="text-xs text-gray-500 hidden sm:block">
-                      (Dng    lt trang)
+                      (Dùng ← → để lật trang)
                     </div>
                   </div>
                   
@@ -270,7 +270,7 @@ export default function Book2DPreview({ book, onBack, onOrder }: Book2DPreviewPr
                   <button
                     onClick={() => setRotation(rotation - 15)}
                     className="p-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-pink-300 transition-all"
-                    title="Xoay tri"
+                    title="Xoay trái"
                   >
                     <RotateCw className="w-5 h-5 transform -scale-x-100" />
                   </button>
@@ -279,7 +279,7 @@ export default function Book2DPreview({ book, onBack, onOrder }: Book2DPreviewPr
                     onClick={() => setZoom(Math.max(0.8, zoom - 0.1))}
                     disabled={zoom <= 0.8}
                     className="p-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-pink-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                    title="Thu nh"
+                    title="Thu nhỏ"
                   >
                     <ZoomOut className="w-5 h-5" />
                   </button>
@@ -292,7 +292,7 @@ export default function Book2DPreview({ book, onBack, onOrder }: Book2DPreviewPr
                     onClick={() => setZoom(Math.min(1.5, zoom + 0.1))}
                     disabled={zoom >= 1.5}
                     className="p-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-pink-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                    title="Phng to"
+                    title="Phóng to"
                   >
                     <ZoomIn className="w-5 h-5" />
                   </button>
@@ -300,7 +300,7 @@ export default function Book2DPreview({ book, onBack, onOrder }: Book2DPreviewPr
                   <button
                     onClick={() => setRotation(rotation + 15)}
                     className="p-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-pink-300 transition-all"
-                    title="Xoay phi"
+                    title="Xoay phải"
                   >
                     <RotateCw className="w-5 h-5" />
                   </button>
@@ -315,7 +315,7 @@ export default function Book2DPreview({ book, onBack, onOrder }: Book2DPreviewPr
             <div className="bg-white rounded-2xl shadow-lg p-6">
               <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                 <Eye className="w-5 h-5 text-pink-500" />
-                Ch  xem
+                Chế độ xem
               </h3>
               <div className="grid grid-cols-2 gap-3">
                 <button
@@ -333,7 +333,7 @@ export default function Book2DPreview({ book, onBack, onOrder }: Book2DPreviewPr
                   <div className={`p-2 rounded-lg ${viewMode === 'cover' ? 'bg-pink-500 text-white' : 'bg-gray-100 text-gray-600'}`}>
                     <Eye className="w-5 h-5" />
                   </div>
-                  <span className="text-sm font-medium">Ba sch</span>
+                  <span className="text-sm font-medium">Bìa sách</span>
                 </button>
                 
                 <button
@@ -351,7 +351,7 @@ export default function Book2DPreview({ book, onBack, onOrder }: Book2DPreviewPr
                   <div className={`p-2 rounded-lg ${viewMode === 'pages' ? 'bg-pink-500 text-white' : 'bg-gray-100 text-gray-600'}`}>
                     <BookOpen className="w-5 h-5" />
                   </div>
-                  <span className="text-sm font-medium">Lt trang</span>
+                  <span className="text-sm font-medium">Lật trang</span>
                 </button>
               </div>
             </div>
@@ -360,28 +360,28 @@ export default function Book2DPreview({ book, onBack, onOrder }: Book2DPreviewPr
             <div className="bg-white rounded-2xl shadow-lg p-6">
               <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                 <BookOpen className="w-5 h-5 text-purple-500" />
-                Thng tin sch
+                Thông tin sách
               </h3>
               <div className="space-y-3">
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span className="text-gray-600 text-sm">Ch :</span>
+                  <span className="text-gray-600 text-sm">Chủ đề:</span>
                   <span className="font-semibold text-gray-900 text-sm">{book.theme}</span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span className="text-gray-600 text-sm">S trang:</span>
+                  <span className="text-gray-600 text-sm">Số trang:</span>
                   <span className="font-semibold text-gray-900 text-sm">{totalPages} trang</span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span className="text-gray-600 text-sm">Kch thc:</span>
+                  <span className="text-gray-600 text-sm">Kích thước:</span>
                   <span className="font-semibold text-gray-900 text-sm">20x20cm</span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span className="text-gray-600 text-sm">Loi ba:</span>
-                  <span className="font-semibold text-gray-900 text-sm">Ba cng</span>
+                  <span className="text-gray-600 text-sm">Loại bìa:</span>
+                  <span className="font-semibold text-gray-900 text-sm">Bìa cứng</span>
                 </div>
                 <div className="flex justify-between items-center py-2">
-                  <span className="text-gray-600 text-sm">Cht liu:</span>
-                  <span className="font-semibold text-gray-900 text-sm">Giy cao cp</span>
+                  <span className="text-gray-600 text-sm">Chất liệu:</span>
+                  <span className="font-semibold text-gray-900 text-sm">Giấy cao cấp</span>
                 </div>
               </div>
             </div>
@@ -390,35 +390,35 @@ export default function Book2DPreview({ book, onBack, onOrder }: Book2DPreviewPr
             <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl shadow-lg p-6 border border-blue-100">
               <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-blue-500" />
-                Mo nh
+                Mẹo nhỏ
               </h3>
               <ul className="space-y-2 text-sm text-gray-700">
                 <li className="flex items-start gap-2">
-                  <span className="text-blue-500 mt-0.5"></span>
-                  <span>Dng phm mi tn    lt trang nhanh</span>
+                  <span className="text-blue-500 mt-0.5">•</span>
+                  <span>Dùng phím mũi tên ← → để lật trang nhanh</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-blue-500 mt-0.5"></span>
-                  <span>Xoay v zoom ba sch  xem chi tit</span>
+                  <span className="text-blue-500 mt-0.5">•</span>
+                  <span>Xoay và zoom bìa sách để xem chi tiết</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-blue-500 mt-0.5"></span>
-                  <span>Preview 2D gip xem nhanh trc khi t hng</span>
+                  <span className="text-blue-500 mt-0.5">•</span>
+                  <span>Preview 2D giúp xem nhanh trước khi đặt hàng</span>
                 </li>
               </ul>
             </div>
 
             {/* Order CTA */}
             <div className="bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 rounded-2xl shadow-lg p-6 text-white">
-              <h3 className="text-xl font-bold mb-2">Sn sng t hng?</h3>
+              <h3 className="text-xl font-bold mb-2">Sẵn sàng đặt hàng?</h3>
               <p className="text-white/80 text-sm mb-4">
-                Cun sch ca bn s c in cht lng cao v giao tn nh
+                Cuốn sách của bạn sẽ được in chất lượng cao và giao tận nhà
               </p>
               <button
                 onClick={onOrder}
                 className="w-full bg-white text-pink-600 px-6 py-3 rounded-xl font-bold hover:shadow-xl hover:scale-105 transition-all duration-200"
               >
-                t hng ngay
+                Đặt hàng ngay
               </button>
             </div>
           </div>

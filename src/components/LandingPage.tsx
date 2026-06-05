@@ -34,133 +34,133 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
 
   const photobookBoxItems = [
     {
-      title: '1 quyn Photobook',
-      description: 'Mt cun photobook c nhn ho, lu gi nh v cu chuyn ca bn.',
+      title: '1 quyển Photobook',
+      description: 'Một cuốn photobook cá nhân hoá, lưu giữ ảnh và câu chuyện của bạn.',
       icon: <BookOpen className="w-7 h-7" />,
-      emoji: '',
+      emoji: '📖',
     },
     {
-      title: '1 ko mt',
-      description: 'Mt mn qu nh d thng i km  hp qu thm ngt ngo.',
+      title: '1 kẹo mút',
+      description: 'Một món quà nhỏ dễ thương đi kèm để hộp quà thêm ngọt ngào.',
       icon: <Gift className="w-7 h-7" />,
-      emoji: '',
+      emoji: '🍭',
     },
     {
-      title: '1 th cm n',
-      description: 'L th cm n c t trong hp, gip mn qu tr nn chn chu hn.',
+      title: '1 thư cảm ơn',
+      description: 'Lá thư cảm ơn được đặt trong hộp, giúp món quà trở nên chỉn chu hơn.',
       icon: <Heart className="w-7 h-7" />,
-      emoji: '',
+      emoji: '💌',
     },
   ];
 
   const photobookCategories = [
     {
       id: 'hard-cover',
-      title: 'Photobook ba cng',
-      description: 'Cng cp, sang trng, ph hp lm qu k nim hoc qu tng c bit.',
+      title: 'Photobook bìa cứng',
+      description: 'Cứng cáp, sang trọng, phù hợp làm quà kỷ niệm hoặc quà tặng đặc biệt.',
       image: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=600&h=700&fit=crop',
-      badge: 'Sang trng',
+      badge: 'Sang trọng',
     },
     {
       id: 'soft-cover',
-      title: 'Photobook ba mm',
-      description: 'Nh, d cm, gi hp l, ph hp cho cc album nh nh v qu tng thn mt.',
+      title: 'Photobook bìa mềm',
+      description: 'Nhẹ, dễ cầm, giá hợp lý, phù hợp cho các album ảnh nhỏ và quà tặng thân mật.',
       image: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=600&h=700&fit=crop',
-      badge: 'D chn',
+      badge: 'Dễ chọn',
     },
     {
       id: 'layflat',
-      title: 'Photobook ba bi lin m phng',
-      description: 'M phng p mt, xem nh ton trang r hn, ph hp nh i v nh k nim ln.',
+      title: 'Photobook bìa bồi liền mở phẳng',
+      description: 'Mở phẳng đẹp mắt, xem ảnh toàn trang rõ hơn, phù hợp ảnh đôi và ảnh kỷ niệm lớn.',
       image: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?w=600&h=700&fit=crop',
-      badge: 'Cao cp',
+      badge: 'Cao cấp',
     },
   ];
 
   const themes = [
     {
       id: 'family',
-      title: 'Gia nh',
-      description: 'Lu gi nhng khonh khc m p cng ngi thn.',
-      icon: '',
+      title: 'Gia đình',
+      description: 'Lưu giữ những khoảnh khắc ấm áp cùng người thân.',
+      icon: '👨‍👩‍👧‍👦',
       color: 'from-orange-400 to-rose-400',
       image: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?w=600&h=400&fit=crop',
     },
     {
       id: 'friends',
-      title: 'Bn b',
-      description: 'Dnh cho sinh nht, tt nghip v nhng chuyn i cng nhau.',
-      icon: '',
+      title: 'Bạn bè',
+      description: 'Dành cho sinh nhật, tốt nghiệp và những chuyến đi cùng nhau.',
+      icon: '🎉',
       color: 'from-cyan-400 to-blue-400',
       image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&h=400&fit=crop',
     },
     {
       id: 'love',
-      title: 'Ngi yu',
-      description: 'Mt mn qu nh nhng cho cc dp k nim tnh yu.',
-      icon: '',
+      title: 'Người yêu',
+      description: 'Một món quà nhẹ nhàng cho các dịp kỷ niệm tình yêu.',
+      icon: '💕',
       color: 'from-pink-400 to-rose-500',
       image: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=600&h=400&fit=crop',
     },
     {
       id: 'memories',
-      title: 'K nim',
-      description: 'Gom li nhng bc nh ng nh thnh mt cun sch ring.',
-      icon: '',
+      title: 'Kỷ niệm',
+      description: 'Gom lại những bức ảnh đáng nhớ thành một cuốn sách riêng.',
+      icon: '📸',
       color: 'from-purple-400 to-indigo-400',
       image: 'https://images.unsplash.com/photo-1495562569060-2eec283d3391?w=600&h=400&fit=crop',
     },
   ];
 
   const features = [
-    'Chn loi Photobook ph hp vi nhu cu',
-    'Chnh sa nh v ni dung d dng',
-    'Xem trc thit k trc khi in',
-    'ng gi thnh photobook box chn chu',
-    'C th cm n i km',
-    'Giao hng ton quc',
+    'Chọn loại Photobook phù hợp với nhu cầu',
+    'Chỉnh sửa ảnh và nội dung dễ dàng',
+    'Xem trước thiết kế trước khi in',
+    'Đóng gói thành photobook box chỉn chu',
+    'Có thư cảm ơn đi kèm',
+    'Giao hàng toàn quốc',
   ];
 
   const pricingPlans = [
     {
-      name: 'Ba mm',
+      name: 'Bìa mềm',
       price: '149K',
-      description: 'Ph hp  to mt cun Photobook nh gn, d tng.',
-      features: ['Chn mu c sn', 'Tu chnh ni dung', 'Upload nh', 'Xem trc bn thit k'],
+      description: 'Phù hợp để tạo một cuốn Photobook nhỏ gọn, dễ tặng.',
+      features: ['Chọn mẫu có sẵn', 'Tuỳ chỉnh nội dung', 'Upload ảnh', 'Xem trước bản thiết kế'],
       popular: false,
     },
     {
-      name: 'Ba cng',
+      name: 'Bìa cứng',
       price: '249K',
-      description: 'La chn cn bng cho sinh nht, k nim v qu tng c bit.',
-      features: ['Tt c tnh nng gi Ba mm', 'Ba cng chc chn', 'In cht lng cao', 'Photobook box y '],
+      description: 'Lựa chọn cân bằng cho sinh nhật, kỷ niệm và quà tặng đặc biệt.',
+      features: ['Tất cả tính năng gói Bìa mềm', 'Bìa cứng chắc chắn', 'In chất lượng cao', 'Photobook box đầy đủ'],
       popular: true,
     },
     {
-      name: 'M phng',
+      name: 'Mở phẳng',
       price: '399K',
-      description: 'Dnh cho thnh phm cao cp, xem nh ton trang p hn.',
-      features: ['Tt c tnh nng gi Ba cng', 'Ba bi lin m phng', 'Thip li chc ring', 'u tin x l n hng'],
+      description: 'Dành cho thành phẩm cao cấp, xem ảnh toàn trang đẹp hơn.',
+      features: ['Tất cả tính năng gói Bìa cứng', 'Bìa bồi liền mở phẳng', 'Thiệp lời chúc riêng', 'Ưu tiên xử lý đơn hàng'],
       popular: false,
     },
   ];
 
   const faqs = [
     {
-      question: 'Photobook box gm nhng g?',
-      answer: 'Photobook box gm 1 quyn Photobook, 1 ko mt v 1 th cm n c ng gi chn chu.',
+      question: 'Photobook box gồm những gì?',
+      answer: 'Photobook box gồm 1 quyển Photobook, 1 kẹo mút và 1 thư cảm ơn được đóng gói chỉn chu.',
     },
     {
-      question: 'C nhng loi Photobook no?',
-      answer: 'Hin c 3 loi chnh: Photobook ba cng, Photobook ba mm v Photobook ba bi lin m phng.',
+      question: 'Có những loại Photobook nào?',
+      answer: 'Hiện có 3 loại chính: Photobook bìa cứng, Photobook bìa mềm và Photobook bìa bồi liền mở phẳng.',
     },
     {
-      question: 'Ti c c xem trc sch trc khi in khng?',
-      answer: 'C. Bn c th xem trc thit k trc khi xc nhn t in.',
+      question: 'Tôi có được xem trước sách trước khi in không?',
+      answer: 'Có. Bạn có thể xem trước thiết kế trước khi xác nhận đặt in.',
     },
     {
-      question: 'C giao hng ton quc khng?',
-      answer: 'C. DearMemories h tr giao sch n nhiu tnh thnh trn ton quc.',
+      question: 'Có giao hàng toàn quốc không?',
+      answer: 'Có. DearMemories hỗ trợ giao sách đến nhiều tỉnh thành trên toàn quốc.',
     },
   ];
 
@@ -191,7 +191,7 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
                 }} 
                 className={`px-4 py-2 rounded-full text-[#5B4038] hover:bg-[#F7D9CF] hover:text-[#B9423A] font-semibold transition focus:outline-none ${showAbout ? 'text-[#B9423A] bg-[#F7D9CF]' : ''}`}
               >
-                Gii thiu
+                Giới thiệu
               </button>
               <button 
                 onClick={() => handleNavClick('ptb-box')} 
@@ -203,13 +203,13 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
                 onClick={() => handleNavClick('categories')} 
                 className="px-4 py-2 rounded-full text-[#5B4038] hover:bg-[#F7D9CF] hover:text-[#B9423A] font-semibold transition focus:outline-none"
               >
-                Danh mc
+                Danh mục
               </button>
               <button 
                 onClick={() => handleNavClick('themes')} 
                 className="px-4 py-2 rounded-full text-[#5B4038] hover:bg-[#F7D9CF] hover:text-[#B9423A] font-semibold transition focus:outline-none"
               >
-                Ch 
+                Chủ đề
               </button>
             </nav>
 
@@ -219,10 +219,10 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
                 className="relative z-50 px-6 py-2.5 text-[#5B4038] hover:text-[#B9423A] hover:bg-[#F7D9CF] rounded-xl font-medium transition-all cursor-pointer"
                 style={{ pointerEvents: 'auto' }}
               >
-                ng nhp
+                Đăng nhập
               </button>
               <button onClick={onGetStarted} className="btn bg-[#B9423A] text-white hover:bg-[#96332E]">
-                To sch ngay
+                Tạo sách ngay
                 <Sparkles className="w-4 h-4" />
               </button>
             </div>
@@ -288,7 +288,7 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
             {/* Right: Premium Glassmorphism content card */}
             <div className="flex-1 bg-white/70 backdrop-blur-md p-8 md:p-10 rounded-3xl shadow-xl border border-[#E6C7B8]/40">
               <div className="text-center md:text-left mb-6">
-                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#B9423A] block mb-2">Gii thiu</span>
+                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#B9423A] block mb-2">Giới thiệu</span>
 
                 <h3 
                   className="text-lg font-serif italic text-[#7A4A42] font-semibold mt-2"
@@ -300,10 +300,10 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
 
               <div className="space-y-4 text-[#543A34] text-base leading-relaxed text-justify md:text-left" style={{ fontFamily: 'ui-serif, Georgia, serif' }}>
                 <p>
-                  <strong className="text-[#B9423A] font-sans">dearmemories.</strong> l nn tng photobook c nhn ha c to ra  gip bn lu gi nhng khonh khc ng nh theo cch ring ca mnh. Chng ti tin rng mi bc nh u mang theo mt cu chuyn v mi cu chuyn u xng ng c lu gi lu di thay v b lng qun trong th vin nh ca in thoi.
+                  <strong className="text-[#B9423A] font-sans">dearmemories.</strong> là nền tảng photobook cá nhân hóa được tạo ra để giúp bạn lưu giữ những khoảnh khắc đáng nhớ theo cách riêng của mình. Chúng tôi tin rằng mỗi bức ảnh đều mang theo một câu chuyện và mỗi câu chuyện đều xứng đáng được lưu giữ lâu dài thay vì bị lãng quên trong thư viện ảnh của điện thoại.
                 </p>
                 <p>
-                  Thng qua nhng mu thit k c chn lc sn cng tri nghim ty chnh n gin, <strong className="text-[#B9423A] font-sans">dearmemories.</strong> gip bn d dng bin nhng k nim, cm xc v cu chuyn c nhn thnh mt cun photobook mang du n ring.
+                  Thông qua những mẫu thiết kế được chọn lọc sẵn cùng trải nghiệm tùy chỉnh đơn giản, <strong className="text-[#B9423A] font-sans">dearmemories.</strong> giúp bạn dễ dàng biến những kỷ niệm, cảm xúc và câu chuyện cá nhân thành một cuốn photobook mang dấu ấn riêng.
                 </p>
               </div>
 
@@ -320,7 +320,7 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
                   }}
                 >
                   <ArrowLeft className="w-4 h-4" />
-                  Quay li trang ch
+                  Quay lại trang chủ
                 </button>
               </div>
             </div>
@@ -338,7 +338,7 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
           <div className="max-w-4xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md mb-6 animate-fade-in">
               <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-              <span className="text-sm font-medium text-[#5B4038]">Photobook box dnh cho nhng mn qu k nim</span>
+              <span className="text-sm font-medium text-[#5B4038]">Photobook box dành cho những món quà kỷ niệm</span>
             </div>
 
             <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-in" style={{ fontFamily: '"Cooper BT", "Cooper Black", Georgia, serif' }}>
@@ -346,20 +346,20 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
               <br />
               <span
                 style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A', display: 'block', fontSize: 'clamp(2.5rem, 7vw, 5rem)', lineHeight: 1.1 }}
-              >nh xinh nhng y cm xc</span>
+              >nhỏ xinh nhưng đầy cảm xúc</span>
             </h1>
 
             <p className="text-xl text-[#7A5C53] mb-8 max-w-2xl mx-auto animate-fade-in">
-              Mi hp qu gm 1 quyn Photobook, 1 ko mt v 1 th cm n. Tt c c chun b  ngi nhn cm thy mn qu tht ring v tht ng nh.
+              Mỗi hộp quà gồm 1 quyển Photobook, 1 kẹo mút và 1 thư cảm ơn. Tất cả được chuẩn bị để người nhận cảm thấy món quà thật riêng và thật đáng nhớ.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in">
               <button onClick={onGetStarted} className="btn bg-[#B9423A] text-white hover:bg-[#96332E] btn-lg">
-                To Photobook ca bn
+                Tạo Photobook của bạn
                 <ArrowRight className="w-5 h-5" />
               </button>
               <button onClick={() => handleNavClick('categories')} className="btn border border-[#B9423A] text-[#B9423A] bg-white hover:bg-[#F7D9CF] btn-lg focus:outline-none">
-                Xem danh mc Photobook
+                Xem danh mục Photobook
               </button>
             </div>
           </div>
@@ -385,10 +385,10 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
         <div className="container-custom">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Danh mc <span style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A' }}>loi Photobook</span>
+              Danh mục <span style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A' }}>loại Photobook</span>
             </h2>
             <p className="text-xl text-[#7A5C53] max-w-3xl mx-auto">
-              Chn kiu photobook ph hp vi ngn sch, phong cch v mc  chn chu bn mun dnh cho mn qu.
+              Chọn kiểu photobook phù hợp với ngân sách, phong cách và mức độ chỉn chu bạn muốn dành cho món quà.
             </p>
           </div>
 
@@ -415,7 +415,7 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
 
                 <div className="p-5">
                   <button onClick={onGetStarted} className="w-full btn border border-[#B9423A] text-[#B9423A] bg-white hover:bg-[#B9423A] hover:text-white">
-                    Chn loi ny
+                    Chọn loại này
                   </button>
                 </div>
               </div>
@@ -429,9 +429,9 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
         <div className="container-custom">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Chn <span style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A' }}>ch  ph hp</span>
+              Chọn <span style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A' }}>chủ đề phù hợp</span>
             </h2>
-            <p className="text-xl text-[#7A5C53]">Mi ch  u c cm xc, mu sc v cch k chuyn ring</p>
+            <p className="text-xl text-[#7A5C53]">Mỗi chủ đề đều có cảm xúc, màu sắc và cách kể chuyện riêng</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -452,7 +452,7 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
                   <p className="text-[#7A5C53] text-sm">{theme.description}</p>
 
                   <button onClick={onGetStarted} className="mt-4 w-full btn border border-[#B9423A] text-[#B9423A] bg-white hover:bg-[#B9423A] hover:text-white btn-sm">
-                    Dng ch  ny
+                    Dùng chủ đề này
                   </button>
                 </div>
               </div>
@@ -467,8 +467,8 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                Mi th bn cn  to
-                <span style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A', display: 'block', marginTop: '0.5rem', fontSize: 'clamp(2rem, 5vw, 3.5rem)', lineHeight: 1.15 }}>mt photobook box hon chnh</span>
+                Mọi thứ bạn cần để tạo
+                <span style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A', display: 'block', marginTop: '0.5rem', fontSize: 'clamp(2rem, 5vw, 3.5rem)', lineHeight: 1.15 }}>một photobook box hoàn chỉnh</span>
               </h2>
 
               <div className="grid sm:grid-cols-2 gap-4 mb-8">
@@ -483,7 +483,7 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
               </div>
 
               <button onClick={onGetStarted} className="btn bg-[#B9423A] text-white hover:bg-[#96332E] btn-lg">
-                Bt u ngay
+                Bắt đầu ngay
                 <Sparkles className="w-5 h-5" />
               </button>
             </div>
@@ -505,9 +505,9 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
         <div className="container-custom">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Chn gi <span style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A' }}>ph hp vi bn</span>
+              Chọn gói <span style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A' }}>phù hợp với bạn</span>
             </h2>
-            <p className="text-xl text-[#7A5C53]">Gi tham kho theo loi PTB</p>
+            <p className="text-xl text-[#7A5C53]">Giá tham khảo theo loại PTB</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -519,7 +519,7 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                     <span className="px-4 py-2 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white text-sm font-semibold shadow-lg">
-                      Ph bin nht
+                      Phổ biến nhất
                     </span>
                   </div>
                 )}
@@ -529,7 +529,7 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
 
                 <div className="mb-6">
                   <span className="text-5xl font-bold text-[#B9423A]">{plan.price}</span>
-                  <span className="text-gray-500 ml-2">/ hp</span>
+                  <span className="text-gray-500 ml-2">/ hộp</span>
                 </div>
 
                 <ul className="space-y-3 mb-8">
@@ -545,7 +545,7 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
                   onClick={onGetStarted}
                   className={`w-full btn ${plan.popular ? 'bg-[#B9423A] text-white hover:bg-[#96332E]' : 'border border-[#B9423A] text-[#B9423A] bg-white hover:bg-[#F7D9CF]'}`}
                 >
-                  Chn gi ny
+                  Chọn gói này
                 </button>
               </div>
             ))}
@@ -561,9 +561,9 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
               <HelpCircle className="w-7 h-7" />
             </div>
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Cu hi <span style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A' }}>thng gp</span>
+              Câu hỏi <span style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A' }}>thường gặp</span>
             </h2>
-            <p className="text-xl text-[#7A5C53]">Mt vi thng tin quan trng trc khi bn bt u to Photobook</p>
+            <p className="text-xl text-[#7A5C53]">Một vài thông tin quan trọng trước khi bạn bắt đầu tạo Photobook</p>
           </div>
 
           <div className="max-w-4xl mx-auto space-y-4">
@@ -581,14 +581,14 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
       <section className="section-padding bg-[#B9423A] text-white">
         <div className="container-custom text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            Sn sng to photobook box ca bn?
+            Sẵn sàng tạo photobook box của bạn?
           </h2>
           <p className="text-xl mb-8 opacity-90">
-            Bin nhng k nim p thnh mt hp qu c th cm trn tay.
+            Biến những kỷ niệm đẹp thành một hộp quà có thể cầm trên tay.
           </p>
 
           <button onClick={onGetStarted} className="btn bg-white text-[#B9423A] hover:bg-gray-50 btn-lg shadow-xl">
-            To sch ngay
+            Tạo sách ngay
             <Sparkles className="w-5 h-5" />
           </button>
         </div>
@@ -614,44 +614,44 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
                 <span className="text-2xl font-bold font-handwriting">dearmemories.</span>
               </div>
               <p className="text-[#E8D7CF]">
-                To photobook box c nhn ho vi tnh yu thng.
+                Tạo photobook box cá nhân hoá với tình yêu thương.
               </p>
             </div>
 
             <div>
-              <h3 className="font-bold mb-4">Sn phm</h3>
+              <h3 className="font-bold mb-4">Sản phẩm</h3>
               <ul className="space-y-2 text-[#E8D7CF] flex flex-col items-start">
                 <li><button onClick={() => handleNavClick('ptb-box')} className="hover:text-white transition focus:outline-none text-left">Photobook Box</button></li>
-                <li><button onClick={() => handleNavClick('categories')} className="hover:text-white transition focus:outline-none text-left">Danh mc</button></li>
-                <li><button onClick={() => handleNavClick('themes')} className="hover:text-white transition focus:outline-none text-left">Ch </button></li>
+                <li><button onClick={() => handleNavClick('categories')} className="hover:text-white transition focus:outline-none text-left">Danh mục</button></li>
+                <li><button onClick={() => handleNavClick('themes')} className="hover:text-white transition focus:outline-none text-left">Chủ đề</button></li>
                 <li><button onClick={() => {
                   setShowAbout(true);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
-                }} className="hover:text-white transition focus:outline-none text-left">Gii thiu</button></li>
+                }} className="hover:text-white transition focus:outline-none text-left">Giới thiệu</button></li>
               </ul>
             </div>
 
             <div>
-              <h3 className="font-bold mb-4">Danh mc Photobook</h3>
+              <h3 className="font-bold mb-4">Danh mục Photobook</h3>
               <ul className="space-y-2 text-[#E8D7CF] flex flex-col items-start">
-                <li><button onClick={() => handleNavClick('categories')} className="hover:text-white transition focus:outline-none text-left">Ba cng</button></li>
-                <li><button onClick={() => handleNavClick('categories')} className="hover:text-white transition focus:outline-none text-left">Ba mm</button></li>
-                <li><button onClick={() => handleNavClick('categories')} className="hover:text-white transition focus:outline-none text-left">Ba bi lin m phng</button></li>
+                <li><button onClick={() => handleNavClick('categories')} className="hover:text-white transition focus:outline-none text-left">Bìa cứng</button></li>
+                <li><button onClick={() => handleNavClick('categories')} className="hover:text-white transition focus:outline-none text-left">Bìa mềm</button></li>
+                <li><button onClick={() => handleNavClick('categories')} className="hover:text-white transition focus:outline-none text-left">Bìa bồi liền mở phẳng</button></li>
               </ul>
             </div>
 
             <div>
-              <h3 className="font-bold mb-4">H tr</h3>
+              <h3 className="font-bold mb-4">Hỗ trợ</h3>
               <ul className="space-y-2 text-[#E8D7CF] flex flex-col items-start">
-                <li><button onClick={() => handleNavClick('ptb-box')} className="hover:text-white transition focus:outline-none text-left">Trong hp c g?</button></li>
-                <li><button onClick={() => handleNavClick('themes')} className="hover:text-white transition focus:outline-none text-left">Chn ch </button></li>
-                <li><button onClick={() => handleNavClick('categories')} className="hover:text-white transition focus:outline-none text-left">Chn loi Photobook</button></li>
+                <li><button onClick={() => handleNavClick('ptb-box')} className="hover:text-white transition focus:outline-none text-left">Trong hộp có gì?</button></li>
+                <li><button onClick={() => handleNavClick('themes')} className="hover:text-white transition focus:outline-none text-left">Chọn chủ đề</button></li>
+                <li><button onClick={() => handleNavClick('categories')} className="hover:text-white transition focus:outline-none text-left">Chọn loại Photobook</button></li>
               </ul>
             </div>
           </div>
 
           <div className="border-t border-[#6B4A40] mt-8 pt-8 text-center text-[#E8D7CF]">
-            <p> 2026 DearMemories. All rights reserved. Made with  in Vietnam</p>
+            <p>© 2026 DearMemories. All rights reserved. Made with ❤️ in Vietnam</p>
           </div>
         </div>
       </footer>

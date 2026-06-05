@@ -51,7 +51,7 @@ export function ImprovedAdvancedEditor({
     return (
       <div className="flex items-center justify-center h-screen bg-gradient-to-br from-purple-50 to-pink-50">
         <div className="text-center">
-          <p className="text-gray-500 text-lg">Khng tm thy trang</p>
+          <p className="text-gray-500 text-lg">Không tìm thấy trang</p>
         </div>
       </div>
     );
@@ -139,7 +139,7 @@ export function ImprovedAdvancedEditor({
         newElement = {
           ...baseElement,
           type: 'text',
-          content: data.content || 'Nhp vn bn...',
+          content: data.content || 'Nhập văn bản...',
           fontFamily: data.fontFamily || 'Poppins',
           fontSize: data.fontSize || 24,
           fontWeight: data.fontWeight || 'normal',
@@ -197,7 +197,7 @@ export function ImprovedAdvancedEditor({
     const newElements = [...elements, newElement];
     setElements(newElements);
     setSelectedIds([newElement.id]);
-    toast.success('  thm phn t mi');
+    toast.success('✨ Đã thêm phần tử mới');
   };
 
   const handleUpdateElement = (id: string, updates: Partial<PageElement>) => {
@@ -211,7 +211,7 @@ export function ImprovedAdvancedEditor({
     const newElements = elements.filter((el) => el.id !== id);
     setElements(newElements);
     setSelectedIds(selectedIds.filter((sid) => sid !== id));
-    toast.info('  xa phn t');
+    toast.info('🗑️ Đã xóa phần tử');
   };
 
   const handleSelectElement = (id: string, multiSelect?: boolean) => {
@@ -243,7 +243,7 @@ export function ImprovedAdvancedEditor({
     });
 
     setElements(newElements);
-    toast.success('  nhn i phn t');
+    toast.success('✨ Đã nhân đôi phần tử');
   };
 
   const handleAlign = (type: 'left' | 'center' | 'right') => {
@@ -265,7 +265,7 @@ export function ImprovedAdvancedEditor({
     });
 
     setElements(newElements);
-    toast.success('  cn chnh');
+    toast.success('📐 Đã căn chỉnh');
   };
 
   // Keyboard shortcuts
@@ -280,7 +280,7 @@ export function ImprovedAdvancedEditor({
         if (e.key === 's') {
           e.preventDefault();
           forceSave();
-          toast.success('  lu');
+          toast.success('💾 Đã lưu');
         } else if (e.key === 'd') {
           e.preventDefault();
           handleDuplicate();
@@ -514,7 +514,7 @@ export function ImprovedAdvancedEditor({
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-pink-600" />
-                <h3 className="font-bold text-gray-900">Th vin</h3>
+                <h3 className="font-bold text-gray-900">Thư viện</h3>
               </div>
               <button
                 onClick={() => setShowAssetLibrary(false)}
@@ -524,7 +524,7 @@ export function ImprovedAdvancedEditor({
               </button>
             </div>
             <p className="text-xs text-gray-600">
-              Ko th  thm phn t vo trang
+              Kéo thả để thêm phần tử vào trang
             </p>
           </div>
           <AssetLibrary onAddElement={handleAddElement} />
@@ -536,7 +536,7 @@ export function ImprovedAdvancedEditor({
         {/* Improved Toolbar */}
         {!isMobile && (
           <ImprovedEditorToolbar
-            title={book.title || 'Chnh sa trang'}
+            title={book.title || 'Chỉnh sửa trang'}
             zoom={zoom}
             canUndo={canUndo}
             canRedo={canRedo}
@@ -551,11 +551,11 @@ export function ImprovedAdvancedEditor({
             onPreview={onPreview}
             onSave={() => {
               forceSave();
-              toast.success('  lu thnh cng');
+              toast.success('💾 Đã lưu thành công');
             }}
             onAddText={() =>
               handleAddElement('text', {
-                content: 'Nhp vn bn...',
+                content: 'Nhập văn bản...',
                 fontSize: 24,
               })
             }
@@ -572,27 +572,27 @@ export function ImprovedAdvancedEditor({
           <div className="bg-gradient-to-r from-purple-50 to-pink-50 border-b border-purple-100 px-4 py-2">
             <div className="flex items-center gap-2">
               <span className="text-xs font-medium text-gray-700">
-                {selectedIds.length} phn t c chn
+                {selectedIds.length} phần tử được chọn
               </span>
               <div className="flex items-center gap-1 ml-4">
                 <button
                   onClick={() => handleAlign('left')}
                   className="p-2 hover:bg-white rounded-lg transition-colors"
-                  title="Cn tri"
+                  title="Căn trái"
                 >
                   <AlignLeft className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => handleAlign('center')}
                   className="p-2 hover:bg-white rounded-lg transition-colors"
-                  title="Cn gia"
+                  title="Căn giữa"
                 >
                   <AlignCenter className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => handleAlign('right')}
                   className="p-2 hover:bg-white rounded-lg transition-colors"
-                  title="Cn phi"
+                  title="Căn phải"
                 >
                   <AlignRight className="w-4 h-4" />
                 </button>
@@ -650,7 +650,7 @@ export function ImprovedAdvancedEditor({
                 <div className="text-center">
                   <Plus className="w-12 h-12 text-gray-300 mx-auto mb-2" />
                   <p className="text-sm text-gray-400 font-medium">
-                    Click "Text" hoc "nh"  bt u
+                    Click "Text" hoặc "Ảnh" để bắt đầu
                   </p>
                 </div>
               </div>
@@ -666,12 +666,12 @@ export function ImprovedAdvancedEditor({
             className="flex items-center gap-2 px-4 py-2 border-2 border-gray-300 rounded-xl hover:bg-gray-50 transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:border-purple-400"
           >
             <ChevronLeft className="w-5 h-5" />
-            {!isMobile && <span className="font-medium">Trc</span>}
+            {!isMobile && <span className="font-medium">Trước</span>}
           </button>
 
           <div className="flex items-center gap-3 px-6 py-2 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-100">
             <span className="font-bold text-gray-900">
-              {currentPageIndex === 0 ? ' Trang ba' : `Trang ${currentPageIndex + 1}`}
+              {currentPageIndex === 0 ? '📖 Trang bìa' : `Trang ${currentPageIndex + 1}`}
             </span>
             <span className="text-sm text-gray-500">/ {pages.length}</span>
           </div>
@@ -695,10 +695,10 @@ export function ImprovedAdvancedEditor({
             <div className="sticky top-0 z-10 bg-gradient-to-r from-purple-50 to-pink-50 border-b border-purple-100 p-4">
               <div className="flex items-center gap-2 mb-1">
                 <Layers className="w-5 h-5 text-purple-600" />
-                <h3 className="font-bold text-gray-900">Lp</h3>
+                <h3 className="font-bold text-gray-900">Lớp</h3>
               </div>
               <p className="text-xs text-gray-600">
-                {elements.length} phn t trn trang
+                {elements.length} phần tử trên trang
               </p>
             </div>
             <LayerPanel
@@ -767,7 +767,7 @@ export function ImprovedAdvancedEditor({
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-bold text-gray-900">Thm hnh nh</h3>
+              <h3 className="text-xl font-bold text-gray-900">Thêm hình ảnh</h3>
               <button
                 onClick={() => setShowImageUploader(false)}
                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors"

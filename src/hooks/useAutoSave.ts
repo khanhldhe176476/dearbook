@@ -130,15 +130,15 @@ export function useAutoSave<T>({
     };
   }, [enabled, interval, performSave]);
 
-  // Save before unload  ng b vo localStorage lm backup
-  // (IndexedDB l async nn khng m bo kp khi tab ng)
+  // Save before unload — đồng bộ vào localStorage làm backup
+  // (IndexedDB là async nên không đảm bảo kịp khi tab đóng)
   useEffect(() => {
     if (!enabled) return;
 
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       const currentDataString = JSON.stringify(dataRef.current);
       if (currentDataString !== lastSavedDataRef.current) {
-        // Backup ng b vo localStorage
+        // Backup đồng bộ vào localStorage
         try {
           const key = 'dearbook_autosave_backup';
           localStorage.setItem(key, JSON.stringify({
@@ -146,13 +146,13 @@ export function useAutoSave<T>({
             timestamp: Date.now(),
           }));
         } catch {
-          // localStorage c th y, b qua
+          // localStorage có thể đầy, bỏ qua
         }
 
         e.preventDefault();
-        e.returnValue = 'Bn c thay i cha c lu. Bn c chc mun ri i?';
+        e.returnValue = 'Bạn có thay đổi chưa được lưu. Bạn có chắc muốn rời đi?';
 
-        // Th async save (best effort)
+        // Thử async save (best effort)
         onSave(dataRef.current);
       }
     };
@@ -161,24 +161,24 @@ export function useAutoSave<T>({
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [enabled, onSave]);
 
-  // Restore backup nu c (khi hook mount)
+  // Restore backup nếu có (khi hook mount)
   useEffect(() => {
     try {
       const backupRaw = localStorage.getItem('dearbook_autosave_backup');
       if (backupRaw) {
         const backup = JSON.parse(backupRaw);
         if (backup.data && backup.timestamp) {
-          // Ch restore nu backup mi hn last saved
+          // Chỉ restore nếu backup mới hơn last saved
           const backupStr = JSON.stringify(backup.data);
           if (backupStr !== lastSavedDataRef.current) {
-            console.log(' Found auto-save backup from', new Date(backup.timestamp).toLocaleString());
-            // Khng t ng restore   component cha quyt nh
+            console.log('📦 Found auto-save backup from', new Date(backup.timestamp).toLocaleString());
+            // Không tự động restore — để component cha quyết định
           }
         }
         localStorage.removeItem('dearbook_autosave_backup');
       }
     } catch {
-      // B qua
+      // Bỏ qua
     }
   }, []);
 

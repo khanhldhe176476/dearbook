@@ -7,10 +7,10 @@ interface Step1ThemeSelectorProps {
 const themes = [
   {
     id: 'love' as const,
-    title: 'Tnh Yu',
+    title: 'Tình Yêu',
     icon: Heart,
-    emoji: '',
-    description: 'Cun sch k v cu chuyn tnh yu ngt ngo ca hai bn',
+    emoji: '💕',
+    description: 'Cuốn sách kể về câu chuyện tình yêu ngọt ngào của hai bạn',
     color: 'from-pink-400 to-rose-500',
     bgColor: 'bg-pink-50',
     borderColor: 'border-pink-200',
@@ -18,10 +18,10 @@ const themes = [
   },
   {
     id: 'family' as const,
-    title: 'Gia nh',
+    title: 'Gia Đình',
     icon: Users,
-    emoji: '',
-    description: 'Nhng khonh khc m p bn gia nh thn yu',
+    emoji: '👨‍👩‍👧',
+    description: 'Những khoảnh khắc ấm áp bên gia đình thân yêu',
     color: 'from-blue-400 to-indigo-500',
     bgColor: 'bg-blue-50',
     borderColor: 'border-blue-200',
@@ -29,10 +29,10 @@ const themes = [
   },
   {
     id: 'birthday' as const,
-    title: 'Sinh Nht',
+    title: 'Sinh Nhật',
     icon: Cake,
-    emoji: '',
-    description: 'Chc mng sinh nht vi mn qu c bit v  ngha',
+    emoji: '🎂',
+    description: 'Chúc mừng sinh nhật với món quà đặc biệt và ý nghĩa',
     color: 'from-yellow-400 to-orange-500',
     bgColor: 'bg-yellow-50',
     borderColor: 'border-yellow-200',
@@ -40,10 +40,10 @@ const themes = [
   },
   {
     id: 'friendship' as const,
-    title: 'Tnh Bn',
+    title: 'Tình Bạn',
     icon: Smile,
-    emoji: '',
-    description: 'K nim v tnh bn p v nhng ngi bn thn thit',
+    emoji: '🤝',
+    description: 'Kỷ niệm về tình bạn đẹp và những người bạn thân thiết',
     color: 'from-green-400 to-emerald-500',
     bgColor: 'bg-green-50',
     borderColor: 'border-green-200',
@@ -57,10 +57,10 @@ export function Step1ThemeSelector({ onSelect }: Step1ThemeSelectorProps) {
       {/* Header */}
       <div className="text-center space-y-4">
         <h2 className="text-4xl md:text-5xl font-serif text-gray-900">
-          Chn ch  cho cun sch ca bn
+          Chọn chủ đề cho cuốn sách của bạn
         </h2>
         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-          Mi ch  s c nhng ni dung v minh ha ph hp vi cu chuyn bn mun k
+          Mỗi chủ đề sẽ có những nội dung và minh họa phù hợp với câu chuyện bạn muốn kể
         </p>
       </div>
 
@@ -101,7 +101,7 @@ export function Step1ThemeSelector({ onSelect }: Step1ThemeSelectorProps) {
 
                 {/* Arrow */}
                 <div className="mt-6 flex items-center gap-2 text-gray-900 font-semibold group-hover:gap-4 transition-all">
-                  Chn ch  ny
+                  Chọn chủ đề này
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
@@ -119,7 +119,7 @@ export function Step1ThemeSelector({ onSelect }: Step1ThemeSelectorProps) {
       {/* Info Box */}
       <div className="mt-12 p-6 rounded-2xl bg-purple-50 border border-purple-200 max-w-3xl mx-auto">
         <p className="text-center text-purple-900">
-           <strong>Lu :</strong> Bn c th quay li v thay i ch  bt k lc no trong qu trnh thit k
+          💡 <strong>Lưu ý:</strong> Bạn có thể quay lại và thay đổi chủ đề bất kỳ lúc nào trong quá trình thiết kế
         </p>
       </div>
     </div>

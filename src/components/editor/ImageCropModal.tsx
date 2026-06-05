@@ -217,7 +217,7 @@ export function ImageCropModal({
       <div className="w-full max-w-4xl h-[90vh] bg-white rounded-xl shadow-2xl flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900">Ct & Chnh sa nh</h2>
+          <h2 className="text-xl font-semibold text-gray-900">Cắt & Chỉnh sửa ảnh</h2>
           <button
             onClick={onCancel}
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -271,10 +271,10 @@ export function ImageCropModal({
               <button
                 onClick={handleRotate}
                 className="flex items-center gap-2 px-3 py-2 hover:bg-white rounded-lg transition-colors border border-gray-300"
-                title="Rotate 90"
+                title="Rotate 90°"
               >
                 <RotateCw className="w-5 h-5 text-gray-700" />
-                <span className="text-sm font-medium text-gray-700">{rotation}</span>
+                <span className="text-sm font-medium text-gray-700">{rotation}°</span>
               </button>
             </div>
 
@@ -283,14 +283,14 @@ export function ImageCropModal({
                 onClick={onCancel}
                 className="px-4 py-2 text-gray-700 hover:bg-gray-200 rounded-lg transition-colors"
               >
-                Hy
+                Hủy
               </button>
               <button
                 onClick={handleComplete}
                 className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-lg hover:shadow-lg transition-all"
               >
                 <Check className="w-5 h-5" />
-                Hon thnh
+                Hoàn thành
               </button>
             </div>
           </div>

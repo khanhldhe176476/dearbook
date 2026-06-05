@@ -7,7 +7,7 @@ export const templateBooks: BookData[] = [
     id: 'template-love-anniversary',
     theme: 'love',
     templateId: 'love-modern',
-    title: 'K Nim 2 Nm Bn Nhau',
+    title: 'Kỷ Niệm 2 Năm Bên Nhau',
     status: 'completed',
     createdAt: '2024-01-15T00:00:00.000Z',
     updatedAt: '2024-01-15T00:00:00.000Z',
@@ -28,7 +28,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Ln u Gp Em',
+            content: 'Lần Đầu Gặp Em',
             x: 30,
             y: 270,
             width: 340,
@@ -42,7 +42,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'Ngy 14/02/2022 - Qun c ph Highlands\n\nAnh vn nh nh in ngy u tin gp em. nh mt em tht trong veo, n ci em nh mang c ma xun n. Lc  anh ngh, y chnh l ngi anh mun bn cnh sut i.',
+            content: 'Ngày 14/02/2022 - Quán cà phê Highlands\n\nAnh vẫn nhớ như in ngày đầu tiên gặp em. Ánh mắt em thật trong veo, nụ cười em như mang cả mùa xuân đến. Lúc đó anh nghĩ, đây chính là người anh muốn bên cạnh suốt đời.',
             x: 30,
             y: 330,
             width: 340,
@@ -61,7 +61,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Bui Hn u Tin',
+            content: 'Buổi Hẹn Đầu Tiên',
             x: 30,
             y: 30,
             width: 340,
@@ -75,7 +75,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'Chng mnh i xem phim, sau  do quanh h Hon Kim. Anh c gng tm nhng ch  tr chuyn tht th v, nhng c ngi gn em l anh  thy hnh phc ri.\n\nLc v, anh mo him nm tay em. Em cng nm li tay anh. Tri tim anh lc  nh mun nhy ra khi lng ngc.',
+            content: 'Chúng mình đi xem phim, sau đó dạo quanh hồ Hoàn Kiếm. Anh cố gắng tìm những chủ đề trò chuyện thật thú vị, nhưng cứ ngồi gần em là anh đã thấy hạnh phúc rồi.\n\nLúc về, anh mạo hiểm nắm tay em. Em cũng nắm lại tay anh. Trái tim anh lúc đó như muốn nhảy ra khỏi lồng ngực.',
             x: 30,
             y: 90,
             width: 340,
@@ -112,7 +112,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Nhng K Nim p',
+            content: 'Những Kỷ Niệm Đẹp',
             x: 30,
             y: 270,
             width: 340,
@@ -126,7 +126,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: ' Chuyn i  Lt u tin\n Ba ti lng mn bn b h\n Sinh nht u tin bn nhau\n m giao tha m ngc cng nhau\n Marathon phim yu thch\n Nhng bui sng c ph cng nhau',
+            content: '💕 Chuyến đi Đà Lạt đầu tiên\n🌹 Bữa tối lãng mạn bên bờ hồ\n🎂 Sinh nhật đầu tiên bên nhau\n🌟 Đêm giao thừa đếm ngược cùng nhau\n🎬 Marathon phim yêu thích\n☕ Những buổi sáng cà phê cùng nhau',
             x: 30,
             y: 330,
             width: 340,
@@ -145,7 +145,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Chuyn i ng Nh',
+            content: 'Chuyến Đi Đáng Nhớ',
             x: 30,
             y: 30,
             width: 340,
@@ -168,7 +168,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'Thng 6/2023 -  Nng\n\nChng mnh i do trn bi bin M Kh lc hong hn. Em ni rng y l khonh khc p nht i em. Anh cng ngh vy, nhng khng phi v cnh p, m v c em bn cnh.',
+            content: 'Tháng 6/2023 - Đà Nẵng\n\nChúng mình đi dạo trên bãi biển Mỹ Khê lúc hoàng hôn. Em nói rằng đây là khoảnh khắc đẹp nhất đời em. Anh cũng nghĩ vậy, nhưng không phải vì cảnh đẹp, mà vì có em bên cạnh.',
             x: 30,
             y: 310,
             width: 340,
@@ -196,7 +196,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Ba Ti Lng Mn',
+            content: 'Bữa Tối Lãng Mạn',
             x: 30,
             y: 250,
             width: 340,
@@ -210,7 +210,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'K nim 1 nm yu nhau, anh t bn  nh hng trn cao. nh nn lung linh, view thnh ph v m tuyt p. Nhng p nht vn l em trong chic vy trng, mm ci vi anh.',
+            content: 'Kỷ niệm 1 năm yêu nhau, anh đặt bàn ở nhà hàng trên cao. Ánh nến lung linh, view thành phố về đêm tuyệt đẹp. Nhưng đẹp nhất vẫn là em trong chiếc váy trắng, mỉm cười với anh.',
             x: 30,
             y: 310,
             width: 340,
@@ -229,7 +229,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Khonh Khc Ngt Ngo',
+            content: 'Khoảnh Khắc Ngọt Ngào',
             x: 30,
             y: 30,
             width: 340,
@@ -252,7 +252,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'C nhng khonh khc nh nhoi nhng li in su trong tr nh. Ci cch em ci khi anh k chuyn ci. Ci cch em nu tay anh khi qua ng. Ci cch em nhn anh vi nh mt y yu thng.',
+            content: 'Có những khoảnh khắc nhỏ nhoi nhưng lại in sâu trong trí nhớ. Cái cách em cười khi anh kể chuyện cười. Cái cách em níu tay anh khi qua đường. Cái cách em nhìn anh với ánh mắt đầy yêu thương.',
             x: 30,
             y: 310,
             width: 340,
@@ -280,7 +280,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Tnh Yu Ca Chng Mnh',
+            content: 'Tình Yêu Của Chúng Mình',
             x: 30,
             y: 270,
             width: 340,
@@ -294,7 +294,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'Hai nm khng phi l thi gian di, nhng   anh bit rng em l ngi anh mun bn cnh mi mi. Tnh yu ca chng mnh khng n o, khng ph trng, nhng chn thnh v bn vng.',
+            content: 'Hai năm không phải là thời gian dài, nhưng đủ để anh biết rằng em là người anh muốn bên cạnh mãi mãi. Tình yêu của chúng mình không ồn ào, không phô trương, nhưng chân thành và bền vững.',
             x: 30,
             y: 330,
             width: 340,
@@ -313,7 +313,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Li Ha Ca Anh',
+            content: 'Lời Hứa Của Anh',
             x: 30,
             y: 50,
             width: 340,
@@ -327,7 +327,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'Anh ha s lun l ch da vng chc cho em\n\nAnh ha s lun lng nghe v thu hiu em\n\nAnh ha s cng em vt qua mi kh khn\n\nAnh ha s yu em nhiu hn mi ngy\n\nAnh ha s lm em hnh phc sut i\n\nV em chnh l tnh yu ca i anh\n\nYu em mi mi! ',
+            content: 'Anh hứa sẽ luôn là chỗ dựa vững chắc cho em\n\nAnh hứa sẽ luôn lắng nghe và thấu hiểu em\n\nAnh hứa sẽ cùng em vượt qua mọi khó khăn\n\nAnh hứa sẽ yêu em nhiều hơn mỗi ngày\n\nAnh hứa sẽ làm em hạnh phúc suốt đời\n\nVì em chính là tình yêu của đời anh\n\nYêu em mãi mãi! ❤️',
             x: 30,
             y: 130,
             width: 340,
@@ -346,7 +346,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'back-quote',
             type: 'text',
-            content: '"Tnh yu khng phi l nhn nhau,\nm l cng nhau nhn v mt hng."',
+            content: '"Tình yêu không phải là nhìn nhau,\nmà là cùng nhau nhìn về một hướng."',
             x: 50,
             y: 250,
             width: 300,
@@ -360,7 +360,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'back-heart',
             type: 'text',
-            content: '',
+            content: '💕',
             x: 150,
             y: 400,
             width: 100,
@@ -380,7 +380,7 @@ export const templateBooks: BookData[] = [
     id: 'template-love-longdistance',
     theme: 'love',
     templateId: 'love-elegant',
-    title: 'Yu Em T Xa',
+    title: 'Yêu Em Từ Xa',
     status: 'completed',
     createdAt: '2024-02-01T00:00:00.000Z',
     updatedAt: '2024-02-01T00:00:00.000Z',
@@ -401,7 +401,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Nh Em Mi Ngy',
+            content: 'Nhớ Em Mỗi Ngày',
             x: 30,
             y: 270,
             width: 340,
@@ -415,7 +415,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'D chng ta cch xa hng nghn cy s, nhng tri tim anh lun  bn em. Khong cch khng th ngn cch tnh yu ca chng ta. Mi ngy thc dy, iu u tin anh ngh n l em.',
+            content: 'Dù chúng ta cách xa hàng nghìn cây số, nhưng trái tim anh luôn ở bên em. Khoảng cách không thể ngăn cách tình yêu của chúng ta. Mỗi ngày thức dậy, điều đầu tiên anh nghĩ đến là em.',
             x: 30,
             y: 330,
             width: 340,
@@ -434,7 +434,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Nhng Cuc Gi Video',
+            content: 'Những Cuộc Gọi Video',
             x: 30,
             y: 30,
             width: 340,
@@ -457,7 +457,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'Mi ti 9 gi, anh li m in thoi gi cho em. Nhn thy khun mt em qua mn hnh, anh thy c ngy mt mi tan bin. Em k cho anh nghe v ngy ca em, anh nghe v ci theo.\n\n l khonh khc hnh phc nht trong ngy ca anh.',
+            content: 'Mỗi tối 9 giờ, anh lại mở điện thoại gọi cho em. Nhìn thấy khuôn mặt em qua màn hình, anh thấy cả ngày mệt mỏi tan biến. Em kể cho anh nghe về ngày của em, anh nghe và cười theo.\n\nĐó là khoảnh khắc hạnh phúc nhất trong ngày của anh.',
             x: 30,
             y: 310,
             width: 340,
@@ -485,7 +485,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'iu Anh Nh Nht',
+            content: 'Điều Anh Nhớ Nhất',
             x: 30,
             y: 270,
             width: 340,
@@ -499,7 +499,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: ' Nhng cuc gi video mi ti\n Nhng tin nhn "Good morning" ca em\n N ci ti ca em qua mn hnh\n Tnh yu vt qua khong cch\n Cng nhau ngm trng d  hai ni\n Nhng li chc ng ngon mi m',
+            content: '📱 Những cuộc gọi video mỗi tối\n💌 Những tin nhắn "Good morning" của em\n😊 Nụ cười tươi của em qua màn hình\n❤️ Tình yêu vượt qua khoảng cách\n🌙 Cùng nhau ngắm trăng dù ở hai nơi\n💭 Những lời chúc ngủ ngon mỗi đêm',
             x: 30,
             y: 330,
             width: 340,
@@ -518,7 +518,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Ngy Gp Li',
+            content: 'Ngày Gặp Lại',
             x: 30,
             y: 30,
             width: 340,
@@ -532,7 +532,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'Mi ln c v gp em, anh m tng ngy. Ra sn bay, tim anh p thnh thch. Nhn thy em ng i, anh chy n m em tht cht.\n\nNhng ngy c  bn em, d ngn ngi, nhng   anh np nng lng cho nhng thng ngy xa cch tip theo.',
+            content: 'Mỗi lần được về gặp em, anh đếm từng ngày. Ra sân bay, tim anh đập thình thịch. Nhìn thấy em đứng đợi, anh chạy đến ôm em thật chặt.\n\nNhững ngày được ở bên em, dù ngắn ngủi, nhưng đủ để anh nạp năng lượng cho những tháng ngày xa cách tiếp theo.',
             x: 30,
             y: 90,
             width: 340,
@@ -569,7 +569,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'K Hoch Tng Lai',
+            content: 'Kế Hoạch Tương Lai',
             x: 30,
             y: 270,
             width: 340,
@@ -583,7 +583,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'Anh ang c gng tng ngy  chng ta sm c  bn nhau. Mt ngy khng xa, anh s v v chng ta s khng phi xa cch na. Anh ha s to cho em mt t m hnh phc.',
+            content: 'Anh đang cố gắng từng ngày để chúng ta sớm được ở bên nhau. Một ngày không xa, anh sẽ về và chúng ta sẽ không phải xa cách nữa. Anh hứa sẽ tạo cho em một tổ ấm hạnh phúc.',
             x: 30,
             y: 330,
             width: 340,
@@ -602,7 +602,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Li Ha Ca Anh',
+            content: 'Lời Hứa Của Anh',
             x: 30,
             y: 50,
             width: 340,
@@ -616,7 +616,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'Anh ha s lun kin nhn ch i\n\nAnh ha s lun tin tng em\n\nAnh ha s n lc  sm v bn em\n\nAnh ha mt ngy chng ta s khng cn cch xa na\n\nAnh ha s yu em mi mi\n\nD khong cch c xa n u\n\nEm lun l tng lai ca anh! ',
+            content: 'Anh hứa sẽ luôn kiên nhẫn chờ đợi\n\nAnh hứa sẽ luôn tin tưởng em\n\nAnh hứa sẽ nỗ lực để sớm về bên em\n\nAnh hứa một ngày chúng ta sẽ không còn cách xa nữa\n\nAnh hứa sẽ yêu em mãi mãi\n\nDù khoảng cách có xa đến đâu\n\nEm luôn là tương lai của anh! 💖',
             x: 30,
             y: 130,
             width: 340,
@@ -635,7 +635,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'back-quote',
             type: 'text',
-            content: '"Khong cch ch l con s,\ntnh yu mi l tt c."',
+            content: '"Khoảng cách chỉ là con số,\ntình yêu mới là tất cả."',
             x: 50,
             y: 250,
             width: 300,
@@ -649,7 +649,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'back-icon',
             type: 'text',
-            content: '',
+            content: '💌',
             x: 150,
             y: 400,
             width: 100,
@@ -669,7 +669,7 @@ export const templateBooks: BookData[] = [
     id: 'template-family-grandparents',
     theme: 'family',
     templateId: 'family-warm',
-    title: 'Tnh Yu Ca ng B',
+    title: 'Tình Yêu Của Ông Bà',
     status: 'completed',
     createdAt: '2024-01-20T00:00:00.000Z',
     updatedAt: '2024-01-20T00:00:00.000Z',
@@ -690,7 +690,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Li Cm n',
+            content: 'Lời Cảm Ơn',
             x: 30,
             y: 270,
             width: 340,
@@ -704,7 +704,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'Cm n ng b  lun yu thng chng con v iu kin. T nhng ba cm m cng n nhng li dy bo qu gi. ng b l ngi  dy con bit yu thng, bit sng t t vi mi ngi.',
+            content: 'Cảm ơn ông bà đã luôn yêu thương chúng con vô điều kiện. Từ những bữa cơm ấm cúng đến những lời dạy bảo quý giá. Ông bà là người đã dạy con biết yêu thương, biết sống tử tế với mọi người.',
             x: 30,
             y: 330,
             width: 340,
@@ -723,7 +723,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Ngi Nh m p',
+            content: 'Ngôi Nhà Ấm Áp',
             x: 30,
             y: 30,
             width: 340,
@@ -737,7 +737,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'Nh ng b lun l ni con mun v nht. Mi thm bp la, ting ci ni m p, nhng cu chuyn k v ngy xa. Mi ln v thm, con li thy mnh nh mt a tr c yu thng, c ch che.',
+            content: 'Nhà ông bà luôn là nơi con muốn về nhất. Mùi thơm bếp lửa, tiếng cười nói ấm áp, những câu chuyện kể về ngày xưa. Mỗi lần về thăm, con lại thấy mình như một đứa trẻ được yêu thương, được chở che.',
             x: 30,
             y: 90,
             width: 340,
@@ -774,7 +774,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Nhng K Nim p',
+            content: 'Những Kỷ Niệm Đẹp',
             x: 30,
             y: 270,
             width: 340,
@@ -788,7 +788,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: ' Ngi nh m p ca ng b\n Mn ph b nu mi sng ch nht\n Nhng cu chuyn xa ng k\n Vn cy ng chm sc\n Chic o len b an tng\n Tnh yu thng bao la',
+            content: '🏡 Ngôi nhà ấm áp của ông bà\n🍜 Món phở bà nấu mỗi sáng chủ nhật\n📚 Những câu chuyện xưa ông kể\n🌳 Vườn cây ông chăm sóc\n🧶 Chiếc áo len bà đan tặng\n❤️ Tình yêu thương bao la',
             x: 30,
             y: 330,
             width: 340,
@@ -807,7 +807,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Ba Cm Gia nh',
+            content: 'Bữa Cơm Gia Đình',
             x: 30,
             y: 30,
             width: 340,
@@ -830,7 +830,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'Ch nht no cng vy, c nh quy qun bn mm cm. B nu nhng mn con thch, ng k chuyn vui lm c nh ci.  l nhng khonh khc hnh phc nht m con mi mi ghi nh.',
+            content: 'Chủ nhật nào cũng vậy, cả nhà quây quần bên mâm cơm. Bà nấu những món con thích, ông kể chuyện vui làm cả nhà cười. Đó là những khoảnh khắc hạnh phúc nhất mà con mãi mãi ghi nhớ.',
             x: 30,
             y: 310,
             width: 340,
@@ -858,7 +858,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Nhng Bi Hc Qu Gi',
+            content: 'Những Bài Học Quý Giá',
             x: 30,
             y: 270,
             width: 340,
@@ -872,7 +872,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'ng b  dy con bit trn trng nhng iu gin d. Bit cm n v bit cho i. Bit kin nhn v bit yu thng. Nhng bi hc ny con s mang theo sut i.',
+            content: 'Ông bà đã dạy con biết trân trọng những điều giản dị. Biết cảm ơn và biết cho đi. Biết kiên nhẫn và biết yêu thương. Những bài học này con sẽ mang theo suốt đời.',
             x: 30,
             y: 330,
             width: 340,
@@ -900,7 +900,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Ba Th H',
+            content: 'Ba Thế Hệ',
             x: 30,
             y: 270,
             width: 340,
@@ -914,7 +914,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'ng b, b m v con - ba th h cng nhau trong tnh yu thng. ng b l gc r vng chc, nui dng c gia nh. Con t ho l chu ca ng b.',
+            content: 'Ông bà, bố mẹ và con - ba thế hệ cùng nhau trong tình yêu thương. Ông bà là gốc rễ vững chắc, nuôi dưỡng cả gia đình. Con tự hào là cháu của ông bà.',
             x: 30,
             y: 330,
             width: 340,
@@ -933,7 +933,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Li Chc',
+            content: 'Lời Chúc',
             x: 30,
             y: 50,
             width: 340,
@@ -947,7 +947,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'Con chc ng b lun mnh khe\n\nCon chc ng b lun vui v, hnh phc\n\nCon chc ng b trng th\n\nCon ha s lun v thm ng b thng xuyn\n\nCon ha s lun l a chu ngoan ca ng b\n\nCon ha s chm sc ng b tht tt\n\nYu ng b nhiu lm! ',
+            content: 'Con chúc ông bà luôn mạnh khỏe\n\nCon chúc ông bà luôn vui vẻ, hạnh phúc\n\nCon chúc ông bà trường thọ\n\nCon hứa sẽ luôn về thăm ông bà thường xuyên\n\nCon hứa sẽ luôn là đứa cháu ngoan của ông bà\n\nCon hứa sẽ chăm sóc ông bà thật tốt\n\nYêu ông bà nhiều lắm! 💛',
             x: 30,
             y: 130,
             width: 340,
@@ -966,7 +966,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'back-quote',
             type: 'text',
-            content: '"Gia nh l ni tnh yu bt u\nv khng bao gi kt thc."',
+            content: '"Gia đình là nơi tình yêu bắt đầu\nvà không bao giờ kết thúc."',
             x: 50,
             y: 250,
             width: 300,
@@ -980,7 +980,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'back-icon',
             type: 'text',
-            content: '',
+            content: '❤️',
             x: 150,
             y: 400,
             width: 100,
@@ -1000,7 +1000,7 @@ export const templateBooks: BookData[] = [
     id: 'template-family-newbaby',
     theme: 'family',
     templateId: 'family-cozy',
-    title: 'Cho Mng B Yu',
+    title: 'Chào Mừng Bé Yêu',
     status: 'completed',
     createdAt: '2024-02-05T00:00:00.000Z',
     updatedAt: '2024-02-05T00:00:00.000Z',
@@ -1021,7 +1021,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Ngy Con Cho i',
+            content: 'Ngày Con Chào Đời',
             x: 30,
             y: 270,
             width: 340,
@@ -1035,7 +1035,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'Ngy 15/01/2025 - Lc 8:30 sng\nCn nng: 3.2kg - Chiu di: 50cm\n\nCon l thin thn nh ca b m. Khonh khc nhn thy con ln u tin, b m  khc v hnh phc.',
+            content: 'Ngày 15/01/2025 - Lúc 8:30 sáng\nCân nặng: 3.2kg - Chiều dài: 50cm\n\nCon là thiên thần nhỏ của bố mẹ. Khoảnh khắc nhìn thấy con lần đầu tiên, bố mẹ đã khóc vì hạnh phúc.',
             x: 30,
             y: 330,
             width: 340,
@@ -1054,7 +1054,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Ln u Tin',
+            content: 'Lần Đầu Tiên',
             x: 30,
             y: 30,
             width: 340,
@@ -1077,7 +1077,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: ' Ln u b m\n N ci u tin ca con\n Ln u nm tay b m\n Gic ng say u tin\n Du chn nh xinh\n Bn tay nh b\n Tri tim b m y p yu thng',
+            content: '🍼 Lần đầu bú mẹ\n😊 Nụ cười đầu tiên của con\n👶 Lần đầu nắm tay bố mẹ\n💤 Giấc ngủ say đầu tiên\n👣 Dấu chân nhỏ xinh\n✋ Bàn tay nhỏ bé\n❤️ Trái tim bố mẹ đầy ắp yêu thương',
             x: 30,
             y: 310,
             width: 340,
@@ -1105,7 +1105,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Bn Tay Nh',
+            content: 'Bàn Tay Nhỏ',
             x: 30,
             y: 270,
             width: 340,
@@ -1119,7 +1119,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'Bn tay con tht nh b, nm cht ngn tay b. Trong khonh khc , b hiu rng b s lun bo v con, ch che cho con trn con ng pha trc.',
+            content: 'Bàn tay con thật nhỏ bé, nắm chặt ngón tay bố. Trong khoảnh khắc đó, bố hiểu rằng bố sẽ luôn bảo vệ con, chở che cho con trên con đường phía trước.',
             x: 30,
             y: 330,
             width: 340,
@@ -1138,7 +1138,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Gic Ng Yn Bnh',
+            content: 'Giấc Ngủ Yên Bình',
             x: 30,
             y: 30,
             width: 340,
@@ -1152,7 +1152,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'Nhn con ng say, m cm thy tht bnh yn. Hi th nh nhng ca con nh m nhc m du nht. M c th ngi nhn con c gi m khng chn.',
+            content: 'Nhìn con ngủ say, mẹ cảm thấy thật bình yên. Hơi thở nhẹ nhàng của con như âm nhạc êm dịu nhất. Mẹ có thể ngồi nhìn con cả giờ mà không chán.',
             x: 30,
             y: 90,
             width: 340,
@@ -1189,7 +1189,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'N Ci u Tin',
+            content: 'Nụ Cười Đầu Tiên',
             x: 30,
             y: 270,
             width: 340,
@@ -1203,7 +1203,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'Ngy con ci ln u tin, c nh u vui mng khn xit. N ci y nh nh nng sng, xua tan mi mt mi ca b m.  l khonh khc tuyt vi nht!',
+            content: 'Ngày con cười lần đầu tiên, cả nhà đều vui mừng khôn xiết. Nụ cười ấy như ánh nắng sáng, xua tan mọi mệt mỏi của bố mẹ. Đó là khoảnh khắc tuyệt vời nhất!',
             x: 30,
             y: 330,
             width: 340,
@@ -1222,7 +1222,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Tnh Yu V iu Kin',
+            content: 'Tình Yêu Vô Điều Kiện',
             x: 30,
             y: 30,
             width: 340,
@@ -1245,7 +1245,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'T khi c con, b m mi thc s hiu c  ngha ca tnh yu v iu kin. D con c lm g, b m vn lun yu con ht mc. Con l nim t ho v hnh phc ln nht ca b m.',
+            content: 'Từ khi có con, bố mẹ mới thực sự hiểu được ý nghĩa của tình yêu vô điều kiện. Dù con có làm gì, bố mẹ vẫn luôn yêu con hết mực. Con là niềm tự hào và hạnh phúc lớn nhất của bố mẹ.',
             x: 30,
             y: 310,
             width: 340,
@@ -1264,7 +1264,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Li Chc Ca B M',
+            content: 'Lời Chúc Của Bố Mẹ',
             x: 30,
             y: 50,
             width: 340,
@@ -1278,7 +1278,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'B m chc con lun khe mnh\n\nB m chc con ln ln thng minh, ngoan ngon\n\nB m chc con lun hnh phc\n\nB m ha s lun yu thng con\n\nB m ha s lun bo v con\n\nB m ha s dnh iu tt p nht cho con\n\nCon l nim vui ln nht ca b m! ',
+            content: 'Bố mẹ chúc con luôn khỏe mạnh\n\nBố mẹ chúc con lớn lên thông minh, ngoan ngoãn\n\nBố mẹ chúc con luôn hạnh phúc\n\nBố mẹ hứa sẽ luôn yêu thương con\n\nBố mẹ hứa sẽ luôn bảo vệ con\n\nBố mẹ hứa sẽ dành điều tốt đẹp nhất cho con\n\nCon là niềm vui lớn nhất của bố mẹ! 👶💕',
             x: 30,
             y: 130,
             width: 340,
@@ -1297,7 +1297,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'back-quote',
             type: 'text',
-            content: '"Con l mn qu qu gi nht\nm cuc i trao tng."',
+            content: '"Con là món quà quý giá nhất\nmà cuộc đời trao tặng."',
             x: 50,
             y: 250,
             width: 300,
@@ -1311,7 +1311,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'back-icon',
             type: 'text',
-            content: '',
+            content: '👶',
             x: 150,
             y: 400,
             width: 100,
@@ -1331,7 +1331,7 @@ export const templateBooks: BookData[] = [
     id: 'template-birthday-bestfriend',
     theme: 'birthday',
     templateId: 'birthday-fun',
-    title: 'Chc Mng Sinh Nht Bn Thn',
+    title: 'Chúc Mừng Sinh Nhật Bạn Thân',
     status: 'completed',
     createdAt: '2024-01-25T00:00:00.000Z',
     updatedAt: '2024-01-25T00:00:00.000Z',
@@ -1352,7 +1352,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Ngi Bn Tuyt Vi!',
+            content: 'Người Bạn Tuyệt Vời!',
             x: 30,
             y: 270,
             width: 340,
@@ -1366,7 +1366,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'Cm n cu  lun  bn mnh trong sut nhng nm qua. Cu khng ch l bn thn m cn nh ngi anh/ch em ca mnh. Sinh nht vui v nh! ',
+            content: 'Cảm ơn cậu đã luôn ở bên mình trong suốt những năm qua. Cậu không chỉ là bạn thân mà còn như người anh/chị em của mình. Sinh nhật vui vẻ nhé! 🎉',
             x: 30,
             y: 330,
             width: 340,
@@ -1385,7 +1385,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'K Nim Kh Qun',
+            content: 'Kỷ Niệm Khó Quên',
             x: 30,
             y: 30,
             width: 340,
@@ -1408,7 +1408,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: ' Ngy tt nghip cng nhau\n Nhng bui i n "x stress"\n Marathon xem phim sut m\n Ci au bng v nhng tr ng ngn\n Chi game c ngy khng chn\n Chp hnh sng o khp ni',
+            content: '🎓 Ngày tốt nghiệp cùng nhau\n🍕 Những buổi đi ăn "xả stress"\n🎬 Marathon xem phim suốt đêm\n😂 Cười đau bụng vì những trò ngớ ngẩn\n🎮 Chơi game cả ngày không chán\n📸 Chụp hình sống ảo khắp nơi',
             x: 30,
             y: 310,
             width: 340,
@@ -1436,7 +1436,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Nhng Khonh Khc Vui',
+            content: 'Những Khoảnh Khắc Vui',
             x: 30,
             y: 270,
             width: 340,
@@ -1450,7 +1450,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'Mi khonh khc bn cu u l k nim p. T nhng cuc tr chuyn su v m khuya, n nhng trn ci nghing ng v chuyn v vn. Cu lun bit cch lm mnh vui!',
+            content: 'Mỗi khoảnh khắc bên cậu đều là kỷ niệm đẹp. Từ những cuộc trò chuyện sâu về đêm khuya, đến những trận cười nghiêng ngả vì chuyện vớ vẩn. Cậu luôn biết cách làm mình vui!',
             x: 30,
             y: 330,
             width: 340,
@@ -1469,7 +1469,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Tic Sinh Nht',
+            content: 'Tiệc Sinh Nhật',
             x: 30,
             y: 30,
             width: 340,
@@ -1492,7 +1492,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'Hm nay l ngy c bit ca cu! Thi nn, ct bnh, m qu v cng nhau to thm nhng k nim mi. Hy vng tic sinh nht nm nay s tht vui v v  ngha! ',
+            content: 'Hôm nay là ngày đặc biệt của cậu! Thổi nến, cắt bánh, mở quà và cùng nhau tạo thêm những kỷ niệm mới. Hy vọng tiệc sinh nhật năm nay sẽ thật vui vẻ và ý nghĩa! 🎊',
             x: 30,
             y: 310,
             width: 340,
@@ -1520,7 +1520,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'iu c Bit V Cu',
+            content: 'Điều Đặc Biệt Về Cậu',
             x: 30,
             y: 270,
             width: 340,
@@ -1534,7 +1534,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'Cu lun tch cc v lc quan \nCu c khiu hi hc tuyt vi \nCu lun sn sng gip  \nCu l ngi bn trung thnh \nCu bit cch lm ngi khc vui \nCu thc s tuyt vi! ',
+            content: 'Cậu luôn tích cực và lạc quan 😊\nCậu có khiếu hài hước tuyệt vời 😂\nCậu luôn sẵn sàng giúp đỡ 🤝\nCậu là người bạn trung thành 💯\nCậu biết cách làm người khác vui 🎉\nCậu thực sự tuyệt vời! ⭐',
             x: 30,
             y: 330,
             width: 340,
@@ -1553,7 +1553,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Selfie Cng Nhau',
+            content: 'Selfie Cùng Nhau',
             x: 30,
             y: 30,
             width: 340,
@@ -1576,7 +1576,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'Mi ln i u cng phi chp hnh lu nim. Album nh chng mnh ngy cng dy thm nhng khonh khc vui v. C th m cng nhau to thm nhiu k nim p na nh!',
+            content: 'Mỗi lần đi đâu cũng phải chụp hình lưu niệm. Album ảnh chúng mình ngày càng dày thêm những khoảnh khắc vui vẻ. Cứ thế mà cùng nhau tạo thêm nhiều kỷ niệm đẹp nữa nhé!',
             x: 30,
             y: 310,
             width: 340,
@@ -1595,7 +1595,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Li Chc Sinh Nht',
+            content: 'Lời Chúc Sinh Nhật',
             x: 30,
             y: 50,
             width: 340,
@@ -1609,7 +1609,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'Chc cu lun vui v, hnh phc! \n\nChc mi c m ca cu u thnh hin thc! \n\nChc cu ngy cng thnh cng! \n\nChc cu lun khe mnh! \n\nV quan trng nht, chc chng mnh mi l bn thn! \n\nTui mi nhiu nim vui nha bn yu! ',
+            content: 'Chúc cậu luôn vui vẻ, hạnh phúc! 🎊\n\nChúc mọi ước mơ của cậu đều thành hiện thực! ✨\n\nChúc cậu ngày càng thành công! 🌟\n\nChúc cậu luôn khỏe mạnh! 💪\n\nVà quan trọng nhất, chúc chúng mình mãi là bạn thân! 👯\n\nTuổi mới nhiều niềm vui nha bạn yêu! 🎂',
             x: 30,
             y: 130,
             width: 340,
@@ -1628,7 +1628,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'back-quote',
             type: 'text',
-            content: '"Tui cng tng,\ntnh bn cng p!"',
+            content: '"Tuổi càng tăng,\ntình bạn càng đẹp!"',
             x: 50,
             y: 250,
             width: 300,
@@ -1642,7 +1642,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'back-icon',
             type: 'text',
-            content: '',
+            content: '🎂',
             x: 150,
             y: 400,
             width: 100,
@@ -1662,7 +1662,7 @@ export const templateBooks: BookData[] = [
     id: 'template-friendship-thankyou',
     theme: 'friendship',
     templateId: 'friendship-cheerful',
-    title: 'Cm n V Tnh Bn',
+    title: 'Cảm Ơn Vì Tình Bạn',
     status: 'completed',
     createdAt: '2024-01-28T00:00:00.000Z',
     updatedAt: '2024-01-28T00:00:00.000Z',
@@ -1683,7 +1683,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Bn L Mn Qu',
+            content: 'Bạn Là Món Quà',
             x: 30,
             y: 270,
             width: 340,
@@ -1697,7 +1697,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'Mnh tht may mn khi c c mt ngi bn nh cu. Cu lun   khi mnh cn, lun lng nghe v chia s. Cu l mn qu qu gi m cuc i trao tng mnh.',
+            content: 'Mình thật may mắn khi có được một người bạn như cậu. Cậu luôn ở đó khi mình cần, luôn lắng nghe và chia sẻ. Cậu là món quà quý giá mà cuộc đời trao tặng mình.',
             x: 30,
             y: 330,
             width: 340,
@@ -1716,7 +1716,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Nhng K Nim p',
+            content: 'Những Kỷ Niệm Đẹp',
             x: 30,
             y: 30,
             width: 340,
@@ -1739,7 +1739,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: ' Nhng ln cng nhau vt qua kh khn\n Nhng bui caf tm s\n Nhng ln n mng thnh cng\n Nhng lc khc cng nhau\n Nhng ln ci n au bng\n Cng nhau hng ti mc tiu',
+            content: '🌟 Những lần cùng nhau vượt qua khó khăn\n☕ Những buổi café tâm sự\n🎉 Những lần ăn mừng thành công\n😢 Những lúc khóc cùng nhau\n😊 Những lần cười đến đau bụng\n🎯 Cùng nhau hướng tới mục tiêu',
             x: 30,
             y: 310,
             width: 340,
@@ -1767,7 +1767,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'iu Mnh Trn Trng',
+            content: 'Điều Mình Trân Trọng',
             x: 30,
             y: 270,
             width: 340,
@@ -1781,7 +1781,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'S chn thnh ca cu \nTm lng rng m \nN ci ti lun rng r \nLun sn sng gip  \nBit lng nghe v chia s \nng vin mnh vt kh khn ',
+            content: 'Sự chân thành của cậu 💙\nTấm lòng rộng mở 🤗\nNụ cười tươi luôn rạng rỡ 😊\nLuôn sẵn sàng giúp đỡ 🤝\nBiết lắng nghe và chia sẻ 👂\nĐộng viên mình vượt khó khăn 💪',
             x: 30,
             y: 330,
             width: 340,
@@ -1800,7 +1800,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Cuc Phiu Lu Cng Nhau',
+            content: 'Cuộc Phiêu Lưu Cùng Nhau',
             x: 30,
             y: 30,
             width: 340,
@@ -1823,7 +1823,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'Nhng chuyn i cng nhau lun y ting ci. D l leo ni, i bin hay ch n gin l do ph, ch cn c cu bn cnh, mi th u tr nn vui v v  ngha hn!',
+            content: 'Những chuyến đi cùng nhau luôn đầy tiếng cười. Dù là leo núi, đi biển hay chỉ đơn giản là dạo phố, chỉ cần có cậu bên cạnh, mọi thứ đều trở nên vui vẻ và ý nghĩa hơn!',
             x: 30,
             y: 310,
             width: 340,
@@ -1851,7 +1851,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Nhng Lc Vui V',
+            content: 'Những Lúc Vui Vẻ',
             x: 30,
             y: 270,
             width: 340,
@@ -1865,7 +1865,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'Cng nhau n ung tr chuyn, ci a vui v. Nhng khonh khc gin d ny li l nhng k nim p nht. Cm n cu  lun lm cho cuc sng ca mnh thm nhiu mu sc!',
+            content: 'Cùng nhau ăn uống trò chuyện, cười đùa vui vẻ. Những kho���nh khắc giản dị này lại là những kỷ niệm đẹp nhất. Cảm ơn cậu đã luôn làm cho cuộc sống của mình thêm nhiều màu sắc!',
             x: 30,
             y: 330,
             width: 340,
@@ -1884,7 +1884,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Bn Thn Ca Ti',
+            content: 'Bạn Thân Của Tôi',
             x: 30,
             y: 30,
             width: 340,
@@ -1898,7 +1898,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'Khng phi ai cng may mn c c mt ngi bn thn thc s. Nhng mnh c cu, v  l iu m mnh trn trng nht.\n\nCm n cu v  lun  , qua mi thng trm ca cuc sng. Cu thc s l ngi bn tuyt vi nht!',
+            content: 'Không phải ai cũng may mắn có được một người bạn thân thực sự. Nhưng mình có cậu, và đó là điều mà mình trân trọng nhất.\n\nCảm ơn cậu vì đã luôn ở đó, qua mọi thăng trầm của cuộc sống. Cậu thực sự là người bạn tuyệt vời nhất!',
             x: 30,
             y: 90,
             width: 340,
@@ -1926,7 +1926,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-1',
             type: 'text',
-            content: 'Li Ha Ca Mnh',
+            content: 'Lời Hứa Của Mình',
             x: 30,
             y: 50,
             width: 340,
@@ -1940,7 +1940,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'text-2',
             type: 'text',
-            content: 'Mnh ha s lun  bn cu\n\nMnh ha s lun lng nghe cu\n\nMnh ha s cng cu vt qua mi kh khn\n\nMnh ha chng mnh s mi l bn\n\nD thi gian c tri, khong cch c xa\n\nTnh bn ny mnh s lun gi gn\n\nCm n cu v tt c! ',
+            content: 'Mình hứa sẽ luôn ở bên cậu\n\nMình hứa sẽ luôn lắng nghe cậu\n\nMình hứa sẽ cùng cậu vượt qua mọi khó khăn\n\nMình hứa chúng mình sẽ mãi là bạn\n\nDù thời gian có trôi, khoảng cách có xa\n\nTình bạn này mình sẽ luôn giữ gìn\n\nCảm ơn cậu vì tất cả! 💙',
             x: 30,
             y: 130,
             width: 340,
@@ -1959,7 +1959,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'back-quote',
             type: 'text',
-            content: '"Tnh bn tht s\nl kho bu qu gi nht."',
+            content: '"Tình bạn thật sự\nlà kho báu quý giá nhất."',
             x: 50,
             y: 250,
             width: 300,
@@ -1973,7 +1973,7 @@ export const templateBooks: BookData[] = [
           {
             id: 'back-icon',
             type: 'text',
-            content: '',
+            content: '🤝',
             x: 150,
             y: 400,
             width: 100,

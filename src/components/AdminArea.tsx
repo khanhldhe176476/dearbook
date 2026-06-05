@@ -55,11 +55,11 @@ type AdminOrder = {
 const API_BASE = "/api/admin";
 
 const statusLabels: Record<string, string> = {
-    PENDING: "Ch x l",
-    CONFIRMED: " xc nhn",
-    PRINTING: "ang in",
-    COMPLETED: "Hon thnh",
-    CANCELLED: " hy",
+    PENDING: "Chờ xử lý",
+    CONFIRMED: "Đã xác nhận",
+    PRINTING: "Đang in",
+    COMPLETED: "Hoàn thành",
+    CANCELLED: "Đã hủy",
 };
 
 const statusClass: Record<string, string> = {
@@ -83,7 +83,7 @@ function clearToken() {
 }
 
 function formatDate(value?: string) {
-    if (!value) return "";
+    if (!value) return "—";
     try {
         return new Date(value).toLocaleString("vi-VN");
     } catch {
@@ -92,8 +92,8 @@ function formatDate(value?: string) {
 }
 
 function formatMoney(value?: number) {
-    if (value == null || Number.isNaN(value)) return "";
-    return value.toLocaleString("vi-VN") + "";
+    if (value == null || Number.isNaN(value)) return "—";
+    return value.toLocaleString("vi-VN") + "đ";
 }
 
 function StatusBadge({ status }: { status: string }) {
@@ -126,7 +126,7 @@ function PagePreview({ page, index }: { page: PageData; index: number }) {
             >
                 {elements.length === 0 ? (
                     <div className="flex h-full items-center justify-center px-4 text-center text-xs text-gray-400">
-                        Khng c d liu thit k cho trang ny
+                        Không có dữ liệu thiết kế cho trang này
                     </div>
                 ) : (
                     elements.map((el, i) => {
@@ -203,7 +203,7 @@ export default function AdminArea() {
         if (res.status === 401 || res.status === 403) {
             clearToken();
             setTokenState("");
-            throw new Error("Phin ng nhp  ht hn");
+            throw new Error("Phiên đăng nhập đã hết hạn");
         }
 
         if (!res.ok) {
@@ -232,14 +232,14 @@ export default function AdminArea() {
             });
 
             if (!res.ok) {
-                throw new Error("Sai ti khon hoc mt khu qun tr vin");
+                throw new Error("Sai tài khoản hoặc mật khẩu quản trị viên");
             }
 
             const data = await res.json();
             const token = data.token || data.accessToken;
 
             if (!token) {
-                throw new Error("Backend khng tr v token ng nhp");
+                throw new Error("Backend không trả về token đăng nhập");
             }
 
             setToken(token);
@@ -247,7 +247,7 @@ export default function AdminArea() {
             setPassword("");
         } catch (err) {
             console.error(err);
-            setLoginError("Sai ti khon hoc mt khu qun tr vin");
+            setLoginError("Sai tài khoản hoặc mật khẩu quản trị viên");
         } finally {
             setLoadingLogin(false);
         }
@@ -274,7 +274,7 @@ export default function AdminArea() {
             setSelectedOrder(data);
         } catch (err) {
             console.error(err);
-            alert("Khng th ti chi tit n hng");
+            alert("Không thể tải chi tiết đơn hàng");
         } finally {
             setDetailLoading(false);
         }
@@ -294,7 +294,7 @@ export default function AdminArea() {
             setSelectedOrder((prev) => (prev ? { ...prev, ...(data || {}), status } : prev));
         } catch (err) {
             console.error(err);
-            alert("Khng th cp nht trng thi n hng");
+            alert("Không thể cập nhật trạng thái đơn hàng");
         }
     }
 
@@ -361,14 +361,14 @@ export default function AdminArea() {
             <div className="min-h-screen bg-[#faf7f2] px-4 py-16">
                 <div className="mx-auto max-w-xl rounded-3xl border border-stone-200 bg-white p-10 shadow-xl">
                     <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-stone-100 text-4xl">
-                        
+                        🔒
                     </div>
 
                     <h1 className="text-center text-3xl font-bold text-stone-900">
-                        Trang Qun Tr DearBook
+                        Trang Quản Trị DearBook
                     </h1>
                     <p className="mt-3 text-center text-stone-500">
-                        Ch dnh cho qun tr vin c y quyn.
+                        Chỉ dành cho quản trị viên được ủy quyền.
                     </p>
 
                     {loginError && (
@@ -380,7 +380,7 @@ export default function AdminArea() {
                     <form onSubmit={handleLogin} className="mt-8 space-y-5">
                         <div>
                             <label className="mb-2 block font-semibold text-stone-700">
-                                Tn ng nhp admin
+                                Tên đăng nhập admin
                             </label>
                             <input
                                 value={username}
@@ -392,19 +392,19 @@ export default function AdminArea() {
 
                         <div>
                             <label className="mb-2 block font-semibold text-stone-700">
-                                Mt khu bo mt
+                                Mật khẩu bảo mật
                             </label>
                             <input
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 type="password"
                                 className="w-full rounded-xl border border-stone-300 px-4 py-3 outline-none focus:border-stone-900"
-                                placeholder="Nhp mt khu admin"
+                                placeholder="Nhập mật khẩu admin"
                             />
                         </div>
 
                         <a href="/" className="block text-sm text-stone-600 hover:text-stone-900">
-                            Quay li Trang ch
+                            Quay lại Trang chủ
                         </a>
 
                         <button
@@ -412,7 +412,7 @@ export default function AdminArea() {
                             disabled={loadingLogin}
                             className="w-full rounded-xl bg-black px-5 py-4 font-bold text-white transition hover:bg-stone-800 disabled:cursor-not-allowed disabled:opacity-60"
                         >
-                            {loadingLogin ? "ang ng nhp..." : "ng nhp h thng"}
+                            {loadingLogin ? "Đang đăng nhập..." : "Đăng nhập hệ thống"}
                         </button>
                     </form>
                 </div>
@@ -426,10 +426,10 @@ export default function AdminArea() {
                 <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
                     <div>
                         <h1 className="text-2xl font-bold text-stone-900">
-                            Dashboard Qun Tr DearBook
+                            Dashboard Quản Trị DearBook
                         </h1>
                         <p className="text-sm text-stone-500">
-                            Qun l n t in photobook v d liu thit k ca khch hng.
+                            Quản lý đơn đặt in photobook và dữ liệu thiết kế của khách hàng.
                         </p>
                     </div>
 
@@ -442,8 +442,8 @@ export default function AdminArea() {
                             </span>
                             <span>
                                 {lastRefresh
-                                    ? `Cp nht lc ${lastRefresh.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`
-                                    : 'ang ti...'}
+                                    ? `Cập nhật lúc ${lastRefresh.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`
+                                    : 'Đang tải...'}
                             </span>
                         </div>
 
@@ -452,19 +452,19 @@ export default function AdminArea() {
                             onClick={loadOrders}
                             disabled={loadingOrders}
                             className="flex items-center gap-2 rounded-xl border border-stone-300 px-3 py-1.5 text-sm font-semibold text-stone-700 hover:bg-stone-100 disabled:opacity-50 transition-all"
-                            title="Ti li danh sch n hng"
+                            title="Tải lại danh sách đơn hàng"
                         >
                             <svg className={`w-4 h-4 ${loadingOrders ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                             </svg>
-                            <span className="hidden md:inline">Lm mi</span>
+                            <span className="hidden md:inline">Làm mới</span>
                         </button>
 
                         <button
                             onClick={handleLogout}
                             className="rounded-xl border border-stone-300 px-4 py-2 font-semibold text-stone-700 hover:bg-stone-100"
                         >
-                            ng xut
+                            Đăng xuất
                         </button>
                     </div>
                 </div>
@@ -473,36 +473,36 @@ export default function AdminArea() {
             <main className="mx-auto max-w-7xl px-6 py-8">
                 <section className="grid gap-4 md:grid-cols-5">
                     <div className="rounded-2xl bg-white p-5 shadow-sm">
-                        <p className="text-sm text-stone-500">Tng n</p>
+                        <p className="text-sm text-stone-500">Tổng đơn</p>
                         <p className="mt-2 text-3xl font-bold">{stats.total}</p>
                     </div>
                     <div className="rounded-2xl bg-white p-5 shadow-sm">
-                        <p className="text-sm text-stone-500">Ch x l</p>
+                        <p className="text-sm text-stone-500">Chờ xử lý</p>
                         <p className="mt-2 text-3xl font-bold">{stats.pending}</p>
                     </div>
                     <div className="rounded-2xl bg-white p-5 shadow-sm">
-                        <p className="text-sm text-stone-500">ang in</p>
+                        <p className="text-sm text-stone-500">Đang in</p>
                         <p className="mt-2 text-3xl font-bold">{stats.printing}</p>
                     </div>
                     <div className="rounded-2xl bg-white p-5 shadow-sm">
-                        <p className="text-sm text-stone-500">Hon thnh</p>
+                        <p className="text-sm text-stone-500">Hoàn thành</p>
                         <p className="mt-2 text-3xl font-bold">{stats.completed}</p>
                     </div>
                     <div className="rounded-2xl bg-white p-5 shadow-sm">
-                        <p className="text-sm text-stone-500"> hy</p>
+                        <p className="text-sm text-stone-500">Đã hủy</p>
                         <p className="mt-2 text-3xl font-bold">{stats.cancelled}</p>
                     </div>
                 </section>
 
                 <section className="mt-8 rounded-3xl bg-white p-6 shadow-sm">
                     <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                        <h2 className="text-xl font-bold text-stone-900">Danh sch n hng</h2>
+                        <h2 className="text-xl font-bold text-stone-900">Danh sách đơn hàng</h2>
 
                         <div className="flex flex-col gap-3 md:flex-row">
                             <input
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                placeholder="Tm theo tn, ST, email, m n..."
+                                placeholder="Tìm theo tên, SĐT, email, mã đơn..."
                                 className="w-full rounded-xl border border-stone-300 px-4 py-2 md:w-80"
                             />
 
@@ -511,36 +511,36 @@ export default function AdminArea() {
                                 onChange={(e) => setStatusFilter(e.target.value)}
                                 className="rounded-xl border border-stone-300 px-4 py-2"
                             >
-                                <option value="ALL">Tt c trng thi</option>
-                                <option value="PENDING">Ch x l</option>
-                                <option value="CONFIRMED"> xc nhn</option>
-                                <option value="PRINTING">ang in</option>
-                                <option value="COMPLETED">Hon thnh</option>
-                                <option value="CANCELLED"> hy</option>
+                                <option value="ALL">Tất cả trạng thái</option>
+                                <option value="PENDING">Chờ xử lý</option>
+                                <option value="CONFIRMED">Đã xác nhận</option>
+                                <option value="PRINTING">Đang in</option>
+                                <option value="COMPLETED">Hoàn thành</option>
+                                <option value="CANCELLED">Đã hủy</option>
                             </select>
                         </div>
                     </div>
 
                     {loadingOrders ? (
-                        <div className="py-10 text-center text-stone-500">ang ti n hng...</div>
+                        <div className="py-10 text-center text-stone-500">Đang tải đơn hàng...</div>
                     ) : filteredOrders.length === 0 ? (
                         <div className="py-10 text-center text-stone-500">
-                            Cha c n hng ph hp.
+                            Chưa có đơn hàng phù hợp.
                         </div>
                     ) : (
                         <div className="overflow-x-auto">
                             <table className="w-full min-w-[900px] border-collapse text-left">
                                 <thead>
                                     <tr className="border-b text-sm text-stone-500">
-                                        <th className="py-3 pr-4">M n</th>
-                                        <th className="py-3 pr-4">Khch hng</th>
-                                        <th className="py-3 pr-4">Lin h</th>
-                                        <th className="py-3 pr-4">Sn phm</th>
+                                        <th className="py-3 pr-4">Mã đơn</th>
+                                        <th className="py-3 pr-4">Khách hàng</th>
+                                        <th className="py-3 pr-4">Liên hệ</th>
+                                        <th className="py-3 pr-4">Sản phẩm</th>
                                         <th className="py-3 pr-4">SL</th>
-                                        <th className="py-3 pr-4">Tng tin</th>
-                                        <th className="py-3 pr-4">Trng thi</th>
-                                        <th className="py-3 pr-4">Ngy to</th>
-                                        <th className="py-3 pr-4">Thao tc</th>
+                                        <th className="py-3 pr-4">Tổng tiền</th>
+                                        <th className="py-3 pr-4">Trạng thái</th>
+                                        <th className="py-3 pr-4">Ngày tạo</th>
+                                        <th className="py-3 pr-4">Thao tác</th>
                                     </tr>
                                 </thead>
 
@@ -551,17 +551,17 @@ export default function AdminArea() {
                                                 {order.id}
                                             </td>
                                             <td className="py-4 pr-4 font-semibold">
-                                                {order.customerName || order.name || ""}
+                                                {order.customerName || order.name || "—"}
                                             </td>
                                             <td className="py-4 pr-4">
-                                                <div>{order.phone || ""}</div>
-                                                <div className="text-xs text-stone-500">{order.email || ""}</div>
+                                                <div>{order.phone || "—"}</div>
+                                                <div className="text-xs text-stone-500">{order.email || "—"}</div>
                                             </td>
                                             <td className="py-4 pr-4">
-                                                <div>{order.collectionName || ""}</div>
+                                                <div>{order.collectionName || "—"}</div>
                                                 <div className="text-xs text-stone-500">
                                                     {[order.productType, order.productSize].filter(Boolean).join(" / ") ||
-                                                        ""}
+                                                        "—"}
                                                 </div>
                                             </td>
                                             <td className="py-4 pr-4">{order.quantity || 1}</td>
@@ -575,7 +575,7 @@ export default function AdminArea() {
                                                     onClick={() => openOrderDetail(order.id)}
                                                     className="rounded-lg bg-black px-3 py-2 text-xs font-semibold text-white hover:bg-stone-800"
                                                 >
-                                                    Xem chi tit
+                                                    Xem chi tiết
                                                 </button>
                                             </td>
                                         </tr>
@@ -590,7 +590,7 @@ export default function AdminArea() {
                     <section className="mt-8 rounded-3xl bg-white p-6 shadow-sm">
                         <div className="mb-6 flex items-start justify-between gap-4">
                             <div>
-                                <h2 className="text-xl font-bold text-stone-900">Chi tit n hng</h2>
+                                <h2 className="text-xl font-bold text-stone-900">Chi tiết đơn hàng</h2>
                                 <p className="mt-1 font-mono text-sm text-stone-500">
                                     {selectedOrder.id}
                                 </p>
@@ -600,67 +600,67 @@ export default function AdminArea() {
                                 onClick={() => setSelectedOrder(null)}
                                 className="rounded-xl border px-4 py-2 font-semibold hover:bg-stone-100"
                             >
-                                ng
+                                Đóng
                             </button>
                         </div>
 
                         {detailLoading ? (
                             <div className="py-10 text-center text-stone-500">
-                                ang ti chi tit n hng...
+                                Đang tải chi tiết đơn hàng...
                             </div>
                         ) : (
                             <>
                                 <div className="grid gap-6 lg:grid-cols-3">
                                     <div className="rounded-2xl border p-5">
-                                        <h3 className="mb-4 font-bold">Thng tin khch hng</h3>
+                                        <h3 className="mb-4 font-bold">Thông tin khách hàng</h3>
                                         <div className="space-y-2 text-sm">
                                             <p>
-                                                <b>H tn:</b>{" "}
-                                                {selectedOrder.customerName || selectedOrder.name || ""}
+                                                <b>Họ tên:</b>{" "}
+                                                {selectedOrder.customerName || selectedOrder.name || "—"}
                                             </p>
                                             <p>
-                                                <b>ST:</b> {selectedOrder.phone || ""}
+                                                <b>SĐT:</b> {selectedOrder.phone || "—"}
                                             </p>
                                             <p>
-                                                <b>Email:</b> {selectedOrder.email || ""}
+                                                <b>Email:</b> {selectedOrder.email || "—"}
                                             </p>
                                             <p>
-                                                <b>a ch:</b> {[selectedOrder.address, selectedOrder.district, selectedOrder.city].filter(Boolean).join(", ") || ""}
+                                                <b>Địa chỉ:</b> {[selectedOrder.address, selectedOrder.district, selectedOrder.city].filter(Boolean).join(", ") || "—"}
                                             </p>
                                         </div>
                                     </div>
 
                                     <div className="rounded-2xl border p-5">
-                                        <h3 className="mb-4 font-bold">Thng tin photobook</h3>
+                                        <h3 className="mb-4 font-bold">Thông tin photobook</h3>
                                         <div className="space-y-2 text-sm">
                                             <p>
-                                                <b>Collection:</b> {selectedOrder.collectionName || ""}
+                                                <b>Collection:</b> {selectedOrder.collectionName || "—"}
                                             </p>
                                             <p>
-                                                <b>Loi sch:</b> {selectedOrder.productType || ""}
+                                                <b>Loại sách:</b> {selectedOrder.productType || "—"}
                                             </p>
                                             <p>
-                                                <b>Kch thc:</b> {selectedOrder.productSize || ""}
+                                                <b>Kích thước:</b> {selectedOrder.productSize || "—"}
                                             </p>
                                             <p>
-                                                <b>S lng:</b> {selectedOrder.quantity || 1}
+                                                <b>Số lượng:</b> {selectedOrder.quantity || 1}
                                             </p>
                                             <p>
-                                                <b>Phng thc TT:</b>{" "}
+                                                <b>Phương thức TT:</b>{" "}
                                                 {selectedOrder.paymentMethod === "DEPOSIT"
-                                                    ? "t cc 50%"
+                                                    ? "Đặt cọc 50%"
                                                     : selectedOrder.paymentMethod === "FULL"
-                                                        ? "Thanh ton 100%"
-                                                        : selectedOrder.paymentMethod || ""}
+                                                        ? "Thanh toán 100%"
+                                                        : selectedOrder.paymentMethod || "—"}
                                             </p>
                                             <p>
-                                                <b>Tng tin:</b> <span className="font-bold text-emerald-600">{formatMoney(selectedOrder.totalAmount ?? selectedOrder.totalPrice)}</span>
+                                                <b>Tổng tiền:</b> <span className="font-bold text-emerald-600">{formatMoney(selectedOrder.totalAmount ?? selectedOrder.totalPrice)}</span>
                                             </p>
                                         </div>
                                     </div>
 
                                     <div className="rounded-2xl border p-5">
-                                        <h3 className="mb-4 font-bold">Trng thi x l</h3>
+                                        <h3 className="mb-4 font-bold">Trạng thái xử lý</h3>
                                         <div className="mb-4">
                                             <StatusBadge status={selectedOrder.status} />
                                         </div>
@@ -670,11 +670,11 @@ export default function AdminArea() {
                                             onChange={(e) => updateStatus(selectedOrder.id, e.target.value)}
                                             className="w-full rounded-xl border border-stone-300 px-4 py-3"
                                         >
-                                            <option value="PENDING">Ch x l</option>
-                                            <option value="CONFIRMED"> xc nhn</option>
-                                            <option value="PRINTING">ang in</option>
-                                            <option value="COMPLETED">Hon thnh</option>
-                                            <option value="CANCELLED"> hy</option>
+                                            <option value="PENDING">Chờ xử lý</option>
+                                            <option value="CONFIRMED">Đã xác nhận</option>
+                                            <option value="PRINTING">Đang in</option>
+                                            <option value="COMPLETED">Hoàn thành</option>
+                                            <option value="CANCELLED">Đã hủy</option>
                                         </select>
                                     </div>
                                 </div>
@@ -682,7 +682,7 @@ export default function AdminArea() {
                                 {selectedOrder.note && (
                                     <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5">
                                         <h3 className="mb-3 font-bold flex items-center gap-2 text-amber-800">
-                                             Ghi ch ca khch hng
+                                            📝 Ghi chú của khách hàng
                                         </h3>
                                         <p className="whitespace-pre-wrap text-sm text-amber-900">
                                             {selectedOrder.note}
@@ -690,10 +690,10 @@ export default function AdminArea() {
                                     </div>
                                 )}
 
-                                {/* File PDF thit k */}
+                                {/* File PDF thiết kế */}
                                 <div className="mt-6 rounded-2xl border p-5">
                                     <h3 className="mb-3 font-bold flex items-center gap-2">
-                                         File PDF thit k
+                                        📄 File PDF thiết kế
                                     </h3>
                                     {selectedOrder.pdfFileName && selectedOrder.pdfFileData ? (
                                         <div className="flex items-center justify-between p-4 rounded-xl bg-green-50 border border-green-200">
@@ -706,7 +706,7 @@ export default function AdminArea() {
                                                         {selectedOrder.pdfFileName}
                                                     </p>
                                                     <p className="text-xs text-green-700 font-medium">
-                                                          ti ln  {((selectedOrder.pdfFileData?.length || 0) / 1024).toFixed(0)} KB
+                                                        ✓ Đã tải lên · {((selectedOrder.pdfFileData?.length || 0) / 1024).toFixed(0)} KB
                                                     </p>
                                                 </div>
                                             </div>
@@ -727,12 +727,12 @@ export default function AdminArea() {
                                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                                 </svg>
-                                                Ti xung
+                                                Tải xuống
                                             </button>
                                         </div>
                                     ) : (
                                         <div className="rounded-xl border border-dashed p-6 text-center text-stone-500">
-                                            <p className="text-sm">Khch hng cha ti ln file PDF thit k.</p>
+                                            <p className="text-sm">Khách hàng chưa tải lên file PDF thiết kế.</p>
                                         </div>
                                     )}
                                 </div>

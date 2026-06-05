@@ -30,12 +30,12 @@ export function Step4PageEditorAdvanced({
   onFinish,
 }: Step4PageEditorAdvancedProps) {
   const [mode, setMode] = useState<'simple' | 'advanced'>('advanced');
-  const [bookTitle, setBookTitle] = useState(title || 'Cun sch ca ti');
+  const [bookTitle, setBookTitle] = useState(title || 'Cuốn sách của tôi');
   const [localPages, setLocalPages] = useState(pages);
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [show3DView, setShow3DView] = useState(false);
 
-  // ng b localPages khi pages prop thay i (vd: khi load sch t IndexedDB)
+  // Đồng bộ localPages khi pages prop thay đổi (vd: khi load sách từ IndexedDB)
   useEffect(() => {
     if (pages && pages.length > 0) {
       setLocalPages(pages);
@@ -67,27 +67,27 @@ export function Step4PageEditorAdvanced({
       return [];
     }
 
-    //  LOCAL TEMPLATES & AUTO TEMPLATES 
-    // Cc trang dng nh template lm nn. Editor cho php user thm elements ln trn.
+    // ── LOCAL TEMPLATES & AUTO TEMPLATES ──────────────────────────────────
+    // Các trang dùng ảnh template làm nền. Editor cho phép user thêm elements lên trên.
     if (templateId.startsWith('local-template-') || templateId.startsWith('auto-template-')) {
       return localPages.map((page) => {
         let elements = page.elements ? [...page.elements] : [];
         let background = page.background;
 
-        // Ly URL nh template t nhiu ngun khc nhau
+        // Lấy URL ảnh template từ nhiều nguồn khác nhau
         const templateImageUrl =
           (page as any).imageUrl ||                          // autoTemplates.json format
           page.images?.pageImage ||                          // PageData format
-          (page as any).images?.pageImage ||                 // bin th
+          (page as any).images?.pageImage ||                 // biến thể
           '';
 
-        // Tm template frame c sn trong elements (t session trc)
+        // Tìm template frame có sẵn trong elements (từ session trước)
         const existingFrame = elements.find(
           (el: any) => el.id && el.id.startsWith('template-frame-')
         );
         const frameImageUrl = (existingFrame as any)?.src || templateImageUrl;
 
-        // TH1: Ln u convert - cha c elements  to template frame + background
+        // TH1: Lần đầu convert - chưa có elements → tạo template frame + background
         if (!page.elements || page.elements.length === 0) {
           if (frameImageUrl) {
             const maxZ = elements.length > 0 ? Math.max(...elements.map((e: any) => e.zIndex || 0)) : 0;
@@ -105,8 +105,8 @@ export function Step4PageEditorAdvanced({
           }
         }
 
-        // TH2:  c elements nhng background l mu trng  ly nh t template frame lm background
-        // (Xy ra vi sch  lu t phin bn c - background b set thnh mu trng)
+        // TH2: Đã có elements nhưng background là màu trắng → lấy ảnh từ template frame làm background
+        // (Xảy ra với sách đã lưu từ phiên bản cũ - background bị set thành màu trắng)
         if (background?.type !== 'image' && frameImageUrl) {
           background = { type: 'image', value: frameImageUrl };
         }
@@ -172,7 +172,7 @@ export function Step4PageEditorAdvanced({
               ...base,
               id: el.id || `sticker-${elIdx}`,
               type: 'sticker',
-              emoji: (el as any).content || (el as any).emoji || '',
+              emoji: (el as any).content || (el as any).emoji || '⭐',
             } as PageElement;
           }
           return { ...base, id: el.id || `el-${elIdx}` } as PageElement;
@@ -354,7 +354,7 @@ export function Step4PageEditorAdvanced({
       }
     }
     
-    // Lu thng nh dng EditorPage (cha full elements)  khng b mt khi render li
+    // Lưu thẳng định dạng EditorPage (chứa full elements) để không bị mất khi render lại
     setLocalPages(editorFormat);
     onChange(editorFormat, bookTitle);
   };
@@ -363,7 +363,7 @@ export function Step4PageEditorAdvanced({
     const newPage = {
       id: `page-${Date.now()}`,
       templatePageId: '',
-      texts: { content: 'Trang mi' },
+      texts: { content: 'Trang mới' },
       images: {}
     };
     const newPages = [...localPages, newPage];
@@ -478,7 +478,7 @@ export function Step4PageEditorAdvanced({
           onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = 'transparent')}
         >
           <ArrowLeft className="w-5 h-5" />
-          <span className="hidden sm:inline">Quay li</span>
+          <span className="hidden sm:inline">Quay lại</span>
         </button>
         )}
 
@@ -501,7 +501,7 @@ export function Step4PageEditorAdvanced({
             onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#EDE9E3')}
           >
             <Sliders className="w-4 h-4" />
-            <span className="hidden sm:inline">Ch  nng cao</span>
+            <span className="hidden sm:inline">Chế độ nâng cao</span>
             <Wand2 className="w-4 h-4" />
           </button>
           <button
@@ -512,7 +512,7 @@ export function Step4PageEditorAdvanced({
             onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = 'linear-gradient(135deg, #000000 0%, #5A5049 100%)')}
           >
             <ShoppingCart className="w-4 h-4" />
-            <span>t hng</span>
+            <span>Đặt hàng</span>
           </button>
         </div>
       </div>
@@ -520,7 +520,7 @@ export function Step4PageEditorAdvanced({
       {/* Title Editor */}
       <div className="rounded-2xl p-6 border" style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(8px)', borderColor: '#DDD8D0', boxShadow: '0 2px 10px rgba(60,46,40,0.06)' }}>
         <label className="block font-semibold mb-3" style={{ color: '#000000' }}>
-           Tn cun sch
+          📖 Tên cuốn sách
         </label>
         <input
           type="text"
@@ -531,7 +531,7 @@ export function Step4PageEditorAdvanced({
           }}
           className="w-full px-4 py-3 rounded-xl outline-none transition-all text-lg font-semibold border"
           style={{ borderColor: '#DDD8D0', color: '#000000', background: '#FAFAF8' }}
-          placeholder="Nhp tn cun sch..."
+          placeholder="Nhập tên cuốn sách..."
           onFocus={e => { e.currentTarget.style.borderColor = '#7A6F66'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(122,111,102,0.12)'; }}
           onBlur={e  => { e.currentTarget.style.borderColor = '#DDD8D0'; e.currentTarget.style.boxShadow = 'none'; }}
         />
@@ -606,10 +606,10 @@ export function Step4PageEditorAdvanced({
           </div>
           <div className="flex-1">
             <h3 className="font-bold mb-2" style={{ color: '#000000' }}>
-               Mun thit k t do hn?
+              🎨 Muốn thiết kế tự do hơn?
             </h3>
             <p className="mb-3" style={{ color: '#5A5049' }}>
-              S dng <strong>Ch  nng cao</strong> vi editor chuyn nghip: drag & drop, thm hnh nh, icon, sticker, shapes v nhiu hiu ng p mt!
+              Sử dụng <strong>Chế độ nâng cao</strong> với editor chuyên nghiệp: drag & drop, thêm hình ảnh, icon, sticker, shapes và nhiều hiệu ứng đẹp mắt!
             </p>
             <button
               onClick={() => setMode('advanced')}
@@ -619,7 +619,7 @@ export function Step4PageEditorAdvanced({
               onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#000000')}
             >
               <Sliders className="w-4 h-4" />
-              <span>M ch  nng cao</span>
+              <span>Mở chế độ nâng cao</span>
             </button>
           </div>
         </div>

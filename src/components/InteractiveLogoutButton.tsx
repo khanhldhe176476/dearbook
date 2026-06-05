@@ -11,7 +11,7 @@ interface InteractiveLogoutButtonProps {
 
 export const InteractiveLogoutButton: React.FC<InteractiveLogoutButtonProps> = ({
   onLogout,
-  label = 'ng xut',
+  label = 'Đăng xuất',
   className = '',
   variant = 'ghost',
 }) => {
@@ -25,7 +25,7 @@ export const InteractiveLogoutButton: React.FC<InteractiveLogoutButtonProps> = (
       if (onLogout) await onLogout();
     } catch (error: any) {
       console.error('Logout error:', error);
-      toast.error('ng xut tht bi. Vui lng th li sau.');
+      toast.error('Đăng xuất thất bại. Vui lòng thử lại sau.');
       setIsLoading(false);
     }
   };

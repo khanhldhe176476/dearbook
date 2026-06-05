@@ -100,14 +100,14 @@ export function EditorCanvas({
             className="px-3 py-2 bg-purple-100 text-purple-600 hover:bg-purple-200 rounded-lg transition-colors flex items-center gap-2 text-sm font-medium"
           >
             <Plus className="w-4 h-4" />
-            Thm trang
+            Thêm trang
           </button>
           
           {book.pages.length > 1 && (
             <button
               onClick={() => onDeletePage(currentPageIndex)}
               className="p-2 hover:bg-red-100 text-red-600 rounded-lg transition-colors"
-              title="Xa trang"
+              title="Xóa trang"
             >
               <Trash2 className="w-4 h-4" />
             </button>
@@ -153,7 +153,7 @@ export function EditorCanvas({
               <button
                 onClick={() => onDeleteElement(selectedElementId)}
                 className="p-2 hover:bg-red-100 text-red-600 rounded transition-colors"
-                title="Xa"
+                title="Xóa"
               >
                 <Trash2 className="w-4 h-4" />
               </button>

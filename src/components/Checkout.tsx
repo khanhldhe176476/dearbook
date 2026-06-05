@@ -37,7 +37,7 @@ export function Checkout({ book, onComplete, onBack }: CheckoutProps) {
     if (couponCode.toLowerCase() === 'bookify10') {
       setDiscount(subtotal * 0.1);
     } else {
-      alert('M gim gi khng hp l');
+      alert('Mã giảm giá không hợp lệ');
     }
   };
 
@@ -46,7 +46,7 @@ export function Checkout({ book, onComplete, onBack }: CheckoutProps) {
     
     // Validate
     if (!formData.fullName || !formData.phone || !formData.email || !formData.address) {
-      alert('Vui lng in y  thng tin');
+      alert('Vui lòng điền đầy đủ thông tin');
       return;
     }
 
@@ -60,7 +60,7 @@ export function Checkout({ book, onComplete, onBack }: CheckoutProps) {
         <div className="mb-8">
           <h1 className="text-3xl font-bold">
             <ShoppingCart className="w-8 h-8 inline mr-2" />
-            Thanh ton
+            Thanh toán
           </h1>
         </div>
 
@@ -70,26 +70,26 @@ export function Checkout({ book, onComplete, onBack }: CheckoutProps) {
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Customer Info */}
               <div className="card p-8">
-                <h2 className="text-xl font-bold mb-6">Thng tin ngi nhn</h2>
+                <h2 className="text-xl font-bold mb-6">Thông tin người nhận</h2>
                 
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      H v tn *
+                      Họ và tên *
                     </label>
                     <input
                       type="text"
                       required
                       value={formData.fullName}
                       onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                      placeholder="Nguyn Vn A"
+                      placeholder="Nguyễn Văn A"
                       className="input"
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      S in thoi *
+                      Số điện thoại *
                     </label>
                     <input
                       type="tel"
@@ -117,21 +117,21 @@ export function Checkout({ book, onComplete, onBack }: CheckoutProps) {
 
                   <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      a ch *
+                      Địa chỉ *
                     </label>
                     <input
                       type="text"
                       required
                       value={formData.address}
                       onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                      placeholder="123 ng ABC"
+                      placeholder="123 Đường ABC"
                       className="input"
                     />
                   </div>
 
                   <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Thnh ph *
+                      Thành phố *
                     </label>
                     <select
                       value={formData.city}
@@ -139,22 +139,22 @@ export function Checkout({ book, onComplete, onBack }: CheckoutProps) {
                       className="input"
                       required
                     >
-                      <option value="">Chn thnh ph</option>
-                      <option value="hanoi">H Ni</option>
-                      <option value="hcm">TP. H Ch Minh</option>
-                      <option value="danang"> Nng</option>
-                      <option value="other">Tnh thnh khc</option>
+                      <option value="">Chọn thành phố</option>
+                      <option value="hanoi">Hà Nội</option>
+                      <option value="hcm">TP. Hồ Chí Minh</option>
+                      <option value="danang">Đà Nẵng</option>
+                      <option value="other">Tỉnh thành khác</option>
                     </select>
                   </div>
 
                   <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Ghi ch (khng bt buc)
+                      Ghi chú (không bắt buộc)
                     </label>
                     <textarea
                       value={formData.note}
                       onChange={(e) => setFormData({ ...formData, note: e.target.value })}
-                      placeholder="Ghi ch v n hng..."
+                      placeholder="Ghi chú về đơn hàng..."
                       rows={3}
                       className="input"
                     />
@@ -164,13 +164,13 @@ export function Checkout({ book, onComplete, onBack }: CheckoutProps) {
 
               {/* Book Options */}
               <div className="card p-8">
-                <h2 className="text-xl font-bold mb-6">Ty chn sch</h2>
+                <h2 className="text-xl font-bold mb-6">Tùy chọn sách</h2>
 
                 <div className="space-y-6">
                   {/* Size */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-3">
-                      Kch thc
+                      Kích thước
                     </label>
                     <div className="grid grid-cols-2 gap-4">
                       <button
@@ -183,7 +183,7 @@ export function Checkout({ book, onComplete, onBack }: CheckoutProps) {
                         }`}
                       >
                         <div className="font-semibold mb-1">A5 (14.8 x 21cm)</div>
-                        <div className="text-sm text-gray-600">Ph hp mang theo</div>
+                        <div className="text-sm text-gray-600">Phù hợp mang theo</div>
                       </button>
 
                       <button
@@ -196,7 +196,7 @@ export function Checkout({ book, onComplete, onBack }: CheckoutProps) {
                         }`}
                       >
                         <div className="font-semibold mb-1">A4 (21 x 29.7cm)</div>
-                        <div className="text-sm text-gray-600">+30,000</div>
+                        <div className="text-sm text-gray-600">+30,000đ</div>
                       </button>
                     </div>
                   </div>
@@ -204,7 +204,7 @@ export function Checkout({ book, onComplete, onBack }: CheckoutProps) {
                   {/* Cover Type */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-3">
-                      Loi ba
+                      Loại bìa
                     </label>
                     <div className="grid grid-cols-2 gap-4">
                       <button
@@ -216,8 +216,8 @@ export function Checkout({ book, onComplete, onBack }: CheckoutProps) {
                             : 'border-gray-200 hover:border-pink-200'
                         }`}
                       >
-                        <div className="font-semibold mb-1">Ba mm</div>
-                        <div className="text-sm text-gray-600">Gi chun</div>
+                        <div className="font-semibold mb-1">Bìa mềm</div>
+                        <div className="text-sm text-gray-600">Giá chuẩn</div>
                       </button>
 
                       <button
@@ -229,8 +229,8 @@ export function Checkout({ book, onComplete, onBack }: CheckoutProps) {
                             : 'border-gray-200 hover:border-pink-200'
                         }`}
                       >
-                        <div className="font-semibold mb-1">Ba cng</div>
-                        <div className="text-sm text-gray-600">+50,000</div>
+                        <div className="font-semibold mb-1">Bìa cứng</div>
+                        <div className="text-sm text-gray-600">+50,000đ</div>
                       </button>
                     </div>
                   </div>
@@ -246,8 +246,8 @@ export function Checkout({ book, onComplete, onBack }: CheckoutProps) {
                       />
                       <Gift className="w-5 h-5 text-pink-500" />
                       <div className="flex-1">
-                        <div className="font-semibold">Gi qu min ph</div>
-                        <div className="text-sm text-gray-600">Hp qu + thip chc mng (+20,000)</div>
+                        <div className="font-semibold">Gói quà miễn phí</div>
+                        <div className="text-sm text-gray-600">Hộp quà + thiệp chúc mừng (+20,000đ)</div>
                       </div>
                     </label>
                   </div>
@@ -256,7 +256,7 @@ export function Checkout({ book, onComplete, onBack }: CheckoutProps) {
 
               <button type="submit" className="btn btn-primary w-full btn-lg">
                 <CreditCard className="w-5 h-5" />
-                Tip tc thanh ton
+                Tiếp tục thanh toán
               </button>
             </form>
           </div>
@@ -264,7 +264,7 @@ export function Checkout({ book, onComplete, onBack }: CheckoutProps) {
           {/* Right: Order Summary */}
           <div className="lg:col-span-1">
             <div className="card p-6 sticky top-8">
-              <h2 className="text-xl font-bold mb-6">n hng</h2>
+              <h2 className="text-xl font-bold mb-6">Đơn hàng</h2>
 
               {/* Book Info */}
               <div className="flex gap-4 pb-6 border-b mb-6">
@@ -282,40 +282,40 @@ export function Checkout({ book, onComplete, onBack }: CheckoutProps) {
               {/* Price Breakdown */}
               <div className="space-y-3 text-sm mb-6">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Gi in ({book.pageCount} trang)</span>
-                  <span className="font-medium">{basePrice.toLocaleString('vi-VN')}</span>
+                  <span className="text-gray-600">Giá in ({book.pageCount} trang)</span>
+                  <span className="font-medium">{basePrice.toLocaleString('vi-VN')}đ</span>
                 </div>
 
                 {sizePrice > 0 && (
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Kch thc A4</span>
-                    <span className="font-medium">{sizePrice.toLocaleString('vi-VN')}</span>
+                    <span className="text-gray-600">Kích thước A4</span>
+                    <span className="font-medium">{sizePrice.toLocaleString('vi-VN')}đ</span>
                   </div>
                 )}
 
                 {coverPrice > 0 && (
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Ba cng</span>
-                    <span className="font-medium">{coverPrice.toLocaleString('vi-VN')}</span>
+                    <span className="text-gray-600">Bìa cứng</span>
+                    <span className="font-medium">{coverPrice.toLocaleString('vi-VN')}đ</span>
                   </div>
                 )}
 
                 {giftPrice > 0 && (
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Gi qu</span>
-                    <span className="font-medium">{giftPrice.toLocaleString('vi-VN')}</span>
+                    <span className="text-gray-600">Gói quà</span>
+                    <span className="font-medium">{giftPrice.toLocaleString('vi-VN')}đ</span>
                   </div>
                 )}
 
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Ph vn chuyn</span>
-                  <span className="font-medium">{shippingPrice.toLocaleString('vi-VN')}</span>
+                  <span className="text-gray-600">Phí vận chuyển</span>
+                  <span className="font-medium">{shippingPrice.toLocaleString('vi-VN')}đ</span>
                 </div>
 
                 {discount > 0 && (
                   <div className="flex justify-between text-green-600">
-                    <span>Gim gi</span>
-                    <span className="font-medium">-{discount.toLocaleString('vi-VN')}</span>
+                    <span>Giảm giá</span>
+                    <span className="font-medium">-{discount.toLocaleString('vi-VN')}đ</span>
                   </div>
                 )}
               </div>
@@ -323,14 +323,14 @@ export function Checkout({ book, onComplete, onBack }: CheckoutProps) {
               {/* Coupon */}
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  M gim gi
+                  Mã giảm giá
                 </label>
                 <div className="flex gap-2">
                   <input
                     type="text"
                     value={couponCode}
                     onChange={(e) => setCouponCode(e.target.value)}
-                    placeholder="Nhp m..."
+                    placeholder="Nhập mã..."
                     className="input flex-1"
                   />
                   <button
@@ -338,7 +338,7 @@ export function Checkout({ book, onComplete, onBack }: CheckoutProps) {
                     onClick={handleApplyCoupon}
                     className="btn btn-outline"
                   >
-                    p dng
+                    Áp dụng
                   </button>
                 </div>
               </div>
@@ -346,12 +346,12 @@ export function Checkout({ book, onComplete, onBack }: CheckoutProps) {
               {/* Total */}
               <div className="pt-6 border-t">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-lg font-semibold">Tng cng</span>
+                  <span className="text-lg font-semibold">Tổng cộng</span>
                   <span className="text-3xl font-bold gradient-text">
-                    {total.toLocaleString('vi-VN')}
+                    {total.toLocaleString('vi-VN')}đ
                   </span>
                 </div>
-                <p className="text-xs text-gray-500"> bao gm VAT</p>
+                <p className="text-xs text-gray-500">Đã bao gồm VAT</p>
               </div>
             </div>
           </div>

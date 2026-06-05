@@ -68,7 +68,7 @@ export function EditorToolbar({
           onClick={onUndo}
           disabled={!canUndo}
           className="p-2 hover:bg-gray-100 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed transition-all"
-          title="Hon tc (Ctrl+Z)"
+          title="Hoàn tác (Ctrl+Z)"
         >
           <Undo2 className="w-5 h-5" />
         </button>
@@ -76,7 +76,7 @@ export function EditorToolbar({
           onClick={onRedo}
           disabled={!canRedo}
           className="p-2 hover:bg-gray-100 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed transition-all"
-          title="Lm li (Ctrl+Y)"
+          title="Làm lại (Ctrl+Y)"
         >
           <Redo2 className="w-5 h-5" />
         </button>
@@ -86,37 +86,37 @@ export function EditorToolbar({
         <button
           onClick={onSave}
           className="flex items-center gap-2 px-3 py-2 bg-rose-50 text-rose-600 rounded-lg hover:bg-rose-100 transition-all font-medium"
-          title="Lu (Ctrl+S)"
+          title="Lưu (Ctrl+S)"
         >
           <Save className="w-4 h-4" />
-          <span className="text-sm hidden sm:inline">Lu</span>
+          <span className="text-sm hidden sm:inline">Lưu</span>
         </button>
       </div>
 
       {/* Center: Alignment (only when selection) */}
       {hasSelection && (
         <div className="flex items-center gap-2">
-          <div className="text-xs text-gray-500 mr-2">Cn chnh:</div>
+          <div className="text-xs text-gray-500 mr-2">Căn chỉnh:</div>
           
           {/* Horizontal Alignment */}
           <button
             onClick={onAlignLeft}
             className="p-2 hover:bg-gray-100 rounded-lg transition-all"
-            title="Cn tri"
+            title="Căn trái"
           >
             <AlignLeft className="w-4 h-4" />
           </button>
           <button
             onClick={onAlignCenter}
             className="p-2 hover:bg-gray-100 rounded-lg transition-all"
-            title="Cn gia ngang"
+            title="Căn giữa ngang"
           >
             <AlignHorizontalJustifyCenter className="w-4 h-4" />
           </button>
           <button
             onClick={onAlignRight}
             className="p-2 hover:bg-gray-100 rounded-lg transition-all"
-            title="Cn phi"
+            title="Căn phải"
           >
             <AlignRight className="w-4 h-4" />
           </button>
@@ -127,21 +127,21 @@ export function EditorToolbar({
           <button
             onClick={onAlignTop}
             className="p-2 hover:bg-gray-100 rounded-lg transition-all"
-            title="Cn trn"
+            title="Căn trên"
           >
             <AlignLeft className="w-4 h-4 rotate-90" />
           </button>
           <button
             onClick={onAlignMiddle}
             className="p-2 hover:bg-gray-100 rounded-lg transition-all"
-            title="Cn gia dc"
+            title="Căn giữa dọc"
           >
             <AlignVerticalJustifyCenter className="w-4 h-4" />
           </button>
           <button
             onClick={onAlignBottom}
             className="p-2 hover:bg-gray-100 rounded-lg transition-all"
-            title="Cn di"
+            title="Căn dưới"
           >
             <AlignRight className="w-4 h-4 rotate-90" />
           </button>
@@ -152,14 +152,14 @@ export function EditorToolbar({
           <button
             onClick={onDuplicate}
             className="p-2 hover:bg-gray-100 rounded-lg transition-all"
-            title="Nhn bn (Ctrl+D)"
+            title="Nhân bản (Ctrl+D)"
           >
             <Copy className="w-4 h-4" />
           </button>
           <button
             onClick={onDelete}
             className="p-2 hover:bg-red-100 text-red-600 rounded-lg transition-all"
-            title="Xa (Delete)"
+            title="Xóa (Delete)"
           >
             <Trash2 className="w-4 h-4" />
           </button>
@@ -175,7 +175,7 @@ export function EditorToolbar({
               ? 'bg-rose-50 text-rose-600'
               : 'hover:bg-gray-100'
           }`}
-          title="Hin/n li"
+          title="Hiện/ẩn lưới"
         >
           <Grid3x3 className="w-5 h-5" />
         </button>
@@ -185,7 +185,7 @@ export function EditorToolbar({
         <button
           onClick={onZoomOut}
           className="p-2 hover:bg-gray-100 rounded-lg transition-all"
-          title="Thu nh (-)"
+          title="Thu nhỏ (-)"
         >
           <ZoomOut className="w-5 h-5" />
         </button>
@@ -199,7 +199,7 @@ export function EditorToolbar({
         <button
           onClick={onZoomIn}
           className="p-2 hover:bg-gray-100 rounded-lg transition-all"
-          title="Phng to (+)"
+          title="Phóng to (+)"
         >
           <ZoomIn className="w-5 h-5" />
         </button>
@@ -207,7 +207,7 @@ export function EditorToolbar({
         <button
           onClick={onZoomFit}
           className="p-2 hover:bg-gray-100 rounded-lg transition-all"
-          title="Va khung (0)"
+          title="Vừa khung (0)"
         >
           <Maximize2 className="w-5 h-5" />
         </button>

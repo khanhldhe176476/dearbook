@@ -32,7 +32,7 @@ export function MyBooksLibrary({ user, onLogout, onCreateNew, onEditBook }: MyBo
     // Migrate old books: add default theme if missing
     const migratedBooks = savedBooks.map((book: BookData) => {
       if (!book.theme) {
-        console.log(` Book "${book.title}" missing theme, adding default: love`);
+        console.log(`⚠️ Book "${book.title}" missing theme, adding default: love`);
         return { ...book, theme: 'love' };
       }
       return book;
@@ -50,7 +50,7 @@ export function MyBooksLibrary({ user, onLogout, onCreateNew, onEditBook }: MyBo
     const duplicated: BookData = {
       ...book,
       id: `book-${Date.now()}`,
-      title: `${book.title || 'Sch'} (Bn sao)`,
+      title: `${book.title || 'Sách'} (Bản sao)`,
       status: 'draft',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -87,10 +87,10 @@ export function MyBooksLibrary({ user, onLogout, onCreateNew, onEditBook }: MyBo
   );
 
   const themeData = {
-    love: { name: 'Tnh yu', emoji: '', color: 'from-rose-400 to-pink-400' },
-    family: { name: 'Gia nh', emoji: '', color: 'from-blue-400 to-cyan-400' },
-    birthday: { name: 'Sinh nht', emoji: '', color: 'from-purple-400 to-pink-400' },
-    friendship: { name: 'Tnh bn', emoji: '', color: 'from-amber-400 to-orange-400' },
+    love: { name: 'Tình yêu', emoji: '💕', color: 'from-rose-400 to-pink-400' },
+    family: { name: 'Gia đình', emoji: '👨‍👩‍👧', color: 'from-blue-400 to-cyan-400' },
+    birthday: { name: 'Sinh nhật', emoji: '🎂', color: 'from-purple-400 to-pink-400' },
+    friendship: { name: 'Tình bạn', emoji: '🤝', color: 'from-amber-400 to-orange-400' },
   };
 
   return (
@@ -110,7 +110,7 @@ export function MyBooksLibrary({ user, onLogout, onCreateNew, onEditBook }: MyBo
                   className="object-contain block" 
                   style={{ height: '56px', margin: '-10px 0' }}
                 />
-                <p className="text-xs text-gray-600" style={{ marginTop: '-18px' }}>Sch tng  ngha</p>
+                <p className="text-xs text-gray-600" style={{ marginTop: '-18px' }}>Sách tặng ý nghĩa</p>
               </div>
             </div>
 
@@ -123,10 +123,10 @@ export function MyBooksLibrary({ user, onLogout, onCreateNew, onEditBook }: MyBo
         {/* Welcome */}
         <div className="mb-8">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-3">
-            Xin cho, {user.name}! 
+            Xin chào, {user.name}! 👋
           </h2>
           <p className="text-lg text-gray-600">
-            To cun sch y cm xc cho ngi thn yu ca bn
+            Tạo cuốn sách đầy cảm xúc cho người thân yêu của bạn
           </p>
         </div>
 
@@ -145,8 +145,8 @@ export function MyBooksLibrary({ user, onLogout, onCreateNew, onEditBook }: MyBo
               <Plus className="w-8 h-8" />
             </div>
             <div className="text-left">
-              <p className="text-2xl sm:text-3xl font-bold mb-1">To sch mi</p>
-              <p className="text-white/90 text-sm sm:text-base">Bt u hnh trnh sng to ca bn</p>
+              <p className="text-2xl sm:text-3xl font-bold mb-1">Tạo sách mới</p>
+              <p className="text-white/90 text-sm sm:text-base">Bắt đầu hành trình sáng tạo của bạn</p>
             </div>
           </div>
         </button>
@@ -157,7 +157,7 @@ export function MyBooksLibrary({ user, onLogout, onCreateNew, onEditBook }: MyBo
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
               type="text"
-              placeholder="Tm kim sch..."
+              placeholder="Tìm kiếm sách..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-12 pr-4 py-3 rounded-2xl bg-white/80 backdrop-blur-sm border border-orange-200/50 focus:border-rose-400 focus:ring-4 focus:ring-rose-200/50 outline-none transition-all shadow-sm"
@@ -169,7 +169,7 @@ export function MyBooksLibrary({ user, onLogout, onCreateNew, onEditBook }: MyBo
         <div className="mb-6">
           <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
             <FileText className="w-5 h-5" />
-            Sch ca ti ({filteredBooks.length})
+            Sách của tôi ({filteredBooks.length})
           </h3>
 
           {filteredBooks.length === 0 ? (
@@ -178,14 +178,14 @@ export function MyBooksLibrary({ user, onLogout, onCreateNew, onEditBook }: MyBo
                 <BookHeart className="w-10 h-10 text-rose-400" />
               </div>
               <p className="text-gray-600 mb-4">
-                {searchQuery ? 'Khng tm thy sch no' : 'Bn cha c sch no'}
+                {searchQuery ? 'Không tìm thấy sách nào' : 'Bạn chưa có sách nào'}
               </p>
               {!searchQuery && (
                 <button
                   onClick={onCreateNew}
                   className="px-6 py-3 rounded-2xl bg-gradient-to-r from-rose-400 to-amber-400 text-white font-semibold hover:shadow-lg transition-all"
                 >
-                  To sch u tin
+                  Tạo sách đầu tiên
                 </button>
               )}
             </div>
@@ -203,7 +203,7 @@ export function MyBooksLibrary({ user, onLogout, onCreateNew, onEditBook }: MyBo
                       <span className="group-hover:scale-110 transition-transform">{theme.emoji}</span>
                       {book.status === 'draft' && (
                         <div className="absolute top-3 right-3 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-semibold text-gray-700">
-                          Nhp
+                          Nháp
                         </div>
                       )}
                     </div>
@@ -211,7 +211,7 @@ export function MyBooksLibrary({ user, onLogout, onCreateNew, onEditBook }: MyBo
                     {/* Info */}
                     <div className="p-4">
                       <h4 className="font-bold text-gray-800 mb-1 truncate">
-                        {book.title || `Sch ${theme.name}`}
+                        {book.title || `Sách ${theme.name}`}
                       </h4>
                       <p className="text-sm text-gray-600 mb-3">{theme.name}</p>
                       <p className="text-xs text-gray-500 flex items-center gap-2 mb-4">
@@ -233,19 +233,19 @@ export function MyBooksLibrary({ user, onLogout, onCreateNew, onEditBook }: MyBo
                           className="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 text-white font-medium hover:shadow-md transition-all flex items-center justify-center gap-2"
                         >
                           <Edit className="w-4 h-4" />
-                          {book.status === 'draft' ? 'Tip tc' : 'Chnh sa'}
+                          {book.status === 'draft' ? 'Tiếp tục' : 'Chỉnh sửa'}
                         </button>
                         <button
                           onClick={() => handleDuplicate(book)}
                           className="p-2 rounded-xl bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all"
-                          title="Sao chp"
+                          title="Sao chép"
                         >
                           <Copy className="w-4 h-4" />
                         </button>
                         <button
-                          onClick={() => handleDeleteClick(book.id, book.title || 'Sch ca bn')}
+                          onClick={() => handleDeleteClick(book.id, book.title || 'Sách của bạn')}
                           className="p-2 rounded-xl bg-red-100 text-red-600 hover:bg-red-200 transition-all"
-                          title="Xa"
+                          title="Xóa"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -260,15 +260,15 @@ export function MyBooksLibrary({ user, onLogout, onCreateNew, onEditBook }: MyBo
 
         {/* Pricing Info */}
         <div className="mt-12 p-6 rounded-3xl bg-white/60 backdrop-blur-sm border border-orange-200/50">
-          <h4 className="font-bold text-gray-800 mb-3"> Thng tin gi</h4>
+          <h4 className="font-bold text-gray-800 mb-3">💝 Thông tin giá</h4>
           <div className="grid sm:grid-cols-2 gap-4 text-sm text-gray-700">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-rose-400" />
-              <span>Gi: 500,000 - 700,000 VN</span>
+              <span>Giá: 500,000 - 700,000 VNĐ</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-amber-400" />
-              <span>Giao hng: 5-7 ngy lm vic</span>
+              <span>Giao hàng: 5-7 ngày làm việc</span>
             </div>
           </div>
         </div>

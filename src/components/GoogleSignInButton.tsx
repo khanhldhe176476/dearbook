@@ -39,7 +39,7 @@ export function GoogleSignInButton({ onClick, disabled = false }: GoogleSignInBu
       </svg>
       
       <span className="relative z-10 group-hover:text-gray-900 transition-colors">
-        ng nhp vi Google
+        Đăng nhập với Google
       </span>
 
       {/* Shimmer effect on hover */}

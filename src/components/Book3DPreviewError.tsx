@@ -22,7 +22,7 @@ export class Book3DPreviewError extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: any) {
-    console.error(' 3D Preview Error:', error);
+    console.error('❌ 3D Preview Error:', error);
     console.error('Error Info:', errorInfo);
   }
 
@@ -45,10 +45,10 @@ export class Book3DPreviewError extends Component<Props, State> {
 
             {/* Error Message */}
             <h1 className="text-3xl font-bold text-gray-900 mb-4">
-              Khng th ti Preview 3D
+              Không thể tải Preview 3D
             </h1>
             <p className="text-gray-600 mb-6">
-               xy ra li khi ti giao din xem trc 3D. Vui lng th li.
+              Đã xảy ra lỗi khi tải giao diện xem trước 3D. Vui lòng thử lại.
             </p>
 
             {/* Error Details */}
@@ -67,26 +67,26 @@ export class Book3DPreviewError extends Component<Props, State> {
                 className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-rose-500 to-pink-600 text-white font-semibold rounded-xl hover:shadow-xl hover:shadow-rose-500/50 transition-all duration-300 hover:scale-105 active:scale-95"
               >
                 <RefreshCcw className="w-5 h-5" />
-                Th li
+                Thử lại
               </button>
 
               <button
                 onClick={() => window.location.reload()}
                 className="flex items-center gap-2 px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-xl transition-all duration-300"
               >
-                Ti li trang
+                Tải lại trang
               </button>
             </div>
 
             {/* Help Text */}
             <p className="text-sm text-gray-500 mt-8">
-               Nu vn  vn tip din, vui lng th:
+              💡 Nếu vấn đề vẫn tiếp diễn, vui lòng thử:
               <br />
-               Ti li trang
+              • Tải lại trang
               <br />
-               Xa cache trnh duyt
+              • Xóa cache trình duyệt
               <br />
-               Th vi trnh duyt khc
+              • Thử với trình duyệt khác
             </p>
           </div>
         </div>

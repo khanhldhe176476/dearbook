@@ -23,14 +23,14 @@ interface YouthArchiveEditorProps {
 }
 
 // Photo slots matching the ya-page-1.jpg layout
-// Image dimensions: 7101006px  aspect ratio 5:7 matches canvas
-// Window frame is tilted ~-4.5 counter-clockwise
+// Image dimensions: 710×1006px → aspect ratio 5:7 matches canvas
+// Window frame is tilted ~-4.5° counter-clockwise
 // Each pane inner area (excluding white border):
 const COVER_SLOTS: PhotoSlot[] = [
-  { id: 'ya-win-1', label: 'Ca s 1', x: 20.5, y: 7.5, w: 22, h: 18, rotation: -4.5 },
-  { id: 'ya-win-2', label: 'Ca s 2', x: 46.0, y: 5.0, w: 22, h: 18, rotation: -4.5 },
-  { id: 'ya-win-3', label: 'Ca s 3', x: 22.5, y: 26.5, w: 22, h: 18, rotation: -4.5 },
-  { id: 'ya-win-4', label: 'Ca s 4', x: 48.0, y: 24.0, w: 22, h: 18, rotation: -4.5 },
+  { id: 'ya-win-1', label: 'Cửa sổ 1', x: 20.5, y: 7.5, w: 22, h: 18, rotation: -4.5 },
+  { id: 'ya-win-2', label: 'Cửa sổ 2', x: 46.0, y: 5.0, w: 22, h: 18, rotation: -4.5 },
+  { id: 'ya-win-3', label: 'Cửa sổ 3', x: 22.5, y: 26.5, w: 22, h: 18, rotation: -4.5 },
+  { id: 'ya-win-4', label: 'Cửa sổ 4', x: 48.0, y: 24.0, w: 22, h: 18, rotation: -4.5 },
   // Polaroids: x/y = top-left of the full polaroid frame (including white border)
   { id: 'ya-pol-1', label: 'Polaroid 1', x: 2, y: 62, w: 28, h: 26, rotation: -12, shape: 'polaroid' },
   { id: 'ya-pol-2', label: 'Polaroid 2', x: 26, y: 56, w: 28, h: 26, rotation: -4, shape: 'polaroid' },
@@ -39,15 +39,15 @@ const COVER_SLOTS: PhotoSlot[] = [
 
 // Photo slots matching the ya-page-2.png layout
 const PAGE2_SLOTS: PhotoSlot[] = [
-  { id: 'ya2-main', label: 'nh chnh', x: 19, y: 15, w: 62, h: 29 },
-  { id: 'ya2-sq', label: 'Khung vung', x: 16, y: 50, w: 30, h: 20 },
-  { id: 'ya2-curly', label: 'Khung vin', x: 19, y: 76, w: 26, h: 16 },
+  { id: 'ya2-main', label: 'Ảnh chính', x: 19, y: 15, w: 62, h: 29 },
+  { id: 'ya2-sq', label: 'Khung vuông', x: 16, y: 50, w: 30, h: 20 },
+  { id: 'ya2-curly', label: 'Khung viền', x: 19, y: 76, w: 26, h: 16 },
   { id: 'ya2-film-1', label: 'Film 1', x: 55, y: 51, w: 29, h: 18 },
   { id: 'ya2-film-2', label: 'Film 2', x: 55, y: 71, w: 29, h: 18 },
 ];
 
 const PAGE3_SLOTS: PhotoSlot[] = [
-  { id: 'ya3-photo', label: 'nh chnh', x: 7, y: 7, w: 86, h: 60 },
+  { id: 'ya3-photo', label: 'Ảnh chính', x: 7, y: 7, w: 86, h: 60 },
 ];
 
 const PAGE4_SLOTS: PhotoSlot[] = [
@@ -55,12 +55,12 @@ const PAGE4_SLOTS: PhotoSlot[] = [
   { id: 'ya4-fp2', label: 'Strip 2', x: 28, y: 14, w: 20, h: 20 },
   { id: 'ya4-fp3', label: 'Strip 3', x: 51, y: 14, w: 20, h: 20 },
   { id: 'ya4-fp4', label: 'Strip 4', x: 74, y: 14, w: 20, h: 20 },
-  { id: 'ya4-p5', label: 'nh ln 1', x: 5, y: 47, w: 42, h: 40 },
-  { id: 'ya4-p6', label: 'nh ln 2', x: 53, y: 47, w: 42, h: 40 },
+  { id: 'ya4-p5', label: 'Ảnh lớn 1', x: 5, y: 47, w: 42, h: 40 },
+  { id: 'ya4-p6', label: 'Ảnh lớn 2', x: 53, y: 47, w: 42, h: 40 },
 ];
 
 const PAGE5_SLOTS: PhotoSlot[] = [
-  { id: 'ya5-photo1', label: 'nh k nim', x: 5, y: 24, w: 90, h: 45 },
+  { id: 'ya5-photo1', label: 'Ảnh kỷ niệm', x: 5, y: 24, w: 90, h: 45 },
 ];
 
 const PAGE6_SLOTS: PhotoSlot[] = [
@@ -74,7 +74,7 @@ const PAGE6_SLOTS: PhotoSlot[] = [
 
 const ALL_PAGES_SLOTS = [COVER_SLOTS, PAGE2_SLOTS, PAGE3_SLOTS, PAGE4_SLOTS, PAGE5_SLOTS, PAGE6_SLOTS];
 
-const PAGE_LABELS = ['Trang ba', 'B su tp nh', 'Khonh khc c bit', 'Hnh trnh', 'Ghi li k nim', 'Nm 2025'];
+const PAGE_LABELS = ['Trang bìa', 'Bộ sưu tập ảnh', 'Khoảnh khắc đặc biệt', 'Hành trình', 'Ghi lại kỷ niệm', 'Năm 2025'];
 
 const PAGE_BG_COLORS = ['#6B4A2A', '#F5EFE6', '#5C3D20', '#1A1A1A', '#F5EFE6', '#E5DFD5'];
 
@@ -190,7 +190,7 @@ export function YouthArchiveEditor({ book, pages, onChange, onBack, onFinish, on
         style={{ background: 'rgba(255, 255, 255, 0.75)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(229, 223, 213, 0.8)' }}>
         <button onClick={onBack} className="flex items-center gap-2 text-sm font-medium text-[#8C6E5D] hover:text-[#4A3B32] transition-colors">
           <ArrowLeft className="w-5 h-5" />
-          Quay li
+          Quay lại
         </button>
 
         <div className="text-center absolute left-1/2 -translate-x-1/2 flex flex-col items-center">
@@ -201,7 +201,7 @@ export function YouthArchiveEditor({ book, pages, onChange, onBack, onFinish, on
             className="text-center bg-transparent text-[#4A3B32] font-bold text-2xl outline-none border-b border-transparent focus:border-[#C4956A]/50 transition-colors"
             style={{ fontFamily: 'Dancing Script, cursive', minWidth: '250px' }}
           />
-          <p className="text-xs font-medium text-[#8C6E5D]/80 mt-1">{filledSlots}/{totalSlots} nh  thm</p>
+          <p className="text-xs font-medium text-[#8C6E5D]/80 mt-1">{filledSlots}/{totalSlots} ảnh đã thêm</p>
         </div>
 
         <div className="flex items-center gap-3">
@@ -210,7 +210,7 @@ export function YouthArchiveEditor({ book, pages, onChange, onBack, onFinish, on
             className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all hover:bg-white"
             style={{ border: '1.5px solid rgba(196,149,106,0.5)', color: '#C4956A', boxShadow: '0 2px 8px rgba(196,149,106,0.1)' }}
           >
-            Chnh sa t do
+            Chỉnh sửa tự do
           </button>
           <button
             onClick={onFinish}
@@ -218,7 +218,7 @@ export function YouthArchiveEditor({ book, pages, onChange, onBack, onFinish, on
             style={{ background: 'linear-gradient(135deg, #C4956A, #8B5E3C)', color: '#fff', boxShadow: '0 6px 16px rgba(196,149,106,0.3)' }}
           >
             <ShoppingCart className="w-4 h-4" />
-            t hng
+            Đặt hàng
           </button>
         </div>
       </header>
@@ -271,8 +271,8 @@ export function YouthArchiveEditor({ book, pages, onChange, onBack, onFinish, on
         {/* Main canvas area */}
         <div className="flex-1 flex flex-col items-center justify-center p-8 gap-6 overflow-y-auto">
           <div className="flex items-center gap-2 text-[#8C6E5D] bg-white/60 px-5 py-2 rounded-full shadow-sm border border-[#E5DFD5]">
-            <span className="text-lg"></span>
-            <span className="text-sm font-medium">Click vo khung trng  ti nh ln  <strong>{PAGE_LABELS[currentPageIdx]}</strong></span>
+            <span className="text-lg">📸</span>
+            <span className="text-sm font-medium">Click vào khung trống để tải ảnh lên • <strong>{PAGE_LABELS[currentPageIdx]}</strong></span>
           </div>
 
           {/* Canvas */}
@@ -297,8 +297,8 @@ export function YouthArchiveEditor({ book, pages, onChange, onBack, onFinish, on
             )}
             {currentPageIdx === 2 && (
               <>
-                <div className="absolute" style={{ bottom: '10%', left: '5%', right: '5%', fontFamily: 'Dancing Script, cursive', fontSize: 'clamp(13px, 3vw, 18px)', color: '#F5E6D0', textAlign: 'center', fontStyle: 'italic', zIndex: 2 }}>"Tui tr l khi bn dm c m v dm sng ht mnh."</div>
-                <div className="absolute" style={{ bottom: '3%', left: '5%', right: '5%', fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(8px, 2vw, 11px)', color: '#C4956A', textAlign: 'center', zIndex: 2 }}> Youth Archive 2025</div>
+                <div className="absolute" style={{ bottom: '10%', left: '5%', right: '5%', fontFamily: 'Dancing Script, cursive', fontSize: 'clamp(13px, 3vw, 18px)', color: '#F5E6D0', textAlign: 'center', fontStyle: 'italic', zIndex: 2 }}>"Tuổi trẻ là khi bạn dám ước mơ và dám sống hết mình."</div>
+                <div className="absolute" style={{ bottom: '3%', left: '5%', right: '5%', fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(8px, 2vw, 11px)', color: '#C4956A', textAlign: 'center', zIndex: 2 }}>— Youth Archive 2025</div>
               </>
             )}
             {currentPageIdx === 3 && (
@@ -306,16 +306,16 @@ export function YouthArchiveEditor({ book, pages, onChange, onBack, onFinish, on
                 <div className="absolute" style={{ top: '2%', left: '5%', right: '5%', fontFamily: 'Dancing Script, cursive', fontSize: 'clamp(16px, 4vw, 26px)', color: '#F5E6D0', textAlign: 'center', fontWeight: 700, zIndex: 2 }}>The Journey</div>
                 {/* Film strip bg horizontal */}
                 <div className="absolute" style={{ top: '12%', left: 0, right: 0, height: '20%', background: '#0A0A0A', zIndex: 1 }} />
-                <div className="absolute" style={{ top: '34%', left: '5%', right: '5%', fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(8px, 2vw, 11px)', color: '#AAA', textAlign: 'center', fontStyle: 'italic', zIndex: 2 }}>Ghi li hnh trnh ca bn...</div>
-                <div className="absolute" style={{ bottom: '4%', left: '40%', fontSize: 'clamp(14px, 3vw, 20px)', zIndex: 3 }}></div>
+                <div className="absolute" style={{ top: '34%', left: '5%', right: '5%', fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(8px, 2vw, 11px)', color: '#AAA', textAlign: 'center', fontStyle: 'italic', zIndex: 2 }}>Ghi lại hành trình của bạn...</div>
+                <div className="absolute" style={{ bottom: '4%', left: '40%', fontSize: 'clamp(14px, 3vw, 20px)', zIndex: 3 }}>🎞️</div>
               </>
             )}
             {currentPageIdx === 4 && (
               <>
-                <div className="absolute" style={{ top: '4%', left: '5%', right: '5%', fontSize: 'clamp(18px, 4vw, 28px)', textAlign: 'center', zIndex: 2 }}></div>
-                <div className="absolute" style={{ top: '12%', left: '5%', right: '5%', fontFamily: 'Dancing Script, cursive', fontSize: 'clamp(16px, 4vw, 24px)', color: '#5C3D20', textAlign: 'center', fontWeight: 700, zIndex: 2 }}>Ghi li khonh khc</div>
-                <div className="absolute" style={{ bottom: '12%', left: '5%', right: '5%', fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(9px, 2vw, 13px)', color: '#7A5C3A', textAlign: 'center', fontStyle: 'italic', zIndex: 2 }}>Vit iu bn mun ghi nh v khonh khc ny...</div>
-                <div className="absolute" style={{ bottom: '4%', left: '5%', right: '5%', fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(8px, 2vw, 12px)', color: '#C4956A', textAlign: 'center', zIndex: 2 }}> Ngy... thng... nm...</div>
+                <div className="absolute" style={{ top: '4%', left: '5%', right: '5%', fontSize: 'clamp(18px, 4vw, 28px)', textAlign: 'center', zIndex: 2 }}>📸</div>
+                <div className="absolute" style={{ top: '12%', left: '5%', right: '5%', fontFamily: 'Dancing Script, cursive', fontSize: 'clamp(16px, 4vw, 24px)', color: '#5C3D20', textAlign: 'center', fontWeight: 700, zIndex: 2 }}>Ghi lại khoảnh khắc</div>
+                <div className="absolute" style={{ bottom: '12%', left: '5%', right: '5%', fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(9px, 2vw, 13px)', color: '#7A5C3A', textAlign: 'center', fontStyle: 'italic', zIndex: 2 }}>Viết điều bạn muốn ghi nhớ về khoảnh khắc này...</div>
+                <div className="absolute" style={{ bottom: '4%', left: '5%', right: '5%', fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(8px, 2vw, 12px)', color: '#C4956A', textAlign: 'center', zIndex: 2 }}>📅 Ngày... tháng... năm...</div>
               </>
             )}
 
@@ -402,8 +402,8 @@ export function YouthArchiveEditor({ book, pages, onChange, onBack, onFinish, on
           <div className="text-center max-w-sm mt-2">
             <p className="text-[#8C6E5D] text-xs font-medium bg-white/40 px-4 py-2 rounded-lg border border-[#E5DFD5]">
               {currentPageIdx === 0
-                ? `Ba Scrapbook c ${COVER_SLOTS.length} khung nh  Hy in y  nh`
-                : `Trang ${currentPageIdx + 1}  ${currentSlots.length} khung nh`}
+                ? `Bìa Scrapbook có ${COVER_SLOTS.length} khung ảnh • Hãy điền đầy đủ nhé`
+                : `Trang ${currentPageIdx + 1} • ${currentSlots.length} khung ảnh`}
             </p>
           </div>
         </div>
@@ -413,26 +413,26 @@ export function YouthArchiveEditor({ book, pages, onChange, onBack, onFinish, on
           <div className="bg-white/80 rounded-2xl p-5 shadow-sm border border-[#E5DFD5]">
             <h3 className="text-[#4A3B32] font-bold text-base mb-4 flex items-center gap-2">
               <span className="bg-[#F5EFE6] p-1.5 rounded-lg text-[#C4956A]"><Eye className="w-4 h-4" /></span>
-              Hng dn
+              Hướng dẫn
             </h3>
             <div className="space-y-4 text-sm text-[#7A6F66]">
               <div className="flex items-start gap-3">
-                <div className="bg-[#F5EFE6] w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs shadow-sm"></div>
-                <p className="leading-snug">Click vo <strong>khung trng</strong> trn sch  chn nh</p>
+                <div className="bg-[#F5EFE6] w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs shadow-sm">👆</div>
+                <p className="leading-snug">Click vào <strong>khung trống</strong> trên sách để chọn ảnh</p>
               </div>
               <div className="flex items-start gap-3">
-                <div className="bg-[#F5EFE6] w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs shadow-sm"></div>
-                <p className="leading-snug">Click li vo nh  in  <strong>thay nh khc</strong></p>
+                <div className="bg-[#F5EFE6] w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs shadow-sm">🔄</div>
+                <p className="leading-snug">Click lại vào ảnh đã điền để <strong>thay ảnh khác</strong></p>
               </div>
               <div className="flex items-start gap-3">
-                <div className="bg-[#F5EFE6] w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs shadow-sm"></div>
-                <p className="leading-snug">S dng nt <strong>Chnh sa t do</strong> pha trn  thm ch, sticker</p>
+                <div className="bg-[#F5EFE6] w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs shadow-sm">✨</div>
+                <p className="leading-snug">Sử dụng nút <strong>Chỉnh sửa tự do</strong> phía trên để thêm chữ, sticker</p>
               </div>
             </div>
           </div>
 
           <div className="bg-white/80 rounded-2xl p-5 shadow-sm border border-[#E5DFD5]">
-            <h3 className="text-[#4A3B32] font-bold text-sm mb-3">Tin  b su tp</h3>
+            <h3 className="text-[#4A3B32] font-bold text-sm mb-3">Tiến độ bộ sưu tập</h3>
             <div className="flex items-center gap-3">
               <div className="flex-1 h-2 rounded-full" style={{ background: '#E5DFD5' }}>
                 <div className="h-full rounded-full transition-all duration-700 ease-out" style={{ width: `${(filledSlots / totalSlots) * 100}%`, background: '#C4956A' }} />
@@ -441,7 +441,7 @@ export function YouthArchiveEditor({ book, pages, onChange, onBack, onFinish, on
             </div>
             {filledSlots === totalSlots && (
               <div className="mt-3 text-xs text-[#8B5E3C] font-medium text-center bg-[#F5EFE6] py-1.5 rounded-md">
-                 Tuyt vi!  hon thnh!
+                🎉 Tuyệt vời! Đã hoàn thành!
               </div>
             )}
           </div>

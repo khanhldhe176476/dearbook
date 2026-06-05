@@ -65,10 +65,10 @@ export function DesignEditor({ bookDesign, setBookDesign, onPreview, onBackToHom
   };
 
   const layouts: Array<{ value: BookPage['layout']; label: string; icon: string }> = [
-    { value: 'text-only', label: 'Ch ch', icon: '' },
-    { value: 'image-only', label: 'Ch nh', icon: '' },
-    { value: 'text-image', label: 'Ch + nh', icon: '' },
-    { value: 'image-text', label: 'nh + Ch', icon: '' }
+    { value: 'text-only', label: 'Chỉ chữ', icon: '📝' },
+    { value: 'image-only', label: 'Chỉ ảnh', icon: '🖼️' },
+    { value: 'text-image', label: 'Chữ + Ảnh', icon: '📄' },
+    { value: 'image-text', label: 'Ảnh + Chữ', icon: '🎨' }
   ];
 
   return (
@@ -82,7 +82,7 @@ export function DesignEditor({ bookDesign, setBookDesign, onPreview, onBackToHom
               className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition"
             >
               <ArrowLeft className="w-5 h-5" />
-              <span>Quay li</span>
+              <span>Quay lại</span>
             </button>
             <div className="flex items-center gap-4">
               {user && (
@@ -99,13 +99,13 @@ export function DesignEditor({ bookDesign, setBookDesign, onPreview, onBackToHom
                 className="flex items-center gap-2 px-6 py-2 bg-rose-600 text-white rounded-full hover:bg-rose-700 transition"
               >
                 <Eye className="w-5 h-5" />
-                Xem trc
+                Xem trước
               </button>
               {user && (
                 <button
                   onClick={onLogout}
                   className="p-2 hover:bg-gray-100 rounded-full transition"
-                  title="ng xut"
+                  title="Đăng xuất"
                 >
                   <LogOut className="w-5 h-5 text-gray-600" />
                 </button>
@@ -121,43 +121,43 @@ export function DesignEditor({ bookDesign, setBookDesign, onPreview, onBackToHom
           <div className="space-y-6">
             {/* Book Info */}
             <div className="bg-white rounded-2xl shadow-md p-6">
-              <h2 className="text-2xl font-serif text-rose-900 mb-6">Thng tin sch</h2>
+              <h2 className="text-2xl font-serif text-rose-900 mb-6">Thông tin sách</h2>
               
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Tiu  sch
+                    Tiêu đề sách
                   </label>
                   <input
                     type="text"
                     value={bookDesign.title}
                     onChange={(e) => setBookDesign({ ...bookDesign, title: e.target.value })}
-                    placeholder="VD: K nim 1 nm bn nhau"
+                    placeholder="VD: Kỷ niệm 1 năm bên nhau"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Ngi nhn
+                    Người nhận
                   </label>
                   <input
                     type="text"
                     value={bookDesign.recipient}
                     onChange={(e) => setBookDesign({ ...bookDesign, recipient: e.target.value })}
-                    placeholder="VD: Anh yu ca em"
+                    placeholder="VD: Anh yêu của em"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Li tng (trang u)
+                    Lời tặng (trang đầu)
                   </label>
                   <textarea
                     value={bookDesign.dedication}
                     onChange={(e) => setBookDesign({ ...bookDesign, dedication: e.target.value })}
-                    placeholder="Gi nhng li yu thng..."
+                    placeholder="Gửi những lời yêu thương..."
                     rows={3}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
                   />
@@ -165,7 +165,7 @@ export function DesignEditor({ bookDesign, setBookDesign, onPreview, onBackToHom
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    nh ba
+                    Ảnh bìa
                   </label>
                   <input
                     type="file"
@@ -191,7 +191,7 @@ export function DesignEditor({ bookDesign, setBookDesign, onPreview, onBackToHom
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Kiu b cc
+                    Kiểu bố cục
                   </label>
                   <div className="grid grid-cols-2 gap-2">
                     {layouts.map((layout) => (
@@ -214,12 +214,12 @@ export function DesignEditor({ bookDesign, setBookDesign, onPreview, onBackToHom
                 {(currentPage.layout === 'text-only' || currentPage.layout === 'text-image' || currentPage.layout === 'image-text') && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Ni dung
+                      Nội dung
                     </label>
                     <textarea
                       value={currentPage.content}
                       onChange={(e) => updatePage({ content: e.target.value })}
-                      placeholder="Vit cu chuyn ca bn..."
+                      placeholder="Viết câu chuyện của bạn..."
                       rows={6}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
                     />
@@ -229,7 +229,7 @@ export function DesignEditor({ bookDesign, setBookDesign, onPreview, onBackToHom
                 {currentPage.layout !== 'text-only' && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Hnh nh
+                      Hình ảnh
                     </label>
                     <input
                       type="file"
@@ -252,7 +252,7 @@ export function DesignEditor({ bookDesign, setBookDesign, onPreview, onBackToHom
           <div className="space-y-6">
             {/* Current Page Preview */}
             <div className="bg-white rounded-2xl shadow-md p-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Xem trc trang hin ti</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Xem trước trang hiện tại</h3>
               <div className="aspect-[3/4] bg-gradient-to-br from-amber-50 to-rose-50 rounded-lg p-8 border-2 border-gray-200">
                 <PagePreview page={currentPage} />
               </div>
@@ -261,13 +261,13 @@ export function DesignEditor({ bookDesign, setBookDesign, onPreview, onBackToHom
             {/* Pages Navigation */}
             <div className="bg-white rounded-2xl shadow-md p-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-medium text-gray-900">Danh sch trang</h3>
+                <h3 className="text-lg font-medium text-gray-900">Danh sách trang</h3>
                 <button
                   onClick={addPage}
                   className="flex items-center gap-2 px-4 py-2 bg-rose-600 text-white rounded-full hover:bg-rose-700 transition text-sm"
                 >
                   <Plus className="w-4 h-4" />
-                  Thm trang
+                  Thêm trang
                 </button>
               </div>
 
@@ -315,7 +315,7 @@ function PagePreview({ page, compact = false }: { page: BookPage; compact?: bool
     return (
       <div className="h-full flex items-center justify-center p-4">
         <p className={`${textClass} text-gray-700 text-center italic`}>
-          {page.content || 'Ni dung trang...'}
+          {page.content || 'Nội dung trang...'}
         </p>
       </div>
     );
@@ -336,7 +336,7 @@ function PagePreview({ page, compact = false }: { page: BookPage; compact?: bool
       <div className="h-full flex flex-col gap-2">
         <div className="flex-1">
           <p className={`${textClass} text-gray-700`}>
-            {page.content || 'Ni dung...'}
+            {page.content || 'Nội dung...'}
           </p>
         </div>
         {page.imageUrl ? (
@@ -362,7 +362,7 @@ function PagePreview({ page, compact = false }: { page: BookPage; compact?: bool
         )}
         <div className="flex-1">
           <p className={`${textClass} text-gray-700`}>
-            {page.content || 'Ni dung...'}
+            {page.content || 'Nội dung...'}
           </p>
         </div>
       </div>

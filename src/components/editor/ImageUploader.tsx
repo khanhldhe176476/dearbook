@@ -28,12 +28,12 @@ export function ImageUploader({
 
   const validateFile = (file: File): string | null => {
     if (!acceptedFormats.includes(file.type)) {
-      return `nh dng khng h tr. Ch chp nhn: ${acceptedFormats.map(f => f.split('/')[1]).join(', ')}`;
+      return `Định dạng không hỗ trợ. Chỉ chấp nhận: ${acceptedFormats.map(f => f.split('/')[1]).join(', ')}`;
     }
 
     const maxSizeBytes = maxSizeMB * 1024 * 1024;
     if (file.size > maxSizeBytes) {
-      return `Kch thc file qu ln. Ti a ${maxSizeMB}MB`;
+      return `Kích thước file quá lớn. Tối đa ${maxSizeMB}MB`;
     }
 
     return null;
@@ -61,12 +61,12 @@ export function ImageUploader({
             setImageForCrop(dataUrl);
           } else {
             try {
-              // Lu vo IndexedDB (primary storage, khng gii hn ~5MB)
+              // Lưu vào IndexedDB (primary storage, không giới hạn ~5MB)
               const imageKey = await dbStoreImage(dataUrl);
               onImageUpload(imageKey);
             } catch (err) {
               console.warn('Failed to save to IndexedDB, fallback to dataUrl:', err);
-              // Fallback: dng raw dataUrl (km hiu qu nhng khng mt nh)
+              // Fallback: dùng raw dataUrl (kém hiệu quả nhưng không mất ảnh)
               onImageUpload(dataUrl);
             }
           }
@@ -75,13 +75,13 @@ export function ImageUploader({
         };
 
         reader.onerror = () => {
-          setError('Khng th c file. Vui lng th li.');
+          setError('Không thể đọc file. Vui lòng thử lại.');
           setIsUploading(false);
         };
 
         reader.readAsDataURL(file);
       } catch (err) {
-        setError('C li xy ra khi ti nh ln.');
+        setError('Có lỗi xảy ra khi tải ảnh lên.');
         setIsUploading(false);
       }
     },
@@ -124,7 +124,7 @@ export function ImageUploader({
   };
 
   const handleCropComplete = async (croppedImageUrl: string) => {
-    // Lu nh  crop vo IndexedDB
+    // Lưu ảnh đã crop vào IndexedDB
     try {
       const imageKey = await dbStoreImage(croppedImageUrl);
       onImageUpload(imageKey);
@@ -166,7 +166,7 @@ export function ImageUploader({
           {isUploading ? (
             <>
               <Loader2 className="w-10 h-10 text-pink-500 animate-spin" />
-              <p className="text-sm text-gray-600">ang ti ln...</p>
+              <p className="text-sm text-gray-600">Đang tải lên...</p>
             </>
           ) : (
             <>
@@ -175,10 +175,10 @@ export function ImageUploader({
               </div>
               <div className="text-center">
                 <p className="text-sm font-medium text-gray-900">
-                  Ko th nh hoc click  chn
+                  Kéo thả ảnh hoặc click để chọn
                 </p>
                 <p className="text-xs text-gray-500 mt-1">
-                  PNG, JPG, WEBP, GIF (ti a {maxSizeMB}MB)
+                  PNG, JPG, WEBP, GIF (tối đa {maxSizeMB}MB)
                 </p>
               </div>
             </>

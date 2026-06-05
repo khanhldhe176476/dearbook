@@ -114,7 +114,7 @@ export function InteractiveBook3D({ book, onClose }: InteractiveBook3DProps) {
             <div>
               <h2 className="text-lg font-bold text-white">{book.title || 'My Book'}</h2>
               <p className="text-sm text-gray-300">
-                {currentSpread === 0 ? 'Cover' : `Pages ${(currentSpread - 1) * 2 + 1}${Math.min((currentSpread - 1) * 2 + 2, totalPages)}`}
+                {currentSpread === 0 ? 'Cover' : `Pages ${(currentSpread - 1) * 2 + 1}–${Math.min((currentSpread - 1) * 2 + 2, totalPages)}`}
               </p>
             </div>
           </div>
@@ -282,10 +282,10 @@ export function InteractiveBook3D({ book, onClose }: InteractiveBook3DProps) {
 
       {/* Instructions */}
       <div className="absolute bottom-6 left-6 bg-black/40 backdrop-blur-xl rounded-2xl px-4 py-3 text-white text-sm border border-white/10">
-        <p className="font-semibold mb-1"> Controls</p>
-        <p className="text-xs text-gray-300"> Drag to rotate</p>
-        <p className="text-xs text-gray-300"> Arrows to flip pages</p>
-        <p className="text-xs text-gray-300"> Zoom buttons on right</p>
+        <p className="font-semibold mb-1">💡 Controls</p>
+        <p className="text-xs text-gray-300">• Drag to rotate</p>
+        <p className="text-xs text-gray-300">• Arrows to flip pages</p>
+        <p className="text-xs text-gray-300">• Zoom buttons on right</p>
       </div>
     </div>
   );

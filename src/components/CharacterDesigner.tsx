@@ -19,61 +19,61 @@ export interface CharacterData {
 }
 
 const SKIN_TONES = [
-  { id: 'fair', name: 'Trng hng', color: '#FFE4C4' },
-  { id: 'light', name: 'Trng', color: '#F5D5C5' },
-  { id: 'medium', name: 'Vng da', color: '#E8B898' },
-  { id: 'tan', name: 'Nu nht', color: '#D4A574' },
-  { id: 'brown', name: 'Nu', color: '#B08860' },
-  { id: 'dark', name: 'Nu m', color: '#8D5524' }
+  { id: 'fair', name: 'Trắng hồng', color: '#FFE4C4' },
+  { id: 'light', name: 'Trắng', color: '#F5D5C5' },
+  { id: 'medium', name: 'Vàng da', color: '#E8B898' },
+  { id: 'tan', name: 'Nâu nhạt', color: '#D4A574' },
+  { id: 'brown', name: 'Nâu', color: '#B08860' },
+  { id: 'dark', name: 'Nâu đậm', color: '#8D5524' }
 ];
 
 const HAIR_STYLES = [
-  { id: 'long-straight', name: 'Tc di thng', icon: '' },
-  { id: 'ponytail', name: 'ui nga', icon: '' },
-  { id: 'bob', name: 'Tc bob', icon: '' },
-  { id: 'bun', name: 'Bi cao', icon: '' },
-  { id: 'short-messy', name: 'Tc ngn xon', icon: '' },
-  { id: 'wavy', name: 'Tc xon sng', icon: '' }
+  { id: 'long-straight', name: 'Tóc dài thẳng', icon: '👱‍♀️' },
+  { id: 'ponytail', name: 'Đuôi ngựa', icon: '🎀' },
+  { id: 'bob', name: 'Tóc bob', icon: '💇‍♀️' },
+  { id: 'bun', name: 'Búi cao', icon: '🌸' },
+  { id: 'short-messy', name: 'Tóc ngắn xoăn', icon: '🌀' },
+  { id: 'wavy', name: 'Tóc xoăn sóng', icon: '🌊' }
 ];
 
 const HAIR_COLORS = [
-  { id: '#2C1810', name: 'en', color: '#2C1810' },
-  { id: '#4A2511', name: 'Nu m', color: '#4A2511' },
-  { id: '#8B4513', name: 'Nu', color: '#8B4513' },
-  { id: '#D2691E', name: 'Ht d', color: '#D2691E' },
-  { id: '#CD853F', name: 'Vng nu', color: '#CD853F' },
-  { id: '#F4A460', name: 'Vng nh kim', color: '#F4A460' },
-  { id: '#FF6347', name: '', color: '#FF6347' },
-  { id: '#FF69B4', name: 'Hng', color: '#FF69B4' },
-  { id: '#DDA0DD', name: 'Tm pastel', color: '#DDA0DD' },
+  { id: '#2C1810', name: 'Đen', color: '#2C1810' },
+  { id: '#4A2511', name: 'Nâu đậm', color: '#4A2511' },
+  { id: '#8B4513', name: 'Nâu', color: '#8B4513' },
+  { id: '#D2691E', name: 'Hạt dẻ', color: '#D2691E' },
+  { id: '#CD853F', name: 'Vàng nâu', color: '#CD853F' },
+  { id: '#F4A460', name: 'Vàng ánh kim', color: '#F4A460' },
+  { id: '#FF6347', name: 'Đỏ', color: '#FF6347' },
+  { id: '#FF69B4', name: 'Hồng', color: '#FF69B4' },
+  { id: '#DDA0DD', name: 'Tím pastel', color: '#DDA0DD' },
   { id: '#87CEEB', name: 'Xanh pastel', color: '#87CEEB' }
 ];
 
 const EYE_STYLES = [
-  { id: 'round', name: 'Trn to', icon: '' },
-  { id: 'cat', name: 'Mt mo', icon: '' },
-  { id: 'anime', name: 'Anime', icon: '' }
+  { id: 'round', name: 'Tròn to', icon: '👁️' },
+  { id: 'cat', name: 'Mắt mèo', icon: '😺' },
+  { id: 'anime', name: 'Anime', icon: '✨' }
 ];
 
 const LIP_STYLES = [
-  { id: 'smile', name: 'Ci ti', icon: '' },
-  { id: 'natural', name: 'T nhin', icon: '' },
-  { id: 'pouty', name: 'Mi tu', icon: '' }
+  { id: 'smile', name: 'Cười tươi', icon: '😊' },
+  { id: 'natural', name: 'Tự nhiên', icon: '😌' },
+  { id: 'pouty', name: 'Môi tều', icon: '😚' }
 ];
 
 const OUTFITS = [
-  { id: 'dress-pink', name: 'Vy hng', color: '#FF69B4', icon: '' },
-  { id: 'dress-purple', name: 'Vy tm', color: '#DDA0DD', icon: '' },
-  { id: 'shirt-white', name: 'o s mi trng', color: '#FFFFFF', icon: '' },
-  { id: 'hoodie-blue', name: 'o hoodie xanh', color: '#87CEEB', icon: '' }
+  { id: 'dress-pink', name: 'Váy hồng', color: '#FF69B4', icon: '👗' },
+  { id: 'dress-purple', name: 'Váy tím', color: '#DDA0DD', icon: '👗' },
+  { id: 'shirt-white', name: 'Áo sơ mi trắng', color: '#FFFFFF', icon: '👔' },
+  { id: 'hoodie-blue', name: 'Áo hoodie xanh', color: '#87CEEB', icon: '🧥' }
 ];
 
 const ACCESSORIES = [
-  { id: 'flower', name: 'Hoa ci', icon: '' },
-  { id: 'bow', name: 'N', icon: '' },
-  { id: 'glasses', name: 'Knh', icon: '' },
-  { id: 'earrings', name: 'Bng tai', icon: '' },
-  { id: 'necklace', name: 'Vng c', icon: '' }
+  { id: 'flower', name: 'Hoa cài', icon: '🌸' },
+  { id: 'bow', name: 'Nơ', icon: '🎀' },
+  { id: 'glasses', name: 'Kính', icon: '👓' },
+  { id: 'earrings', name: 'Bông tai', icon: '💎' },
+  { id: 'necklace', name: 'Vòng cổ', icon: '📿' }
 ];
 
 export function CharacterDesigner({ onClose, onApplyToBook, initialCharacter }: CharacterDesignerProps) {
@@ -119,8 +119,8 @@ export function CharacterDesigner({ onClose, onApplyToBook, initialCharacter }: 
               <User className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-gray-900">Thit k nhn vt</h2>
-              <p className="text-xs text-gray-600">To avatar p cho sch ca bn</p>
+              <h2 className="text-xl font-bold text-gray-900">Thiết kế nhân vật</h2>
+              <p className="text-xs text-gray-600">Tạo avatar đẹp cho sách của bạn</p>
             </div>
           </div>
           <button
@@ -152,7 +152,7 @@ export function CharacterDesigner({ onClose, onApplyToBook, initialCharacter }: 
               <div className="mt-4 text-center">
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white shadow-lg border-2 border-pink-200">
                   <Sparkles className="w-4 h-4 text-pink-500" />
-                  <span className="font-semibold text-gray-700">Nhn vt ca bn</span>
+                  <span className="font-semibold text-gray-700">Nhân vật của bạn</span>
                 </div>
               </div>
             </div>
@@ -164,11 +164,11 @@ export function CharacterDesigner({ onClose, onApplyToBook, initialCharacter }: 
             <div className="px-4 py-3 border-b border-gray-200 bg-white overflow-x-auto">
               <div className="flex gap-1 min-w-max">
                 {[
-                  { id: 'skin' as const, label: ' Da', short: '' },
-                  { id: 'hair' as const, label: ' Tc', short: '' },
-                  { id: 'face' as const, label: ' Mt', short: '' },
-                  { id: 'outfit' as const, label: ' ', short: '' },
-                  { id: 'accessories' as const, label: ' Ph kin', short: '' }
+                  { id: 'skin' as const, label: '🎨 Da', short: '🎨' },
+                  { id: 'hair' as const, label: '💇 Tóc', short: '💇' },
+                  { id: 'face' as const, label: '😊 Mặt', short: '😊' },
+                  { id: 'outfit' as const, label: '👗 Đồ', short: '👗' },
+                  { id: 'accessories' as const, label: '✨ Phụ kiện', short: '✨' }
                 ].map((tab) => (
                   <button
                     key={tab.id}
@@ -190,7 +190,7 @@ export function CharacterDesigner({ onClose, onApplyToBook, initialCharacter }: 
             <div className="flex-1 overflow-y-auto p-4">
               {activeTab === 'skin' && (
                 <div className="space-y-3">
-                  <h3 className="font-semibold text-gray-700 mb-3">Chn mu da</h3>
+                  <h3 className="font-semibold text-gray-700 mb-3">Chọn màu da</h3>
                   <div className="grid grid-cols-3 gap-3">
                     {SKIN_TONES.map((tone) => (
                       <button
@@ -226,7 +226,7 @@ export function CharacterDesigner({ onClose, onApplyToBook, initialCharacter }: 
               {activeTab === 'hair' && (
                 <div className="space-y-4">
                   <div>
-                    <h3 className="font-semibold text-gray-700 mb-3">Kiu tc</h3>
+                    <h3 className="font-semibold text-gray-700 mb-3">Kiểu tóc</h3>
                     <div className="grid grid-cols-2 gap-3">
                       {HAIR_STYLES.map((style) => (
                         <button
@@ -246,7 +246,7 @@ export function CharacterDesigner({ onClose, onApplyToBook, initialCharacter }: 
                   </div>
 
                   <div>
-                    <h3 className="font-semibold text-gray-700 mb-3">Mu tc</h3>
+                    <h3 className="font-semibold text-gray-700 mb-3">Màu tóc</h3>
                     <div className="grid grid-cols-5 gap-2">
                       {HAIR_COLORS.map((color) => (
                         <button
@@ -275,7 +275,7 @@ export function CharacterDesigner({ onClose, onApplyToBook, initialCharacter }: 
               {activeTab === 'face' && (
                 <div className="space-y-4">
                   <div>
-                    <h3 className="font-semibold text-gray-700 mb-3">Kiu mt</h3>
+                    <h3 className="font-semibold text-gray-700 mb-3">Kiểu mắt</h3>
                     <div className="grid grid-cols-3 gap-3">
                       {EYE_STYLES.map((style) => (
                         <button
@@ -295,7 +295,7 @@ export function CharacterDesigner({ onClose, onApplyToBook, initialCharacter }: 
                   </div>
 
                   <div>
-                    <h3 className="font-semibold text-gray-700 mb-3">Kiu mi</h3>
+                    <h3 className="font-semibold text-gray-700 mb-3">Kiểu môi</h3>
                     <div className="grid grid-cols-3 gap-3">
                       {LIP_STYLES.map((style) => (
                         <button
@@ -318,7 +318,7 @@ export function CharacterDesigner({ onClose, onApplyToBook, initialCharacter }: 
 
               {activeTab === 'outfit' && (
                 <div className="space-y-3">
-                  <h3 className="font-semibold text-gray-700 mb-3">Trang phc</h3>
+                  <h3 className="font-semibold text-gray-700 mb-3">Trang phục</h3>
                   <div className="grid grid-cols-2 gap-3">
                     {OUTFITS.map((outfit) => (
                       <button
@@ -340,7 +340,7 @@ export function CharacterDesigner({ onClose, onApplyToBook, initialCharacter }: 
 
               {activeTab === 'accessories' && (
                 <div className="space-y-3">
-                  <h3 className="font-semibold text-gray-700 mb-3">Ph kin (chn nhiu)</h3>
+                  <h3 className="font-semibold text-gray-700 mb-3">Phụ kiện (chọn nhiều)</h3>
                   <div className="grid grid-cols-2 gap-3">
                     {ACCESSORIES.map((accessory) => {
                       const isSelected = character.accessories?.includes(accessory.id);
@@ -376,7 +376,7 @@ export function CharacterDesigner({ onClose, onApplyToBook, initialCharacter }: 
                 className="w-full py-3 px-6 rounded-2xl bg-gradient-to-r from-pink-500 via-purple-600 to-blue-600 text-white font-bold shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all flex items-center justify-center gap-2"
               >
                 <Sparkles className="w-5 h-5" />
-                p dng nhn vt vo sch
+                Áp dụng nhân vật vào sách
               </button>
             </div>
           </div>

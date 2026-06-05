@@ -108,23 +108,23 @@ export function LoginScreen({ onLogin, onVerifyOtp, onBack }: LoginScreenProps) 
       return "Correct password";
     }
     if (statusState === 'loading') {
-      return "Checking... ";
+      return "Checking... 🔍";
     }
     if (statusState === 'error') {
-      return "Wrong Password! ";
+      return "Wrong Password! 😢";
     }
     if (showOtpScreen) {
-      return "Enter your OTP code! ";
+      return "Enter your OTP code! 🔑";
     }
     switch (focusState) {
       case 'email':
-        return "Typing email... ";
+        return "Typing email... 📧";
       case 'password':
-        return "Covering my eyes! ";
+        return "Covering my eyes! 🤫";
       case 'name':
-        return "Nice to meet you! ";
+        return "Nice to meet you! ✨";
       default:
-        return isSignup ? "Let's make a book! " : "Welcome back! ";
+        return isSignup ? "Let's make a book! 👻" : "Welcome back! 👻";
     }
   };
 
@@ -135,7 +135,7 @@ export function LoginScreen({ onLogin, onVerifyOtp, onBack }: LoginScreenProps) 
   return (
     <div className="spooky-login-bg">
       
-      {/*  BULLETPROOF STYLING SYSTEM (Bypasses all Tailwind viewport and clipping bugs)  */}
+      {/* ── BULLETPROOF STYLING SYSTEM (Bypasses all Tailwind viewport and clipping bugs) ── */}
       <style>{`
         /* Page Viewport Centering */
         .spooky-login-bg {
@@ -582,7 +582,7 @@ export function LoginScreen({ onLogin, onVerifyOtp, onBack }: LoginScreenProps) 
           background-color: #cbd5e1;
         }
 
-        /*  GHOST BOBBING & ARM WAVING KEYFRAMES  */
+        /* ── GHOST BOBBING & ARM WAVING KEYFRAMES ── */
         @keyframes float-a {
           0%, 100% { transform: translateY(0px) rotate(0deg); }
           50% { transform: translateY(-7px) rotate(-1.5deg); }
@@ -682,10 +682,10 @@ export function LoginScreen({ onLogin, onVerifyOtp, onBack }: LoginScreenProps) 
         }
       `}</style>
 
-      {/*  Outer wrapper container with forced horizontal centering  */}
+      {/* ── Outer wrapper container with forced horizontal centering ── */}
       <div className="spooky-container">
         
-        {/*  Spooky Reels Header (Enforced contrast layout)  */}
+        {/* ── Spooky Reels Header (Enforced contrast layout) ── */}
         <div className="spooky-header">
           <button className="spooky-back-btn" onClick={() => onBack ? onBack() : window.history.back()}>
             <span style={{ fontSize: '1.25rem', lineHeight: '1' }}>&lt;</span>
@@ -699,12 +699,12 @@ export function LoginScreen({ onLogin, onVerifyOtp, onBack }: LoginScreenProps) 
           <div style={{ width: '56px' }}></div>
         </div>
 
-        {/*  Main Card (Always Flex-Row on Desktop, Explicitly Rounded)  */}
+        {/* ── Main Card (Always Flex-Row on Desktop, Explicitly Rounded) ── */}
         <div 
           className={`spooky-card ${statusState === 'error' ? 'animate-shake' : ''}`}
         >
           
-          {/*  Left Half: Spooky Doodle Ghosts Panel (Explicitly Rounded Left)  */}
+          {/* ── Left Half: Spooky Doodle Ghosts Panel (Explicitly Rounded Left) ── */}
           <div className="spooky-left">
             
             {/* Speech Bubble Above Ghost Left */}
@@ -726,7 +726,7 @@ export function LoginScreen({ onLogin, onVerifyOtp, onBack }: LoginScreenProps) 
                   </g>
                 )}
 
-                {/*  Ghost A (Left - Interactive Speaker)  */}
+                {/* ── Ghost A (Left - Interactive Speaker) ── */}
                 <g className="ghost-a-animated">
                   {/* Body shape (Perfectly Centered +7px shifted) */}
                   <path
@@ -775,7 +775,7 @@ export function LoginScreen({ onLogin, onVerifyOtp, onBack }: LoginScreenProps) 
                   <path d="M 87,82 Q 97,83 101,79" fill="none" className="ghost-stroke-thick ghost-a-arm-right" />
                 </g>
 
-                {/*  Ghost B (Right - Playful Reactor)  */}
+                {/* ── Ghost B (Right - Playful Reactor) ── */}
                 <g className="ghost-b-animated">
                   {/* Body shape (Perfectly Centered +7px shifted) */}
                   <path
@@ -854,7 +854,7 @@ export function LoginScreen({ onLogin, onVerifyOtp, onBack }: LoginScreenProps) 
             </div>
           </div>
 
-          {/*  Right Half: Clean Input Form Panel (Explicitly Rounded Right)  */}
+          {/* ── Right Half: Clean Input Form Panel (Explicitly Rounded Right) ── */}
           <div className="spooky-right">
             
             {!showOtpScreen ? (
@@ -922,7 +922,7 @@ export function LoginScreen({ onLogin, onVerifyOtp, onBack }: LoginScreenProps) 
                         value={password} 
                         onChange={e => setPassword(e.target.value)}
                         className="spooky-input" 
-                        placeholder="" 
+                        placeholder="••••••••" 
                         required
                         onFocus={() => setFocusState('password')}
                         onBlur={() => setFocusState('idle')}
@@ -943,7 +943,7 @@ export function LoginScreen({ onLogin, onVerifyOtp, onBack }: LoginScreenProps) 
                     </div>
                   )}
 
-                  {/*  Dynamic Button States (Absolutely Guaranteed Rendering)  */}
+                  {/* ── Dynamic Button States (Absolutely Guaranteed Rendering) ── */}
                   <div className="spooky-btn-container">
                     {statusState === 'success' ? (
                       /* Success Button */
@@ -1031,7 +1031,7 @@ export function LoginScreen({ onLogin, onVerifyOtp, onBack }: LoginScreenProps) 
                       onChange={e => setOtpCode(e.target.value.replace(/\D/g, ''))}
                       className="spooky-input"
                       style={{ textAlign: 'center', fontSize: '1.5rem', letterSpacing: '0.25em', paddingLeft: '1rem' }}
-                      placeholder="" 
+                      placeholder="······" 
                       required
                       onFocus={() => setFocusState('otp')}
                       onBlur={() => setFocusState('idle')}

@@ -186,14 +186,14 @@ export const templates: Template[] = [
   // ========== FAMILY TEMPLATES (6) ==========
   {
     id: 'family-1',
-    name: 'Li cm n gia nh',
+    name: 'Lời cảm ơn gia đình',
     theme: 'family',
     badge: 'bestseller',
     thumbnail: 'https://images.unsplash.com/photo-1729291638795-7a23d54ddaa5?w=400&h=500&fit=crop',
     cover: createMagazineCover(
       'family',
-      'Mn Qu Dnh Cho Gia nh',
-      ' Yu thng & Gn kt',
+      'Món Quà Dành Cho Gia Đình',
+      '👨‍👩‍👧 Yêu thương & Gắn kết',
       'https://images.unsplash.com/photo-1729291638795-7a23d54ddaa5?w=800&h=1200&fit=crop',
       'https://images.unsplash.com/photo-1763696790396-faf8ddc25725?w=300&h=300&fit=crop'
     ),
@@ -207,7 +207,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Li nhn gi',
+            content: 'Lời nhắn gửi',
             x: 50,
             y: 80,
             width: 700,
@@ -222,7 +222,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'sticker',
-            content: '',
+            content: '❤️',
             x: 350,
             y: 200,
             width: 100,
@@ -231,7 +231,7 @@ export const templates: Template[] = [
           {
             id: '3',
             type: 'text',
-            content: 'Cm n ba m  lun bn cnh, yu thng v chm sc con. Nhng k nim cng gia nh l mn qu qu gi nht trong cuc i con.',
+            content: 'Cảm ơn ba mẹ đã luôn bên cạnh, yêu thương và chăm sóc con. Những kỷ niệm cùng gia đình là món quà quý giá nhất trong cuộc đời con.',
             x: 80,
             y: 400,
             width: 640,
@@ -253,7 +253,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Khonh khc bn nhau',
+            content: 'Khoảnh khắc bên nhau',
             x: 50,
             y: 50,
             width: 700,
@@ -276,7 +276,7 @@ export const templates: Template[] = [
           {
             id: '3',
             type: 'text',
-            content: 'Hnh phc l c sum hp bn gia nh, ni lun c tnh yu thng v s m p.',
+            content: 'Hạnh phúc là được sum họp bên gia đình, nơi luôn có tình yêu thương và sự ấm áp.',
             x: 80,
             y: 620,
             width: 640,
@@ -299,7 +299,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Cm n m',
+            content: 'Cảm ơn mẹ',
             x: 50,
             y: 100,
             width: 700,
@@ -313,7 +313,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: 'M l ngi ph n u tin con yu, l ngi hng hu v v i nht trong cuc i con. Cm n m v tt c!',
+            content: 'Mẹ là người phụ nữ đầu tiên con yêu, là người hùng hậu và vĩ đại nhất trong cuộc đời con. Cảm ơn mẹ vì tất cả!',
             x: 80,
             y: 540,
             width: 640,
@@ -334,7 +334,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Ba cm gia nh',
+            content: 'Bữa cơm gia đình',
             x: 50,
             y: 50,
             width: 700,
@@ -357,7 +357,7 @@ export const templates: Template[] = [
           {
             id: '3',
             type: 'text',
-            content: 'Mn n ngon nht khng phi  nh hng 5 sao, m l ba cm m cng quy qun bn gia nh.',
+            content: 'Món ăn ngon nhất không phải ở nhà hàng 5 sao, mà là bữa cơm ấm cúng quây quần bên gia đình.',
             x: 80,
             y: 580,
             width: 640,
@@ -378,7 +378,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Nhng bi hc t gia nh',
+            content: 'Những bài học từ gia đình',
             x: 50,
             y: 50,
             width: 700,
@@ -401,7 +401,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: '1. Lun yu thng v tn trng nhau',
+            content: '1. Luôn yêu thương và tôn trọng nhau',
             x: 60,
             y: 200,
             width: 420,
@@ -415,7 +415,7 @@ export const templates: Template[] = [
           {
             id: '3',
             type: 'text',
-            content: '2. Gia nh l ni ta c th l chnh mnh',
+            content: '2. Gia đình là nơi ta có thể là chính mình',
             x: 60,
             y: 280,
             width: 420,
@@ -429,7 +429,7 @@ export const templates: Template[] = [
           {
             id: '4',
             type: 'text',
-            content: '3. Hy dnh thi gian cho ngi thn',
+            content: '3. Hãy dành thời gian cho người thân',
             x: 60,
             y: 360,
             width: 420,
@@ -443,7 +443,7 @@ export const templates: Template[] = [
           {
             id: '5',
             type: 'text',
-            content: '4. Chia s c vui ln bun',
+            content: '4. Chia sẻ cả vui lẫn buồn',
             x: 60,
             y: 440,
             width: 420,
@@ -457,7 +457,7 @@ export const templates: Template[] = [
           {
             id: '6',
             type: 'text',
-            content: '5. Lun  bn nhau mi lc',
+            content: '5. Luôn ở bên nhau mọi lúc',
             x: 60,
             y: 520,
             width: 420,
@@ -478,7 +478,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Li ha ca con',
+            content: 'Lời hứa của con',
             x: 50,
             y: 150,
             width: 700,
@@ -492,7 +492,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'sticker',
-            content: '',
+            content: '🏠',
             x: 350,
             y: 60,
             width: 100,
@@ -501,7 +501,7 @@ export const templates: Template[] = [
           {
             id: '3',
             type: 'text',
-            content: 'Con ha s lun l ngi con ngoan, yu thng v quan tm n gia nh. Con s c gng  lm ba m t ho.',
+            content: 'Con hứa sẽ luôn là người con ngoan, yêu thương và quan tâm đến gia đình. Con sẽ cố gắng để làm ba mẹ tự hào.',
             x: 80,
             y: 350,
             width: 640,
@@ -515,7 +515,7 @@ export const templates: Template[] = [
           {
             id: '4',
             type: 'text',
-            content: 'Yu ba m nhiu lm! ',
+            content: 'Yêu ba mẹ nhiều lắm! ❤️',
             x: 50,
             y: 620,
             width: 700,
@@ -533,14 +533,14 @@ export const templates: Template[] = [
 
   {
     id: 'family-2',
-    name: 'Ba cm gia nh',
+    name: 'Bữa cơm gia đình',
     theme: 'family',
     badge: 'popular',
     thumbnail: 'https://images.unsplash.com/photo-1766808982983-a2f7cdbe58d9?w=400&h=500&fit=crop',
     cover: createMagazineCover(
       'family',
-      'Ba Cm Gia nh',
-      ' Ni tnh thn gn kt',
+      'Bữa Cơm Gia Đình',
+      '👨‍👩‍👧 Nơi tình thân gắn kết',
       'https://images.unsplash.com/photo-1766808982983-a2f7cdbe58d9?w=800&h=1200&fit=crop',
       'https://images.unsplash.com/photo-1763696790396-faf8ddc25725?w=300&h=300&fit=crop'
     ),
@@ -552,7 +552,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Hng v nh',
+            content: 'Hương vị nhà',
             x: 50,
             y: 60,
             width: 700,
@@ -566,7 +566,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: 'Mn n ngon nht khng phi  nh hng, m l ba cm m cng bn gia nh yu thng.',
+            content: 'Món ăn ngon nhất không phải ở nhà hàng, mà là bữa cơm ấm cúng bên gia đình yêu thương.',
             x: 80,
             y: 200,
             width: 640,
@@ -584,14 +584,14 @@ export const templates: Template[] = [
 
   {
     id: 'family-3',
-    name: 'M v con',
+    name: 'Mẹ và con',
     theme: 'family',
     badge: 'new',
     thumbnail: 'https://images.unsplash.com/photo-1729291638795-7a23d54ddaa5?w=400&h=500&fit=crop',
     cover: createMagazineCover(
       'family',
-      'Tnh Mu T',
-      ' Yu thng v b bn',
+      'Tình Mẫu Tử',
+      '🌸 Yêu thương vô bờ bến',
       'https://images.unsplash.com/photo-1729291638795-7a23d54ddaa5?w=800&h=1200&fit=crop',
       'https://images.unsplash.com/photo-1763696790396-faf8ddc25725?w=300&h=300&fit=crop'
     ),
@@ -603,7 +603,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Cm n m',
+            content: 'Cảm ơn mẹ',
             x: 50,
             y: 50,
             width: 700,
@@ -617,7 +617,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: 'M l ngi ph n u tin con yu, l tm gng sng m con lun ngng m. Cm n m v tt c.',
+            content: 'Mẹ là người phụ nữ đầu tiên con yêu, là tấm gương sáng mà con luôn ngưỡng mộ. Cảm ơn mẹ vì tất cả.',
             x: 80,
             y: 250,
             width: 640,
@@ -635,13 +635,13 @@ export const templates: Template[] = [
 
   {
     id: 'family-4',
-    name: 'K ngh gia nh',
+    name: 'Kỳ nghỉ gia đình',
     theme: 'family',
     thumbnail: 'https://images.unsplash.com/photo-1766808982983-a2f7cdbe58d9?w=400&h=500&fit=crop',
     cover: createMagazineCover(
       'family',
-      'K Ngh Cng Nhau',
-      ' Nhng chuyn i ng nh',
+      'Kỳ Nghỉ Cùng Nhau',
+      '👨‍👩‍👧 Những chuyến đi đáng nhớ',
       'https://images.unsplash.com/photo-1766808982983-a2f7cdbe58d9?w=800&h=1200&fit=crop',
       'https://images.unsplash.com/photo-1763696790396-faf8ddc25725?w=300&h=300&fit=crop'
     ),
@@ -653,7 +653,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Khonh khc hnh phc',
+            content: 'Khoảnh khắc hạnh phúc',
             x: 50,
             y: 50,
             width: 700,
@@ -667,7 +667,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: 'Mi chuyn i l c hi  gia nh gn nhau hn, hiu nhau hn v yu thng nhau nhiu hn.',
+            content: 'Mỗi chuyến đi là cơ hội để gia đình gần nhau hơn, hiểu nhau hơn và yêu thương nhau nhiều hơn.',
             x: 80,
             y: 250,
             width: 640,
@@ -685,13 +685,13 @@ export const templates: Template[] = [
 
   {
     id: 'family-5',
-    name: 'ng b v chu',
+    name: 'Ông bà và cháu',
     theme: 'family',
     thumbnail: 'https://images.unsplash.com/photo-1729291638795-7a23d54ddaa5?w=400&h=500&fit=crop',
     cover: createMagazineCover(
       'family',
-      'Th H Kt Ni',
-      ' Tnh yu thng bt tn',
+      'Thế Hệ Kết Nối',
+      '👨‍👩‍👧 Tình yêu thương bất tận',
       'https://images.unsplash.com/photo-1729291638795-7a23d54ddaa5?w=800&h=1200&fit=crop',
       'https://images.unsplash.com/photo-1763696790396-faf8ddc25725?w=300&h=300&fit=crop'
     ),
@@ -703,7 +703,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Li cn dn ca ng b',
+            content: 'Lời căn dặn của ông bà',
             x: 50,
             y: 50,
             width: 700,
@@ -717,7 +717,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: 'Tnh yu ca ng b dnh cho chu l mn qu v gi, l ngun ng lc  chu trng thnh.',
+            content: 'Tình yêu của ông bà dành cho cháu là món quà vô giá, là nguồn động lực để cháu trưởng thành.',
             x: 80,
             y: 250,
             width: 640,
@@ -735,13 +735,13 @@ export const templates: Template[] = [
 
   {
     id: 'family-6',
-    name: 'Tui th hng',
+    name: 'Tuổi thơ hồng',
     theme: 'family',
     thumbnail: 'https://images.unsplash.com/photo-1766808982983-a2f7cdbe58d9?w=400&h=500&fit=crop',
     cover: createMagazineCover(
       'family',
-      'Tui Th Hng',
-      ' K nim thi th u',
+      'Tuổi Thơ Hồng',
+      '🎈 Kỷ niệm thời thơ ấu',
       'https://images.unsplash.com/photo-1766808982983-a2f7cdbe58d9?w=800&h=1200&fit=crop',
       'https://images.unsplash.com/photo-1763696790396-faf8ddc25725?w=300&h=300&fit=crop'
     ),
@@ -753,7 +753,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'K c tui th',
+            content: 'Ký ức tuổi thơ',
             x: 50,
             y: 50,
             width: 700,
@@ -767,7 +767,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: 'Tui th l khong thi gian p nht, ni c tnh yu thng ca gia nh v nhng k nim khng th no qun.',
+            content: 'Tuổi thơ là khoảng thời gian đẹp nhất, nơi có tình yêu thương của gia đình và những kỷ niệm không thể nào quên.',
             x: 80,
             y: 250,
             width: 640,
@@ -786,14 +786,14 @@ export const templates: Template[] = [
   // ========== FRIENDS TEMPLATES (6) ==========
   {
     id: 'friends-1',
-    name: 'Chuyn i cng bn',
+    name: 'Chuyến đi cùng bạn',
     theme: 'friendship',
     badge: 'popular',
     thumbnail: 'https://images.unsplash.com/photo-1583609042814-8a30efe7a9d5?w=400&h=500&fit=crop',
     cover: createMagazineCover(
       'friendship',
-      'Chuyn i Cng Bn',
-      ' Nhng k nim khng th qun',
+      'Chuyến Đi Cùng Bạn',
+      '🤝 Những kỷ niệm không thể quên',
       'https://images.unsplash.com/photo-1583609042814-8a30efe7a9d5?w=800&h=1200&fit=crop',
       'https://images.unsplash.com/photo-1763696790396-faf8ddc25725?w=300&h=300&fit=crop'
     ),
@@ -806,7 +806,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Cng nhau khm ph',
+            content: 'Cùng nhau khám phá',
             x: 50,
             y: 80,
             width: 700,
@@ -820,7 +820,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'sticker',
-            content: '',
+            content: '✈️',
             x: 350,
             y: 190,
             width: 100,
@@ -838,7 +838,7 @@ export const templates: Template[] = [
           {
             id: '3',
             type: 'text',
-            content: 'Mi chuyn i vi bn b l mt cuc phiu lu y th v, ni chng ta cng nhau to nn nhng k nim khng th qun.',
+            content: 'Mỗi chuyến đi với bạn bè là một cuộc phiêu lưu đầy thú vị, nơi chúng ta cùng nhau tạo nên những kỷ niệm không thể quên.',
             x: 60,
             y: 380,
             width: 360,
@@ -859,7 +859,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Nhng con ng ta i cng nhau',
+            content: 'Những con đường ta đi cùng nhau',
             x: 50,
             y: 50,
             width: 700,
@@ -882,7 +882,7 @@ export const templates: Template[] = [
           {
             id: '3',
             type: 'text',
-            content: 'Khng phi im n, m chnh l hnh trnh cng nhau mi to nn  ngha.',
+            content: 'Không phải điểm đến, mà chính là hành trình cùng nhau mới tạo nên ý nghĩa.',
             x: 80,
             y: 620,
             width: 640,
@@ -905,7 +905,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Hong hn bn bn',
+            content: 'Hoàng hôn bên bạn',
             x: 50,
             y: 100,
             width: 700,
@@ -919,7 +919,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: 'Nhng khonh khc p nht l khi ta c  bn nhng ngi ta yu thng.',
+            content: 'Những khoảnh khắc đẹp nhất là khi ta được ở bên những người ta yêu thương.',
             x: 80,
             y: 560,
             width: 640,
@@ -940,7 +940,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Ci khng ngng',
+            content: 'Cười không ngừng',
             x: 50,
             y: 50,
             width: 700,
@@ -963,7 +963,7 @@ export const templates: Template[] = [
           {
             id: '3',
             type: 'text',
-            content: 'Ting ci ca chng ta l m nhc p nht, l liu thuc cha lnh mi bun phin.',
+            content: 'Tiếng cười của chúng ta là âm nhạc đẹp nhất, là liều thuốc chữa lành mọi buồn phiền.',
             x: 80,
             y: 580,
             width: 640,
@@ -984,7 +984,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Nhng iu mnh thch lm cng nhau',
+            content: 'Những điều mình thích làm cùng nhau',
             x: 50,
             y: 50,
             width: 700,
@@ -998,7 +998,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: ' Chi game n tn sng',
+            content: '🎮 Chơi game đến tận sáng',
             x: 100,
             y: 200,
             width: 600,
@@ -1012,7 +1012,7 @@ export const templates: Template[] = [
           {
             id: '3',
             type: 'text',
-            content: ' i n khp ni',
+            content: '🍕 Đi ăn khắp nơi',
             x: 100,
             y: 280,
             width: 600,
@@ -1026,7 +1026,7 @@ export const templates: Template[] = [
           {
             id: '4',
             type: 'text',
-            content: ' Chp nh "sng o"',
+            content: '📸 Chụp ảnh "sống ảo"',
             x: 100,
             y: 360,
             width: 600,
@@ -1040,7 +1040,7 @@ export const templates: Template[] = [
           {
             id: '5',
             type: 'text',
-            content: ' Xem phim v bn lun',
+            content: '🎬 Xem phim và bàn luận',
             x: 100,
             y: 440,
             width: 600,
@@ -1054,7 +1054,7 @@ export const templates: Template[] = [
           {
             id: '6',
             type: 'text',
-            content: ' Tm s n tn m khuya',
+            content: '💬 Tâm sự đến tận đêm khuya',
             x: 100,
             y: 520,
             width: 600,
@@ -1075,7 +1075,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Bn mi mi',
+            content: 'Bạn mãi mãi',
             x: 50,
             y: 180,
             width: 700,
@@ -1089,7 +1089,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'sticker',
-            content: '',
+            content: '🤝',
             x: 350,
             y: 80,
             width: 100,
@@ -1098,7 +1098,7 @@ export const templates: Template[] = [
           {
             id: '3',
             type: 'text',
-            content: 'D thi gian c tri, d cuc sng c thay i, tnh bn ca chng ta s mi mi khng phai.',
+            content: 'Dù thời gian có trôi, dù cuộc sống có thay đổi, tình bạn của chúng ta sẽ mãi mãi không phai.',
             x: 80,
             y: 380,
             width: 640,
@@ -1112,7 +1112,7 @@ export const templates: Template[] = [
           {
             id: '4',
             type: 'text',
-            content: 'Love you guys! ',
+            content: 'Love you guys! 💙',
             x: 50,
             y: 640,
             width: 700,
@@ -1130,14 +1130,14 @@ export const templates: Template[] = [
 
   {
     id: 'friends-2',
-    name: 'Ci cng bn',
+    name: 'Cười cùng bạn',
     theme: 'friendship',
     badge: 'bestseller',
     thumbnail: 'https://images.unsplash.com/photo-1581812380447-5544e1a1f20d?w=400&h=500&fit=crop',
     cover: createMagazineCover(
       'friendship',
-      'Ci Khng Ngng',
-      ' Nim vui cng bn b',
+      'Cười Không Ngừng',
+      '😄 Niềm vui cùng bạn bè',
       'https://images.unsplash.com/photo-1581812380447-5544e1a1f20d?w=800&h=1200&fit=crop',
       'https://images.unsplash.com/photo-1763696790396-faf8ddc25725?w=300&h=300&fit=crop'
     ),
@@ -1149,7 +1149,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Ting ci sng khoi',
+            content: 'Tiếng cười sảng khoái',
             x: 50,
             y: 50,
             width: 700,
@@ -1172,7 +1172,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: 'Nhng lc ci a vi bn b l nhng khonh khc hnh phc nht trong cuc sng ca mnh.',
+            content: 'Những lúc cười đùa với bạn bè là những khoảnh khắc hạnh phúc nhất trong cuộc sống của mình.',
             x: 80,
             y: 620,
             width: 640,
@@ -1190,14 +1190,14 @@ export const templates: Template[] = [
 
   {
     id: 'friends-3',
-    name: 'Tnh bn mi mi',
+    name: 'Tình bạn mãi mãi',
     theme: 'friendship',
     badge: 'new',
     thumbnail: 'https://images.unsplash.com/photo-1583609042814-8a30efe7a9d5?w=400&h=500&fit=crop',
     cover: createMagazineCover(
       'friendship',
-      'Tnh Bn Mi Mi',
-      ' Bn cht theo nm thng',
+      'Tình Bạn Mãi Mãi',
+      '🤝 Bền chặt theo năm tháng',
       'https://images.unsplash.com/photo-1583609042814-8a30efe7a9d5?w=800&h=1200&fit=crop',
       'https://images.unsplash.com/photo-1763696790396-faf8ddc25725?w=300&h=300&fit=crop'
     ),
@@ -1209,7 +1209,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Bn nhau mi lc',
+            content: 'Bên nhau mọi lúc',
             x: 50,
             y: 50,
             width: 700,
@@ -1223,7 +1223,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: 'Tnh bn ch thc khng o bng thi gian, m o bng tnh cm v s thu hiu ln nhau.',
+            content: 'Tình bạn đích thực không đo bằng thời gian, mà đo bằng tình cảm và sự thấu hiểu lẫn nhau.',
             x: 80,
             y: 250,
             width: 640,
@@ -1241,13 +1241,13 @@ export const templates: Template[] = [
 
   {
     id: 'friends-4',
-    name: 'Du lch cng hi',
+    name: 'Du lịch cùng hội',
     theme: 'friendship',
     thumbnail: 'https://images.unsplash.com/photo-1581812380447-5544e1a1f20d?w=400&h=500&fit=crop',
     cover: createMagazineCover(
       'friendship',
-      'Hnh Trnh Cng Hi',
-      ' Khm ph th gii bn nhau',
+      'Hành Trình Cùng Hội',
+      '🤝 Khám phá thế giới bên nhau',
       'https://images.unsplash.com/photo-1581812380447-5544e1a1f20d?w=800&h=1200&fit=crop',
       'https://images.unsplash.com/photo-1763696790396-faf8ddc25725?w=300&h=300&fit=crop'
     ),
@@ -1259,7 +1259,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Nhng con ng',
+            content: 'Những con đường',
             x: 50,
             y: 50,
             width: 700,
@@ -1273,7 +1273,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: 'i cng bn b l cch tt nht  khm ph th gii v to ra nhng k nim khng th phai m.',
+            content: 'Đi cùng bạn bè là cách tốt nhất để khám phá thế giới và tạo ra những kỷ niệm không thể phai mờ.',
             x: 80,
             y: 250,
             width: 640,
@@ -1291,13 +1291,13 @@ export const templates: Template[] = [
 
   {
     id: 'friends-5',
-    name: 'Sinh nht bn thn',
+    name: 'Sinh nhật bạn thân',
     theme: 'friendship',
     thumbnail: 'https://images.unsplash.com/photo-1583609042814-8a30efe7a9d5?w=400&h=500&fit=crop',
     cover: createMagazineCover(
       'friendship',
       'Happy Birthday!',
-      ' Chc mng bn thn',
+      '🎉 Chúc mừng bạn thân',
       'https://images.unsplash.com/photo-1583609042814-8a30efe7a9d5?w=800&h=1200&fit=crop',
       'https://images.unsplash.com/photo-1763696790396-faf8ddc25725?w=300&h=300&fit=crop'
     ),
@@ -1309,7 +1309,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Chc mng sinh nht!',
+            content: 'Chúc mừng sinh nhật!',
             x: 50,
             y: 50,
             width: 700,
@@ -1323,7 +1323,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: 'Chc bn mt tui mi trn y nim vui, hnh phc v thnh cng. Cm n v  l ngi bn tuyt vi!',
+            content: 'Chúc bạn một tuổi mới tràn đầy niềm vui, hạnh phúc và thành công. Cảm ơn vì đã là người bạn tuyệt vời!',
             x: 80,
             y: 250,
             width: 640,
@@ -1341,13 +1341,13 @@ export const templates: Template[] = [
 
   {
     id: 'friends-6',
-    name: 'Nhng ngy hc',
+    name: 'Những ngày học',
     theme: 'friendship',
     thumbnail: 'https://images.unsplash.com/photo-1581812380447-5544e1a1f20d?w=400&h=500&fit=crop',
     cover: createMagazineCover(
       'friendship',
-      'Thi Hc Sinh',
-      ' K nim khng phai',
+      'Thời Học Sinh',
+      '🤝 Kỷ niệm không phai',
       'https://images.unsplash.com/photo-1581812380447-5544e1a1f20d?w=800&h=1200&fit=crop',
       'https://images.unsplash.com/photo-1763696790396-faf8ddc25725?w=300&h=300&fit=crop'
     ),
@@ -1359,7 +1359,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'K c ngy xa',
+            content: 'Ký ức ngày xưa',
             x: 50,
             y: 50,
             width: 700,
@@ -1373,7 +1373,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: 'Thi hc sinh l khong thi gian p nht, ni ta gp c nhng ngi bn chn thnh v to nn bit bao k nim.',
+            content: 'Thời học sinh là khoảng thời gian đẹp nhất, nơi ta gặp được những người bạn chân thành và tạo nên biết bao kỷ niệm.',
             x: 80,
             y: 250,
             width: 640,
@@ -1392,14 +1392,14 @@ export const templates: Template[] = [
   // ========== LOVE TEMPLATES (6) ==========
   {
     id: 'love-1',
-    name: 'Cu chuyn tnh yu',
+    name: 'Câu chuyện tình yêu',
     theme: 'love',
     badge: 'bestseller',
     thumbnail: 'https://images.unsplash.com/photo-1768468104279-726353bcad08?w=400&h=500&fit=crop',
     cover: createMagazineCover(
       'love',
       'Our Love Story',
-      ' Dnh tng ngi em yu',
+      '💕 Dành tặng người em yêu',
       'https://images.unsplash.com/photo-1768468104279-726353bcad08?w=800&h=1200&fit=crop',
       'https://images.unsplash.com/photo-1767986012138-d02276728368?w=300&h=300&fit=crop'
     ),
@@ -1413,7 +1413,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Ngy u tin',
+            content: 'Ngày đầu tiên',
             x: 50,
             y: 80,
             width: 700,
@@ -1427,7 +1427,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: 'Anh nh nh in ngy u tin gp em. nh mt em, n ci em  lm anh rung ng khng th t.',
+            content: 'Anh nhớ như in ngày đầu tiên gặp em. Ánh mắt em, nụ cười em đã làm anh rung động không thể tả.',
             x: 80,
             y: 560,
             width: 640,
@@ -1448,7 +1448,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: '"Anh yu em"',
+            content: '"Anh yêu em"',
             x: 80,
             y: 180,
             width: 640,
@@ -1462,7 +1462,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'sticker',
-            content: '',
+            content: '💕',
             x: 350,
             y: 80,
             width: 100,
@@ -1480,7 +1480,7 @@ export const templates: Template[] = [
           {
             id: '3',
             type: 'text',
-            content: 'Anh yu em khng ch v nhng g em l, m cn v nhng g anh tr thnh khi  bn em. Em lm anh mun tr thnh phin bn tt nht ca chnh mnh.',
+            content: 'Anh yêu em không chỉ vì những gì em là, mà còn vì những gì anh trở thành khi ở bên em. Em làm anh muốn trở thành phiên bản tốt nhất của chính mình.',
             x: 60,
             y: 380,
             width: 420,
@@ -1501,7 +1501,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Nhng khonh khc bn nhau',
+            content: 'Những khoảnh khắc bên nhau',
             x: 50,
             y: 50,
             width: 700,
@@ -1524,7 +1524,7 @@ export const templates: Template[] = [
           {
             id: '3',
             type: 'text',
-            content: 'Mi khonh khc bn em u l mn qu qu gi nht m cuc i trao tng anh.',
+            content: 'Mỗi khoảnh khắc bên em đều là món quà quý giá nhất mà cuộc đời trao tặng anh.',
             x: 80,
             y: 620,
             width: 640,
@@ -1546,7 +1546,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: '100 l do anh yu em',
+            content: '100 lý do anh yêu em',
             x: 50,
             y: 50,
             width: 700,
@@ -1560,7 +1560,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: '1. N ci ti ca em',
+            content: '1. Nụ cười tươi của em',
             x: 80,
             y: 180,
             width: 640,
@@ -1574,7 +1574,7 @@ export const templates: Template[] = [
           {
             id: '3',
             type: 'text',
-            content: '2. Cch em quan tm ngi khc',
+            content: '2. Cách em quan tâm người khác',
             x: 80,
             y: 250,
             width: 640,
@@ -1588,7 +1588,7 @@ export const templates: Template[] = [
           {
             id: '4',
             type: 'text',
-            content: '3. Ging ni ngt ngo ca em',
+            content: '3. Giọng nói ngọt ngào của em',
             x: 80,
             y: 320,
             width: 640,
@@ -1602,7 +1602,7 @@ export const templates: Template[] = [
           {
             id: '5',
             type: 'text',
-            content: '4. Em lun lng nghe anh',
+            content: '4. Em luôn lắng nghe anh',
             x: 80,
             y: 390,
             width: 640,
@@ -1616,7 +1616,7 @@ export const templates: Template[] = [
           {
             id: '6',
             type: 'text',
-            content: '5. V cn 95 l do na...',
+            content: '5. Và còn 95 lý do nữa...',
             x: 80,
             y: 460,
             width: 640,
@@ -1638,7 +1638,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Hnh trnh ca chng ta',
+            content: 'Hành trình của chúng ta',
             x: 50,
             y: 50,
             width: 700,
@@ -1652,7 +1652,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: ' Thng 3, 2023',
+            content: '📅 Tháng 3, 2023',
             x: 100,
             y: 180,
             width: 600,
@@ -1666,7 +1666,7 @@ export const templates: Template[] = [
           {
             id: '3',
             type: 'text',
-            content: 'Ln u gp nhau ti qun c ph',
+            content: 'Lần đầu gặp nhau tại quán cà phê',
             x: 100,
             y: 240,
             width: 600,
@@ -1680,7 +1680,7 @@ export const templates: Template[] = [
           {
             id: '4',
             type: 'text',
-            content: ' Thng 5, 2023',
+            content: '💝 Tháng 5, 2023',
             x: 100,
             y: 340,
             width: 600,
@@ -1694,7 +1694,7 @@ export const templates: Template[] = [
           {
             id: '5',
             type: 'text',
-            content: 'Ngy anh t tnh vi em',
+            content: 'Ngày anh tỏ tình với em',
             x: 100,
             y: 400,
             width: 600,
@@ -1708,7 +1708,7 @@ export const templates: Template[] = [
           {
             id: '6',
             type: 'text',
-            content: ' Thng 12, 2023',
+            content: '🎉 Tháng 12, 2023',
             x: 100,
             y: 500,
             width: 600,
@@ -1722,7 +1722,7 @@ export const templates: Template[] = [
           {
             id: '7',
             type: 'text',
-            content: 'K nim 1 nm yu nhau',
+            content: 'Kỷ niệm 1 năm yêu nhau',
             x: 100,
             y: 560,
             width: 600,
@@ -1744,7 +1744,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Li ha ca anh',
+            content: 'Lời hứa của anh',
             x: 50,
             y: 100,
             width: 700,
@@ -1758,7 +1758,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: 'Anh ha s lun yu thng, che ch v bo v em. Anh ha s l ngi bn ng hnh ng tin cy nht trong cuc i em.',
+            content: 'Anh hứa sẽ luôn yêu thương, che chở và bảo vệ em. Anh hứa sẽ là người bạn đồng hành đáng tin cậy nhất trong cuộc đời em.',
             x: 80,
             y: 400,
             width: 640,
@@ -1772,7 +1772,7 @@ export const templates: Template[] = [
           {
             id: '3',
             type: 'sticker',
-            content: '',
+            content: '💍',
             x: 350,
             y: 650,
             width: 100,
@@ -1781,7 +1781,7 @@ export const templates: Template[] = [
           {
             id: '4',
             type: 'text',
-            content: 'Mi mi bn nhau',
+            content: 'Mãi mãi bên nhau',
             x: 50,
             y: 600,
             width: 700,
@@ -1802,7 +1802,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Cm n em',
+            content: 'Cảm ơn em',
             x: 50,
             y: 200,
             width: 700,
@@ -1816,7 +1816,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'sticker',
-            content: '',
+            content: '❤️',
             x: 350,
             y: 100,
             width: 100,
@@ -1825,7 +1825,7 @@ export const templates: Template[] = [
           {
             id: '3',
             type: 'text',
-            content: 'Cm n em  n bn anh,  khin cuc sng ca anh thm  ngha v trn y hnh phc. Em l iu tuyt vi nht tng n vi anh.',
+            content: 'Cảm ơn em đã đến bên anh, đã khiến cuộc sống của anh thêm ý nghĩa và tràn đầy hạnh phúc. Em là điều tuyệt vời nhất từng đến với anh.',
             x: 80,
             y: 380,
             width: 640,
@@ -1839,7 +1839,7 @@ export const templates: Template[] = [
           {
             id: '4',
             type: 'text',
-            content: 'Yu em nhiu lm! ',
+            content: 'Yêu em nhiều lắm! 💕',
             x: 50,
             y: 650,
             width: 700,
@@ -1857,14 +1857,14 @@ export const templates: Template[] = [
 
   {
     id: 'love-2',
-    name: 'K nim tnh yu',
+    name: 'Kỷ niệm tình yêu',
     theme: 'love',
     badge: 'popular',
     thumbnail: 'https://images.unsplash.com/photo-1768468104279-726353bcad08?w=400&h=500&fit=crop',
     cover: createMagazineCover(
       'love',
-      'K Nim Ca Chng Ta',
-      ' Nhng khonh khc ngt ngo',
+      'Kỷ Niệm Của Chúng Ta',
+      '💕 Những khoảnh khắc ngọt ngào',
       'https://images.unsplash.com/photo-1768468104279-726353bcad08?w=800&h=1200&fit=crop',
       'https://images.unsplash.com/photo-1767986012138-d02276728368?w=300&h=300&fit=crop'
     ),
@@ -1876,7 +1876,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Li nhn yu thng',
+            content: 'Lời nhắn yêu thương',
             x: 80,
             y: 300,
             width: 640,
@@ -1894,14 +1894,14 @@ export const templates: Template[] = [
 
   {
     id: 'love-7',
-    name: 'm ci ngt ngo',
+    name: 'Đám cưới ngọt ngào',
     theme: 'love',
     badge: 'popular',
     thumbnail: 'https://images.unsplash.com/photo-1767986012138-d02276728368?w=400&h=500&fit=crop',
     cover: createMagazineCover(
       'love',
       'Forever & Always',
-      ' Ngy trng i ca chng ta',
+      '💍 Ngày trọng đại của chúng ta',
       'https://images.unsplash.com/photo-1767986012138-d02276728368?w=800&h=1200&fit=crop',
       'https://images.unsplash.com/photo-1768468104279-726353bcad08?w=300&h=300&fit=crop'
     ),
@@ -1913,7 +1913,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Li ha trn i',
+            content: 'Lời hứa trọn đời',
             x: 50,
             y: 50,
             width: 700,
@@ -1927,7 +1927,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: 'Anh ha s lun  bn em, yu em, chm sc em v lm em hnh phc mi ngy cho n cui i.',
+            content: 'Anh hứa sẽ luôn ở bên em, yêu em, chăm sóc em và làm em hạnh phúc mỗi ngày cho đến cuối đời.',
             x: 80,
             y: 250,
             width: 640,
@@ -1945,14 +1945,14 @@ export const templates: Template[] = [
 
   {
     id: 'love-3',
-    name: 'Hn h lng mn',
+    name: 'Hẹn hò lãng mạn',
     theme: 'love',
     badge: 'new',
     thumbnail: 'https://images.unsplash.com/photo-1768468104279-726353bcad08?w=400&h=500&fit=crop',
     cover: createMagazineCover(
       'love',
-      'Ngy u Gp Nhau',
-      ' Khonh khc nh mnh',
+      'Ngày Đầu Gặp Nhau',
+      '💕 Khoảnh khắc định mệnh',
       'https://images.unsplash.com/photo-1768468104279-726353bcad08?w=800&h=1200&fit=crop',
       'https://images.unsplash.com/photo-1767986012138-d02276728368?w=300&h=300&fit=crop'
     ),
@@ -1964,7 +1964,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Ln u anh gp em',
+            content: 'Lần đầu anh gặp em',
             x: 50,
             y: 50,
             width: 700,
@@ -1987,7 +1987,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: 'T ln gp u tin, anh  bit em l ngi m anh mun dnh c i  yu thng v bo v.',
+            content: 'Từ lần gặp đầu tiên, anh đã biết em là người mà anh muốn dành cả đời để yêu thương và bảo vệ.',
             x: 80,
             y: 620,
             width: 640,
@@ -2008,7 +2008,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'm trng sao',
+            content: 'Đêm trăng sao',
             x: 50,
             y: 100,
             width: 700,
@@ -2022,7 +2022,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: 'Di bu tri y sao, anh v em cng nhn v tng lai - ni c c hai chng ta.',
+            content: 'Dưới bầu trời đầy sao, anh và em cùng nhìn về tương lai - nơi có cả hai chúng ta.',
             x: 80,
             y: 560,
             width: 640,
@@ -2040,13 +2040,13 @@ export const templates: Template[] = [
 
   {
     id: 'love-4',
-    name: 'Hong hn bn nhau',
+    name: 'Hoàng hôn bên nhau',
     theme: 'love',
     thumbnail: 'https://images.unsplash.com/photo-1768468104279-726353bcad08?w=400&h=500&fit=crop',
     cover: createMagazineCover(
       'love',
       'Sunset Together',
-      ' Mi hong hn bn em',
+      '💕 Mỗi hoàng hôn bên em',
       'https://images.unsplash.com/photo-1768468104279-726353bcad08?w=800&h=1200&fit=crop',
       'https://images.unsplash.com/photo-1767986012138-d02276728368?w=300&h=300&fit=crop'
     ),
@@ -2058,7 +2058,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Khonh khc bnh yn',
+            content: 'Khoảnh khắc bình yên',
             x: 50,
             y: 50,
             width: 700,
@@ -2072,7 +2072,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: 'c ngm hong hn cng em l iu hnh phc nht m anh c th c trong cuc i ny.',
+            content: 'Được ngắm hoàng hôn cùng em là điều hạnh phúc nhất mà anh có thể có trong cuộc đời này.',
             x: 80,
             y: 250,
             width: 640,
@@ -2090,13 +2090,13 @@ export const templates: Template[] = [
 
   {
     id: 'love-5',
-    name: 'Th tnh',
+    name: 'Thư tình',
     theme: 'love',
     thumbnail: 'https://images.unsplash.com/photo-1768468104279-726353bcad08?w=400&h=500&fit=crop',
     cover: createMagazineCover(
       'love',
       'Love Letters',
-      ' Nhng li yu thng',
+      '✉️ Những lời yêu thương',
       'https://images.unsplash.com/photo-1768468104279-726353bcad08?w=800&h=1200&fit=crop',
       'https://images.unsplash.com/photo-1767986012138-d02276728368?w=300&h=300&fit=crop'
     ),
@@ -2108,7 +2108,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Gi em...',
+            content: 'Gửi em...',
             x: 50,
             y: 50,
             width: 700,
@@ -2122,7 +2122,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: 'Em , c nhng li anh mun ni vi em mi ngy. Cm n em v  n bn anh v lm cho cuc sng ca anh c  ngha hn.',
+            content: 'Em à, có những lời anh muốn nói với em mỗi ngày. Cảm ơn em vì đã đến bên anh và làm cho cuộc sống của anh có ý nghĩa hơn.',
             x: 80,
             y: 250,
             width: 640,
@@ -2142,7 +2142,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'm lng mn',
+            content: 'Đêm lãng mạn',
             x: 50,
             y: 50,
             width: 700,
@@ -2165,7 +2165,7 @@ export const templates: Template[] = [
           {
             id: '3',
             type: 'text',
-            content: 'Nhng m ngm sao cng em l nhng khonh khc p nht trong i anh.',
+            content: 'Những đêm ngắm sao cùng em là những khoảnh khắc đẹp nhất trong đời anh.',
             x: 80,
             y: 660,
             width: 640,
@@ -2184,13 +2184,13 @@ export const templates: Template[] = [
 
   {
     id: 'love-6',
-    name: 'K nim 1 nm',
+    name: 'Kỷ niệm 1 năm',
     theme: 'love',
     thumbnail: 'https://images.unsplash.com/photo-1768468104279-726353bcad08?w=400&h=500&fit=crop',
     cover: createMagazineCover(
       'love',
       'One Year Anniversary',
-      ' 365 ngy bn nhau',
+      '🎂 365 ngày bên nhau',
       'https://images.unsplash.com/photo-1768468104279-726353bcad08?w=800&h=1200&fit=crop',
       'https://images.unsplash.com/photo-1767986012138-d02276728368?w=300&h=300&fit=crop'
     ),
@@ -2202,7 +2202,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: '365 ngy yu em',
+            content: '365 ngày yêu em',
             x: 50,
             y: 50,
             width: 700,
@@ -2216,7 +2216,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: 'Mt nm  tri qua, nhng tnh yu ca anh dnh cho em vn mi nh ngy u tin. Cm n em v mt nm tuyt vi!',
+            content: 'Một năm đã trôi qua, nhưng tình yêu của anh dành cho em vẫn mãi như ngày đầu tiên. Cảm ơn em vì một năm tuyệt vời!',
             x: 80,
             y: 250,
             width: 640,
@@ -2235,14 +2235,14 @@ export const templates: Template[] = [
   // ========== MEMORIES TEMPLATES (6) ==========
   {
     id: 'memories-1',
-    name: 'K nim ng nh',
+    name: 'Kỷ niệm đáng nhớ',
     theme: 'birthday',
     badge: 'bestseller',
     thumbnail: 'https://images.unsplash.com/photo-1598622443054-499119043e82?w=400&h=500&fit=crop',
     cover: createMagazineCover(
       'birthday',
-      'Khonh Khc ng Nh',
-      ' Lu gi k nim qu gi',
+      'Khoảnh Khắc Đáng Nhớ',
+      '🎉 Lưu giữ kỷ niệm quý giá',
       'https://images.unsplash.com/photo-1598622443054-499119043e82?w=800&h=1200&fit=crop',
       'https://images.unsplash.com/photo-1577080415932-2e5a0fbec8e2?w=300&h=300&fit=crop'
     ),
@@ -2254,7 +2254,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Ct mc ng nh',
+            content: 'Cột mốc đáng nhớ',
             x: 50,
             y: 50,
             width: 700,
@@ -2268,7 +2268,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'sticker',
-            content: '',
+            content: '✨',
             x: 350,
             y: 160,
             width: 100,
@@ -2286,7 +2286,7 @@ export const templates: Template[] = [
           {
             id: '3',
             type: 'text',
-            content: 'Mi khonh khc trong cuc i u l mt mn qu. Hy trn trng v lu gi nhng k nim p.',
+            content: 'Mỗi khoảnh khắc trong cuộc đời đều là một món quà. Hãy trân trọng và lưu giữ những kỷ niệm đẹp.',
             x: 60,
             y: 330,
             width: 360,
@@ -2304,14 +2304,14 @@ export const templates: Template[] = [
 
   {
     id: 'memories-2',
-    name: 'Album nh c',
+    name: 'Album ảnh cũ',
     theme: 'birthday',
     badge: 'popular',
     thumbnail: 'https://images.unsplash.com/photo-1577080415932-2e5a0fbec8e2?w=400&h=500&fit=crop',
     cover: createMagazineCover(
       'birthday',
-      'Nhng Tm nh Xa',
-      ' K c ng nh',
+      'Những Tấm Ảnh Xưa',
+      '📷 Ký ức đáng nhớ',
       'https://images.unsplash.com/photo-1577080415932-2e5a0fbec8e2?w=800&h=1200&fit=crop',
       'https://images.unsplash.com/photo-1598622443054-499119043e82?w=300&h=300&fit=crop'
     ),
@@ -2323,7 +2323,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'K c ngy xa',
+            content: 'Ký ức ngày xưa',
             x: 50,
             y: 50,
             width: 700,
@@ -2346,7 +2346,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: 'Mi tm nh l mt cu chuyn, mi khonh khc l mt k nim khng th phai m theo thi gian.',
+            content: 'Mỗi tấm ảnh là một câu chuyện, mỗi khoảnh khắc là một kỷ niệm không thể phai mờ theo thời gian.',
             x: 60,
             y: 250,
             width: 360,
@@ -2364,14 +2364,14 @@ export const templates: Template[] = [
 
   {
     id: 'memories-3',
-    name: 'Cun nht k',
+    name: 'Cuốn nhật ký',
     theme: 'birthday',
     badge: 'new',
     thumbnail: 'https://images.unsplash.com/photo-1598622443054-499119043e82?w=400&h=500&fit=crop',
     cover: createMagazineCover(
       'birthday',
       'My Diary',
-      ' Nhng trang nht k ca ti',
+      '📔 Những trang nhật ký của tôi',
       'https://images.unsplash.com/photo-1598622443054-499119043e82?w=800&h=1200&fit=crop',
       'https://images.unsplash.com/photo-1577080415932-2e5a0fbec8e2?w=300&h=300&fit=crop'
     ),
@@ -2383,7 +2383,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Ghi ch cuc sng',
+            content: 'Ghi chú cuộc sống',
             x: 50,
             y: 50,
             width: 700,
@@ -2397,7 +2397,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: 'Cuc sng l mt cun sch, v mi ngy l mt trang mi. Hy vit nn cu chuyn ca ring bn.',
+            content: 'Cuộc sống là một cuốn sách, và mỗi ngày là một trang mới. Hãy viết nên câu chuyện của riêng bạn.',
             x: 80,
             y: 250,
             width: 640,
@@ -2415,13 +2415,13 @@ export const templates: Template[] = [
 
   {
     id: 'memories-4',
-    name: 'Timeline cuc i',
+    name: 'Timeline cuộc đời',
     theme: 'birthday',
     thumbnail: 'https://images.unsplash.com/photo-1577080415932-2e5a0fbec8e2?w=400&h=500&fit=crop',
     cover: createMagazineCover(
       'birthday',
       'My Life Timeline',
-      ' Hnh trnh ca ti',
+      '🎉 Hành trình của tôi',
       'https://images.unsplash.com/photo-1577080415932-2e5a0fbec8e2?w=800&h=1200&fit=crop',
       'https://images.unsplash.com/photo-1598622443054-499119043e82?w=300&h=300&fit=crop'
     ),
@@ -2433,7 +2433,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Ct mc quan trng',
+            content: 'Cột mốc quan trọng',
             x: 50,
             y: 50,
             width: 700,
@@ -2447,7 +2447,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: 'Mi ct mc trong cuc i l mt bi hc qu gi, gip ta trng thnh v hiu r hn v bn thn mnh.',
+            content: 'Mỗi cột mốc trong cuộc đời là một bài học quý giá, giúp ta trưởng thành và hiểu rõ hơn về bản thân mình.',
             x: 80,
             y: 250,
             width: 640,
@@ -2465,13 +2465,13 @@ export const templates: Template[] = [
 
   {
     id: 'memories-5',
-    name: 'Nhng chuyn i',
+    name: 'Những chuyến đi',
     theme: 'birthday',
     thumbnail: 'https://images.unsplash.com/photo-1598622443054-499119043e82?w=400&h=500&fit=crop',
     cover: createMagazineCover(
       'birthday',
       'Travel Memories',
-      ' Hnh trnh khm ph',
+      '✈️ Hành trình khám phá',
       'https://images.unsplash.com/photo-1598622443054-499119043e82?w=800&h=1200&fit=crop',
       'https://images.unsplash.com/photo-1577080415932-2e5a0fbec8e2?w=300&h=300&fit=crop'
     ),
@@ -2483,7 +2483,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Hnh trnh khm ph',
+            content: 'Hành trình khám phá',
             x: 50,
             y: 50,
             width: 700,
@@ -2497,7 +2497,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: 'Mi chuyn i l mt tri nghim mi, mt bi hc mi v mt k nim p  lu gi mi mi.',
+            content: 'Mỗi chuyến đi là một trải nghiệm mới, một bài học mới và một kỷ niệm đẹp để lưu giữ mãi mãi.',
             x: 80,
             y: 250,
             width: 640,
@@ -2515,13 +2515,13 @@ export const templates: Template[] = [
 
   {
     id: 'memories-6',
-    name: 'Nm thng p',
+    name: 'Năm tháng đẹp',
     theme: 'birthday',
     thumbnail: 'https://images.unsplash.com/photo-1577080415932-2e5a0fbec8e2?w=400&h=500&fit=crop',
     cover: createMagazineCover(
       'birthday',
       'Beautiful Years',
-      ' Nhng nm thng ti p',
+      '🎉 Những năm tháng tươi đẹp',
       'https://images.unsplash.com/photo-1577080415932-2e5a0fbec8e2?w=800&h=1200&fit=crop',
       'https://images.unsplash.com/photo-1598622443054-499119043e82?w=300&h=300&fit=crop'
     ),
@@ -2533,7 +2533,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Thi gian qu gi',
+            content: 'Thời gian quý giá',
             x: 50,
             y: 50,
             width: 700,
@@ -2547,7 +2547,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: 'Thi gian tri qua nhanh chng, nhng nhng k nim p s mi cn trong tim v tm tr chng ta.',
+            content: 'Thời gian trôi qua nhanh chóng, nhưng những kỷ niệm đẹp sẽ mãi còn trong tim và tâm trí chúng ta.',
             x: 80,
             y: 250,
             width: 640,
@@ -2568,14 +2568,14 @@ export const templates: Template[] = [
   // soft, dreamy, artistic couple photos that users can replace with anime images
   {
     id: 'love-8',
-    name: 'Khonh khc lng mn (Dreamy Style)',
+    name: 'Khoảnh khắc lãng mạn (Dreamy Style)',
     theme: 'love',
     badge: 'new',
     thumbnail: 'https://images.unsplash.com/photo-1768468104279-726353bcad08?w=400&h=500&fit=crop',
     cover: createMagazineCover(
       'love',
       'Our Dreamy Love Story',
-      ' Cu chuyn tnh yu ca chng ta',
+      '💕 Câu chuyện tình yêu của chúng ta',
       'https://images.unsplash.com/photo-1768468104279-726353bcad08?w=800&h=1200&fit=crop',
       'https://images.unsplash.com/photo-1767986012138-d02276728368?w=300&h=300&fit=crop'
     ),
@@ -2589,7 +2589,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Hong hn bn nhau',
+            content: 'Hoàng hôn bên nhau',
             x: 50,
             y: 60,
             width: 700,
@@ -2619,7 +2619,7 @@ export const templates: Template[] = [
           {
             id: '3',
             type: 'text',
-            content: 'Khonh khc ny, ch c anh v em. nh hong hn nh nhng ph ln i ta, nh thi gian ngng tri.',
+            content: 'Khoảnh khắc này, chỉ có anh và em. Ánh hoàng hôn nhẹ nhàng phủ lên đôi ta, như thời gian ngừng trôi.',
             x: 80,
             y: 540,
             width: 640,
@@ -2644,7 +2644,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: '"Trong nh sng du nh"',
+            content: '"Trong ánh sáng dịu nhẹ"',
             x: 80,
             y: 150,
             width: 640,
@@ -2659,7 +2659,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'text',
-            content: 'Trong nhng khonh khc yn bnh, ta tm thy nhau. nh mt em, n ci em, tt c u khin anh say m.',
+            content: 'Trong những khoảnh khắc yên bình, ta tìm thấy nhau. Ánh mắt em, nụ cười em, tất cả đều khiến anh say đắm.',
             x: 80,
             y: 400,
             width: 640,
@@ -2697,7 +2697,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Nhng pht giy yn ng',
+            content: 'Những phút giây yên ắng',
             x: 50,
             y: 80,
             width: 700,
@@ -2726,7 +2726,7 @@ export const templates: Template[] = [
           {
             id: '3',
             type: 'text',
-            content: 'i khi, hnh phc ch n gin l c  bn em trong nhng khonh khc bnh yn nht.',
+            content: 'Đôi khi, hạnh phúc chỉ đơn giản là được ở bên em trong những khoảnh khắc bình yên nhất.',
             x: 80,
             y: 560,
             width: 640,
@@ -2751,7 +2751,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Nm tay nhau',
+            content: 'Nắm tay nhau',
             x: 50,
             y: 100,
             width: 700,
@@ -2781,7 +2781,7 @@ export const templates: Template[] = [
           {
             id: '3',
             type: 'text',
-            content: 'Bn tay em trong tay anh -  l ni anh mun gi mi mi. D i u, d n u, anh ch mun l ngi cng em bc tip.',
+            content: 'Bàn tay em trong tay anh - đó là nơi anh muốn giữ mãi mãi. Dù đi đâu, dù đến đâu, anh chỉ muốn là người cùng em bước tiếp.',
             x: 70,
             y: 500,
             width: 660,
@@ -2804,7 +2804,7 @@ export const templates: Template[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Dnh tng em',
+            content: 'Dành tặng em',
             x: 50,
             y: 120,
             width: 700,
@@ -2818,7 +2818,7 @@ export const templates: Template[] = [
           {
             id: '2',
             type: 'sticker',
-            content: '',
+            content: '💖',
             x: 350,
             y: 240,
             width: 100,
@@ -2827,7 +2827,7 @@ export const templates: Template[] = [
           {
             id: '3',
             type: 'text',
-            content: 'Em l nh sng trong i anh,\nL l do anh mm ci mi sng thc dy,\nL ngun ng lc cho anh vt qua mi kh khn.\n\nCm n em v  n bn anh.\nAnh yu em, gi v mi mi.',
+            content: 'Em là ánh sáng trong đời anh,\nLà lý do anh mỉm cười mỗi sáng thức dậy,\nLà nguồn động lực cho anh vượt qua mọi khó khăn.\n\nCảm ơn em vì đã đến bên anh.\nAnh yêu em, giờ và mãi mãi.',
             x: 80,
             y: 380,
             width: 640,
@@ -2843,7 +2843,7 @@ export const templates: Template[] = [
           {
             id: '4',
             type: 'text',
-            content: '- Ngi yu em nhiu nht -',
+            content: '- Người yêu em nhiều nhất -',
             x: 150,
             y: 620,
             width: 500,

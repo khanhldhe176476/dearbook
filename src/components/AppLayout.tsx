@@ -65,10 +65,10 @@ export function AppLayout({ user, onLogout, onBackToDashboard, children, showBac
               <button
                 onClick={onLogout}
                 className="btn btn-ghost flex items-center gap-2"
-                title="ng xut"
+                title="Đăng xuất"
               >
                 <LogOut className="w-5 h-5" />
-                <span className="hidden sm:inline">ng xut</span>
+                <span className="hidden sm:inline">Đăng xuất</span>
               </button>
             </div>
           </div>

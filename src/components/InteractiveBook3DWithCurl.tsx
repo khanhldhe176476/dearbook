@@ -227,7 +227,7 @@ export function InteractiveBook3DWithCurl({ book, onClose }: InteractiveBook3DWi
             <div>
               <h2 className="text-lg font-bold text-white">{book.title || 'My Book'}</h2>
               <p className="text-sm text-gray-300">
-                {currentSpread === 0 ? 'Cover' : `Pages ${(currentSpread - 1) * 2 + 1}${Math.min((currentSpread - 1) * 2 + 2, totalPages)}`}
+                {currentSpread === 0 ? 'Cover' : `Pages ${(currentSpread - 1) * 2 + 1}–${Math.min((currentSpread - 1) * 2 + 2, totalPages)}`}
               </p>
             </div>
           </div>
@@ -322,7 +322,7 @@ export function InteractiveBook3DWithCurl({ book, onClose }: InteractiveBook3DWi
                     }}
                   >
                     <div className="absolute bottom-2 left-2 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity text-xs">
-                      
+                      ◄
                     </div>
                   </div>
                 )}
@@ -359,7 +359,7 @@ export function InteractiveBook3DWithCurl({ book, onClose }: InteractiveBook3DWi
                     }}
                   >
                     <div className="absolute bottom-2 right-2 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity text-xs">
-                      
+                      ►
                     </div>
                   </div>
                 )}
@@ -431,10 +431,10 @@ export function InteractiveBook3DWithCurl({ book, onClose }: InteractiveBook3DWi
 
       {/* Instructions */}
       <div className="absolute bottom-6 left-6 bg-black/40 backdrop-blur-xl rounded-2xl px-4 py-3 text-white text-sm border border-white/10">
-        <p className="font-semibold mb-1"> Controls</p>
-        <p className="text-xs text-gray-300"> Drag to rotate book</p>
-        <p className="text-xs text-gray-300"> Drag page corner to flip</p>
-        <p className="text-xs text-gray-300"> Arrows for quick flip</p>
+        <p className="font-semibold mb-1">💡 Controls</p>
+        <p className="text-xs text-gray-300">• Drag to rotate book</p>
+        <p className="text-xs text-gray-300">• Drag page corner to flip</p>
+        <p className="text-xs text-gray-300">• Arrows for quick flip</p>
       </div>
     </div>
   );

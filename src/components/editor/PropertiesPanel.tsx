@@ -15,7 +15,7 @@ export function PropertiesPanel({ element, onUpdate }: PropertiesPanelProps) {
     return (
       <div className="h-full flex flex-col items-center justify-center p-8 text-center text-gray-400 bg-white">
         <Settings className="w-16 h-16 mb-4 opacity-30" />
-        <p className="text-sm">Chn mt phn t  chnh sa</p>
+        <p className="text-sm">Chọn một phần tử để chỉnh sửa</p>
       </div>
     );
   }

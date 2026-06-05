@@ -16,7 +16,7 @@ interface FlipBookReaderProps {
 
 export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
   // Debug: Log book theme
-  console.log(' FlipBookReader opened with book:', { id: book.id, title: book.title, theme: book.theme });
+  console.log('📖 FlipBookReader opened with book:', { id: book.id, title: book.title, theme: book.theme });
   
   const [currentSpread, setCurrentSpread] = useState(0);
   const [zoom, setZoom] = useState(1);
@@ -53,7 +53,7 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
     const { music, index } = getRandomThemeMusicWithInfo(book.theme);
     setCurrentMusicIndex(index);
     
-    console.log(' Initializing ambient music for theme:', book.theme);
+    console.log('🎵 Initializing ambient music for theme:', book.theme);
     
     setIsAudioLoading(true);
     
@@ -68,7 +68,7 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
         setIsPlaying(true);
         setIsAudioLoading(false);
         
-        console.log(' Ambient music started for theme:', book.theme);
+        console.log('✅ Ambient music started for theme:', book.theme);
         
         // Show music notification
         setShowMusicNotification(true);
@@ -76,7 +76,7 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
           setShowMusicNotification(false);
         }, 3000);
       } catch (error) {
-        console.log(' Auto-play prevented by browser. User can click play button.');
+        console.log('⏸️ Auto-play prevented by browser. User can click play button.');
         setIsPlaying(false);
         setIsAudioLoading(false);
       }
@@ -103,16 +103,16 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
   // Handle play/pause
   const togglePlay = () => {
     if (!audioGeneratorRef.current) {
-      console.warn(' Audio generator not available');
+      console.warn('⚠️ Audio generator not available');
       return;
     }
 
     if (isPlaying) {
-      console.log(' Pausing music');
+      console.log('⏸️ Pausing music');
       audioGeneratorRef.current.pause();
       setIsPlaying(false);
     } else {
-      console.log(' Playing music');
+      console.log('▶️ Playing music');
       audioGeneratorRef.current.resume();
       setIsPlaying(true);
     }
@@ -370,7 +370,7 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
           {
             id: 'cover-title',
             type: 'text',
-            content: book.title || 'Cun sch ca ti',
+            content: book.title || 'Cuốn sách của tôi',
             x: 24,
             y: 320,
             width: 352,
@@ -389,9 +389,9 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
           {
             id: 'cover-subtitle',
             type: 'text',
-            content: book.theme === 'love' ? ' Yu thng & Gn kt' :
-                    book.theme === 'family' ? ' Gia nh yu thng' :
-                    book.theme === 'birthday' ? ' Chc mng sinh nht' : ' Tnh bn mi mi',
+            content: book.theme === 'love' ? '💕 Yêu thương & Gắn kết' :
+                    book.theme === 'family' ? '👨‍👩‍👧 Gia đình yêu thương' :
+                    book.theme === 'birthday' ? '🎂 Chúc mừng sinh nhật' : '🤝 Tình bạn mãi mãi',
             x: 24,
             y: 460,
             width: 352,
@@ -528,7 +528,7 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
           {
             id: 'back-logo',
             type: 'text',
-            content: '',
+            content: '✨',
             x: 160,
             y: 96,
             width: 80,
@@ -561,7 +561,7 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
           {
             id: 'back-tagline',
             type: 'text',
-            content: 'Thit k sch c nhn ha',
+            content: 'Thiết kế sách cá nhân hóa',
             x: 64,
             y: 264,
             width: 272,
@@ -590,10 +590,10 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
           {
             id: 'back-quote',
             type: 'text',
-            content: book.theme === 'love' ? '"Tnh yu l iu p  nht\ntrong cuc sng"' :
-                    book.theme === 'family' ? '"Gia nh l ni\ntnh yu bt u"' :
-                    book.theme === 'birthday' ? '"Mi khonh khc\nu ng trn trng"' : 
-                    '"Tnh bn l mn qu\nv gi ca cuc i"',
+            content: book.theme === 'love' ? '"Tình yêu là điều đẹp đẽ nhất\ntrong cuộc sống"' :
+                    book.theme === 'family' ? '"Gia đình là nơi\ntình yêu bắt đầu"' :
+                    book.theme === 'birthday' ? '"Mỗi khoảnh khắc\nđều đáng trân trọng"' : 
+                    '"Tình bạn là món quà\nvô giá của cuộc đời"',
             x: 48,
             y: 360,
             width: 304,
@@ -611,7 +611,7 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
           {
             id: 'back-footer',
             type: 'text',
-            content: 'Made with love ',
+            content: 'Made with love ❤️',
             x: 64,
             y: 496,
             width: 272,
@@ -1037,10 +1037,10 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
               {showMusicTooltip && (
                 <div className="absolute bottom-full right-0 mb-2 px-4 py-2.5 bg-gray-900 text-white text-xs rounded-xl shadow-2xl max-w-xs animate-in fade-in slide-in-from-bottom-2 duration-200">
                   <div className="font-bold text-sm mb-1 leading-tight">
-                    {book.theme === 'love' ? ' Romantic Ambient' : 
-                     book.theme === 'family' ? ' Family Warmth' : 
-                     book.theme === 'birthday' ? ' Birthday Celebration' : 
-                     ' Friendship Cheer'}
+                    {book.theme === 'love' ? '❤️ Romantic Ambient' : 
+                     book.theme === 'family' ? '👨‍👩‍👧 Family Warmth' : 
+                     book.theme === 'birthday' ? '🎉 Birthday Celebration' : 
+                     '🤝 Friendship Cheer'}
                   </div>
                   <div className="text-gray-300 text-[11px] leading-snug">Generative ambient music</div>
                   {/* Arrow */}
@@ -1070,7 +1070,7 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
               </div>
             </div>
             <div className="flex-1 min-w-0">
-              <div className="font-bold text-sm leading-tight mb-1"> Nhc nn ang pht</div>
+              <div className="font-bold text-sm leading-tight mb-1">🎵 Nhạc nền đang phát</div>
               <div className="text-xs text-white/95 font-medium truncate leading-tight">Ambient {book.theme === 'love' ? 'Romantic' : book.theme === 'family' ? 'Warmth' : book.theme === 'birthday' ? 'Celebration' : 'Cheerful'} Music</div>
               <div className="text-[10px] text-white/80 mt-0.5">Generative audio</div>
             </div>
@@ -1638,13 +1638,13 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
 // Page Renderer Component
 function PageRenderer({ page, debugMode = false }: { page: any; debugMode?: boolean }) {
   if (!page) {
-    console.warn(' PageRenderer: page is null or undefined');
+    console.warn('⚠️ PageRenderer: page is null or undefined');
     return null;
   }
 
   // Debug log for pages without elements
   if (!page.elements || page.elements.length === 0) {
-    console.warn(' PageRenderer: page has no elements', { pageId: page.id, page });
+    console.warn('⚠️ PageRenderer: page has no elements', { pageId: page.id, page });
   }
 
   // Check if this is the cover page
@@ -1707,8 +1707,8 @@ function PageRenderer({ page, debugMode = false }: { page: any; debugMode?: bool
         {(!page.elements || page.elements.length === 0) && !isCoverPage && (
           <div className="w-full h-full flex items-center justify-center">
             <div className="text-center text-gray-300">
-              <div className="text-6xl mb-4"></div>
-              <div className="text-sm">Trang trng</div>
+              <div className="text-6xl mb-4">📄</div>
+              <div className="text-sm">Trang trống</div>
             </div>
           </div>
         )}
@@ -1716,13 +1716,13 @@ function PageRenderer({ page, debugMode = false }: { page: any; debugMode?: bool
         {page.elements?.map((el: any, idx: number) => {
           // Log any element with missing or invalid data
           if (!el.type || (!el.content && !el.src && !el.url && !el.emoji && el.type !== 'shape')) {
-            console.warn(' Element missing data:', { pageId: page.id, element: el });
+            console.warn('⚠️ Element missing data:', { pageId: page.id, element: el });
           }
           
           // Validate positioning - element should be visible within page bounds (500x700)
           const isOutOfBounds = el.x < 0 || el.y < 0 || el.x > 500 || el.y > 750;
           if (isOutOfBounds) {
-            console.warn(' Element out of page bounds:', { 
+            console.warn('⚠️ Element out of page bounds:', { 
               pageId: page.id, 
               elementId: el.id,
               x: el.x, 

@@ -11,11 +11,11 @@ interface Step1ThemeSelectionProps {
 
 const getThemeDetails = (name: string, id: string) => {
   const lowerName = name.toLowerCase();
-  if (lowerName.includes('yu') || id.includes('love')) return { icon: Heart, emoji: '', bgImage: 'https://images.unsplash.com/photo-1650595808040-e58faadbc6e8?w=800', examples: ['K nim tnh yu', 'Valentine'] };
-  if (lowerName.includes('gia nh') || id.includes('family')) return { icon: Users, emoji: '', bgImage: 'https://images.unsplash.com/photo-1598623549917-a38dc6cd19b5?w=800', examples: ['K nim gia nh', 'Ngy ca m'] };
-  if (lowerName.includes('sinh nht') || id.includes('birthday')) return { icon: Cake, emoji: '', bgImage: 'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=800', examples: ['Sinh nht', 'Tui mi'] };
-  if (lowerName.includes('bn') || lowerName.includes('friend')) return { icon: Sparkles, emoji: '', bgImage: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800', examples: ['K nim bn b', 'Tt nghip'] };
-  return { icon: Sparkles, emoji: '', bgImage: 'https://images.unsplash.com/photo-1517404215738-15263e9f9178?w=800', examples: ['Lu bt', 'K nim'] };
+  if (lowerName.includes('yêu') || id.includes('love')) return { icon: Heart, emoji: '💕', bgImage: 'https://images.unsplash.com/photo-1650595808040-e58faadbc6e8?w=800', examples: ['Kỷ niệm tình yêu', 'Valentine'] };
+  if (lowerName.includes('gia đình') || id.includes('family')) return { icon: Users, emoji: '👨‍👩‍👧', bgImage: 'https://images.unsplash.com/photo-1598623549917-a38dc6cd19b5?w=800', examples: ['Kỷ niệm gia đình', 'Ngày của mẹ'] };
+  if (lowerName.includes('sinh nhật') || id.includes('birthday')) return { icon: Cake, emoji: '🎂', bgImage: 'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=800', examples: ['Sinh nhật', 'Tuổi mới'] };
+  if (lowerName.includes('bạn') || lowerName.includes('friend')) return { icon: Sparkles, emoji: '🤝', bgImage: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800', examples: ['Kỷ niệm bạn bè', 'Tốt nghiệp'] };
+  return { icon: Sparkles, emoji: '✨', bgImage: 'https://images.unsplash.com/photo-1517404215738-15263e9f9178?w=800', examples: ['Lưu bút', 'Kỷ niệm'] };
 };
 
 const autoThemes = autoData.themes.map(t => {
@@ -23,7 +23,7 @@ const autoThemes = autoData.themes.map(t => {
   return {
     id: t.id,
     name: t.name,
-    description: `Sch nh ch  ${t.name}`,
+    description: `Sách ảnh chủ đề ${t.name}`,
     ...details
   };
 });
@@ -42,7 +42,7 @@ export function Step1ThemeSelection({ selectedTheme, onSelect }: Step1ThemeSelec
         setError(null);
       } catch (err) {
         console.error('Failed to fetch categories:', err);
-        setError('Khng th ti danh mc t my ch. ang s dng d liu d phng.');
+        setError('Không thể tải danh mục từ máy chủ. Đang sử dụng dữ liệu dự phòng.');
       } finally { setLoading(false); }
     };
     fetchCategories();
@@ -62,25 +62,25 @@ export function Step1ThemeSelection({ selectedTheme, onSelect }: Step1ThemeSelec
 
   return (
     <div className="step1-wrapper">
-      {/*  Header  */}
+      {/* ── Header ── */}
       <div className="step1-header">
-        <p className="step1-eyebrow">Bc 1  Chn ch </p>
-        <h2 className="step1-title">Cu chuyn no<br />bn mun k?</h2>
+        <p className="step1-eyebrow">Bước 1 · Chọn chủ đề</p>
+        <h2 className="step1-title">Câu chuyện nào<br />bạn muốn kể?</h2>
         <p className="step1-subtitle">
-          Mi ch  mang mt ngn ng ring  chn ci chm ng cm xc
-          bn mun gi gm vo trang sch.
+          Mỗi chủ đề mang một ngôn ngữ riêng — chọn cái chạm đúng cảm xúc
+          bạn muốn gửi gắm vào trang sách.
         </p>
       </div>
 
-      {/*  Loading state  */}
+      {/* ── Loading state ── */}
       {loading && (
         <div className="step1-loading">
           <Loader2 className="step1-spinner" size={28} />
-          <span>ang ti ch </span>
+          <span>Đang tải chủ đề…</span>
         </div>
       )}
 
-      {/*  Error banner  */}
+      {/* ── Error banner ── */}
       {error && !loading && (
         <div className="step1-error-banner">
           <Info size={15} />
@@ -88,7 +88,7 @@ export function Step1ThemeSelection({ selectedTheme, onSelect }: Step1ThemeSelec
         </div>
       )}
 
-      {/*  Theme grid  */}
+      {/* ── Theme grid ── */}
       {!loading && (
         <div className="step1-grid">
           {displayThemes.map((theme) => {
@@ -147,18 +147,18 @@ export function Step1ThemeSelection({ selectedTheme, onSelect }: Step1ThemeSelec
         </div>
       )}
 
-      {/*  Tip note  */}
+      {/* ── Tip note ── */}
       {!loading && (
         <div className="step1-tip">
           <div className="step1-tip__bar" />
           <p className="step1-tip__text">
-            <strong>Lu :</strong> Ch  nh hng n b cc, mu sc v phong cch
-            ch trong ton b cun sch. Bn vn c th i trc khi xut bn.
+            <strong>Lưu ý:</strong> Chủ đề ảnh hưởng đến bố cục, màu sắc và phong cách
+            chữ trong toàn bộ cuốn sách. Bạn vẫn có thể đổi trước khi xuất bản.
           </p>
         </div>
       )}
 
-      {/*  Scoped styles  */}
+      {/* ── Scoped styles ── */}
       <style>{`
         .step1-wrapper {
           display: flex;
@@ -167,7 +167,7 @@ export function Step1ThemeSelection({ selectedTheme, onSelect }: Step1ThemeSelec
           padding: 0.25rem 0;
         }
 
-        /*  Header  */
+        /* ── Header ── */
         .step1-header {
           display: flex;
           flex-direction: column;
@@ -197,7 +197,7 @@ export function Step1ThemeSelection({ selectedTheme, onSelect }: Step1ThemeSelec
           max-width: 480px;
         }
 
-        /*  Loading  */
+        /* ── Loading ── */
         .step1-loading {
           display: flex;
           align-items: center;
@@ -212,7 +212,7 @@ export function Step1ThemeSelection({ selectedTheme, onSelect }: Step1ThemeSelec
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /*  Error banner  */
+        /* ── Error banner ── */
         .step1-error-banner {
           display: flex;
           align-items: flex-start;
@@ -227,7 +227,7 @@ export function Step1ThemeSelection({ selectedTheme, onSelect }: Step1ThemeSelec
         }
         .step1-error-banner svg { margin-top: 1px; flex-shrink: 0; }
 
-        /*  Grid  */
+        /* ── Grid ── */
         .step1-grid {
           display: grid;
           grid-template-columns: 1fr;
@@ -239,7 +239,7 @@ export function Step1ThemeSelection({ selectedTheme, onSelect }: Step1ThemeSelec
           }
         }
 
-        /*  Card  */
+        /* ── Card ── */
         .theme-card {
           position: relative;
           min-height: 210px;
@@ -389,7 +389,7 @@ export function Step1ThemeSelection({ selectedTheme, onSelect }: Step1ThemeSelec
           backdrop-filter: blur(3px);
         }
 
-        /*  Tip box  */
+        /* ── Tip box ── */
         .step1-tip {
           display: flex;
           align-items: flex-start;

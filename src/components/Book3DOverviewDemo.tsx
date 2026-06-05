@@ -17,25 +17,25 @@ export default function Book3DOverviewDemo() {
       title: "Our Love Story",
       theme: "love" as const,
       coverColor: "#f9a8d4",
-      description: "Cun sch tnh yu vi mu hng pastel"
+      description: "Cuốn sách tình yêu với màu hồng pastel"
     },
     {
       title: "Family Moments",
       theme: "family" as const,
       coverColor: "#a78bfa",
-      description: "K nim gia nh vi mu tm nht"
+      description: "Kỷ niệm gia đình với màu tím nhạt"
     },
     {
       title: "Happy Birthday",
       theme: "birthday" as const,
       coverColor: "#fbbf24",
-      description: "Sinh nht vui v vi mu vng m"
+      description: "Sinh nhật vui vẻ với màu vàng ấm"
     },
     {
       title: "Best Friends Forever",
       theme: "friendship" as const,
       coverColor: "#6ee7b7",
-      description: "Tnh bn p vi mu xanh mint"
+      description: "Tình bạn đẹp với màu xanh mint"
     }
   ];
 
@@ -46,11 +46,11 @@ export default function Book3DOverviewDemo() {
           {/* Header */}
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-gray-800 mb-4">
-              3D Book Preview  Overview Mode
+              3D Book Preview – Overview Mode
             </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Chn mt cun sch  xem trc 3D vi gc nhn tng th.
-              Bn c th xoay, zoom v chuyn i gia cc ch  xem khc nhau.
+              Chọn một cuốn sách để xem trước 3D với góc nhìn tổng thể.
+              Bạn có thể xoay, zoom và chuyển đổi giữa các chế độ xem khác nhau.
             </p>
           </div>
 
@@ -75,7 +75,7 @@ export default function Book3DOverviewDemo() {
                   }}
                 >
                   <div className="text-white text-center">
-                    <div className="text-3xl mb-2"></div>
+                    <div className="text-3xl mb-2">📖</div>
                     <div className="font-handwriting text-xl">{book.title}</div>
                   </div>
                 </div>
@@ -87,7 +87,7 @@ export default function Book3DOverviewDemo() {
                 </p>
                 <div className="flex items-center gap-2 text-sm text-pink-600 font-medium">
                   <span>Xem 3D Preview</span>
-                  <span className="group-hover:translate-x-1 transition-transform"></span>
+                  <span className="group-hover:translate-x-1 transition-transform">→</span>
                 </div>
               </button>
             ))}
@@ -96,36 +96,36 @@ export default function Book3DOverviewDemo() {
           {/* Features */}
           <div className="max-w-4xl mx-auto">
             <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-              Tnh nng 3D Preview
+              Tính năng 3D Preview
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="p-6 bg-white rounded-2xl shadow-md">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-400 to-rose-400 flex items-center justify-center text-white text-2xl mb-4">
-                  
+                  👁️
                 </div>
                 <h3 className="font-semibold text-gray-800 mb-2">Overview Mode</h3>
                 <p className="text-sm text-gray-600">
-                  Nhn thy ton b cun sch: ba trc, gy, ba sau v  dy trong mt gc nhn
+                  Nhìn thấy toàn bộ cuốn sách: bìa trước, gáy, bìa sau và độ dày trong một góc nhìn
                 </p>
               </div>
 
               <div className="p-6 bg-white rounded-2xl shadow-md">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-400 to-indigo-400 flex items-center justify-center text-white text-2xl mb-4">
-                  
+                  🔄
                 </div>
-                <h3 className="font-semibold text-gray-800 mb-2">iu khin linh hot</h3>
+                <h3 className="font-semibold text-gray-800 mb-2">Điều khiển linh hoạt</h3>
                 <p className="text-sm text-gray-600">
-                  Xoay 360, zoom in/out, v reset view d dng vi chut hoc touch
+                  Xoay 360°, zoom in/out, và reset view dễ dàng với chuột hoặc touch
                 </p>
               </div>
 
               <div className="p-6 bg-white rounded-2xl shadow-md">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center text-white text-2xl mb-4">
-                  
+                  🎨
                 </div>
-                <h3 className="font-semibold text-gray-800 mb-2">Cht lng cao</h3>
+                <h3 className="font-semibold text-gray-800 mb-2">Chất lượng cao</h3>
                 <p className="text-sm text-gray-600">
-                  Render 3D realistic vi shadows, lighting v textures chuyn nghip
+                  Render 3D realistic với shadows, lighting và textures chuyên nghiệp
                 </p>
               </div>
             </div>

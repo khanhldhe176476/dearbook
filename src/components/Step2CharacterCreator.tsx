@@ -24,10 +24,10 @@ export function Step2CharacterCreator({ initialCharacter, onComplete }: Step2Cha
       {/* Header */}
       <div className="text-center space-y-4">
         <h2 className="text-4xl md:text-5xl font-serif text-gray-900">
-          To hnh nh nhn vt ca bn
+          Tạo hình ảnh nhân vật của bạn
         </h2>
         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-          Tu chnh nhn vt  to ra hnh nh ging bn hoc ngi bn yu thng nht
+          Tuỳ chỉnh nhân vật để tạo ra hình ảnh giống bạn hoặc người bạn yêu thương nhất
         </p>
       </div>
 
@@ -58,17 +58,17 @@ export function Step2CharacterCreator({ initialCharacter, onComplete }: Step2Cha
                   <div className="flex items-center gap-2 text-white text-sm">
                     <User className="w-4 h-4" />
                     <span className="font-medium">
-                      {character.gender === 'male' ? 'Nam' : 'N'}
+                      {character.gender === 'male' ? 'Nam' : 'Nữ'}
                     </span>
                   </div>
                   <div className="flex items-center gap-2 text-white text-sm">
                     <Palette className="w-4 h-4" />
                     <span className="font-medium capitalize">
-                      Tc {character.hairStyle === 'long' ? 'di' : 'ngn'} - {
-                        character.hairColor === 'black' ? 'en' :
-                        character.hairColor === 'brown' ? 'Nu' :
-                        character.hairColor === 'red' ? '' :
-                        character.hairColor === 'blonde' ? 'Vng' : 'Xm'
+                      Tóc {character.hairStyle === 'long' ? 'dài' : 'ngắn'} - {
+                        character.hairColor === 'black' ? 'Đen' :
+                        character.hairColor === 'brown' ? 'Nâu' :
+                        character.hairColor === 'red' ? 'Đỏ' :
+                        character.hairColor === 'blonde' ? 'Vàng' : 'Xám'
                       }
                     </span>
                   </div>
@@ -79,7 +79,7 @@ export function Step2CharacterCreator({ initialCharacter, onComplete }: Step2Cha
 
           <div className="mt-6 p-4 rounded-2xl bg-blue-50 border border-blue-200">
             <p className="text-sm text-blue-800 text-center">
-               Hnh nh s cp nht ngay khi bn thay i la chn
+              💡 Hình ảnh sẽ cập nhật ngay khi bạn thay đổi lựa chọn
             </p>
           </div>
         </div>
@@ -90,7 +90,7 @@ export function Step2CharacterCreator({ initialCharacter, onComplete }: Step2Cha
           <div className="space-y-4">
             <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
               <User className="w-6 h-6" />
-              Gii tnh
+              Giới tính
             </h3>
             <div className="grid grid-cols-2 gap-4">
               <button
@@ -101,8 +101,8 @@ export function Step2CharacterCreator({ initialCharacter, onComplete }: Step2Cha
                     : 'border-gray-200 bg-white hover:border-pink-300'
                 }`}
               >
-                <div className="text-4xl mb-2"></div>
-                <p className="font-bold text-gray-900">N</p>
+                <div className="text-4xl mb-2">👩</div>
+                <p className="font-bold text-gray-900">Nữ</p>
               </button>
               <button
                 onClick={() => updateCharacter({ gender: 'male' })}
@@ -112,7 +112,7 @@ export function Step2CharacterCreator({ initialCharacter, onComplete }: Step2Cha
                     : 'border-gray-200 bg-white hover:border-blue-300'
                 }`}
               >
-                <div className="text-4xl mb-2"></div>
+                <div className="text-4xl mb-2">👨</div>
                 <p className="font-bold text-gray-900">Nam</p>
               </button>
             </div>
@@ -120,7 +120,7 @@ export function Step2CharacterCreator({ initialCharacter, onComplete }: Step2Cha
 
           {/* Hair Style */}
           <div className="space-y-4">
-            <h3 className="text-2xl font-bold text-gray-900">Kiu tc</h3>
+            <h3 className="text-2xl font-bold text-gray-900">Kiểu tóc</h3>
             <div className="grid grid-cols-2 gap-4">
               <button
                 onClick={() => updateCharacter({ hairStyle: 'short' })}
@@ -130,8 +130,8 @@ export function Step2CharacterCreator({ initialCharacter, onComplete }: Step2Cha
                     : 'border-gray-200 bg-white hover:border-purple-300'
                 }`}
               >
-                <div className="text-4xl mb-2"></div>
-                <p className="font-bold text-gray-900">Tc ngn</p>
+                <div className="text-4xl mb-2">💇‍♀️</div>
+                <p className="font-bold text-gray-900">Tóc ngắn</p>
               </button>
               <button
                 onClick={() => updateCharacter({ hairStyle: 'long' })}
@@ -141,8 +141,8 @@ export function Step2CharacterCreator({ initialCharacter, onComplete }: Step2Cha
                     : 'border-gray-200 bg-white hover:border-purple-300'
                 }`}
               >
-                <div className="text-4xl mb-2"></div>
-                <p className="font-bold text-gray-900">Tc di</p>
+                <div className="text-4xl mb-2">👱‍♀️</div>
+                <p className="font-bold text-gray-900">Tóc dài</p>
               </button>
             </div>
           </div>
@@ -151,15 +151,15 @@ export function Step2CharacterCreator({ initialCharacter, onComplete }: Step2Cha
           <div className="space-y-4">
             <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
               <Palette className="w-6 h-6" />
-              Mu tc
+              Màu tóc
             </h3>
             <div className="grid grid-cols-5 gap-3">
               {[
-                { id: 'black' as const, color: '#1a1a1a', label: 'en' },
-                { id: 'brown' as const, color: '#8B4513', label: 'Nu' },
-                { id: 'red' as const, color: '#DC143C', label: '' },
-                { id: 'blonde' as const, color: '#FFD700', label: 'Vng' },
-                { id: 'gray' as const, color: '#A9A9A9', label: 'Xm' }
+                { id: 'black' as const, color: '#1a1a1a', label: 'Đen' },
+                { id: 'brown' as const, color: '#8B4513', label: 'Nâu' },
+                { id: 'red' as const, color: '#DC143C', label: 'Đỏ' },
+                { id: 'blonde' as const, color: '#FFD700', label: 'Vàng' },
+                { id: 'gray' as const, color: '#A9A9A9', label: 'Xám' }
               ].map((color) => (
                 <button
                   key={color.id}
@@ -188,13 +188,13 @@ export function Step2CharacterCreator({ initialCharacter, onComplete }: Step2Cha
 
           {/* Skin Tone */}
           <div className="space-y-4">
-            <h3 className="text-2xl font-bold text-gray-900">Mu da</h3>
+            <h3 className="text-2xl font-bold text-gray-900">Màu da</h3>
             <div className="grid grid-cols-4 gap-3">
               {[
-                { id: 'light' as const, color: '#FFE4D6', label: 'Sng' },
-                { id: 'medium' as const, color: '#F5D5C3', label: 'Va' },
-                { id: 'tan' as const, color: '#E8C4B0', label: 'Rm' },
-                { id: 'dark' as const, color: '#D4A078', label: 'Ti' }
+                { id: 'light' as const, color: '#FFE4D6', label: 'Sáng' },
+                { id: 'medium' as const, color: '#F5D5C3', label: 'Vừa' },
+                { id: 'tan' as const, color: '#E8C4B0', label: 'Rám' },
+                { id: 'dark' as const, color: '#D4A078', label: 'Tối' }
               ].map((tone) => (
                 <button
                   key={tone.id}
@@ -223,12 +223,12 @@ export function Step2CharacterCreator({ initialCharacter, onComplete }: Step2Cha
 
           {/* Outfit */}
           <div className="space-y-4">
-            <h3 className="text-2xl font-bold text-gray-900">Trang phc</h3>
+            <h3 className="text-2xl font-bold text-gray-900">Trang phục</h3>
             <div className="grid grid-cols-3 gap-4">
               {[
-                { id: 'casual' as const, emoji: '', label: 'Thoi mi' },
-                { id: 'formal' as const, emoji: '', label: 'Lch s' },
-                { id: 'romantic' as const, emoji: '', label: 'Lng mn' }
+                { id: 'casual' as const, emoji: '👕', label: 'Thoải mái' },
+                { id: 'formal' as const, emoji: '👔', label: 'Lịch sự' },
+                { id: 'romantic' as const, emoji: '👗', label: 'Lãng mạn' }
               ].map((outfit) => (
                 <button
                   key={outfit.id}
@@ -251,7 +251,7 @@ export function Step2CharacterCreator({ initialCharacter, onComplete }: Step2Cha
             onClick={handleContinue}
             className="w-full py-5 px-8 bg-black text-white rounded-full text-xl font-bold hover:bg-gray-800 transition-all hover:scale-105 shadow-xl flex items-center justify-center gap-3 group mt-8"
           >
-            Tip tc
+            Tiếp tục
             <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
           </button>
         </div>

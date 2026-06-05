@@ -6,10 +6,10 @@ interface CoupleIllustrationProps {
   size?: 'md' | 'lg';
 }
 
-// Couple illustrations cho mi theme - hin ti dng reference c sn
+// Couple illustrations cho mỗi theme - hiện tại dùng reference có sẵn
 const coupleIllustrations = {
   love: {
-    romantic: 'figma:asset/7138e6744a2ca0f98e0042a1863471b23f4a8cfc.png', // couple vi hoa
+    romantic: 'figma:asset/7138e6744a2ca0f98e0042a1863471b23f4a8cfc.png', // couple với hoa
     casual: 'figma:asset/e3aac7f894c0f163e73430cd24e482c359d5353f.png',
     formal: 'figma:asset/e3aac7f894c0f163e73430cd24e482c359d5353f.png'
   },

@@ -1,7 +1,7 @@
 import { BookData, BookPage } from '../App';
 import { dbGetImageSync } from './dbStorage';
 
-//  Types 
+// ── Types ──────────────────────────────────────────────────────────────────
 
 export type ExportQuality = 'standard' | 'high' | 'print';
 
@@ -9,7 +9,7 @@ export interface ExportOptions {
   quality?: ExportQuality;
   pageSize?: 'A4' | 'A5' | 'letter';
   orientation?: 'portrait' | 'landscape';
-  selectedPages?: number[]; // indices ca trang cn xut
+  selectedPages?: number[]; // indices của trang cần xuất
 }
 
 interface QualityPreset {
@@ -18,27 +18,27 @@ interface QualityPreset {
 }
 
 const QUALITY_PRESETS: Record<ExportQuality, QualityPreset> = {
-  standard: { dpi: 150, label: 'Tiu chun' },
+  standard: { dpi: 150, label: 'Tiêu chuẩn' },
   high:     { dpi: 200, label: 'Cao' },
-  print:    { dpi: 300, label: 'In n' },
+  print:    { dpi: 300, label: 'In ấn' },
 };
 
-// Kch thc trang (mm)
+// Kích thước trang (mm)
 const PAGE_SIZES_MM: Record<string, [number, number]> = {
   A4:     [210, 297],
   A5:     [148, 210],
   letter: [215.9, 279.4],
 };
 
-// Kch thc canvas gc ca editor (phi khp vi PAGE_W, PAGE_H trong Step4PageEditorAdvanced)
+// Kích thước canvas gốc của editor (phải khớp với PAGE_W, PAGE_H trong Step4PageEditorAdvanced)
 const EDITOR_W = 400;
 const EDITOR_H = 600;
 
-//  Public API 
+// ── Public API ─────────────────────────────────────────────────────────────
 
 /**
- * Xut sch ra PDF cht lng cao.
- * Render tng trang ln canvas  phn gii cao  nhng vo PDF.
+ * Xuất sách ra PDF chất lượng cao.
+ * Render từng trang lên canvas độ phân giải cao → nhúng vào PDF.
  */
 export async function exportBookAsPDF(
   book: BookData,
@@ -57,13 +57,13 @@ export async function exportBookAsPDF(
   const { dpi } = QUALITY_PRESETS[quality];
   const pageSizeMM = PAGE_SIZES_MM[pageSize];
 
-  // Tnh kch thc canvas render da trn DPI
+  // Tính kích thước canvas render dựa trên DPI
   // A4 landscape: 297mm x 210mm at 300dpi = 3508 x 2480 px
   const mmToPx = dpi / 25.4;
   let renderW = Math.round(pageSizeMM[0] * mmToPx);
   let renderH = Math.round(pageSizeMM[1] * mmToPx);
 
-  // Landscape: hon i nu cn
+  // Landscape: hoán đổi nếu cần
   if (orientation === 'landscape') {
     [renderW, renderH] = [renderH, renderW];
   }
@@ -89,10 +89,10 @@ export async function exportBookAsPDF(
     const page = pages[pageIdx];
     if (!page) continue;
 
-    // Render trang ln canvas  phn gii cao
+    // Render trang lên canvas độ phân giải cao
     const dataUrl = await renderPageToCanvas(page, renderW, renderH);
 
-    // Nhng nh canvas vo PDF
+    // Nhúng ảnh canvas vào PDF
     pdf.addImage(dataUrl, 'PNG', 0, 0, pdfW, pdfH);
   }
 
@@ -100,7 +100,7 @@ export async function exportBookAsPDF(
 }
 
 /**
- * Xut 1 trang thnh nh PNG  phn gii cao
+ * Xuất 1 trang thành ảnh PNG độ phân giải cao
  */
 export async function exportPageAsImage(
   page: any,
@@ -110,7 +110,7 @@ export async function exportPageAsImage(
   return renderPageToCanvas(page, width, height);
 }
 
-//  Core: Render page to high-res canvas 
+// ── Core: Render page to high-res canvas ──────────────────────────────────
 
 async function renderPageToCanvas(
   page: any,
@@ -123,11 +123,11 @@ async function renderPageToCanvas(
   const ctx = canvas.getContext('2d');
   if (!ctx) throw new Error('Failed to get canvas context');
 
-  // T l scale t editor (400x600)  output (width x height)
+  // Tỉ lệ scale từ editor (400x600) → output (width x height)
   const scaleX = width / EDITOR_W;
   const scaleY = height / EDITOR_H;
 
-  // 1. V background
+  // 1. Vẽ background
   const bg = page.background;
   if (bg) {
     if (bg.type === 'color') {
@@ -147,7 +147,7 @@ async function renderPageToCanvas(
         ctx.fillRect(0, 0, width, height);
       }
     } else if (bg.type === 'gradient') {
-      // Gradient n gin: linear-gradient topbottom
+      // Gradient đơn giản: linear-gradient top→bottom
       try {
         const grad = ctx.createLinearGradient(0, 0, 0, height);
         const colors = parseGradientColors(bg.value);
@@ -167,7 +167,7 @@ async function renderPageToCanvas(
     ctx.fillRect(0, 0, width, height);
   }
 
-  // 2. V overlay (template layer)
+  // 2. Vẽ overlay (template layer)
   if (page.overlay && page.overlay.type === 'image' && page.overlay.value) {
     try {
       const overlayImg = await loadImageSafe(page.overlay.value);
@@ -177,12 +177,12 @@ async function renderPageToCanvas(
     } catch { /* ignore overlay errors */ }
   }
 
-  // 3. V elements
+  // 3. Vẽ elements
   const elements = page.elements || [];
   const sortedElements = [...elements].sort((a: any, b: any) => (a.zIndex || 0) - (b.zIndex || 0));
 
   for (const el of sortedElements) {
-    // Ch skip elements b n (visible = false)
+    // Chỉ skip elements bị ẩn (visible = false)
     if (el.visible === false) continue;
 
     ctx.save();
@@ -262,14 +262,14 @@ async function renderPageToCanvas(
       try {
         const img = await loadImageSafe(el.src);
         if (img) {
-          // p dng CSS filter (grayscale, brightness, contrast, blur, sepia...)
+          // Áp dụng CSS filter (grayscale, brightness, contrast, blur, sepia...)
           if (el.filter) {
             try {
               ctx.filter = el.filter;
-            } catch { /* filter khng h tr th b qua */ }
+            } catch { /* filter không hỗ trợ thì bỏ qua */ }
           }
 
-          // V border nu c
+          // Vẽ border nếu có
           if (el.border) {
             const borderW = parseFloat(el.border) || 1;
             ctx.strokeStyle = '#cccccc';
@@ -277,7 +277,7 @@ async function renderPageToCanvas(
             ctx.strokeRect(ex, ey, ew, eh);
           }
 
-          // Bo gc nu c
+          // Bo góc nếu có
           if (el.borderRadius) {
             ctx.beginPath();
             const r = el.borderRadius * scaleX;
@@ -286,7 +286,7 @@ async function renderPageToCanvas(
           }
 
           if (el.objectFit === 'cover') {
-            // Cover: scale  lp y, crop phn tha
+            // Cover: scale để lấp đầy, crop phần thừa
             const imgRatio = img.width / img.height;
             const boxRatio = ew / eh;
             let sw, sh, sx, sy;
@@ -322,7 +322,7 @@ async function renderPageToCanvas(
             ctx.drawImage(img, ex, ey, ew, eh);
           }
 
-          // Reset filter sau khi v nh
+          // Reset filter sau khi vẽ ảnh
           if (el.filter) {
             ctx.filter = 'none';
           }
@@ -342,14 +342,14 @@ async function renderPageToCanvas(
       ctx.font = `${stickerSize * 0.8}px sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(el.emoji || '', cx, cy);
+      ctx.fillText(el.emoji || '⭐', cx, cy);
     } else if (el.type === 'icon') {
-      // Icon Lucide  hin th di dng text fallback
+      // Icon Lucide — hiển thị dưới dạng text fallback
       ctx.fillStyle = el.color || '#000000';
       ctx.font = `${Math.min(ew, eh) * 0.7}px sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText('', cx, cy);
+      ctx.fillText('◆', cx, cy);
     }
 
     ctx.restore();
@@ -358,7 +358,7 @@ async function renderPageToCanvas(
   return canvas.toDataURL('image/png', 1.0);
 }
 
-//  Helpers 
+// ── Helpers ────────────────────────────────────────────────────────────────
 
 async function loadImageSafe(src: string): Promise<HTMLImageElement | null> {
   return new Promise((resolve) => {
@@ -380,7 +380,7 @@ async function loadImageSafe(src: string): Promise<HTMLImageElement | null> {
 }
 
 function parseGradientColors(gradientStr: string): string[] {
-  // H tr linear-gradient(...) v cc mu n gin
+  // Hỗ trợ linear-gradient(...) và các màu đơn giản
   const colorRegex = /(#[0-9a-fA-F]{3,8}|rgba?\([^)]+\)|hsla?\([^)]+\))/g;
   const matches = gradientStr.match(colorRegex);
   return matches || ['#ffffff', '#f0f0f0'];
@@ -467,7 +467,7 @@ function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number)
   return lines;
 }
 
-//  Share 
+// ── Share ──────────────────────────────────────────────────────────────────
 
 export function generateShareableLink(bookId: string): string {
   const baseUrl = window.location.origin;

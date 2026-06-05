@@ -27,7 +27,7 @@ const BookModelComponent = ({ bookData, currentPage }: BookModelProps) => {
 
   // Debug log on mount
   useEffect(() => {
-    console.log(' BookModel mounted with data:', {
+    console.log('📖 BookModel mounted with data:', {
       title: bookData.title,
       pagesCount: bookData.pages.length,
       thickness: thickness,
@@ -322,23 +322,23 @@ function Page({ pageData, position, width, height, thickness, isFlipped, pageInd
     // Texture loading disabled for now
     /*
     if (pageData.imageUrl && pageData.imageUrl.startsWith('http')) {
-      console.log(` Loading texture for page ${pageData.pageNumber}:`, pageData.imageUrl);
+      console.log(`📄 Loading texture for page ${pageData.pageNumber}:`, pageData.imageUrl);
       const loader = new THREE.TextureLoader();
       loader.load(
         pageData.imageUrl,
         (loadedTexture) => {
           loadedTexture.colorSpace = THREE.SRGBColorSpace;
           setPageTexture(loadedTexture);
-          console.log(` Page ${pageData.pageNumber} texture loaded successfully`);
+          console.log(`✅ Page ${pageData.pageNumber} texture loaded successfully`);
         },
         undefined,
         (error) => {
-          console.error(` Error loading texture for page ${pageData.pageNumber}:`, error);
+          console.error(`❌ Error loading texture for page ${pageData.pageNumber}:`, error);
           setPageTexture(null);
         }
       );
     } else {
-      console.log(` Page ${pageData.pageNumber} has no image URL`);
+      console.log(`📄 Page ${pageData.pageNumber} has no image URL`);
     */
     }
     return () => {

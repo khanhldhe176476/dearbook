@@ -111,7 +111,7 @@ export const romanticLoveTemplate: Template = {
       {
         id: 'cover-subtitle',
         type: 'text',
-        content: ' A journey of two hearts',
+        content: '💕 A journey of two hearts',
         x: 30,
         y: 540,
         width: 440,
@@ -272,7 +272,7 @@ export const romanticLoveTemplate: Template = {
       ]
     },
 
-    // ========== PAGE 3: Rainy Caf Date - Cozy Moment ==========
+    // ========== PAGE 3: Rainy Café Date - Cozy Moment ==========
     {
       id: 'page-3-rainy-cafe',
       backgroundColor: '#8B7355',
@@ -301,7 +301,7 @@ export const romanticLoveTemplate: Template = {
         {
           id: 'p3-title',
           type: 'text',
-          content: 'Rainy Day Caf',
+          content: 'Rainy Day Café',
           x: 100,
           y: 450,
           width: 600,
@@ -373,7 +373,7 @@ export const romanticLoveTemplate: Template = {
         {
           id: 'p4-text',
           type: 'text',
-          content: 'In the quiet warmth of our little space, I found my forever. Your laugh, your touch, your presencehome.',
+          content: 'In the quiet warmth of our little space, I found my forever. Your laugh, your touch, your presence—home.',
           x: 420,
           y: 300,
           width: 310,
@@ -507,7 +507,7 @@ export const romanticLoveTemplate: Template = {
         {
           id: 'p6-text',
           type: 'text',
-          content: 'In the golden glow, everything feels like a dream. You, me, this momentpure magic.',
+          content: 'In the golden glow, everything feels like a dream. You, me, this moment—pure magic.',
           x: 80,
           y: 540,
           width: 640,
@@ -566,7 +566,7 @@ export const romanticLoveTemplate: Template = {
         {
           id: 'p7-body',
           type: 'text',
-          content: 'Walking through life with your hand in mine. Every step we take together is a promiseto love, to support, to never let go.',
+          content: 'Walking through life with your hand in mine. Every step we take together is a promise—to love, to support, to never let go.',
           x: 110,
           y: 480,
           width: 580,
@@ -743,7 +743,7 @@ export const romanticLoveTemplate: Template = {
         {
           id: 'p10-ending',
           type: 'text',
-          content: ' To infinity and beyond ',
+          content: '♥ To infinity and beyond ♥',
           x: 80,
           y: 620,
           width: 640,

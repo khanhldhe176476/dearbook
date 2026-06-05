@@ -20,35 +20,35 @@ export function CreateWizard({ onComplete, onCancel }: CreateWizardProps) {
   const themes = [
     {
       id: 'family' as Theme,
-      title: 'Gia nh',
-      description: 'Mn qu  ngha cho ngi thn yu',
-      icon: '',
+      title: 'Gia đình',
+      description: 'Món quà ý nghĩa cho người thân yêu',
+      icon: '👨‍👩‍👧‍👦',
       color: 'from-orange-400 to-rose-400',
-      examples: 'Cm n cha m, k nim gia nh, ba cm nh'
+      examples: 'Cảm ơn cha mẹ, kỷ niệm gia đình, bữa cơm nhà'
     },
     {
       id: 'friends' as Theme,
-      title: 'Bn b',
-      description: 'K nim nhng khonh khc ng nh',
-      icon: '',
+      title: 'Bạn bè',
+      description: 'Kỷ niệm những khoảnh khắc đáng nhớ',
+      icon: '🎉',
       color: 'from-cyan-400 to-blue-400',
-      examples: 'Tnh bn mi mi, chuyn i, ci khng ngng'
+      examples: 'Tình bạn mãi mãi, chuyến đi, cười không ngừng'
     },
     {
       id: 'love' as Theme,
-      title: 'Ngi yu',
-      description: 'Li yu thng chn thnh nht',
-      icon: '',
+      title: 'Người yêu',
+      description: 'Lời yêu thương chân thành nhất',
+      icon: '💕',
       color: 'from-pink-400 to-rose-500',
-      examples: 'Ngy u gp nhau, iu em thch, ha hn tng lai'
+      examples: 'Ngày đầu gặp nhau, điều em thích, hứa hẹn tương lai'
     },
     {
       id: 'memories' as Theme,
-      title: 'K nim',
-      description: 'Lu gi nhng k c p',
-      icon: '',
+      title: 'Kỷ niệm',
+      description: 'Lưu giữ những ký ức đẹp',
+      icon: '📸',
       color: 'from-purple-400 to-indigo-400',
-      examples: 'Timeline, ct mc quan trng, bi hc cuc sng'
+      examples: 'Timeline, cột mốc quan trọng, bài học cuộc sống'
     }
   ];
 
@@ -107,10 +107,10 @@ export function CreateWizard({ onComplete, onCancel }: CreateWizardProps) {
               )}
             </div>
             <span className="text-xs text-gray-600 mt-2 hidden sm:block">
-              {stepNum === 1 && 'Ch '}
+              {stepNum === 1 && 'Chủ đề'}
               {stepNum === 2 && 'Template'}
-              {stepNum === 3 && 'S trang'}
-              {stepNum === 4 && 'Xc nhn'}
+              {stepNum === 3 && 'Số trang'}
+              {stepNum === 4 && 'Xác nhận'}
             </span>
           </div>
           {stepNum < 4 && (
@@ -129,7 +129,7 @@ export function CreateWizard({ onComplete, onCancel }: CreateWizardProps) {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-2xl font-bold">
-            To sch mi
+            Tạo sách mới
           </h1>
           
           <div className="w-20"></div>
@@ -145,10 +145,10 @@ export function CreateWizard({ onComplete, onCancel }: CreateWizardProps) {
             <div className="animate-fade-in">
               <div className="text-center mb-10">
                 <h2 className="text-3xl font-bold mb-3">
-                  Chn ch  cho cun sch
+                  Chọn chủ đề cho cuốn sách
                 </h2>
                 <p className="text-gray-600">
-                  Mi ch  c ni dung v mu thit k ring
+                  Mỗi chủ đề có nội dung và mẫu thiết kế riêng
                 </p>
               </div>
 
@@ -172,7 +172,7 @@ export function CreateWizard({ onComplete, onCancel }: CreateWizardProps) {
                     </div>
                     
                     <div className="bg-gray-50 rounded-xl p-4 mt-4">
-                      <p className="text-sm text-gray-600 mb-2">V d ni dung:</p>
+                      <p className="text-sm text-gray-600 mb-2">Ví dụ nội dung:</p>
                       <p className="text-sm text-gray-800 italic">"{theme.examples}"</p>
                     </div>
                   </button>
@@ -186,10 +186,10 @@ export function CreateWizard({ onComplete, onCancel }: CreateWizardProps) {
             <div className="animate-fade-in">
               <div className="text-center mb-10">
                 <h2 className="text-3xl font-bold mb-3">
-                  Chn mu thit k
+                  Chọn mẫu thiết kế
                 </h2>
                 <p className="text-gray-600">
-                  {filteredTemplates.length} mu c sn cho ch {' '}
+                  {filteredTemplates.length} mẫu có sẵn cho chủ đề{' '}
                   <span className="font-semibold text-pink-600">
                     {themes.find(t => t.id === selectedTheme)?.title}
                   </span>
@@ -224,7 +224,7 @@ export function CreateWizard({ onComplete, onCancel }: CreateWizardProps) {
                                 : 'badge-popular'
                             }`}
                           >
-                            {template.badge === 'bestseller' ? 'Bn chy' : template.badge === 'new' ? 'Mi' : 'Ph bin'}
+                            {template.badge === 'bestseller' ? 'Bán chạy' : template.badge === 'new' ? 'Mới' : 'Phổ biến'}
                           </span>
                         </div>
                       )}
@@ -247,7 +247,7 @@ export function CreateWizard({ onComplete, onCancel }: CreateWizardProps) {
               <div className="flex items-center justify-between mt-8 pt-8 border-t">
                 <button onClick={() => setStep(1)} className="btn btn-outline">
                   <ArrowLeft className="w-5 h-5" />
-                  Quay li
+                  Quay lại
                 </button>
                 
                 <button
@@ -255,7 +255,7 @@ export function CreateWizard({ onComplete, onCancel }: CreateWizardProps) {
                   disabled={!selectedTemplate}
                   className="btn btn-primary"
                 >
-                  Tip tc
+                  Tiếp tục
                   <ArrowRight className="w-5 h-5" />
                 </button>
               </div>
@@ -267,10 +267,10 @@ export function CreateWizard({ onComplete, onCancel }: CreateWizardProps) {
             <div className="animate-fade-in">
               <div className="text-center mb-10">
                 <h2 className="text-3xl font-bold mb-3">
-                  Chn s trang
+                  Chọn số trang
                 </h2>
                 <p className="text-gray-600">
-                  S trang s nh hng n gi in cui cng
+                  Số trang sẽ ảnh hưởng đến giá in cuối cùng
                 </p>
               </div>
 
@@ -296,7 +296,7 @@ export function CreateWizard({ onComplete, onCancel }: CreateWizardProps) {
                 {/* Custom Input */}
                 <div className="mb-8">
                   <label className="block text-sm font-medium text-gray-700 mb-3">
-                    Hoc nhp s trang ty chnh:
+                    Hoặc nhập số trang tùy chỉnh:
                   </label>
                   <input
                     type="number"
@@ -306,22 +306,22 @@ export function CreateWizard({ onComplete, onCancel }: CreateWizardProps) {
                     onChange={(e) => setPageCount(Math.max(10, Math.min(100, parseInt(e.target.value) || 10)))}
                     className="input text-center text-2xl font-bold"
                   />
-                  <p className="text-sm text-gray-500 mt-2">T 10 n 100 trang</p>
+                  <p className="text-sm text-gray-500 mt-2">Từ 10 đến 100 trang</p>
                 </div>
 
                 {/* Price Estimate */}
                 <div className="card p-6 bg-gradient-to-br from-pink-50 to-purple-50 border-2 border-pink-200">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600 mb-1">Gi c tnh:</p>
+                      <p className="text-sm text-gray-600 mb-1">Giá ước tính:</p>
                       <p className="text-3xl font-bold gradient-text">
-                        {(pageCount * 5000).toLocaleString('vi-VN')}
+                        {(pageCount * 5000).toLocaleString('vi-VN')}đ
                       </p>
                     </div>
                     <Sparkles className="w-12 h-12 text-pink-400" />
                   </div>
                   <p className="text-xs text-gray-500 mt-3">
-                    *Gi cha bao gm ph ship v cc ty chn c bit
+                    *Giá chưa bao gồm phí ship và các tùy chọn đặc biệt
                   </p>
                 </div>
               </div>
@@ -329,11 +329,11 @@ export function CreateWizard({ onComplete, onCancel }: CreateWizardProps) {
               <div className="flex items-center justify-between mt-8 pt-8 border-t">
                 <button onClick={() => setStep(2)} className="btn btn-outline">
                   <ArrowLeft className="w-5 h-5" />
-                  Quay li
+                  Quay lại
                 </button>
                 
                 <button onClick={() => setStep(4)} className="btn btn-primary">
-                  Tip tc
+                  Tiếp tục
                   <ArrowRight className="w-5 h-5" />
                 </button>
               </div>
@@ -345,10 +345,10 @@ export function CreateWizard({ onComplete, onCancel }: CreateWizardProps) {
             <div className="animate-fade-in">
               <div className="text-center mb-10">
                 <h2 className="text-3xl font-bold mb-3">
-                  Xc nhn thng tin
+                  Xác nhận thông tin
                 </h2>
                 <p className="text-gray-600">
-                  Kim tra li trc khi to sch
+                  Kiểm tra lại trước khi tạo sách
                 </p>
               </div>
 
@@ -356,13 +356,13 @@ export function CreateWizard({ onComplete, onCancel }: CreateWizardProps) {
                 {/* Book Title */}
                 <div className="mb-6">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Tn cun sch
+                    Tên cuốn sách
                   </label>
                   <input
                     type="text"
                     value={bookTitle}
                     onChange={(e) => setBookTitle(e.target.value)}
-                    placeholder="Nhp tn cun sch..."
+                    placeholder="Nhập tên cuốn sách..."
                     className="input"
                   />
                 </div>
@@ -370,7 +370,7 @@ export function CreateWizard({ onComplete, onCancel }: CreateWizardProps) {
                 {/* Summary */}
                 <div className="card p-6 space-y-4">
                   <div className="flex items-center justify-between pb-4 border-b">
-                    <span className="text-gray-600">Ch :</span>
+                    <span className="text-gray-600">Chủ đề:</span>
                     <span className="font-semibold">
                       {themes.find(t => t.id === selectedTheme)?.title}
                     </span>
@@ -382,21 +382,21 @@ export function CreateWizard({ onComplete, onCancel }: CreateWizardProps) {
                   </div>
                   
                   <div className="flex items-center justify-between pb-4 border-b">
-                    <span className="text-gray-600">S trang:</span>
+                    <span className="text-gray-600">Số trang:</span>
                     <span className="font-semibold">{pageCount} trang</span>
                   </div>
                   
                   <div className="flex items-center justify-between pt-2">
-                    <span className="text-lg font-semibold">Gi c tnh:</span>
+                    <span className="text-lg font-semibold">Giá ước tính:</span>
                     <span className="text-2xl font-bold gradient-text">
-                      {(pageCount * 5000).toLocaleString('vi-VN')}
+                      {(pageCount * 5000).toLocaleString('vi-VN')}đ
                     </span>
                   </div>
                 </div>
 
                 {/* Preview */}
                 <div className="mt-6">
-                  <p className="text-sm font-medium text-gray-700 mb-3">Xem trc ba:</p>
+                  <p className="text-sm font-medium text-gray-700 mb-3">Xem trước bìa:</p>
                   <div className="card overflow-hidden">
                     <img
                       src={selectedTemplate.thumbnail}
@@ -410,12 +410,12 @@ export function CreateWizard({ onComplete, onCancel }: CreateWizardProps) {
               <div className="flex items-center justify-between mt-8 pt-8 border-t">
                 <button onClick={() => setStep(3)} className="btn btn-outline">
                   <ArrowLeft className="w-5 h-5" />
-                  Quay li
+                  Quay lại
                 </button>
                 
                 <button onClick={handleCreate} className="btn btn-primary btn-lg">
                   <Sparkles className="w-5 h-5" />
-                  To sch ngay
+                  Tạo sách ngay
                 </button>
               </div>
             </div>

@@ -36,7 +36,7 @@ export function ExportDownloadMenu({ book, pages, onClose }: ExportDownloadMenuP
     setExportProgress(0);
 
     try {
-      toast.info('ang to file PDF...');
+      toast.info('Đang tạo file PDF...');
       
       const pdfBlob = await exportBookAsPDF(book, pages, {
         quality: 0.92,
@@ -48,11 +48,11 @@ export function ExportDownloadMenu({ book, pages, onClose }: ExportDownloadMenuP
       const filename = `${book.title || 'book'}_${Date.now()}.pdf`;
       downloadBlob(pdfBlob, filename);
       
-      toast.success(' ti xung PDF thnh cng!');
+      toast.success('Đã tải xuống PDF thành công!');
       setTimeout(onClose, 1000);
     } catch (error) {
       console.error('PDF export failed:', error);
-      toast.error('Khng th to PDF. Vui lng th li.');
+      toast.error('Không thể tạo PDF. Vui lòng thử lại.');
     } finally {
       setIsExporting(false);
       setCurrentExportType(null);
@@ -66,7 +66,7 @@ export function ExportDownloadMenu({ book, pages, onClose }: ExportDownloadMenuP
     setExportProgress(0);
 
     try {
-      toast.info(`ang to ${pages.length} nh...`);
+      toast.info(`Đang tạo ${pages.length} ảnh...`);
       
       for (let i = 0; i < pages.length; i++) {
         const page = pages[i];
@@ -86,11 +86,11 @@ export function ExportDownloadMenu({ book, pages, onClose }: ExportDownloadMenuP
         await new Promise(resolve => setTimeout(resolve, 500));
       }
       
-      toast.success(` ti xung ${pages.length} nh thnh cng!`);
+      toast.success(`Đã tải xuống ${pages.length} ảnh thành công!`);
       setTimeout(onClose, 1000);
     } catch (error) {
       console.error('Images export failed:', error);
-      toast.error('Khng th to nh. Vui lng th li.');
+      toast.error('Không thể tạo ảnh. Vui lòng thử lại.');
     } finally {
       setIsExporting(false);
       setCurrentExportType(null);
@@ -106,17 +106,17 @@ export function ExportDownloadMenu({ book, pages, onClose }: ExportDownloadMenuP
       const success = await copyShareableLink(book.id);
       
       if (success) {
-        toast.success(' copy link chia s!');
+        toast.success('Đã copy link chia sẻ!');
       } else {
         // Fallback: show link in modal
         const link = `${window.location.origin}/preview/${book.id}`;
-        prompt('Copy link ny  chia s:', link);
+        prompt('Copy link này để chia sẻ:', link);
       }
       
       setTimeout(onClose, 1000);
     } catch (error) {
       console.error('Share failed:', error);
-      toast.error('Khng th to link chia s.');
+      toast.error('Không thể tạo link chia sẻ.');
     } finally {
       setIsExporting(false);
       setCurrentExportType(null);
@@ -129,9 +129,9 @@ export function ExportDownloadMenu({ book, pages, onClose }: ExportDownloadMenuP
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-pink-50 to-rose-50">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Xut & Chia s</h2>
+            <h2 className="text-2xl font-bold text-gray-900">Xuất & Chia sẻ</h2>
             <p className="text-sm text-gray-600 mt-1">
-              {book.title || 'Cun sch ca bn'}  {pages.length} trang
+              {book.title || 'Cuốn sách của bạn'} • {pages.length} trang
             </p>
           </div>
           <button
@@ -164,8 +164,8 @@ export function ExportDownloadMenu({ book, pages, onClose }: ExportDownloadMenuP
                 <FileText className="w-6 h-6 text-white" />
               </div>
               <div className="text-left">
-                <h3 className="font-semibold text-gray-900">Ti xung PDF</h3>
-                <p className="text-sm text-gray-600">File PDF cht lng cao, in c</p>
+                <h3 className="font-semibold text-gray-900">Tải xuống PDF</h3>
+                <p className="text-sm text-gray-600">File PDF chất lượng cao, in được</p>
               </div>
             </div>
             {currentExportType === 'pdf' && isExporting ? (
@@ -194,8 +194,8 @@ export function ExportDownloadMenu({ book, pages, onClose }: ExportDownloadMenuP
                 <Image className="w-6 h-6 text-white" />
               </div>
               <div className="text-left">
-                <h3 className="font-semibold text-gray-900">Ti xung nh</h3>
-                <p className="text-sm text-gray-600">Mi trang thnh 1 file nh PNG</p>
+                <h3 className="font-semibold text-gray-900">Tải xuống ảnh</h3>
+                <p className="text-sm text-gray-600">Mỗi trang thành 1 file ảnh PNG</p>
               </div>
             </div>
             {currentExportType === 'images' && isExporting ? (
@@ -224,8 +224,8 @@ export function ExportDownloadMenu({ book, pages, onClose }: ExportDownloadMenuP
                 <Share2 className="w-6 h-6 text-white" />
               </div>
               <div className="text-left">
-                <h3 className="font-semibold text-gray-900">Chia s link</h3>
-                <p className="text-sm text-gray-600">Copy link  chia s vi ngi khc</p>
+                <h3 className="font-semibold text-gray-900">Chia sẻ link</h3>
+                <p className="text-sm text-gray-600">Copy link để chia sẻ với người khác</p>
               </div>
             </div>
             {currentExportType === 'share' && isExporting ? (
@@ -242,7 +242,7 @@ export function ExportDownloadMenu({ book, pages, onClose }: ExportDownloadMenuP
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-gray-600">
-                  {currentExportType === 'pdf' ? 'ang to PDF...' : 'ang to nh...'}
+                  {currentExportType === 'pdf' ? 'Đang tạo PDF...' : 'Đang tạo ảnh...'}
                 </span>
                 <span className="font-medium text-pink-600">{Math.round(exportProgress)}%</span>
               </div>
@@ -263,8 +263,8 @@ export function ExportDownloadMenu({ book, pages, onClose }: ExportDownloadMenuP
               <FileText className="w-4 h-4 text-blue-600" />
             </div>
             <p className="text-xs text-blue-800 leading-relaxed">
-              <strong>Lu :</strong> File PDF v nh c to t ni dung hin ti. m bo bn 
-              lu tt c thay i trc khi xut.
+              <strong>Lưu ý:</strong> File PDF và ảnh được tạo từ nội dung hiện tại. Đảm bảo bạn đã
+              lưu tất cả thay đổi trước khi xuất.
             </p>
           </div>
         </div>

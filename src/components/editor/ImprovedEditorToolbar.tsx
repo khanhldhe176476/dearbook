@@ -60,7 +60,7 @@ export function ImprovedEditorToolbar({
             <button
               onClick={onBack}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors group"
-              title="Quay li Dashboard"
+              title="Quay lại Dashboard"
             >
               <ArrowLeft className="w-5 h-5 text-gray-600 group-hover:text-gray-900" />
             </button>
@@ -79,9 +79,9 @@ export function ImprovedEditorToolbar({
               'bg-gray-400'
             }`} />
             <span className="text-xs text-gray-600">
-              {saveStatus === 'saved' ? ' lu' : 
-               saveStatus === 'saving' ? 'ang lu...' : 
-               'Cha lu'}
+              {saveStatus === 'saved' ? 'Đã lưu' : 
+               saveStatus === 'saving' ? 'Đang lưu...' : 
+               'Chưa lưu'}
             </span>
           </div>
         </div>
@@ -94,7 +94,7 @@ export function ImprovedEditorToolbar({
               onClick={onUndo}
               disabled={!canUndo}
               className="p-2 hover:bg-white rounded-md transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-              title="Hon tc (Ctrl+Z)"
+              title="Hoàn tác (Ctrl+Z)"
             >
               <Undo className="w-4 h-4" />
             </button>
@@ -102,7 +102,7 @@ export function ImprovedEditorToolbar({
               onClick={onRedo}
               disabled={!canRedo}
               className="p-2 hover:bg-white rounded-md transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-              title="Lm li (Ctrl+Y)"
+              title="Làm lại (Ctrl+Y)"
             >
               <Redo className="w-4 h-4" />
             </button>
@@ -113,7 +113,7 @@ export function ImprovedEditorToolbar({
             <button
               onClick={onZoomOut}
               className="p-2 hover:bg-white rounded-md transition-colors"
-              title="Thu nh"
+              title="Thu nhỏ"
             >
               <ZoomOut className="w-4 h-4" />
             </button>
@@ -125,7 +125,7 @@ export function ImprovedEditorToolbar({
             <button
               onClick={onZoomIn}
               className="p-2 hover:bg-white rounded-md transition-colors"
-              title="Phng to"
+              title="Phóng to"
             >
               <ZoomIn className="w-4 h-4" />
             </button>
@@ -139,7 +139,7 @@ export function ImprovedEditorToolbar({
                 ? 'bg-purple-100 text-purple-600' 
                 : 'hover:bg-gray-100 text-gray-600'
             }`}
-            title="Hin/n li"
+            title="Hiện/Ẩn lưới"
           >
             <Grid3x3 className="w-4 h-4" />
           </button>
@@ -149,7 +149,7 @@ export function ImprovedEditorToolbar({
             <button
               onClick={onAddText}
               className="flex items-center gap-1.5 px-3 py-2 hover:bg-white rounded-md transition-colors"
-              title="Thm vn bn (T)"
+              title="Thêm văn bản (T)"
             >
               <Type className="w-4 h-4" />
               <span className="text-sm font-medium">Text</span>
@@ -157,10 +157,10 @@ export function ImprovedEditorToolbar({
             <button
               onClick={onAddImage}
               className="flex items-center gap-1.5 px-3 py-2 hover:bg-white rounded-md transition-colors"
-              title="Thm hnh nh (I)"
+              title="Thêm hình ảnh (I)"
             >
               <Image className="w-4 h-4" />
-              <span className="text-sm font-medium">nh</span>
+              <span className="text-sm font-medium">Ảnh</span>
             </button>
           </div>
 
@@ -173,7 +173,7 @@ export function ImprovedEditorToolbar({
                   ? 'bg-pink-100 text-pink-600' 
                   : 'hover:bg-white text-gray-600'
               }`}
-              title="Th vin"
+              title="Thư viện"
             >
               <Sparkles className="w-4 h-4" />
             </button>
@@ -184,7 +184,7 @@ export function ImprovedEditorToolbar({
                   ? 'bg-purple-100 text-purple-600' 
                   : 'hover:bg-white text-gray-600'
               }`}
-              title="Lp & Thuc tnh"
+              title="Lớp & Thuộc tính"
             >
               <Layers className="w-4 h-4" />
             </button>
@@ -199,7 +199,7 @@ export function ImprovedEditorToolbar({
               className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
             >
               <Eye className="w-4 h-4" />
-              <span className="text-sm font-medium">Xem trc</span>
+              <span className="text-sm font-medium">Xem trước</span>
             </button>
           )}
 
@@ -208,7 +208,7 @@ export function ImprovedEditorToolbar({
             className="flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:shadow-lg transition-all transform hover:scale-105"
           >
             <Save className="w-4 h-4" />
-            <span className="text-sm font-semibold">Lu</span>
+            <span className="text-sm font-semibold">Lưu</span>
           </button>
         </div>
       </div>
@@ -217,15 +217,15 @@ export function ImprovedEditorToolbar({
       <div className="px-4 py-2 bg-gradient-to-r from-amber-50 to-yellow-50 border-t border-amber-100">
         <div className="flex items-center justify-center gap-6 text-xs text-gray-600">
           <div className="flex items-center gap-1.5">
-            <span className="font-medium text-gray-700"> Mo:</span>
-            <span>Shift + Click  chn nhiu</span>
+            <span className="font-medium text-gray-700">💡 Mẹo:</span>
+            <span>Shift + Click để chọn nhiều</span>
           </div>
           <div className="w-px h-3 bg-gray-300" />
-          <span>Ctrl + S  lu</span>
+          <span>Ctrl + S để lưu</span>
           <div className="w-px h-3 bg-gray-300" />
-          <span>Delete  xa</span>
+          <span>Delete để xóa</span>
           <div className="w-px h-3 bg-gray-300" />
-          <span>Ctrl + D  nhn i</span>
+          <span>Ctrl + D để nhân đôi</span>
         </div>
       </div>
     </div>
