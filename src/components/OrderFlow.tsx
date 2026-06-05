@@ -94,11 +94,8 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
   const validatePhone = (phone: string): boolean => {
     if (!phone) { setPhoneError(''); return false; }
     if (!/^0\d{9}$/.test(phone)) {
-<<<<<<< HEAD
       setPhoneError('Số điện thoại phải gồm 10 chữ số và bắt đầu bằng 0');
-=======
       setPhoneError('Sá»‘ Ä‘iá»‡n thoáº¡i pháº£i gá»“m 10 chá»¯ sá»‘ vÃ  báº¯t Ä‘áº§u báº±ng 0');
->>>>>>> a97a5b3417b6318d93b97db6d59c6018d8b711ce
       return false;
     }
     setPhoneError('');
@@ -172,7 +169,6 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
 
     // Validate required fields
     if (!shippingInfo.fullName.trim()) {
-<<<<<<< HEAD
       toast.error('Vui lòng nhập họ và tên.');
       return;
     }
@@ -198,7 +194,6 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
     }
     if (!shippingInfo.address.trim()) {
       toast.error('Vui lòng nhập địa chỉ chi tiết.');
-=======
       toast.error('Vui lÃ²ng nháº­p há» vÃ  tÃªn.');
       return;
     }
@@ -224,7 +219,6 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
     }
     if (!shippingInfo.address.trim()) {
       toast.error('Vui lÃ²ng nháº­p Ä‘á»‹a chá»‰ chi tiáº¿t.');
->>>>>>> a97a5b3417b6318d93b97db6d59c6018d8b711ce
       return;
     }
 
@@ -288,14 +282,10 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
         city: shippingInfo.city,
         district: shippingInfo.district,
         note: shippingInfo.notes || null,
-<<<<<<< HEAD
-=======
-
         note: [
           shippingInfo.notes,
           pdfFileName ? `[PDF Ä‘Ã­nh kÃ¨m: ${pdfFileName} - ${pdfFileSize}]` : null,
         ].filter(Boolean).join(' | '),
->>>>>>> a97a5b3417b6318d93b97db6d59c6018d8b711ce
         collectionName: book.title || book.templateName || 'Photobook',
         productType: selectedProduct,
         productSize: selectedSize,
@@ -682,11 +672,8 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
 
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-<<<<<<< HEAD
                       <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Họ và tên *</label>
-=======
                       <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Há» vÃ  tÃªn *</label>
->>>>>>> a97a5b3417b6318d93b97db6d59c6018d8b711ce
                       <div className="relative">
                         <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9B9088' }} />
                         <input
@@ -694,11 +681,8 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                           required
                           value={shippingInfo.fullName}
                           onChange={e => setShippingInfo({ ...shippingInfo, fullName: e.target.value })}
-<<<<<<< HEAD
                           placeholder="Nguyễn Văn A"
-=======
                           placeholder="Nguyá»…n VÄƒn A"
->>>>>>> a97a5b3417b6318d93b97db6d59c6018d8b711ce
                           className="w-full pl-10 pr-4 py-3 rounded-xl outline-none text-sm transition-all"
                           style={{ border: '1.5px solid #DDD8D0', color: '#000000', background: '#FAFAF8' }}
                           onFocus={e => ((e.target as HTMLElement).style.borderColor = '#7A6F66')}
@@ -708,11 +692,8 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     </div>
 
                     <div>
-<<<<<<< HEAD
                       <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Số điện thoại *</label>
-=======
                       <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Sá»‘ Ä‘iá»‡n thoáº¡i *</label>
->>>>>>> a97a5b3417b6318d93b97db6d59c6018d8b711ce
                       <div className="relative">
                         <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9B9088' }} />
                         <input
@@ -765,22 +746,16 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     </div>
 
                     <div>
-<<<<<<< HEAD
                       <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Tỉnh/Thành phố *</label>
-=======
                       <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Tá»‰nh/ThÃ nh phá»‘ *</label>
->>>>>>> a97a5b3417b6318d93b97db6d59c6018d8b711ce
                       <select
                         required value={shippingInfo.city}
                         onChange={e => setShippingInfo({ ...shippingInfo, city: e.target.value })}
                         className="w-full px-4 py-3 rounded-xl outline-none text-sm transition-all"
                         style={{ border: '1.5px solid #DDD8D0', color: '#000000', background: '#FAFAF8' }}
                       >
-<<<<<<< HEAD
                         <option value="">Chọn tỉnh/thành phố</option>
-=======
                         <option value="">Chá»n tá»‰nh/thÃ nh phá»‘</option>
->>>>>>> a97a5b3417b6318d93b97db6d59c6018d8b711ce
                         {VIETNAM_PROVINCES.map(province => (
                           <option key={province} value={province}>{province}</option>
                         ))}
@@ -1091,3 +1066,4 @@ function readFileAsDataURL(file: File): Promise<string> {
     reader.readAsDataURL(file);
   });
 }
+
