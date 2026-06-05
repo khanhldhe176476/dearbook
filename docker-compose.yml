@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "3001:80"
+      - "80:80"
     depends_on:
       - backend
     restart: unless-stopped
@@ -16,7 +16,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "8081:8080"
+      - "8080:8080"
     env_file:
       - ./backend/.env
     environment:
