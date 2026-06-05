@@ -155,7 +155,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
     if (isBelowMinimum) {
       if (compatibleProducts.length > 0) {
         toast.error(
-          `Không Ä‘ủ ${currentProduct.pagesLimit} trang tối thiểu cho ${currentProduct.nameVi}. Vui lòng chọn: ${compatibleProducts.map(p => p.nameVi).join(' hoặc ')}.`,
+          `Không đủ ${currentProduct.pagesLimit} trang tối thiểu cho ${currentProduct.nameVi}. Vui lòng chọn: ${compatibleProducts.map(p => p.nameVi).join(' hoặc ')}.`,
           { duration: 6000 }
         );
       } else {
@@ -210,11 +210,11 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
       return;
     }
     if (!shippingInfo.city) {
-      toast.error('Vui lòng chọn tá»‰nh/thành phố.');
+      toast.error('Vui lòng chọn tỉnh/thành phố.');
       return;
     }
     if (!shippingInfo.district.trim()) {
-      toast.error('Vui lòng nhập quận/huyá»‡n.');
+      toast.error('Vui lòng nhập quận/huyện.');
       return;
     }
     if (!shippingInfo.address.trim()) {
@@ -284,7 +284,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
         note: shippingInfo.notes || null,
         note: [
           shippingInfo.notes,
-          pdfFileName ? `[PDF Ä‘ính kèm: ${pdfFileName} - ${pdfFileSize}]` : null,
+          pdfFileName ? `[PDF đính kèm: ${pdfFileName} - ${pdfFileSize}]` : null,
         ].filter(Boolean).join(' | '),
         collectionName: book.title || book.templateName || 'Photobook',
         productType: selectedProduct,
@@ -334,7 +334,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
       }
 
       toast.error(
-        `Không thể gửi đơn hàng.${errorDetail ? `\nLỗi: ${errorDetail}` : ''}\nKiểm tra: Backend Ä‘ã chạy chưa? (port 8080)`,
+        `Không thể gửi đơn hàng.${errorDetail ? `\nLỗi: ${errorDetail}` : ''}\nKiểm tra: Backend đã chạy chưa? (port 8080)`,
         { duration: 10000 }
       );
       // Không chuyển sang confirmation — giữ user ở bước payment để thử lại
@@ -446,7 +446,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     </h2>
                   </div>
                   <p className="text-xs -mt-4 text-[#7A6F66]">
-                    Vui lòng chọn 1 trong 3 loại photobook cao cấp dưới Ä‘ây:
+                    Vui lòng chọn 1 trong 3 loại photobook cao cấp dưới đây:
                   </p>
 
                   {/* Minimum page count warning for current product */}
@@ -455,10 +455,10 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                       <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#d97706' }} />
                       <div>
                         <p className="text-sm font-bold" style={{ color: '#92400e' }}>
-                          Không Ä‘ủ số trang tối thiểu cho {currentProduct.nameVi}
+                          Không đủ số trang tối thiểu cho {currentProduct.nameVi}
                         </p>
                         <p className="text-xs mt-0.5" style={{ color: '#a16207' }}>
-                          Bạn Ä‘ã chọn <span className="font-bold">{selectedPageCount} trang</span>, nhưng {currentProduct.nameVi} yêu cầu tối thiểu <span className="font-bold">{currentProduct.pagesLimit} trang</span>.
+                          Bạn đã chọn <span className="font-bold">{selectedPageCount} trang</span>, nhưng {currentProduct.nameVi} yêu cầu tối thiểu <span className="font-bold">{currentProduct.pagesLimit} trang</span>.
                           {compatibleProducts.length > 0 ? (
                             <span> Vui lòng chọn loại sách khác phù hợp hơn: <span className="font-bold text-green-700">{compatibleProducts.map(p => p.nameVi).join(', ')}</span>.</span>
                           ) : (
@@ -569,10 +569,10 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                       <div>
                         <h3 className="text-sm font-bold text-[#000000] flex items-center gap-1.5">
-                          Số trang Ä‘ã chọn để in
+                          Số trang đã chọn để in
                         </h3>
                         <p className="text-xs text-[#7A6F66]">
-                          Số trang bạn Ä‘ã chọn ở bước trước. Tối thiểu {currentProduct.pagesLimit} trang Ä‘ã bao gồm trong giá cơ bản.
+                          Số trang bạn đã chọn ở bước trước. Tối thiểu {currentProduct.pagesLimit} trang đã bao gồm trong giá cơ bản.
                         </p>
                       </div>
                       <div className="text-center px-4">
@@ -583,12 +583,12 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
 
                     <div className="p-3.5 rounded-xl bg-[#F5F2EE] text-xs text-[#7A6F66] flex flex-col gap-1.5 animate-in fade-in duration-300">
                       <p>
-                        • Số trang mặc định đi kèm: <span className="font-semibold text-[#000000]">{currentProduct.pagesLimit} trang</span> (Ä‘ã bao gồm trong giá cơ bản).
+                        • Số trang mặc định đi kèm: <span className="font-semibold text-[#000000]">{currentProduct.pagesLimit} trang</span> (đã bao gồm trong giá cơ bản).
                       </p>
                       {selectedPageCount > currentProduct.pagesLimit ? (
                         <p className="text-[#10b981] font-semibold">
                           • Bạn đang in thêm: {(selectedPageCount - currentProduct.pagesLimit)} trang ({Math.ceil((selectedPageCount - currentProduct.pagesLimit) / 2)} tờ). Phụ phí: +{pagePrice.toLocaleString('vi-VN')} ₫.
-                          {currentProduct.id !== 'layflat' ? ' (12.000 â‚«/tờ C150)' : ' (30.000 ₫/tờ Lay-flat)'}
+                          {currentProduct.id !== 'layflat' ? ' (12.000 ₫/tờ C150)' : ' (30.000 ₫/tờ Lay-flat)'}
                         </p>
                       ) : (
                         <p>• Số trang trong giới hạn tiêu chuẩn, không phát sinh phụ phí.</p>
@@ -604,7 +604,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     File thiết kế PDF
                   </h2>
                   <p className="text-xs mb-4" style={{ color: '#7A6F66' }}>
-                    Tải lên file PDF bạn Ä‘ã xuất từ bước chọn trang. File sẽ được gửi kèm Ä‘ơn hàng để in ấn chính xác.
+                    Tải lên file PDF bạn đã xuất từ bước chọn trang. File sẽ được gửi kèm đơn hàng để in ấn chính xác.
                   </p>
 
                   {/* Hidden file input */}
@@ -747,7 +747,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
 
                     <div>
                       <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Tỉnh/Thành phố *</label>
-                      <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Tá»‰nh/Thành phố *</label>
+                      <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Tỉnh/Thành phố *</label>
                       <select
                         required value={shippingInfo.city}
                         onChange={e => setShippingInfo({ ...shippingInfo, city: e.target.value })}
@@ -755,7 +755,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                         style={{ border: '1.5px solid #DDD8D0', color: '#000000', background: '#FAFAF8' }}
                       >
                         <option value="">Chọn tỉnh/thành phố</option>
-                        <option value="">Chọn tá»‰nh/thành phố</option>
+                        <option value="">Chọn tỉnh/thành phố</option>
                         {VIETNAM_PROVINCES.map(province => (
                           <option key={province} value={province}>{province}</option>
                         ))}
@@ -779,7 +779,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                       <textarea
                         required value={shippingInfo.address}
                         onChange={e => setShippingInfo({ ...shippingInfo, address: e.target.value })}
-                        rows={3} placeholder="Số nhà, tên Ä‘ường..."
+                        rows={3} placeholder="Số nhà, tên đường..."
                         className="w-full px-4 py-3 rounded-xl outline-none text-sm transition-all resize-none"
                         style={{ border: '1.5px solid #DDD8D0', color: '#000000', background: '#FAFAF8' }}
                         onFocus={e => ((e.target as HTMLElement).style.borderColor = '#7A6F66')}
@@ -825,7 +825,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
 
                   <div className="space-y-3">
                     {[
-                      { method: 'full', title: 'Thanh toán trước', sub: 'Thanh toán trước 100% giá trị Ä‘ơn hàng qua VietQR' },
+                      { method: 'full', title: 'Thanh toán trước', sub: 'Thanh toán trước 100% giá trị đơn hàng qua VietQR' },
                       { method: 'deposit', title: 'Đặt cọc 50% hàng', sub: 'Đặt cọc trước 50%, thanh toán 50% còn lại khi nhận hàng' },
                     ].map(({ method, title, sub }) => (
                       <button
@@ -895,7 +895,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     Đặt hàng thành công! 🎉
                   </h2>
                   <p className="mb-6 text-sm" style={{ color: '#7A6F66' }}>
-                    Cảm ơn bạn Ä‘ã tin tưởng DearMemories. Cuốn sách của bạn đang được xử lý thiết kế và in ấn!
+                    Cảm ơn bạn đã tin tưởng DearMemories. Cuốn sách của bạn đang được xử lý thiết kế và in ấn!
                   </p>
 
                   {/* 1. QR Code Payment */}
@@ -929,7 +929,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                       </p>
                     </div>
                     <p className="text-xs text-amber-700 leading-relaxed">
-                      Để xác nhận chuyển khoản thành công và Ä‘ẩy nhanh sản xuất, bạn vui lòng Ä‘iền thông tin và tải ảnh hóa Ä‘ơn giao dịch tại Form xác nhận sau:
+                      Để xác nhận chuyển khoản thành công và đẩy nhanh sản xuất, bạn vui lòng điền thông tin và tải ảnh hóa đơn giao dịch tại Form xác nhận sau:
                     </p>
                     <a
                       href="https://forms.gle/Svy4UUKsFnFUkW7u9"
@@ -946,9 +946,9 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     className="rounded-xl p-5 text-left space-y-2 mb-6"
                     style={{ background: '#F5F2EE' }}
                   >
-                    <p className="font-semibold text-sm" style={{ color: '#000000' }}>📦 Thông tin Ä‘ơn hàng:</p>
+                    <p className="font-semibold text-sm" style={{ color: '#000000' }}>📦 Thông tin đơn hàng:</p>
                     <div className="space-y-1.5 text-sm" style={{ color: '#7A6F66' }}>
-                      <p>• Mã Ä‘ơn: <span className="font-mono font-bold text-[#000000]">#{orderId || `BK${Date.now()}`}</span></p>
+                      <p>• Mã đơn: <span className="font-mono font-bold text-[#000000]">#{orderId || `BK${Date.now()}`}</span></p>
                       <p>• Loại photobook: <span className="font-semibold text-[#000000]">{currentProduct.nameVi}</span></p>
                       <p>• Kích thước: <span className="font-semibold text-[#000000]">{selectedSize}</span></p>
                       <p>• Số trang: <span className="font-semibold text-[#000000]">{selectedPageCount} trang</span></p>
@@ -1029,7 +1029,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                 <div className="pt-3" style={{ borderTop: '1px solid #EDE9E3' }}>
                   {paymentMethod === 'deposit' && (
                     <div className="flex justify-between text-xs text-[#7A6F66] mb-1.5 animate-in fade-in duration-300">
-                      <span>Đã bớt 50% Ä‘ặt cọc:</span>
+                      <span>Đã bớt 50% đặt cọc:</span>
                       <span className="font-semibold text-rose-500">-( {(totalOriginal * 0.5).toLocaleString('vi-VN')} ₫ )</span>
                     </div>
                   )}
@@ -1047,7 +1047,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                 <p className="font-semibold" style={{ color: '#5A5049' }}>📝 Cam kết chất lượng:</p>
                 <p style={{ color: '#7A6F66' }}>✓ In ấn cao cấp</p>
                 <p style={{ color: '#7A6F66' }}>✓ Hoàn tiền 100% nếu không hài lòng</p>
-                <p style={{ color: '#7A6F66' }}>✓ Giao hàng Ä‘úng hẹn</p>
+                <p style={{ color: '#7A6F66' }}>✓ Giao hàng đúng hẹn</p>
               </div>
             </div>
           </div>
