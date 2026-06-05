@@ -1,4 +1,4 @@
-﻿import { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { ArrowLeft, Package, CreditCard, CheckCircle, MapPin, Phone, Mail, User, Loader2, BookOpen, Layers, Ruler, AlertTriangle, Upload, FileText, X } from 'lucide-react';
 import { BookData, User as UserData } from '../App';
 import { orderApi } from '../lib/orderApi';
@@ -281,11 +281,10 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
         address: shippingInfo.address,
         city: shippingInfo.city,
         district: shippingInfo.district,
-        note: shippingInfo.notes || null,
         note: [
           shippingInfo.notes,
           pdfFileName ? `[PDF đính kèm: ${pdfFileName} - ${pdfFileSize}]` : null,
-        ].filter(Boolean).join(' | '),
+        ].filter(Boolean).join(' | ') || null,
         collectionName: book.title || book.templateName || 'Photobook',
         productType: selectedProduct,
         productSize: selectedSize,
@@ -682,7 +681,6 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                           value={shippingInfo.fullName}
                           onChange={e => setShippingInfo({ ...shippingInfo, fullName: e.target.value })}
                           placeholder="Nguyễn Văn A"
-                          placeholder="Nguyễn Văn A"
                           className="w-full pl-10 pr-4 py-3 rounded-xl outline-none text-sm transition-all"
                           style={{ border: '1.5px solid #DDD8D0', color: '#000000', background: '#FAFAF8' }}
                           onFocus={e => ((e.target as HTMLElement).style.borderColor = '#7A6F66')}
@@ -692,7 +690,6 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Số điện thoại *</label>
                       <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Số điện thoại *</label>
                       <div className="relative">
                         <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9B9088' }} />
@@ -705,8 +702,9 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                             setShippingInfo({ ...shippingInfo, phone: val });
                             if (val) validatePhone(val);
                           }}
-                          onBlur={() => {
+                          onBlur={e => {
                             if (shippingInfo.phone) validatePhone(shippingInfo.phone);
+                            (e.target as HTMLElement).style.borderColor = phoneError ? '#f87171' : '#DDD8D0';
                           }}
                           placeholder="0123456789"
                           className={`w-full pl-10 pr-4 py-3 rounded-xl outline-none text-sm transition-all ${
@@ -719,9 +717,6 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                           }}
                           onFocus={e => {
                             (e.target as HTMLElement).style.borderColor = phoneError ? '#ef4444' : '#7A6F66';
-                          }}
-                          onBlur={e => {
-                            (e.target as HTMLElement).style.borderColor = phoneError ? '#f87171' : '#DDD8D0';
                           }}
                         />
                       </div>
