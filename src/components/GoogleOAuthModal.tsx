@@ -80,19 +80,19 @@ export function GoogleOAuthModal({
 
           {/* Permissions */}
           <div className="space-y-3">
-            <p className="text-sm font-semibold text-gray-700">DearMemories sẽ có quyền:</p>
+            <p className="text-sm font-semibold text-gray-700">DearMemories s c quyn:</p>
             <div className="space-y-2">
               <div className="flex items-start gap-2 text-sm text-gray-600">
                 <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
-                <span>Xem thông tin cơ bản (tên, email)</span>
+                <span>Xem thng tin c bn (tn, email)</span>
               </div>
               <div className="flex items-start gap-2 text-sm text-gray-600">
                 <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
-                <span>Lưu dữ liệu sách của bạn</span>
+                <span>Lu d liu sch ca bn</span>
               </div>
               <div className="flex items-start gap-2 text-sm text-gray-600">
                 <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
-                <span>Gửi thông báo về đơn hàng</span>
+                <span>Gi thng bo v n hng</span>
               </div>
             </div>
           </div>
@@ -100,8 +100,8 @@ export function GoogleOAuthModal({
           {/* Demo Notice */}
           <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-xl">
             <p className="text-xs text-yellow-800">
-              <strong>📝 Demo Mode:</strong> Đây là OAuth flow giả lập. 
-              Production sẽ sử dụng Google OAuth 2.0 thật.
+              <strong> Demo Mode:</strong> y l OAuth flow gi lp. 
+              Production s s dng Google OAuth 2.0 tht.
             </p>
           </div>
         </div>
@@ -113,7 +113,7 @@ export function GoogleOAuthModal({
             disabled={isLoading}
             className="flex-1 py-3 px-6 rounded-xl bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Hủy
+            Hy
           </button>
           <button
             onClick={handleConfirm}
@@ -123,10 +123,10 @@ export function GoogleOAuthModal({
             {isLoading ? (
               <>
                 <Loader className="w-5 h-5 animate-spin" />
-                <span>Đang xác thực...</span>
+                <span>ang xc thc...</span>
               </>
             ) : (
-              <span>Tiếp tục</span>
+              <span>Tip tc</span>
             )}
           </button>
         </div>

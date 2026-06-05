@@ -1,12 +1,12 @@
 /**
- * IndexedDB storage for images — thay thế localStorage cho ảnh.
- * localStorage ~5MB, IndexedDB ~vài GB (50% disk trống).
- * Kèm sync cache để render không cần await.
+ * IndexedDB storage for images  thay th localStorage cho nh.
+ * localStorage ~5MB, IndexedDB ~vi GB (50% disk trng).
+ * Km sync cache  render khng cn await.
  *
- * Dùng chung DB dearbook_db_v2 với bookStorage.ts.
+ * Dng chung DB dearbook_db_v2 vi bookStorage.ts.
  */
 
-// Đồng bộ với bookStorage.ts
+// ng b vi bookStorage.ts
 const DB_NAME = 'dearbook_db_v2';
 const DB_VERSION = 2;
 const STORE_NAME = 'images';
@@ -36,7 +36,7 @@ function openDB(): Promise<IDBDatabase> {
       if (!db.objectStoreNames.contains(STORE_NAME)) {
         db.createObjectStore(STORE_NAME, { keyPath: 'key' });
       }
-      // Books store (đồng bộ với bookStorage.ts)
+      // Books store (ng b vi bookStorage.ts)
       if (!db.objectStoreNames.contains('books')) {
         const bookStore = db.createObjectStore('books', { keyPath: 'id' });
         bookStore.createIndex('userId', 'userId', { unique: false });
@@ -51,20 +51,20 @@ function openDB(): Promise<IDBDatabase> {
   return dbPromise;
 }
 
-// ── Sync cache ──────────────────────────────────────────────────────────
-// IndexedDB là async, nhưng render cần giá trị ngay.
-// Cache này được populate khi store / preload, dùng để tra cứu đồng bộ.
+//  Sync cache 
+// IndexedDB l async, nhng render cn gi tr ngay.
+// Cache ny c populate khi store / preload, dng  tra cu ng b.
 const imageCache = new Map<string, string>();
 
-/** Export cache để các module khác có thể kiểm tra/dọn dẹp */
+/** Export cache  cc module khc c th kim tra/dn dp */
 export { imageCache };
 
 /**
- * Tra cứu ảnh đồng bộ từ cache (cho render).
- * 1. RAM cache → 2. localStorage → 3. trigger async load từ IndexedDB
+ * Tra cu nh ng b t cache (cho render).
+ * 1. RAM cache  2. localStorage  3. trigger async load t IndexedDB
  */
 export function dbGetImageSync(key: string): string | null {
-  // 1. RAM cache (đã được preload)
+  // 1. RAM cache ( c preload)
   if (imageCache.has(key)) return imageCache.get(key)!;
 
   // 2. localStorage (sync cache)
@@ -74,12 +74,12 @@ export function dbGetImageSync(key: string): string | null {
     return fromLocal;
   }
 
-  // 3. Trigger async load từ IndexedDB (sẽ có trong cache ở lần render sau)
+  // 3. Trigger async load t IndexedDB (s c trong cache  ln render sau)
   if (key && key.startsWith('dearbook_image_')) {
     dbGetImage(key).then(dataUrl => {
       if (dataUrl) {
         imageCache.set(key, dataUrl);
-        // Lưu vào localStorage để lần sau có sync cache
+        // Lu vo localStorage  ln sau c sync cache
         try { localStorage.setItem(key, dataUrl); } catch { /* ignore */ }
       }
     }).catch(() => { /* ignore */ });
@@ -88,7 +88,7 @@ export function dbGetImageSync(key: string): string | null {
   return null;
 }
 
-/** Preload nhiều ảnh từ IndexedDB vào cache (gọi khi mở editor) */
+/** Preload nhiu nh t IndexedDB vo cache (gi khi m editor) */
 export async function preloadImages(keys: string[]): Promise<void> {
   const uniqueKeys = [...new Set(keys.filter(k => k && k.startsWith('dearbook_image_')))];
   const toLoad = uniqueKeys.filter(k => !imageCache.has(k));
@@ -109,7 +109,7 @@ export async function preloadImages(keys: string[]): Promise<void> {
     });
   } catch (err) {
     console.warn('preloadImages failed, using localStorage fallback:', err);
-    // Fallback: thử load từ localStorage
+    // Fallback: th load t localStorage
     for (const key of toLoad) {
       const fromLocal = localStorage.getItem(key);
       if (fromLocal) imageCache.set(key, fromLocal);
@@ -117,16 +117,16 @@ export async function preloadImages(keys: string[]): Promise<void> {
   }
 }
 
-/** Lưu ảnh vào IndexedDB, trả về key. Đồng thời cache + localStorage. */
+/** Lu nh vo IndexedDB, tr v key. ng thi cache + localStorage. */
 export async function dbStoreImage(dataUrl: string): Promise<string> {
   const key = `dearbook_image_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   imageCache.set(key, dataUrl); // cache RAM
 
-  // Lưu vào localStorage làm sync cache (để dbGetImageSync có fallback sau khi reload)
+  // Lu vo localStorage lm sync cache ( dbGetImageSync c fallback sau khi reload)
   try {
     localStorage.setItem(key, dataUrl);
   } catch {
-    // localStorage có thể đầy, bỏ qua — IndexedDB vẫn là primary
+    // localStorage c th y, b qua  IndexedDB vn l primary
   }
 
   const db = await openDB();
@@ -139,8 +139,8 @@ export async function dbStoreImage(dataUrl: string): Promise<string> {
 }
 
 /**
- * Lưu ảnh từ File/Blob trực tiếp (không cần đọc thành data URL trước).
- * Tự động đọc file thành data URL rồi lưu.
+ * Lu nh t File/Blob trc tip (khng cn c thnh data URL trc).
+ * T ng c file thnh data URL ri lu.
  */
 export async function dbStoreImageFromFile(file: File | Blob): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -158,9 +158,9 @@ export async function dbStoreImageFromFile(file: File | Blob): Promise<string> {
   });
 }
 
-/** Lấy ảnh từ IndexedDB theo key */
+/** Ly nh t IndexedDB theo key */
 export async function dbGetImage(key: string): Promise<string | null> {
-  // Check cache trước
+  // Check cache trc
   if (imageCache.has(key)) return imageCache.get(key)!;
 
   try {
@@ -170,7 +170,7 @@ export async function dbGetImage(key: string): Promise<string | null> {
       const req = tx.objectStore(STORE_NAME).get(key);
       req.onsuccess = () => {
         const result = req.result?.dataUrl || null;
-        if (result) imageCache.set(key, result); // cache cho lần sau
+        if (result) imageCache.set(key, result); // cache cho ln sau
         resolve(result);
       };
       req.onerror = () => reject(req.error);
@@ -182,7 +182,7 @@ export async function dbGetImage(key: string): Promise<string | null> {
   }
 }
 
-/** Xóa ảnh khỏi IndexedDB + cache */
+/** Xa nh khi IndexedDB + cache */
 export async function dbRemoveImage(key: string): Promise<void> {
   imageCache.delete(key);
   try {
@@ -194,11 +194,11 @@ export async function dbRemoveImage(key: string): Promise<void> {
       tx.onerror = () => reject(tx.error);
     });
   } catch {
-    // Nếu không xóa được IndexedDB thì ít nhất đã xóa cache
+    // Nu khng xa c IndexedDB th t nht  xa cache
   }
 }
 
-/** Lấy danh sách tất cả ảnh đã lưu */
+/** Ly danh sch tt c nh  lu */
 export async function dbGetAllImages(): Promise<Array<{ key: string; dataUrl: string }>> {
   try {
     const db = await openDB();
@@ -213,7 +213,7 @@ export async function dbGetAllImages(): Promise<Array<{ key: string; dataUrl: st
   }
 }
 
-/** Dọn ảnh không còn dùng */
+/** Dn nh khng cn dng */
 export async function dbCleanupUnusedImages(usedKeys: Set<string>): Promise<number> {
   const all = await dbGetAllImages();
   let cleaned = 0;
@@ -226,19 +226,19 @@ export async function dbCleanupUnusedImages(usedKeys: Set<string>): Promise<numb
   return cleaned;
 }
 
-/** Tổng dung lượng ảnh (MB) */
+/** Tng dung lng nh (MB) */
 export async function dbGetTotalSize(): Promise<number> {
   const all = await dbGetAllImages();
   let totalBytes = 0;
   for (const img of all) {
-    totalBytes += img.dataUrl.length * 0.75; // base64 → binary ước lượng
+    totalBytes += img.dataUrl.length * 0.75; // base64  binary c lng
   }
   return totalBytes / (1024 * 1024);
 }
 
-// ── Migration ────────────────────────────────────────────────────────────
+//  Migration 
 
-/** Di trú ảnh cũ từ localStorage sang IndexedDB */
+/** Di tr nh c t localStorage sang IndexedDB */
 export async function dbMigrateFromLocalStorage(): Promise<number> {
   let count = 0;
   const keysToMigrate: string[] = [];
@@ -255,19 +255,19 @@ export async function dbMigrateFromLocalStorage(): Promise<number> {
     if (dataUrl) {
       try {
         await dbStoreImageRaw(key, dataUrl);
-        // Giữ lại localStorage copy làm backup, không xóa
+        // Gi li localStorage copy lm backup, khng xa
         count++;
       } catch (err) {
-        console.warn('Di trú ảnh thất bại:', key, err);
+        console.warn('Di tr nh tht bi:', key, err);
       }
     }
   }
   return count;
 }
 
-/** Lưu ảnh với key có sẵn (dùng cho migrate) */
+/** Lu nh vi key c sn (dng cho migrate) */
 async function dbStoreImageRaw(key: string, dataUrl: string): Promise<void> {
-  imageCache.set(key, dataUrl); // cache luôn
+  imageCache.set(key, dataUrl); // cache lun
   const db = await openDB();
   return new Promise((resolve, reject) => {
     const tx = db.transaction(STORE_NAME, 'readwrite');

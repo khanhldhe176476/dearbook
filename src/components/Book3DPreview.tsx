@@ -32,7 +32,7 @@ export default function Book3DPreview({ book, onBack, onOrder }: Book3DPreviewPr
 
   // Debug logging
   useEffect(() => {
-    console.log('🎨 Book3DPreview mounted', {
+    console.log(' Book3DPreview mounted', {
       bookId: book.id,
       bookTitle: book.title,
       pageCount: book.pages.length,
@@ -46,7 +46,7 @@ export default function Book3DPreview({ book, onBack, onOrder }: Book3DPreviewPr
     }
 
     return () => {
-      console.log('🎨 Book3DPreview unmounted');
+      console.log(' Book3DPreview unmounted');
     };
   }, []);
 
@@ -59,19 +59,19 @@ export default function Book3DPreview({ book, onBack, onOrder }: Book3DPreviewPr
       position: { x: 1.2, y: 0.8, z: 2.5 },
       target: { x: 0, y: 0, z: 0 },
       fov: 50,
-      description: 'Xoay 360° để ngắm toàn bộ cuốn sách'
+      description: 'Xoay 360  ngm ton b cun sch'
     },
     flip: {
       position: { x: 0, y: 1.2, z: 2.0 },
       target: { x: 0, y: 0, z: 0 },
       fov: 45,
-      description: 'Góc nhìn từ trên để lật trang'
+      description: 'Gc nhn t trn  lt trang'
     },
     read: {
       position: { x: 0, y: 0, z: 1.6 },
       target: { x: 0, y: 0, z: 0 },
       fov: 40,
-      description: 'Nhìn thẳng để đọc nội dung rõ nhất'
+      description: 'Nhn thng  c ni dung r nht'
     }
   };
 
@@ -89,11 +89,11 @@ export default function Book3DPreview({ book, onBack, onOrder }: Book3DPreviewPr
     
     const timer = setTimeout(() => {
       try {
-        console.log('✅ 3D Preview ready');
+        console.log(' 3D Preview ready');
         setIsLoading(false);
         setHasError(false);
       } catch (error) {
-        console.error('❌ Error setting loading state:', error);
+        console.error(' Error setting loading state:', error);
         setHasError(true);
         setIsLoading(false);
       }
@@ -166,10 +166,10 @@ export default function Book3DPreview({ book, onBack, onOrder }: Book3DPreviewPr
             <FileQuestion className="w-16 h-16 text-purple-400" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            Chưa có nội dung
+            Cha c ni dung
           </h1>
           <p className="text-gray-600 mb-8 text-lg">
-            Cuốn sách này chưa có trang nào để xem trước. Hãy quay lại Editor và thêm nội dung vào sách của bạn.
+            Cun sch ny cha c trang no  xem trc. Hy quay li Editor v thm ni dung vo sch ca bn.
           </p>
           <button
             onClick={onBack}
@@ -177,7 +177,7 @@ export default function Book3DPreview({ book, onBack, onOrder }: Book3DPreviewPr
           >
             <div className="flex items-center gap-2">
               <ArrowLeft className="w-5 h-5" />
-              Quay lại Editor
+              Quay li Editor
             </div>
           </button>
         </div>
@@ -194,17 +194,17 @@ export default function Book3DPreview({ book, onBack, onOrder }: Book3DPreviewPr
             <AlertCircle className="w-16 h-16 text-red-500" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            Không thể tải Preview 3D
+            Khng th ti Preview 3D
           </h1>
           <p className="text-gray-600 mb-8 text-lg">
-            Đã xảy ra lỗi khi tải giao diện xem trước 3D. Vui lòng thử lại hoặc quay lại Editor.
+             xy ra li khi ti giao din xem trc 3D. Vui lng th li hoc quay li Editor.
           </p>
           <div className="flex items-center justify-center gap-4">
             <button
               onClick={handleRetry}
               className="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-900 font-semibold rounded-xl transition-all duration-300 hover:scale-105 active:scale-95"
             >
-              Thử lại
+              Th li
             </button>
             <button
               onClick={onBack}
@@ -212,7 +212,7 @@ export default function Book3DPreview({ book, onBack, onOrder }: Book3DPreviewPr
             >
               <div className="flex items-center gap-2">
                 <ArrowLeft className="w-5 h-5" />
-                Quay lại Editor
+                Quay li Editor
               </div>
             </button>
           </div>
@@ -233,8 +233,8 @@ export default function Book3DPreview({ book, onBack, onOrder }: Book3DPreviewPr
             </div>
           </div>
           <div>
-            <p className="text-2xl font-bold text-gray-900 mb-2">Đang tạo bản xem trước 3D...</p>
-            <p className="text-gray-600">Vui lòng đợi trong giây lát</p>
+            <p className="text-2xl font-bold text-gray-900 mb-2">ang to bn xem trc 3D...</p>
+            <p className="text-gray-600">Vui lng i trong giy lt</p>
           </div>
           <div className="flex items-center justify-center gap-2">
             <div className="w-3 h-3 bg-rose-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
@@ -261,7 +261,7 @@ export default function Book3DPreview({ book, onBack, onOrder }: Book3DPreviewPr
                   className="flex items-center gap-2 px-4 py-2.5 text-gray-700 hover:text-rose-600 transition-all duration-300 rounded-xl hover:bg-rose-50 font-medium"
                 >
                   <ArrowLeft className="w-5 h-5" />
-                  <span>Quay lại</span>
+                  <span>Quay li</span>
                 </button>
                 
                 <div className="h-8 w-px bg-gray-200"></div>
@@ -278,7 +278,7 @@ export default function Book3DPreview({ book, onBack, onOrder }: Book3DPreviewPr
               >
                 <div className="flex items-center gap-2">
                   <ShoppingCart className="w-5 h-5" />
-                  <span>Đặt hàng ngay</span>
+                  <span>t hng ngay</span>
                 </div>
               </button>
             </div>
@@ -313,7 +313,7 @@ export default function Book3DPreview({ book, onBack, onOrder }: Book3DPreviewPr
                         powerPreference: 'high-performance'
                       }}
                       onCreated={(state) => {
-                        console.log('🎨 Canvas created');
+                        console.log(' Canvas created');
                         state.gl.setClearColor('#fafafa', 1);
                         state.gl.toneMappingExposure = 1.2;
                       }}
@@ -348,13 +348,13 @@ export default function Book3DPreview({ book, onBack, onOrder }: Book3DPreviewPr
                   {/* Page Badge */}
                   <div className="absolute top-6 left-6 px-4 py-2 bg-white/90 backdrop-blur-md rounded-xl shadow-lg border border-gray-200/50">
                     <p className="text-sm font-semibold text-gray-900">
-                      {currentPage === 0 ? 'Bìa' : `Trang ${currentPage}`} / {totalPages}
+                      {currentPage === 0 ? 'Ba' : `Trang ${currentPage}`} / {totalPages}
                     </p>
                   </div>
 
                   {/* Tooltip */}
                   <div className="absolute bottom-6 left-1/2 -translate-x-1/2 px-4 py-2 bg-gray-900/80 backdrop-blur-md rounded-lg text-white text-sm">
-                    Kéo để xoay • Lăn chuột để zoom
+                    Ko  xoay  Ln chut  zoom
                   </div>
 
                   {/* Zoom Badge */}
@@ -368,7 +368,7 @@ export default function Book3DPreview({ book, onBack, onOrder }: Book3DPreviewPr
                 {/* Bottom Progress Bar */}
                 <div className="px-8 py-4 bg-gradient-to-r from-rose-50 to-purple-50 border-t border-gray-200">
                   <div className="flex items-center justify-between mb-2">
-                    <p className="text-sm font-medium text-gray-600">Tiến độ xem</p>
+                    <p className="text-sm font-medium text-gray-600">Tin  xem</p>
                     <p className="text-sm font-bold text-rose-600">{progress}%</p>
                   </div>
                   <div className="h-2 bg-white rounded-full overflow-hidden">
@@ -389,22 +389,22 @@ export default function Book3DPreview({ book, onBack, onOrder }: Book3DPreviewPr
                   <Sparkles className="w-6 h-6" />
                   <h2 className="text-xl font-bold">3D Preview Controls</h2>
                 </div>
-                <p className="text-white/80 text-sm">Điều khiển và xem trước cuốn sách của bạn</p>
+                <p className="text-white/80 text-sm">iu khin v xem trc cun sch ca bn</p>
               </div>
 
               {/* Group 1: Navigation */}
               <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-200/50">
                 <div className="flex items-center gap-2 mb-4">
                   <BookOpen className="w-5 h-5 text-rose-600" />
-                  <h3 className="font-bold text-gray-900">Điều hướng trang</h3>
+                  <h3 className="font-bold text-gray-900">iu hng trang</h3>
                 </div>
                 
                 <div className="space-y-4">
                   {/* Page Counter */}
                   <div className="text-center p-4 bg-gradient-to-br from-rose-50 to-purple-50 rounded-xl">
-                    <p className="text-sm text-gray-600 mb-1">Trang hiện tại</p>
+                    <p className="text-sm text-gray-600 mb-1">Trang hin ti</p>
                     <p className="text-3xl font-bold bg-gradient-to-r from-rose-600 to-purple-600 bg-clip-text text-transparent">
-                      {currentPage === 0 ? 'Bìa' : currentPage} / {totalPages}
+                      {currentPage === 0 ? 'Ba' : currentPage} / {totalPages}
                     </p>
                   </div>
 
@@ -434,7 +434,7 @@ export default function Book3DPreview({ book, onBack, onOrder }: Book3DPreviewPr
               <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-200/50">
                 <div className="flex items-center gap-2 mb-4">
                   <Eye className="w-5 h-5 text-purple-600" />
-                  <h3 className="font-bold text-gray-900">Chế độ xem</h3>
+                  <h3 className="font-bold text-gray-900">Ch  xem</h3>
                 </div>
                 
                 {/* Segmented Control */}
@@ -535,8 +535,8 @@ export default function Book3DPreview({ book, onBack, onOrder }: Book3DPreviewPr
                 >
                   <ShoppingCart className="w-6 h-6" />
                   <div className="text-left">
-                    <div className="text-xs opacity-90">Đặt in ngay</div>
-                    <div className="text-lg">{(book.pageCount * 5000).toLocaleString('vi-VN')}đ</div>
+                    <div className="text-xs opacity-90">t in ngay</div>
+                    <div className="text-lg">{(book.pageCount * 5000).toLocaleString('vi-VN')}</div>
                   </div>
                 </button>
 
@@ -546,7 +546,7 @@ export default function Book3DPreview({ book, onBack, onOrder }: Book3DPreviewPr
                 >
                   <div className="flex items-center justify-center gap-2">
                     <ArrowLeft className="w-5 h-5" />
-                    <span>Quay lại Editor</span>
+                    <span>Quay li Editor</span>
                   </div>
                 </button>
               </div>
@@ -554,7 +554,7 @@ export default function Book3DPreview({ book, onBack, onOrder }: Book3DPreviewPr
               {/* Delivery Info */}
               <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-4 border border-green-200/50">
                 <p className="text-sm text-green-800 text-center">
-                  ⚡ <span className="font-bold">Miễn phí vận chuyển</span> • Giao hàng trong <span className="font-bold">3-7 ngày</span>
+                   <span className="font-bold">Min ph vn chuyn</span>  Giao hng trong <span className="font-bold">3-7 ngy</span>
                 </p>
               </div>
             </div>

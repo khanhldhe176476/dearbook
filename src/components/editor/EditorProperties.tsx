@@ -52,7 +52,7 @@ export function EditorProperties({
   onUpdatePage,
   onUpdateBook,
 }: EditorPropertiesProps) {
-  // ── Local text state — KHÔNG re-render canvas khi đang gõ ──
+  //  Local text state  KHNG re-render canvas khi ang g 
   const [localTextContent, setLocalTextContent] = useState('');
   const textCommitRef = useRef<string | null>(null);
 
@@ -75,7 +75,7 @@ export function EditorProperties({
     }
   }, [selectedElement, onUpdateElement]);
 
-  // Commit khi chuyển sang element khác (tránh mất dữ liệu)
+  // Commit khi chuyn sang element khc (trnh mt d liu)
   useEffect(() => {
     return () => {
       if (textCommitRef.current !== null
@@ -90,19 +90,19 @@ export function EditorProperties({
       <div className="w-80 bg-white border-l border-gray-200 p-6">
         <div className="text-center text-gray-500 py-12">
           <Settings className="w-12 h-12 mx-auto mb-3 opacity-50" />
-          <p className="text-sm">Chọn một phần tử để chỉnh sửa</p>
+          <p className="text-sm">Chn mt phn t  chnh sa</p>
         </div>
 
         {/* Page Settings */}
         <div className="mt-8 space-y-4">
           <h3 className="font-semibold text-gray-800 flex items-center gap-2">
             <Layout className="w-4 h-4" />
-            Cài đặt trang
+            Ci t trang
           </h3>
           
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Màu nền
+              Mu nn
             </label>
             <div className="grid grid-cols-4 gap-2">
               {['#FFF1F2', '#F3E8FF', '#DBEAFE', '#D1FAE5', '#FEF3C7', '#FFFFFF'].map((color) => (
@@ -124,11 +124,11 @@ export function EditorProperties({
     <div className="w-80 bg-white border-l border-gray-200 overflow-y-auto">
       <div className="p-6 space-y-6">
         <div>
-          <h3 className="font-semibold text-gray-800 mb-1">Thuộc tính</h3>
+          <h3 className="font-semibold text-gray-800 mb-1">Thuc tnh</h3>
           <p className="text-xs text-gray-500">
-            {selectedElement.type === 'text' ? 'Văn bản' :
-             selectedElement.type === 'image' ? 'Hình ảnh' :
-             selectedElement.type === 'shape' ? 'Hình dạng' : 'Nhân vật'}
+            {selectedElement.type === 'text' ? 'Vn bn' :
+             selectedElement.type === 'image' ? 'Hnh nh' :
+             selectedElement.type === 'shape' ? 'Hnh dng' : 'Nhn vt'}
           </p>
         </div>
 
@@ -137,7 +137,7 @@ export function EditorProperties({
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
               <Type className="w-4 h-4" />
-              Nội dung
+              Ni dung
             </label>
             <textarea
               value={localTextContent}
@@ -145,9 +145,9 @@ export function EditorProperties({
               onBlur={handleTextBlur}
               className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-purple-400 focus:ring-2 focus:ring-purple-200 outline-none transition-all resize-none"
               rows={4}
-              placeholder="Nhập nội dung..."
+              placeholder="Nhp ni dung..."
             />
-            <p className="text-[10px] text-gray-400 mt-1">Gõ mượt không giật — tự lưu khi click ra ngoài</p>
+            <p className="text-[10px] text-gray-400 mt-1">G mt khng git  t lu khi click ra ngoi</p>
           </div>
         )}
 
@@ -155,7 +155,7 @@ export function EditorProperties({
         {selectedElement.type === 'text' && (
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Font chữ
+              Font ch
             </label>
             <select
               value={selectedElement.style.fontFamily || 'inherit'}
@@ -165,7 +165,7 @@ export function EditorProperties({
               className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-purple-400 focus:ring-2 focus:ring-purple-200 outline-none transition-all"
               style={{ fontFamily: selectedElement.style.fontFamily || 'inherit' }}
             >
-              <option value="inherit">Mặc định</option>
+              <option value="inherit">Mc nh</option>
               {FONT_FAMILIES.map((font) => (
                 <option key={font.value} value={font.value} style={{ fontFamily: font.value }}>
                   {font.label}
@@ -179,7 +179,7 @@ export function EditorProperties({
         {selectedElement.type === 'text' && (
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Kích thước: {selectedElement.style.fontSize}px
+              Kch thc: {selectedElement.style.fontSize}px
             </label>
             <input
               type="range"
@@ -202,7 +202,7 @@ export function EditorProperties({
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
             <Palette className="w-4 h-4" />
-            Màu sắc
+            Mu sc
           </label>
           <div className="flex gap-2">
             <input
@@ -228,7 +228,7 @@ export function EditorProperties({
         {(selectedElement.type === 'shape' || selectedElement.type === 'text') && (
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Màu nền
+              Mu nn
             </label>
             <div className="flex gap-2">
               <input
@@ -254,7 +254,7 @@ export function EditorProperties({
               })}
               className="mt-2 text-xs text-purple-600 hover:text-purple-700"
             >
-              Xóa màu nền
+              Xa mu nn
             </button>
           </div>
         )}
@@ -263,7 +263,7 @@ export function EditorProperties({
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
             <Move className="w-4 h-4" />
-            Vị trí
+            V tr
           </label>
           <div className="grid grid-cols-2 gap-2">
             <div>
@@ -295,11 +295,11 @@ export function EditorProperties({
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
             <Maximize2 className="w-4 h-4" />
-            Kích thước
+            Kch thc
           </label>
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="text-xs text-gray-600">Rộng</label>
+              <label className="text-xs text-gray-600">Rng</label>
               <input
                 type="number"
                 value={Math.round(selectedElement.size.width)}
@@ -326,7 +326,7 @@ export function EditorProperties({
         {/* Border Radius */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Bo góc: {selectedElement.style.borderRadius || 0}px
+            Bo gc: {selectedElement.style.borderRadius || 0}px
           </label>
           <input
             type="range"
@@ -343,7 +343,7 @@ export function EditorProperties({
         {/* Opacity */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Độ mờ: {Math.round((selectedElement.style.opacity || 1) * 100)}%
+             m: {Math.round((selectedElement.style.opacity || 1) * 100)}%
           </label>
           <input
             type="range"
@@ -360,7 +360,7 @@ export function EditorProperties({
         {/* Quick Color Presets */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Màu nhanh
+            Mu nhanh
           </label>
           <div className="grid grid-cols-8 gap-1.5">
             {PRESET_COLORS.map((color) => (

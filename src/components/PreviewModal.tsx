@@ -30,7 +30,7 @@ export function PreviewModal({ bookDesign, onClose, onOrder }: PreviewModalProps
       <div className="bg-white rounded-3xl max-w-6xl w-full max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-2xl font-serif text-rose-900">Xem trước sách của bạn</h2>
+          <h2 className="text-2xl font-serif text-rose-900">Xem trc sch ca bn</h2>
           <button
             onClick={onClose}
             className="p-2 hover:bg-gray-100 rounded-full transition"
@@ -53,9 +53,9 @@ export function PreviewModal({ bookDesign, onClose, onOrder }: PreviewModalProps
                   />
                 )}
                 <div className="relative z-10 text-center">
-                  <h1 className="text-5xl font-serif mb-6">{bookDesign.title || 'Tiêu đề sách'}</h1>
+                  <h1 className="text-5xl font-serif mb-6">{bookDesign.title || 'Tiu  sch'}</h1>
                   {bookDesign.recipient && (
-                    <p className="text-2xl italic">Dành tặng: {bookDesign.recipient}</p>
+                    <p className="text-2xl italic">Dnh tng: {bookDesign.recipient}</p>
                   )}
                 </div>
               </div>
@@ -66,7 +66,7 @@ export function PreviewModal({ bookDesign, onClose, onOrder }: PreviewModalProps
               <div className="aspect-[3/4] bg-gradient-to-br from-amber-50 to-rose-50 rounded-xl shadow-2xl flex items-center justify-center p-16">
                 <div className="text-center">
                   <p className="text-2xl italic text-gray-700 leading-relaxed">
-                    {bookDesign.dedication || 'Lời tặng...'}
+                    {bookDesign.dedication || 'Li tng...'}
                   </p>
                 </div>
               </div>
@@ -94,7 +94,7 @@ export function PreviewModal({ bookDesign, onClose, onOrder }: PreviewModalProps
             className="flex items-center gap-2 px-6 py-3 bg-gray-100 rounded-full hover:bg-gray-200 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ChevronLeft className="w-5 h-5" />
-            Trang trước
+            Trang trc
           </button>
 
           <button
@@ -102,7 +102,7 @@ export function PreviewModal({ bookDesign, onClose, onOrder }: PreviewModalProps
             className="flex items-center gap-2 px-8 py-3 bg-rose-600 text-white rounded-full hover:bg-rose-700 transition"
           >
             <ShoppingCart className="w-5 h-5" />
-            Đặt in sách này
+            t in sch ny
           </button>
 
           <button
@@ -135,7 +135,7 @@ function renderPage(page: any) {
       <img src={page.imageUrl} alt="Page" className="w-full h-full object-cover" />
     ) : (
       <div className="h-full bg-gray-100 flex items-center justify-center">
-        <p className="text-gray-400">Chưa có hình ảnh</p>
+        <p className="text-gray-400">Cha c hnh nh</p>
       </div>
     );
   }

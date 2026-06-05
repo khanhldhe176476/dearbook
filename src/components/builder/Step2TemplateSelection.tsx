@@ -24,7 +24,7 @@ interface Step2TemplateSelectionProps {
   onBack: () => void;
 }
 
-// ── Preview Modal: hiển thị toàn bộ trang của template ────────────────────
+//  Preview Modal: hin th ton b trang ca template 
 function TemplatePreviewModal({
   template,
   onClose,
@@ -67,7 +67,7 @@ function TemplatePreviewModal({
               style={{ background: '#ffffff', color: '#111' }}
             >
               <Check className="w-3.5 h-3.5 inline mr-1" />
-              Chọn mẫu này
+              Chn mu ny
             </button>
             <button
               onClick={onClose}
@@ -142,7 +142,7 @@ function TemplatePreviewModal({
   );
 }
 
-// ── Main Step2 Component ───────────────────────────────────────────────────
+//  Main Step2 Component 
 export function Step2TemplateSelection({
   theme,
   selectedTemplateId,
@@ -158,7 +158,7 @@ export function Step2TemplateSelection({
       if (!supabase) return;
       try {
         setLoading(true);
-        console.log(`📡 Fetching Supabase templates for theme: ${theme}`);
+        console.log(` Fetching Supabase templates for theme: ${theme}`);
         // 1. Fetch categories to find the ID corresponding to selected theme slug
         const { data: catData, error: catError } = await supabase
           .from('book_categories')
@@ -167,7 +167,7 @@ export function Step2TemplateSelection({
           .single();
 
         if (catError || !catData) {
-          console.warn('⚠️ Category not found in Supabase:', catError);
+          console.warn(' Category not found in Supabase:', catError);
           setSupabaseTemplates([]);
           return;
         }
@@ -206,23 +206,23 @@ export function Step2TemplateSelection({
             return {
               id: p.id,
               imageUrl: defContent.backgroundImage || defContent.imageUrl || tpl.cover_image_url || '',
-              label: p.page_number === 1 ? 'Trang bìa' : `Trang ${p.page_number - 1}`
+              label: p.page_number === 1 ? 'Trang ba' : `Trang ${p.page_number - 1}`
             };
           });
 
           formattedTemplates.push({
             id: tpl.id,
             name: tpl.name,
-            description: tpl.description || 'Mẫu thiết kế cao cấp.',
+            description: tpl.description || 'Mu thit k cao cp.',
             thumbnail: tpl.cover_image_url || (mappedPages[0]?.imageUrl || ''),
             pages: mappedPages
           });
         }
 
-        console.log('✅ Loaded Supabase templates:', formattedTemplates);
+        console.log(' Loaded Supabase templates:', formattedTemplates);
         setSupabaseTemplates(formattedTemplates);
       } catch (err) {
-        console.error('❌ Exception loading Supabase templates:', err);
+        console.error(' Exception loading Supabase templates:', err);
       } finally {
         setLoading(false);
       }
@@ -239,7 +239,7 @@ export function Step2TemplateSelection({
   const templates = [...supabaseTemplates, ...localTemplates];
 
   const handleSelectTemplate = (template: LocalTemplate) => {
-    // Chuyển đổi pages của local template sang PageData
+    // Chuyn i pages ca local template sang PageData
     const pages: PageData[] = template.pages.map(p => ({
       id: p.id,
       templatePageId: p.id,
@@ -251,9 +251,9 @@ export function Step2TemplateSelection({
   };
 
   const badgeLabel: Record<string, string> = {
-    bestseller: '🔥 Bán chạy',
-    popular: '⭐ Phổ biến',
-    new: '✨ Mới',
+    bestseller: ' Bn chy',
+    popular: ' Ph bin',
+    new: ' Mi',
   };
 
   return (
@@ -278,19 +278,19 @@ export function Step2TemplateSelection({
         }}
       >
         <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
-        <span>Quay lại chọn chủ đề</span>
+        <span>Quay li chn ch </span>
       </button>
 
       {/* Header */}
       <div className="text-center max-w-2xl mx-auto space-y-2">
         <p className="text-[11px] font-semibold tracking-widest uppercase" style={{ color: '#9ca3af' }}>
-          Bước 2 · Phong cách thiết kế
+          Bc 2  Phong cch thit k
         </p>
         <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight" style={{ color: '#111827' }}>
-          Chọn phong cách thiết kế
+          Chn phong cch thit k
         </h2>
         <p className="text-sm sm:text-base leading-relaxed" style={{ color: '#6b7280' }}>
-          Mỗi mẫu được thiết kế chuyên nghiệp với đầy đủ trang bìa và nội dung. Bạn có thể xem trước toàn bộ trước khi chọn.
+          Mi mu c thit k chuyn nghip vi y  trang ba v ni dung. Bn c th xem trc ton b trc khi chn.
         </p>
       </div>
 
@@ -298,7 +298,7 @@ export function Step2TemplateSelection({
       {loading ? (
         <div className="flex flex-col justify-center items-center py-16">
           <Loader2 className="w-8 h-8 animate-spin text-amber-500" />
-          <span className="ml-2 mt-2 text-sm text-[#7a6f66]">Đang tải phong cách thiết kế từ Supabase...</span>
+          <span className="ml-2 mt-2 text-sm text-[#7a6f66]">ang ti phong cch thit k t Supabase...</span>
         </div>
       ) : (
         <div className="grid sm:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -318,7 +318,7 @@ export function Step2TemplateSelection({
                 transform: isSelected ? 'translateY(-2px)' : 'none',
               }}
             >
-              {/* Preview Image (trang bìa) */}
+              {/* Preview Image (trang ba) */}
               <div className="relative overflow-hidden bg-[#faf8f5] flex-shrink-0" style={{ aspectRatio: '3/4' }}>
                 <img
                   src={template.thumbnail}
@@ -387,7 +387,7 @@ export function Step2TemplateSelection({
                     onMouseLeave={e => { e.currentTarget.style.background = '#faf8f5'; }}
                   >
                     <Eye className="w-3.5 h-3.5" />
-                    Xem mẫu
+                    Xem mu
                   </button>
                   <button
                     onClick={() => handleSelectTemplate(template)}
@@ -401,8 +401,8 @@ export function Step2TemplateSelection({
                     onMouseLeave={e => { e.currentTarget.style.background = isSelected ? '#059669' : '#111111'; }}
                   >
                     {isSelected ? (
-                      <><Check className="w-3.5 h-3.5 text-emerald-300" strokeWidth={3} /> Đã chọn</>
-                    ) : 'Sử dụng mẫu này'}
+                      <><Check className="w-3.5 h-3.5 text-emerald-300" strokeWidth={3} />  chn</>
+                    ) : 'S dng mu ny'}
                   </button>
                 </div>
               </div>
@@ -419,8 +419,8 @@ export function Step2TemplateSelection({
       >
         <div className="w-1.5 self-stretch bg-[#8c6e5d]" />
         <p className="text-xs sm:text-sm p-4 leading-relaxed text-[#7a6f66] flex-1">
-          💡 <strong>Mẹo nhỏ:</strong> Nhấn <strong>Xem mẫu</strong> để xem trước từng trang của mẫu sách trước khi chọn.
-          Sau khi chọn, bạn có thể chỉnh sửa tự do ở bước tiếp theo.
+           <strong>Mo nh:</strong> Nhn <strong>Xem mu</strong>  xem trc tng trang ca mu sch trc khi chn.
+          Sau khi chn, bn c th chnh sa t do  bc tip theo.
         </p>
       </div>
 

@@ -15,11 +15,11 @@ export function EditorSidebar({ book, onAddElement, onUpdateBook }: EditorSideba
   const [activeTab, setActiveTab] = useState<TabType>('templates');
 
   const tabs = [
-    { id: 'templates' as TabType, icon: Layout, label: 'Mẫu' },
-    { id: 'text' as TabType, icon: Type, label: 'Văn bản' },
-    { id: 'images' as TabType, icon: Image, label: 'Hình ảnh' },
-    { id: 'characters' as TabType, icon: User, label: 'Nhân vật' },
-    { id: 'shapes' as TabType, icon: Shapes, label: 'Hình dạng' },
+    { id: 'templates' as TabType, icon: Layout, label: 'Mu' },
+    { id: 'text' as TabType, icon: Type, label: 'Vn bn' },
+    { id: 'images' as TabType, icon: Image, label: 'Hnh nh' },
+    { id: 'characters' as TabType, icon: User, label: 'Nhn vt' },
+    { id: 'shapes' as TabType, icon: Shapes, label: 'Hnh dng' },
   ];
 
   const handleAddText = (preset: any) => {
@@ -100,20 +100,20 @@ export function EditorSidebar({ book, onAddElement, onUpdateBook }: EditorSideba
 function TemplatesTab({ book }: { book: Book }) {
   const themeTemplates = {
     love: [
-      { id: '1', name: 'Lãng mạn', preview: '💕', description: 'Giao diện tình yêu' },
-      { id: '2', name: 'Đơn giản', preview: '💝', description: 'Thiết kế tối giản' },
+      { id: '1', name: 'Lng mn', preview: '', description: 'Giao din tnh yu' },
+      { id: '2', name: 'n gin', preview: '', description: 'Thit k ti gin' },
     ],
     family: [
-      { id: '1', name: 'Gia đình', preview: '👨‍👩‍👧', description: 'Giao diện gia đình' },
-      { id: '2', name: 'Ấm áp', preview: '🏠', description: 'Thiết kế ấm cúng' },
+      { id: '1', name: 'Gia nh', preview: '', description: 'Giao din gia nh' },
+      { id: '2', name: 'm p', preview: '', description: 'Thit k m cng' },
     ],
     birthday: [
-      { id: '1', name: 'Sinh nhật', preview: '🎂', description: 'Giao diện sinh nhật' },
-      { id: '2', name: 'Vui nhộn', preview: '🎈', description: 'Thiết kế rực rỡ' },
+      { id: '1', name: 'Sinh nht', preview: '', description: 'Giao din sinh nht' },
+      { id: '2', name: 'Vui nhn', preview: '', description: 'Thit k rc r' },
     ],
     friendship: [
-      { id: '1', name: 'Bạn bè', preview: '🤝', description: 'Giao diện tình bạn' },
-      { id: '2', name: 'Năng động', preview: '🌟', description: 'Thiết kế sôi động' },
+      { id: '1', name: 'Bn b', preview: '', description: 'Giao din tnh bn' },
+      { id: '2', name: 'Nng ng', preview: '', description: 'Thit k si ng' },
     ],
   };
 
@@ -121,7 +121,7 @@ function TemplatesTab({ book }: { book: Book }) {
 
   return (
     <div className="space-y-3">
-      <h3 className="font-semibold text-gray-800">Mẫu {book.theme}</h3>
+      <h3 className="font-semibold text-gray-800">Mu {book.theme}</h3>
       {templates.map((template) => (
         <button
           key={template.id}
@@ -138,15 +138,15 @@ function TemplatesTab({ book }: { book: Book }) {
 
 function TextTab({ onAdd }: { onAdd: (preset: any) => void }) {
   const textPresets = [
-    { content: 'Tiêu đề', fontSize: 32, fontFamily: 'Dancing Script', color: '#6B46C1' },
-    { content: 'Tiêu đề phụ', fontSize: 24, fontFamily: 'inherit', color: '#4A5568' },
-    { content: 'Đoạn văn bản', fontSize: 16, fontFamily: 'inherit', color: '#4A5568' },
-    { content: 'Chú thích', fontSize: 14, fontFamily: 'inherit', color: '#718096' },
+    { content: 'Tiu ', fontSize: 32, fontFamily: 'Dancing Script', color: '#6B46C1' },
+    { content: 'Tiu  ph', fontSize: 24, fontFamily: 'inherit', color: '#4A5568' },
+    { content: 'on vn bn', fontSize: 16, fontFamily: 'inherit', color: '#4A5568' },
+    { content: 'Ch thch', fontSize: 14, fontFamily: 'inherit', color: '#718096' },
   ];
 
   return (
     <div className="space-y-3">
-      <h3 className="font-semibold text-gray-800">Thêm văn bản</h3>
+      <h3 className="font-semibold text-gray-800">Thm vn bn</h3>
       {textPresets.map((preset, index) => (
         <button
           key={index}
@@ -193,7 +193,7 @@ function ImagesTab({ book, onAdd }: { book: Book; onAdd: (url: string) => void }
 
   return (
     <div className="space-y-3">
-      <h3 className="font-semibold text-gray-800">Thêm hình ảnh</h3>
+      <h3 className="font-semibold text-gray-800">Thm hnh nh</h3>
       <div className="grid grid-cols-2 gap-2">
         {images.map((url, index) => (
           <button
@@ -219,7 +219,7 @@ function CharactersTab({ book, onUpdateBook }: { book: Book; onUpdateBook: (book
 
   return (
     <div className="space-y-4">
-      <h3 className="font-semibold text-gray-800">Tùy chỉnh nhân vật</h3>
+      <h3 className="font-semibold text-gray-800">Ty chnh nhn vt</h3>
 
       {/* Preview */}
       <div className="bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl p-6 flex justify-center">
@@ -228,7 +228,7 @@ function CharactersTab({ book, onUpdateBook }: { book: Book; onUpdateBook: (book
 
       {/* Gender */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Giới tính</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Gii tnh</label>
         <div className="grid grid-cols-2 gap-2">
           {(['male', 'female'] as const).map((gender) => (
             <button
@@ -240,7 +240,7 @@ function CharactersTab({ book, onUpdateBook }: { book: Book; onUpdateBook: (book
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              {gender === 'male' ? '👨 Nam' : '👩 Nữ'}
+              {gender === 'male' ? ' Nam' : ' N'}
             </button>
           ))}
         </div>
@@ -248,7 +248,7 @@ function CharactersTab({ book, onUpdateBook }: { book: Book; onUpdateBook: (book
 
       {/* Hair Style */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Kiểu tóc</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Kiu tc</label>
         <div className="grid grid-cols-2 gap-2">
           {(['short', 'long'] as const).map((style) => (
             <button
@@ -260,7 +260,7 @@ function CharactersTab({ book, onUpdateBook }: { book: Book; onUpdateBook: (book
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              {style === 'short' ? 'Ngắn' : 'Dài'}
+              {style === 'short' ? 'Ngn' : 'Di'}
             </button>
           ))}
         </div>
@@ -268,7 +268,7 @@ function CharactersTab({ book, onUpdateBook }: { book: Book; onUpdateBook: (book
 
       {/* Hair Color */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Màu tóc</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Mu tc</label>
         <div className="grid grid-cols-3 gap-2">
           {(['black', 'brown', 'blonde', 'red', 'gray'] as const).map((color) => (
             <button
@@ -280,10 +280,10 @@ function CharactersTab({ book, onUpdateBook }: { book: Book; onUpdateBook: (book
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              {color === 'black' ? 'Đen' :
-               color === 'brown' ? 'Nâu' :
-               color === 'blonde' ? 'Vàng' :
-               color === 'red' ? 'Đỏ' : 'Xám'}
+              {color === 'black' ? 'en' :
+               color === 'brown' ? 'Nu' :
+               color === 'blonde' ? 'Vng' :
+               color === 'red' ? '' : 'Xm'}
             </button>
           ))}
         </div>
@@ -291,7 +291,7 @@ function CharactersTab({ book, onUpdateBook }: { book: Book; onUpdateBook: (book
 
       {/* Outfit */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Trang phục</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Trang phc</label>
         <div className="grid grid-cols-3 gap-2">
           {(['casual', 'formal', 'romantic'] as const).map((outfit) => (
             <button
@@ -303,8 +303,8 @@ function CharactersTab({ book, onUpdateBook }: { book: Book; onUpdateBook: (book
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              {outfit === 'casual' ? 'Thường' :
-               outfit === 'formal' ? 'Lịch sự' : 'Lãng mạn'}
+              {outfit === 'casual' ? 'Thng' :
+               outfit === 'formal' ? 'Lch s' : 'Lng mn'}
             </button>
           ))}
         </div>
@@ -315,14 +315,14 @@ function CharactersTab({ book, onUpdateBook }: { book: Book; onUpdateBook: (book
 
 function ShapesTab({ onAdd }: { onAdd: (shape: any) => void }) {
   const shapes = [
-    { type: 'rectangle', color: '#E9D5FF', borderRadius: 8, label: 'Hình chữ nhật' },
-    { type: 'circle', color: '#FBCFE8', borderRadius: 999, label: 'Hình tròn' },
-    { type: 'square', color: '#BFDBFE', borderRadius: 8, label: 'Hình vuông' },
+    { type: 'rectangle', color: '#E9D5FF', borderRadius: 8, label: 'Hnh ch nht' },
+    { type: 'circle', color: '#FBCFE8', borderRadius: 999, label: 'Hnh trn' },
+    { type: 'square', color: '#BFDBFE', borderRadius: 8, label: 'Hnh vung' },
   ];
 
   return (
     <div className="space-y-3">
-      <h3 className="font-semibold text-gray-800">Thêm hình dạng</h3>
+      <h3 className="font-semibold text-gray-800">Thm hnh dng</h3>
       <div className="grid grid-cols-2 gap-2">
         {shapes.map((shape) => (
           <button

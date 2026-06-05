@@ -25,7 +25,7 @@ export function PageFilmstrip({
         <button
           onClick={onAddPage}
           className="flex flex-col items-center justify-center gap-1 w-16 h-[85px] rounded-lg border-2 border-dashed border-rose-300 bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors"
-          title="Thêm trang mới"
+          title="Thm trang mi"
         >
           <Plus className="w-5 h-5" />
         </button>
@@ -38,7 +38,7 @@ export function PageFilmstrip({
               <button
                 onClick={(e) => { e.stopPropagation(); onDuplicatePage(index); }}
                 className="p-1.5 bg-white shadow-md rounded-full text-blue-500 hover:text-blue-600 border border-gray-100 transform hover:scale-110 transition-transform"
-                title="Nhân đôi trang"
+                title="Nhn i trang"
               >
                 <Copy className="w-3.5 h-3.5" />
               </button>
@@ -46,7 +46,7 @@ export function PageFilmstrip({
                 <button
                   onClick={(e) => { e.stopPropagation(); onDeletePage(index); }}
                   className="p-1.5 bg-white shadow-md rounded-full text-rose-500 hover:text-rose-600 border border-gray-100 transform hover:scale-110 transition-transform"
-                  title="Xóa trang"
+                  title="Xa trang"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>
@@ -77,7 +77,7 @@ export function PageFilmstrip({
                 {/* Simplified page preview (just a label) */}
                 <div className="absolute inset-0 bg-black/5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                    <div className="px-2 py-1 bg-white/90 rounded text-[10px] font-bold text-gray-700 shadow-sm">
-                      {index === 0 ? 'TRANG BÌA' : `TRANG ${index + 1}`}
+                      {index === 0 ? 'TRANG BA' : `TRANG ${index + 1}`}
                    </div>
                 </div>
                 
@@ -90,7 +90,7 @@ export function PageFilmstrip({
             <div className={`mt-1 text-center text-[10px] font-bold ${
               currentPageIndex === index ? 'text-rose-600' : 'text-gray-400'
             }`}>
-              {index === 0 ? 'Bìa' : index + 1}
+              {index === 0 ? 'Ba' : index + 1}
             </div>
           </div>
         ))}

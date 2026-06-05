@@ -10,20 +10,20 @@ interface BookMockup3DProps {
   pages?: Array<{ type: 'photo', url: string, caption?: string }>;
 }
 
-// ─── Timing constants ────────────────────────────────────────────────────────
-const FLIP_DURATION  = 680;   // ms – duration of one flip direction
-const CASCADE_STEP   = 50;    // ms – stagger between each page strip
+//  Timing constants 
+const FLIP_DURATION  = 680;   // ms  duration of one flip direction
+const CASCADE_STEP   = 50;    // ms  stagger between each page strip
 const NUM_STRIPS     = 8;
 const MAX_CASCADE    = (NUM_STRIPS - 1) * CASCADE_STEP; // 350 ms
-// All pages reach 180° at:
+// All pages reach 180 at:
 const ALL_FORWARD_MS = FLIP_DURATION + MAX_CASCADE;     // 1030 ms
 // Swap photo while page is face-down (midpoint of hold)
 const PHOTO_SWAP_MS  = ALL_FORWARD_MS + 60;             // 1090 ms
 // Start flip-back after a brief pause
 const FLIP_BACK_MS   = ALL_FORWARD_MS + 220;            // 1250 ms
-// All pages back to 0° at:
+// All pages back to 0 at:
 const CYCLE_DONE_MS  = FLIP_BACK_MS + FLIP_DURATION + MAX_CASCADE; // 2280 ms
-// ─────────────────────────────────────────────────────────────────────────────
+// 
 
 export function BookMockup3D({
   coverImage,
@@ -49,20 +49,20 @@ export function BookMockup3D({
     if (pages.length <= 1) return;
 
     const interval = setInterval(() => {
-      // Guard – don't start a new flip if previous hasn't finished
+      // Guard  don't start a new flip if previous hasn't finished
       if (isFlippingRef.current) return;
 
       isFlippingRef.current = true;
       setIsFlipping(true);
 
-      // ── swap photo while all pages are face-down ──
+      //  swap photo while all pages are face-down 
       t1Ref.current = setTimeout(() => {
         const next = (indexRef.current + 1) % pages.length;
         indexRef.current = next;
         setCurrentPhotoIndex(next);
       }, PHOTO_SWAP_MS);
 
-      // ── start flip-back ──
+      //  start flip-back 
       t2Ref.current = setTimeout(() => {
         isFlippingRef.current = false;
         setIsFlipping(false);
@@ -84,7 +84,7 @@ export function BookMockup3D({
       style={{ perspective: '1200px' }}
     >
       <div className="relative">
-        {/* ── Book body ─────────────────────────────────────────────── */}
+        {/*  Book body  */}
         <div
           className="relative bg-white shadow-2xl"
           style={{
@@ -137,7 +137,7 @@ export function BookMockup3D({
             </div>
           </div>
 
-          {/* ── Static background pages (depth stack) ─────────────── */}
+          {/*  Static background pages (depth stack)  */}
           {[...Array(12)].map((_, index) => (
             <div
               key={`static-${index}`}
@@ -156,7 +156,7 @@ export function BookMockup3D({
             </div>
           ))}
 
-          {/* ── Flipping page strips ───────────────────────────────── */}
+          {/*  Flipping page strips  */}
           {[...Array(NUM_STRIPS)].map((_, index) => {
             const cascadeDelay = index * CASCADE_STEP;
 
@@ -166,17 +166,17 @@ export function BookMockup3D({
                 className="absolute right-0 top-0 bottom-0 pointer-events-none"
                 style={{
                   width: `${50 - index * 3}px`,
-                  // ✅ preserve-3d is REQUIRED for backfaceVisibility to work on children
+                  //  preserve-3d is REQUIRED for backfaceVisibility to work on children
                   transformStyle: 'preserve-3d',
                   transformOrigin: 'left center',
-                  // ✅ NO overflow:hidden here – it collapses the 3D stacking context
+                  //  NO overflow:hidden here  it collapses the 3D stacking context
                   transform: `rotateY(${isFlipping ? 180 : 0}deg) translateZ(${index * 2}px)`,
-                  // ✅ Delay baked into the shorthand so both forward AND back are staggered
+                  //  Delay baked into the shorthand so both forward AND back are staggered
                   transition: `transform ${FLIP_DURATION}ms cubic-bezier(0.4, 0, 0.2, 1) ${cascadeDelay}ms`,
                   zIndex: 20 - index,
                 }}
               >
-                {/* ── Front face (visible at 0°) ── */}
+                {/*  Front face (visible at 0)  */}
                 <div
                   className="absolute inset-0 overflow-hidden"
                   style={{
@@ -188,7 +188,7 @@ export function BookMockup3D({
                   }}
                 >
                   {currentPage && index === 0 ? (
-                    /* ── Scrapbook photo – Polaroid layout ── */
+                    /*  Scrapbook photo  Polaroid layout  */
                     <div className="relative h-full w-full p-2 bg-gradient-to-br from-pink-50 via-white to-amber-50">
                       {/* Washi tape top */}
                       <div
@@ -223,7 +223,7 @@ export function BookMockup3D({
                       <div className="absolute bottom-5 left-3 w-2 h-2 bg-rose-300/80 -rotate-6 rounded-sm" />
                     </div>
                   ) : (
-                    /* ── Plain page ── */
+                    /*  Plain page  */
                     <div
                       className="h-full w-full bg-gradient-to-r from-gray-100 to-white"
                       style={{
@@ -234,13 +234,13 @@ export function BookMockup3D({
                   )}
                 </div>
 
-                {/* ── Back face (visible at 180°) ── */}
+                {/*  Back face (visible at 180)  */}
                 <div
                   className="absolute inset-0 overflow-hidden"
                   style={{
                     backfaceVisibility: 'hidden',
                     WebkitBackfaceVisibility: 'hidden',
-                    // ✅ Must be rotated 180° so it faces the viewer when parent is at 180°
+                    //  Must be rotated 180 so it faces the viewer when parent is at 180
                     transform: 'rotateY(180deg)',
                     background: '#f3f4f6',
                     borderLeft: '2px solid #d1d5db',
@@ -259,7 +259,7 @@ export function BookMockup3D({
             );
           })}
 
-          {/* ── Page curl shadow overlay (only while flipping) ─────── */}
+          {/*  Page curl shadow overlay (only while flipping)  */}
           {isFlipping && (
             <div
               className="absolute right-0 top-0 bottom-0 w-24 pointer-events-none"
@@ -272,7 +272,7 @@ export function BookMockup3D({
           )}
         </div>
 
-        {/* ── Decorative tape ─────────────────────────────────────────── */}
+        {/*  Decorative tape  */}
         <div
           className="absolute -bottom-4 -right-6 w-24 h-12 bg-gradient-to-br from-amber-100 to-amber-200 shadow-md"
           style={{
@@ -287,7 +287,7 @@ export function BookMockup3D({
           </div>
         </div>
 
-        {/* ── Kraft box ───────────────────────────────────────────────── */}
+        {/*  Kraft box  */}
         {showBox && (
           <div
             className="absolute -bottom-8 -right-12 w-28 h-16 bg-gradient-to-br from-amber-700 to-amber-800 shadow-xl rounded-sm"
@@ -309,7 +309,7 @@ export function BookMockup3D({
           </div>
         )}
 
-        {/* ── Top tape ────────────────────────────────────────────────── */}
+        {/*  Top tape  */}
         <div
           className="absolute -top-6 -left-4 w-20 h-10 bg-gradient-to-br from-pink-100 to-rose-200 shadow-md"
           style={{
@@ -324,7 +324,7 @@ export function BookMockup3D({
         </div>
       </div>
 
-      {/* ── Global keyframes ─────────────────────────────────────────── */}
+      {/*  Global keyframes  */}
       <style>{`
         @keyframes curlShadow {
           0%   { opacity: 0; }

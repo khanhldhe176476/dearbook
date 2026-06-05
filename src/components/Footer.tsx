@@ -8,7 +8,7 @@ export function Footer() {
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) return;
-    toast.success('✨ Cảm ơn bạn đã đăng ký nhận bản tin từ dearmemories.!');
+    toast.success(' Cm n bn  ng k nhn bn tin t dearmemories.!');
     setEmail('');
   };
 
@@ -60,7 +60,7 @@ export function Footer() {
             </div>
             
             <p className="text-sm text-[#7A6F66] leading-relaxed font-serif italic pr-4">
-              "Mỗi khoảnh khắc trôi qua đều là duy nhất. Chúng tôi giúp bạn đóng gói thanh xuân và gửi gắm yêu thương vào từng trang sách."
+              "Mi khonh khc tri qua u l duy nht. Chng ti gip bn ng gi thanh xun v gi gm yu thng vo tng trang sch."
             </p>
 
             {/* Social Icons */}
@@ -103,27 +103,27 @@ export function Footer() {
           {/* Column 2: Quick navigation */}
           <div className="space-y-5">
             <h4 className="text-xs uppercase tracking-[0.2em] font-sans font-bold text-[#3B2925]">
-              Khám Phá
+              Khm Ph
             </h4>
             <ul className="space-y-3.5 text-sm text-[#7A6F66] font-serif">
               <li>
                 <a href="#create" className="hover:text-[#B9423A] transition-colors flex items-center gap-1">
-                  Tạo photobook
+                  To photobook
                 </a>
               </li>
               <li>
                 <a href="#templates" className="hover:text-[#B9423A] transition-colors">
-                  Mẫu thiết kế
+                  Mu thit k
                 </a>
               </li>
               <li>
                 <a href="#pricing" className="hover:text-[#B9423A] transition-colors">
-                  Bảng giá dịch vụ
+                  Bng gi dch v
                 </a>
               </li>
               <li>
                 <a href="#blog" className="hover:text-[#B9423A] transition-colors">
-                  Blog truyền cảm hứng
+                  Blog truyn cm hng
                 </a>
               </li>
             </ul>
@@ -132,32 +132,32 @@ export function Footer() {
           {/* Column 3: Customer support */}
           <div className="space-y-5">
             <h4 className="text-xs uppercase tracking-[0.2em] font-sans font-bold text-[#3B2925]">
-              Hỗ Trợ Khách Hàng
+              H Tr Khch Hng
             </h4>
             <ul className="space-y-3.5 text-sm text-[#7A6F66] font-serif">
               <li>
                 <a href="#shipping" className="hover:text-[#B9423A] transition-colors">
-                  Chính sách vận chuyển
+                  Chnh sch vn chuyn
                 </a>
               </li>
               <li>
                 <a href="#returns" className="hover:text-[#B9423A] transition-colors">
-                  Chính sách đổi trả
+                  Chnh sch i tr
                 </a>
               </li>
               <li>
                 <a href="#notes" className="hover:text-[#B9423A] transition-colors">
-                  Lưu ý đặt photobook
+                  Lu  t photobook
                 </a>
               </li>
               <li>
                 <a href="#faq" className="hover:text-[#B9423A] transition-colors">
-                  Câu hỏi thường gặp (FAQ)
+                  Cu hi thng gp (FAQ)
                 </a>
               </li>
               <li>
                 <a href="#support" className="hover:text-[#B9423A] transition-colors">
-                  Liên hệ hỗ trợ 24/7
+                  Lin h h tr 24/7
                 </a>
               </li>
             </ul>
@@ -166,7 +166,7 @@ export function Footer() {
           {/* Column 4: Contact & Newsletter */}
           <div className="space-y-5">
             <h4 className="text-xs uppercase tracking-[0.2em] font-sans font-bold text-[#3B2925]">
-              Kết Nối & Bản Tin
+              Kt Ni & Bn Tin
             </h4>
             
             <div className="space-y-3.5 text-sm text-[#7A6F66] font-serif">
@@ -184,19 +184,19 @@ export function Footer() {
               </p>
               <p className="flex items-start gap-2.5">
                 <Clock className="w-4 h-4 text-[#B9423A] flex-shrink-0 mt-1" />
-                <span>Giờ làm việc: 8:00 - 21:00 hàng ngày</span>
+                <span>Gi lm vic: 8:00 - 21:00 hng ngy</span>
               </p>
             </div>
 
             {/* Newsletter Subscription */}
             <div className="pt-2 flex flex-col gap-2.5">
               <p className="text-[11px] text-[#7A6F66] leading-relaxed">
-                Đăng ký nhận thông tin ưu đãi & cảm hứng thiết kế mới nhất.
+                ng k nhn thng tin u i & cm hng thit k mi nht.
               </p>
               <form onSubmit={handleSubscribe} className="relative flex items-center">
                 <input
                   type="email"
-                  placeholder="Nhập email của bạn..."
+                  placeholder="Nhp email ca bn..."
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full pl-4 pr-12 py-3 rounded-full text-xs outline-none border border-[#e6e1da] bg-white/60 focus:bg-white focus:border-[#B9423A] transition-all"
@@ -216,7 +216,7 @@ export function Footer() {
         {/* Bottom Section */}
         <div className="pt-8 border-t border-[#e6e1da] flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-[#7A6F66] flex items-center gap-1 font-serif">
-            <span>© {new Date().getFullYear()}</span>
+            <span> {new Date().getFullYear()}</span>
             <span className="font-sans font-semibold text-[#3B2925]">dearmemories.</span>
             <span>All rights reserved. Made with</span>
             <Heart className="w-3 h-3 text-[#B9423A] fill-[#B9423A]" />
@@ -224,11 +224,11 @@ export function Footer() {
           
           <div className="flex items-center gap-6 text-xs text-[#7A6F66]">
             <a href="#privacy" className="hover:text-[#B9423A] transition-colors">
-              Chính sách bảo mật
+              Chnh sch bo mt
             </a>
             <span className="text-[#e6e1da]">|</span>
             <a href="#terms" className="hover:text-[#B9423A] transition-colors">
-              Điều khoản dịch vụ
+              iu khon dch v
             </a>
           </div>
         </div>

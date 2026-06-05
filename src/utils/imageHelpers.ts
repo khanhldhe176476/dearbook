@@ -199,7 +199,7 @@ export function validateImageFile(
   if (!allowedFormats.includes(file.type)) {
     return {
       valid: false,
-      error: `Định dạng không hỗ trợ. Chỉ chấp nhận: ${allowedFormats
+      error: `nh dng khng h tr. Ch chp nhn: ${allowedFormats
         .map((f) => f.split('/')[1])
         .join(', ')}`,
     };
@@ -210,7 +210,7 @@ export function validateImageFile(
   if (file.size > maxSizeBytes) {
     return {
       valid: false,
-      error: `Kích thước file quá lớn. Tối đa ${maxSizeMB}MB`,
+      error: `Kch thc file qu ln. Ti a ${maxSizeMB}MB`,
     };
   }
 

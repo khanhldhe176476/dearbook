@@ -5,7 +5,7 @@ export const sampleBooks: BookProject[] = [
   // ========== FAMILY BOOK ==========
   {
     id: 'sample-family-1',
-    title: 'Món Quà Dành Cho Gia Đình',
+    title: 'Mn Qu Dnh Cho Gia nh',
     theme: 'family',
     templateId: 'family-1',
     pageCount: 4,
@@ -19,7 +19,7 @@ export const sampleBooks: BookProject[] = [
         {
           id: '1',
           type: 'text',
-          content: 'Món Quà Dành Cho Gia Đình',
+          content: 'Mn Qu Dnh Cho Gia nh',
           x: 50,
           y: 500,
           width: 700,
@@ -33,7 +33,7 @@ export const sampleBooks: BookProject[] = [
         {
           id: '2',
           type: 'text',
-          content: 'Yêu thương & Gắn kết',
+          content: 'Yu thng & Gn kt',
           x: 50,
           y: 640,
           width: 700,
@@ -56,7 +56,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Lời nhắn gửi',
+            content: 'Li nhn gi',
             x: 50,
             y: 50,
             width: 700,
@@ -70,7 +70,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '2',
             type: 'sticker',
-            content: '❤️',
+            content: '',
             x: 350,
             y: 150,
             width: 100,
@@ -79,7 +79,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '3',
             type: 'text',
-            content: 'Cảm ơn ba mẹ đã luôn bên cạnh, yêu thương và chăm sóc con.',
+            content: 'Cm n ba m  lun bn cnh, yu thng v chm sc con.',
             x: 80,
             y: 300,
             width: 640,
@@ -101,7 +101,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Bữa cơm gia đình',
+            content: 'Ba cm gia nh',
             x: 50,
             y: 80,
             width: 700,
@@ -115,7 +115,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '2',
             type: 'text',
-            content: 'Món ăn ngon nhất là bữa cơm ấm cúng bên gia đình.',
+            content: 'Mn n ngon nht l ba cm m cng bn gia nh.',
             x: 80,
             y: 550,
             width: 640,
@@ -137,7 +137,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Tình mẫu tử',
+            content: 'Tnh mu t',
             x: 50,
             y: 80,
             width: 700,
@@ -151,7 +151,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '2',
             type: 'text',
-            content: 'Mẹ là người phụ nữ đầu tiên con yêu, là tấm gương sáng.',
+            content: 'M l ngi ph n u tin con yu, l tm gng sng.',
             x: 80,
             y: 550,
             width: 640,
@@ -172,7 +172,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Những kỷ niệm đẹp',
+            content: 'Nhng k nim p',
             x: 50,
             y: 200,
             width: 700,
@@ -186,7 +186,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '2',
             type: 'sticker',
-            content: '🌟',
+            content: '',
             x: 150,
             y: 320,
             width: 80,
@@ -195,7 +195,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '3',
             type: 'sticker',
-            content: '🏠',
+            content: '',
             x: 570,
             y: 320,
             width: 80,
@@ -204,7 +204,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '4',
             type: 'text',
-            content: 'Mỗi khoảnh khắc bên gia đình đều là món quà quý giá nhất trong cuộc đời.',
+            content: 'Mi khonh khc bn gia nh u l mn qu qu gi nht trong cuc i.',
             x: 80,
             y: 450,
             width: 640,
@@ -223,7 +223,7 @@ export const sampleBooks: BookProject[] = [
   // ========== FRIENDS BOOK ==========
   {
     id: 'sample-friends-1',
-    title: 'Chuyến Đi Cùng Bạn',
+    title: 'Chuyn i Cng Bn',
     theme: 'friends',
     templateId: 'friends-1',
     pageCount: 4,
@@ -237,7 +237,7 @@ export const sampleBooks: BookProject[] = [
         {
           id: '1',
           type: 'text',
-          content: 'Chuyến Đi Cùng Bạn',
+          content: 'Chuyn i Cng Bn',
           x: 50,
           y: 500,
           width: 700,
@@ -251,7 +251,7 @@ export const sampleBooks: BookProject[] = [
         {
           id: '2',
           type: 'text',
-          content: 'Những kỷ niệm không thể quên',
+          content: 'Nhng k nim khng th qun',
           x: 50,
           y: 620,
           width: 700,
@@ -274,7 +274,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Cùng nhau khám phá',
+            content: 'Cng nhau khm ph',
             x: 50,
             y: 50,
             width: 700,
@@ -288,7 +288,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '2',
             type: 'text',
-            content: 'Mỗi chuyến đi với bạn bè là một cuộc phiêu lưu đầy thú vị.',
+            content: 'Mi chuyn i vi bn b l mt cuc phiu lu y th v.',
             x: 80,
             y: 550,
             width: 640,
@@ -310,7 +310,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Tiếng cười sảng khoái',
+            content: 'Ting ci sng khoi',
             x: 50,
             y: 80,
             width: 700,
@@ -324,7 +324,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '2',
             type: 'sticker',
-            content: '😄',
+            content: '',
             x: 350,
             y: 200,
             width: 100,
@@ -333,7 +333,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '3',
             type: 'text',
-            content: 'Những lúc cười đùa với bạn bè là những khoảnh khắc hạnh phúc nhất.',
+            content: 'Nhng lc ci a vi bn b l nhng khonh khc hnh phc nht.',
             x: 80,
             y: 520,
             width: 640,
@@ -354,7 +354,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Tình bạn mãi mãi',
+            content: 'Tnh bn mi mi',
             x: 50,
             y: 200,
             width: 700,
@@ -368,7 +368,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '2',
             type: 'sticker',
-            content: '🤝',
+            content: '',
             x: 350,
             y: 320,
             width: 100,
@@ -377,7 +377,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '3',
             type: 'text',
-            content: 'Tình bạn đích thực không đo bằng thời gian, mà đo bằng tình cảm.',
+            content: 'Tnh bn ch thc khng o bng thi gian, m o bng tnh cm.',
             x: 80,
             y: 460,
             width: 640,
@@ -398,7 +398,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Cảm ơn vì đã là bạn',
+            content: 'Cm n v  l bn',
             x: 50,
             y: 250,
             width: 700,
@@ -412,7 +412,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '2',
             type: 'sticker',
-            content: '💖',
+            content: '',
             x: 200,
             y: 400,
             width: 80,
@@ -421,7 +421,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '3',
             type: 'sticker',
-            content: '🎉',
+            content: '',
             x: 520,
             y: 400,
             width: 80,
@@ -463,7 +463,7 @@ export const sampleBooks: BookProject[] = [
         {
           id: '2',
           type: 'text',
-          content: 'Dành tặng người em yêu',
+          content: 'Dnh tng ngi em yu',
           x: 50,
           y: 640,
           width: 700,
@@ -486,7 +486,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Lời nhắn yêu thương',
+            content: 'Li nhn yu thng',
             x: 50,
             y: 50,
             width: 700,
@@ -500,7 +500,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '2',
             type: 'sticker',
-            content: '💕',
+            content: '',
             x: 350,
             y: 160,
             width: 100,
@@ -509,7 +509,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '3',
             type: 'text',
-            content: 'Anh yêu em không chỉ vì những gì em là, mà còn vì những gì anh trở thành khi ở bên em.',
+            content: 'Anh yu em khng ch v nhng g em l, m cn v nhng g anh tr thnh khi  bn em.',
             x: 80,
             y: 500,
             width: 640,
@@ -531,7 +531,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Bên nhau mãi mãi',
+            content: 'Bn nhau mi mi',
             x: 50,
             y: 80,
             width: 700,
@@ -545,7 +545,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '2',
             type: 'text',
-            content: 'Cùng nhau viết nên câu chuyện tình yêu của riêng chúng ta.',
+            content: 'Cng nhau vit nn cu chuyn tnh yu ca ring chng ta.',
             x: 80,
             y: 550,
             width: 640,
@@ -566,7 +566,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Khoảnh khắc đặc biệt',
+            content: 'Khonh khc c bit',
             x: 50,
             y: 200,
             width: 700,
@@ -580,7 +580,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '2',
             type: 'sticker',
-            content: '❤️',
+            content: '',
             x: 250,
             y: 320,
             width: 90,
@@ -589,7 +589,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '3',
             type: 'sticker',
-            content: '💑',
+            content: '',
             x: 460,
             y: 320,
             width: 90,
@@ -598,7 +598,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '4',
             type: 'text',
-            content: 'Mỗi giây phút bên em đều là điều kỳ diệu với anh.',
+            content: 'Mi giy pht bn em u l iu k diu vi anh.',
             x: 80,
             y: 470,
             width: 640,
@@ -633,7 +633,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '2',
             type: 'sticker',
-            content: '💖',
+            content: '',
             x: 350,
             y: 420,
             width: 100,
@@ -647,7 +647,7 @@ export const sampleBooks: BookProject[] = [
   // ========== MEMORIES BOOK ==========
   {
     id: 'sample-memories-1',
-    title: 'Ký Ức Tươi Đẹp',
+    title: 'K c Ti p',
     theme: 'memories',
     templateId: 'memories-1',
     pageCount: 4,
@@ -661,7 +661,7 @@ export const sampleBooks: BookProject[] = [
         {
           id: '1',
           type: 'text',
-          content: 'Ký Ức Tươi Đẹp',
+          content: 'K c Ti p',
           x: 50,
           y: 500,
           width: 700,
@@ -675,7 +675,7 @@ export const sampleBooks: BookProject[] = [
         {
           id: '2',
           type: 'text',
-          content: 'Những khoảnh khắc đáng nhớ',
+          content: 'Nhng khonh khc ng nh',
           x: 50,
           y: 620,
           width: 700,
@@ -698,7 +698,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Những ngày xưa',
+            content: 'Nhng ngy xa',
             x: 50,
             y: 50,
             width: 700,
@@ -712,7 +712,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '2',
             type: 'sticker',
-            content: '📸',
+            content: '',
             x: 350,
             y: 160,
             width: 100,
@@ -721,7 +721,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '3',
             type: 'text',
-            content: 'Mỗi bức ảnh là một câu chuyện, mỗi kỷ niệm là một món quà.',
+            content: 'Mi bc nh l mt cu chuyn, mi k nim l mt mn qu.',
             x: 80,
             y: 520,
             width: 640,
@@ -742,7 +742,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Thời gian trôi',
+            content: 'Thi gian tri',
             x: 50,
             y: 200,
             width: 700,
@@ -756,7 +756,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '2',
             type: 'sticker',
-            content: '⏰',
+            content: '',
             x: 200,
             y: 320,
             width: 80,
@@ -765,7 +765,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '3',
             type: 'sticker',
-            content: '🌈',
+            content: '',
             x: 520,
             y: 320,
             width: 80,
@@ -774,7 +774,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '4',
             type: 'text',
-            content: 'Thời gian trôi qua nhưng kỷ niệm mãi trong tim.',
+            content: 'Thi gian tri qua nhng k nim mi trong tim.',
             x: 80,
             y: 460,
             width: 640,
@@ -795,7 +795,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Quãng đường đã qua',
+            content: 'Qung ng  qua',
             x: 50,
             y: 220,
             width: 700,
@@ -809,7 +809,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '2',
             type: 'sticker',
-            content: '🛤️',
+            content: '',
             x: 350,
             y: 340,
             width: 100,
@@ -818,7 +818,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '3',
             type: 'text',
-            content: 'Mỗi bước chân là một dấu ấn, mỗi khoảnh khắc là một kỷ niệm.',
+            content: 'Mi bc chn l mt du n, mi khonh khc l mt k nim.',
             x: 80,
             y: 490,
             width: 640,
@@ -839,7 +839,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '1',
             type: 'text',
-            content: 'Trân trọng từng phút giây',
+            content: 'Trn trng tng pht giy',
             x: 50,
             y: 270,
             width: 700,
@@ -853,7 +853,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '2',
             type: 'sticker',
-            content: '✨',
+            content: '',
             x: 250,
             y: 410,
             width: 80,
@@ -862,7 +862,7 @@ export const sampleBooks: BookProject[] = [
           {
             id: '3',
             type: 'sticker',
-            content: '💫',
+            content: '',
             x: 470,
             y: 410,
             width: 80,

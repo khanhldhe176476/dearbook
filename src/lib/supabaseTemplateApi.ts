@@ -11,7 +11,7 @@ export interface BookTemplate {
   created_at?: string;
 }
 
-/** Mapped shape dùng cho UI */
+/** Mapped shape dng cho UI */
 export interface BookTemplateUI {
   id: string;
   title: string;         // <- name
@@ -21,17 +21,17 @@ export interface BookTemplateUI {
   categoryId?: string;
 }
 
-/** Dữ liệu mẫu fallback khi Supabase lỗi permission */
+/** D liu mu fallback khi Supabase li permission */
 const FALLBACK_TEMPLATES_UI: BookTemplateUI[] = [
-  { id: 'template-love-1', title: 'Tình Yêu Mãi Mãi', description: 'Mẫu sách lãng mạn dành cho các cặp đôi.', coverImageUrl: '', price: 299000 },
-  { id: 'template-family-1', title: 'Ký Ức Gia Đình', description: 'Cuốn sách ảnh gia đình ấm áp.', coverImageUrl: '', price: 349000 },
-  { id: 'template-birthday-1', title: 'Sinh Nhật Đặc Biệt', description: 'Tặng người thân món quà ý nghĩa.', coverImageUrl: '', price: 249000 },
-  { id: 'template-wedding-1', title: 'Ngày Cưới Hạnh Phúc', description: 'Album cưới cao cấp.', coverImageUrl: '', price: 499000 },
-  { id: 'template-travel-1', title: 'Hành Trình Khám Phá', description: 'Ghi lại những chuyến du lịch đáng nhớ.', coverImageUrl: '', price: 299000 },
-  { id: 'template-kids-1', title: 'Tuổi Thơ Tươi Đẹp', description: 'Sách ảnh dành cho bé.', coverImageUrl: '', price: 279000 },
+  { id: 'template-love-1', title: 'Tnh Yu Mi Mi', description: 'Mu sch lng mn dnh cho cc cp i.', coverImageUrl: '', price: 299000 },
+  { id: 'template-family-1', title: 'K c Gia nh', description: 'Cun sch nh gia nh m p.', coverImageUrl: '', price: 349000 },
+  { id: 'template-birthday-1', title: 'Sinh Nht c Bit', description: 'Tng ngi thn mn qu  ngha.', coverImageUrl: '', price: 249000 },
+  { id: 'template-wedding-1', title: 'Ngy Ci Hnh Phc', description: 'Album ci cao cp.', coverImageUrl: '', price: 499000 },
+  { id: 'template-travel-1', title: 'Hnh Trnh Khm Ph', description: 'Ghi li nhng chuyn du lch ng nh.', coverImageUrl: '', price: 299000 },
+  { id: 'template-kids-1', title: 'Tui Th Ti p', description: 'Sch nh dnh cho b.', coverImageUrl: '', price: 279000 },
 ];
 
-/** Lấy tất cả template đang active (is_active = true) */
+/** Ly tt c template ang active (is_active = true) */
 export async function fetchActiveBookTemplates(): Promise<BookTemplateUI[]> {
   try {
     const { data, error } = await supabase
@@ -41,14 +41,14 @@ export async function fetchActiveBookTemplates(): Promise<BookTemplateUI[]> {
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.warn('⚠️ fetchActiveBookTemplates error – dùng fallback:', error.message);
+      console.warn(' fetchActiveBookTemplates error  dng fallback:', error.message);
       return FALLBACK_TEMPLATES_UI;
     }
 
-    console.log('📦 Supabase book_templates raw data:', data);
+    console.log(' Supabase book_templates raw data:', data);
 
     if (!data || data.length === 0) {
-      console.warn('⚠️ Không có dữ liệu từ Supabase – dùng fallback templates.');
+      console.warn(' Khng c d liu t Supabase  dng fallback templates.');
       return FALLBACK_TEMPLATES_UI;
     }
 
@@ -61,10 +61,10 @@ export async function fetchActiveBookTemplates(): Promise<BookTemplateUI[]> {
       categoryId: row.category_id,
     }));
 
-    console.log('✅ Mapped BookTemplateUI[]:', mapped);
+    console.log(' Mapped BookTemplateUI[]:', mapped);
     return mapped;
   } catch (err: any) {
-    console.warn('⚠️ fetchActiveBookTemplates exception – dùng fallback:', err?.message);
+    console.warn(' fetchActiveBookTemplates exception  dng fallback:', err?.message);
     return FALLBACK_TEMPLATES_UI;
   }
 }

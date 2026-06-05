@@ -2,21 +2,21 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 
 /**
- * Kiểu dữ liệu map từ bảng book_templates trong Supabase
+ * Kiu d liu map t bng book_templates trong Supabase
  */
 export interface BookTemplate {
   id: string;
-  /** Tên hiển thị của mẫu sách */
+  /** Tn hin th ca mu sch */
   name: string;
-  /** Mô tả ngắn */
+  /** M t ngn */
   description: string | null;
-  /** URL ảnh bìa */
+  /** URL nh ba */
   cover_image_url: string | null;
-  /** Giá (VNĐ) */
+  /** Gi (VN) */
   price: number | null;
-  /** Chỉ hiển thị template đang active */
+  /** Ch hin th template ang active */
   is_active: boolean;
-  /** Các trường phụ có thể có */
+  /** Cc trng ph c th c */
   theme?: string | null;
   badge?: string | null;
   page_count?: number | null;
@@ -39,7 +39,7 @@ export function useBookTemplates(): UseBookTemplatesResult {
     setError(null);
 
     try {
-      console.log('📡 Fetching book_templates from Supabase...');
+      console.log(' Fetching book_templates from Supabase...');
 
       const { data, error: sbError } = await supabase
         .from('book_templates')
@@ -51,23 +51,23 @@ export function useBookTemplates(): UseBookTemplatesResult {
         throw sbError;
       }
 
-      console.log('✅ book_templates data from Supabase:', data);
-      // Nếu Supabase trả về mảng rỗng, dùng fallback
+      console.log(' book_templates data from Supabase:', data);
+      // Nu Supabase tr v mng rng, dng fallback
       setTemplates(data && data.length > 0 ? data : FALLBACK_TEMPLATES);
     } catch (err: any) {
-      console.error('❌ Error fetching book_templates:', err);
-      // Nếu lỗi permission (RLS chưa được cấu hình), dùng fallback data
+      console.error(' Error fetching book_templates:', err);
+      // Nu li permission (RLS cha c cu hnh), dng fallback data
       if (
         err?.code === '42501' ||
         err?.message?.includes('permission denied') ||
         err?.message?.includes('row-level security')
       ) {
-        console.warn('⚠️ RLS permission error – sử dụng dữ liệu mẫu tạm thời.');
+        console.warn(' RLS permission error  s dng d liu mu tm thi.');
         setTemplates(FALLBACK_TEMPLATES);
         setError(null);
       } else {
-        // Lỗi khác cũng dùng fallback để UI không bị trắng
-        console.warn('⚠️ Lỗi Supabase – dùng dữ liệu mẫu:', err?.message);
+        // Li khc cng dng fallback  UI khng b trng
+        console.warn(' Li Supabase  dng d liu mu:', err?.message);
         setTemplates(FALLBACK_TEMPLATES);
         setError(null);
       }
@@ -83,34 +83,34 @@ export function useBookTemplates(): UseBookTemplatesResult {
   return { templates, loading, error, refetch: fetchTemplates };
 }
 
-/** Dữ liệu mẫu dùng khi Supabase chưa cấu hình RLS policy */
+/** D liu mu dng khi Supabase cha cu hnh RLS policy */
 const FALLBACK_TEMPLATES: BookTemplate[] = [
   {
     id: 'template-love-1',
-    name: 'Tình Yêu Mãi Mãi',
-    description: 'Mẫu sách lãng mạn dành cho các cặp đôi, lưu giữ những kỷ niệm đẹp nhất.',
+    name: 'Tnh Yu Mi Mi',
+    description: 'Mu sch lng mn dnh cho cc cp i, lu gi nhng k nim p nht.',
     cover_image_url: '/tinh-yeu/firrst-love/aa.png',
     price: 299000,
     is_active: true,
     theme: 'romantic',
-    badge: 'Phổ biến',
+    badge: 'Ph bin',
     page_count: 20,
   },
   {
     id: 'template-family-1',
-    name: 'Ký Ức Gia Đình',
-    description: 'Cuốn sách ảnh gia đình ấm áp, ghi lại những khoảnh khắc quý giá bên nhau.',
+    name: 'K c Gia nh',
+    description: 'Cun sch nh gia nh m p, ghi li nhng khonh khc qu gi bn nhau.',
     cover_image_url: '/ca-nhan/dust-soul/aa.png',
     price: 349000,
     is_active: true,
     theme: 'family',
-    badge: 'Mới',
+    badge: 'Mi',
     page_count: 24,
   },
   {
     id: 'template-birthday-1',
-    name: 'Sinh Nhật Đặc Biệt',
-    description: 'Tặng người thân món quà ý nghĩa nhân ngày sinh nhật với những lời chúc yêu thương.',
+    name: 'Sinh Nht c Bit',
+    description: 'Tng ngi thn mn qu  ngha nhn ngy sinh nht vi nhng li chc yu thng.',
     cover_image_url: '/ca-nhan/dust-soul/aatbio_com_image_export_May_23_2026%20(1).png',
     price: 249000,
     is_active: true,
@@ -120,8 +120,8 @@ const FALLBACK_TEMPLATES: BookTemplate[] = [
   },
   {
     id: 'template-travel-1',
-    name: 'Hành Trình Khám Phá',
-    description: 'Ghi lại những chuyến du lịch đáng nhớ với bạn bè và gia đình.',
+    name: 'Hnh Trnh Khm Ph',
+    description: 'Ghi li nhng chuyn du lch ng nh vi bn b v gia nh.',
     cover_image_url: '/ban-be/vintage-style/aatbio_com_image_export_May_21_2026%20(1).png',
     price: 299000,
     is_active: true,
@@ -131,8 +131,8 @@ const FALLBACK_TEMPLATES: BookTemplate[] = [
   },
   {
     id: 'template-wedding-1',
-    name: 'Ngày Cưới Hạnh Phúc',
-    description: 'Album cưới cao cấp lưu giữ những khoảnh khắc thiêng liêng nhất trong cuộc đời.',
+    name: 'Ngy Ci Hnh Phc',
+    description: 'Album ci cao cp lu gi nhng khonh khc thing ling nht trong cuc i.',
     cover_image_url: '/tinh-yeu/firrst-love/aatbio_com_image_export_May_31_2026%20(1).png',
     price: 499000,
     is_active: true,
@@ -142,8 +142,8 @@ const FALLBACK_TEMPLATES: BookTemplate[] = [
   },
   {
     id: 'template-kids-1',
-    name: 'Tuổi Thơ Tươi Đẹp',
-    description: 'Sách ảnh dành cho bé, ghi lại từng bước trưởng thành đáng yêu.',
+    name: 'Tui Th Ti p',
+    description: 'Sch nh dnh cho b, ghi li tng bc trng thnh ng yu.',
     cover_image_url: '/ban-be/xanh-la-khong-xa-lanh/aa.png',
     price: 279000,
     is_active: true,

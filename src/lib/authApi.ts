@@ -7,14 +7,14 @@ export interface AuthUser {
   avatarUrl?: string;
 }
 
-/** Đăng ký tài khoản mới bằng email/password */
+/** ng k ti khon mi bng email/password */
 export async function signUpWithEmail(
   email: string,
   password: string,
   fullName: string
 ): Promise<AuthUser> {
   if (!supabase) {
-    console.warn('⚠️ Supabase client not initialized. Falling back to Demo Mode.');
+    console.warn(' Supabase client not initialized. Falling back to Demo Mode.');
     return {
       id: 'demo-user-id',
       email,
@@ -22,27 +22,27 @@ export async function signUpWithEmail(
       avatarUrl: undefined,
     };
   }
-  // 1. Tạo tài khoản trong Supabase Auth
+  // 1. To ti khon trong Supabase Auth
   const { data: authData, error: authError } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      data: { full_name: fullName }, // metadata lưu trong auth.users
+      data: { full_name: fullName }, // metadata lu trong auth.users
     },
   });
 
   if (authError) {
-    console.error('❌ signUp error:', authError);
+    console.error(' signUp error:', authError);
     let msg = authError.message;
-    if (msg.includes('already registered')) msg = 'Email này đã được đăng ký. Vui lòng đăng nhập.';
-    if (msg.includes('Password should be at least 6 characters')) msg = 'Mật khẩu phải có ít nhất 6 ký tự.';
+    if (msg.includes('already registered')) msg = 'Email ny  c ng k. Vui lng ng nhp.';
+    if (msg.includes('Password should be at least 6 characters')) msg = 'Mt khu phi c t nht 6 k t.';
     throw new Error(msg);
   }
 
   const userId = authData.user?.id;
-  if (!userId) throw new Error('Không lấy được user ID sau khi đăng ký');
+  if (!userId) throw new Error('Khng ly c user ID sau khi ng k');
 
-  console.log('✅ Supabase Auth signUp OK, userId:', userId);
+  console.log(' Supabase Auth signUp OK, userId:', userId);
 
   return {
     id: userId,
@@ -52,14 +52,14 @@ export async function signUpWithEmail(
   };
 }
 
-/** Xác minh mã OTP sau khi đăng ký */
+/** Xc minh m OTP sau khi ng k */
 export async function verifySignupOTP(
   email: string,
   token: string,
   fullName: string
 ): Promise<AuthUser> {
   if (!supabase) {
-    console.warn('⚠️ Supabase client not initialized. Falling back to Demo Mode.');
+    console.warn(' Supabase client not initialized. Falling back to Demo Mode.');
     return {
       id: 'demo-user-id',
       email,
@@ -67,24 +67,24 @@ export async function verifySignupOTP(
       avatarUrl: undefined,
     };
   }
-  // 1. Đảm bảo OTP không có khoảng trắng và đúng định dạng
+  // 1. m bo OTP khng c khong trng v ng nh dng
   const cleanOtp = token.trim();
   if (!/^\d{6,10}$/.test(cleanOtp)) {
-    throw new Error('Mã OTP không hợp lệ, vui lòng nhập từ 6 đến 10 chữ số.');
+    throw new Error('M OTP khng hp l, vui lng nhp t 6 n 10 ch s.');
   }
 
 
 
-  // 2. Xác thực OTP với Supabase
+  // 2. Xc thc OTP vi Supabase
   let verifyResult = await supabase.auth.verifyOtp({
     email,
     token: cleanOtp,
     type: 'signup',
   });
 
-  // Fallback 1: Nếu signup bị lỗi, thử lại bằng type: 'email' (Numeric OTP chuẩn)
+  // Fallback 1: Nu signup b li, th li bng type: 'email' (Numeric OTP chun)
   if (verifyResult.error) {
-    console.warn('⚠️ verifyOtp with type: signup failed, trying fallback type: email...', verifyResult.error.message);
+    console.warn(' verifyOtp with type: signup failed, trying fallback type: email...', verifyResult.error.message);
     const fallbackResult = await supabase.auth.verifyOtp({
       email,
       token: cleanOtp,
@@ -92,13 +92,13 @@ export async function verifySignupOTP(
     });
     if (!fallbackResult.error) {
       verifyResult = fallbackResult;
-      console.log('✅ Fallback with type: email succeeded!');
+      console.log(' Fallback with type: email succeeded!');
     }
   }
 
-  // Fallback 2: Nếu vẫn bị lỗi, thử lại bằng type: 'magiclink'
+  // Fallback 2: Nu vn b li, th li bng type: 'magiclink'
   if (verifyResult.error) {
-    console.warn('⚠️ verifyOtp with type: email failed, trying fallback type: magiclink...', verifyResult.error.message);
+    console.warn(' verifyOtp with type: email failed, trying fallback type: magiclink...', verifyResult.error.message);
     const fallbackResult2 = await supabase.auth.verifyOtp({
       email,
       token: cleanOtp,
@@ -106,26 +106,26 @@ export async function verifySignupOTP(
     });
     if (!fallbackResult2.error) {
       verifyResult = fallbackResult2;
-      console.log('✅ Fallback with type: magiclink succeeded!');
+      console.log(' Fallback with type: magiclink succeeded!');
     }
   }
 
   const { data, error } = verifyResult;
 
   if (error) {
-    console.error('❌ verifyOtp error after fallbacks:', error);
+    console.error(' verifyOtp error after fallbacks:', error);
     let msg = error.message;
-    if (msg.includes('Token has expired') || msg.includes('expired')) msg = 'Mã OTP đã hết hạn. Vui lòng bấm gửi lại.';
-    if (msg.includes('Invalid token') || msg.includes('invalid')) msg = 'Mã OTP không chính xác hoặc đã hết hạn. Vui lòng nhập lại.';
+    if (msg.includes('Token has expired') || msg.includes('expired')) msg = 'M OTP  ht hn. Vui lng bm gi li.';
+    if (msg.includes('Invalid token') || msg.includes('invalid')) msg = 'M OTP khng chnh xc hoc  ht hn. Vui lng nhp li.';
     throw new Error(msg);
   }
 
   const user = data.user;
-  if (!user) throw new Error('Không lấy được thông tin user sau khi xác thực OTP');
+  if (!user) throw new Error('Khng ly c thng tin user sau khi xc thc OTP');
 
-  console.log('✅ OTP Verification OK, user:', user.email);
+  console.log(' OTP Verification OK, user:', user.email);
 
-  // 3. Insert vào bảng profiles sau khi tài khoản được xác minh
+  // 3. Insert vo bng profiles sau khi ti khon c xc minh
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .upsert(
@@ -141,7 +141,7 @@ export async function verifySignupOTP(
     .single();
 
   if (profileError) {
-    console.warn('⚠️ Could not insert profile on OTP verify:', profileError.message);
+    console.warn(' Could not insert profile on OTP verify:', profileError.message);
   }
 
   return {
@@ -152,13 +152,13 @@ export async function verifySignupOTP(
   };
 }
 
-/** Đăng nhập bằng email/password */
+/** ng nhp bng email/password */
 export async function signInWithEmail(
   email: string,
   password: string
 ): Promise<AuthUser> {
   if (!supabase) {
-    console.warn('⚠️ Supabase client not initialized. Falling back to Demo Mode.');
+    console.warn(' Supabase client not initialized. Falling back to Demo Mode.');
     return {
       id: 'demo-user-id',
       email: email,
@@ -172,19 +172,19 @@ export async function signInWithEmail(
   });
 
   if (error) {
-    console.error('❌ signIn error:', error);
+    console.error(' signIn error:', error);
     let msg = error.message;
-    if (msg.includes('Invalid login credentials')) msg = 'Email hoặc mật khẩu không chính xác.';
-    if (msg.includes('Email not confirmed')) msg = 'Vui lòng xác nhận email trước khi đăng nhập.';
+    if (msg.includes('Invalid login credentials')) msg = 'Email hoc mt khu khng chnh xc.';
+    if (msg.includes('Email not confirmed')) msg = 'Vui lng xc nhn email trc khi ng nhp.';
     throw new Error(msg);
   }
 
   const user = data.user;
-  if (!user) throw new Error('Không lấy được thông tin user');
+  if (!user) throw new Error('Khng ly c thng tin user');
 
-  console.log('✅ Supabase Auth signIn OK:', user.email);
+  console.log(' Supabase Auth signIn OK:', user.email);
 
-  // Lấy profile từ bảng profiles
+  // Ly profile t bng profiles
   const { data: profile } = await supabase
     .from('profiles')
     .select('full_name, avatar_url')
@@ -199,7 +199,7 @@ export async function signInWithEmail(
   };
 }
 
-/** Lấy session hiện tại nếu có */
+/** Ly session hin ti nu c */
 export async function getCurrentSession(): Promise<AuthUser | null> {
   if (!supabase) return null;
   const { data: { session } } = await supabase.auth.getSession();
@@ -220,7 +220,7 @@ export async function getCurrentSession(): Promise<AuthUser | null> {
   };
 }
 
-/** Đăng xuất */
+/** ng xut */
 export async function signOut(): Promise<void> {
   if (!supabase) return;
   await supabase.auth.signOut();

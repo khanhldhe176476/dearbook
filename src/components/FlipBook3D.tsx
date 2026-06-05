@@ -33,7 +33,7 @@ export function FlipBook3D({ autoFlipInterval = 3500, theme = 'love' }: FlipBook
           <div className="relative space-y-6 text-center">
             <Heart className="w-20 h-20 text-white mx-auto drop-shadow-lg animate-pulse" />
             <h2 className="font-handwriting text-6xl text-white drop-shadow-xl">Our Love Story</h2>
-            <p className="text-white text-lg italic drop-shadow-md">Những kỷ niệm đẹp nhất</p>
+            <p className="text-white text-lg italic drop-shadow-md">Nhng k nim p nht</p>
           </div>
         </div>
       ),
@@ -44,13 +44,13 @@ export function FlipBook3D({ autoFlipInterval = 3500, theme = 'love' }: FlipBook
               <div className="text-center space-y-3">
                 <h3 className="font-handwriting text-4xl text-rose-600">Dear My Love,</h3>
                 <p className="text-sm text-gray-700 italic leading-relaxed">
-                  "Trong tất cả những khoảnh khắc của cuộc đời, những khoảnh khắc bên em là quý giá nhất..."
+                  "Trong tt c nhng khonh khc ca cuc i, nhng khonh khc bn em l qu gi nht..."
                 </p>
               </div>
               <div className="mt-6 space-y-3 text-sm text-gray-700">
-                <p>✨ Lần đầu gặp em, anh biết ngay đó là định mệnh</p>
-                <p>💕 Mỗi ngày bên em đều là món quà</p>
-                <p>🌹 Em là lý do anh mỉm cười mỗi sáng thức dậy</p>
+                <p> Ln u gp em, anh bit ngay  l nh mnh</p>
+                <p> Mi ngy bn em u l mn qu</p>
+                <p> Em l l do anh mm ci mi sng thc dy</p>
               </div>
             </div>
             <div className="flex justify-end items-center gap-2">
@@ -67,7 +67,7 @@ export function FlipBook3D({ autoFlipInterval = 3500, theme = 'love' }: FlipBook
         <div className="h-full bg-gradient-to-br from-pink-50 to-rose-50 p-4">
           <div className="h-full flex flex-col justify-between">
             <div>
-              <h3 className="font-handwriting text-3xl text-rose-700 mb-4 text-center">Khoảnh khắc đầu tiên</h3>
+              <h3 className="font-handwriting text-3xl text-rose-700 mb-4 text-center">Khonh khc u tin</h3>
               <div className="grid grid-cols-2 gap-3">
                 <div className="relative aspect-square rounded-lg overflow-hidden shadow-md transform -rotate-2 bg-white p-2">
                   <img 
@@ -75,7 +75,7 @@ export function FlipBook3D({ autoFlipInterval = 3500, theme = 'love' }: FlipBook
                     className="w-full h-full object-cover rounded"
                     alt="Coffee date"
                   />
-                  <p className="font-handwriting text-xs text-gray-600 mt-1 text-center">Coffee date ♡</p>
+                  <p className="font-handwriting text-xs text-gray-600 mt-1 text-center">Coffee date </p>
                 </div>
                 <div className="relative aspect-square rounded-lg overflow-hidden shadow-md transform rotate-3 bg-white p-2">
                   <img 
@@ -83,7 +83,7 @@ export function FlipBook3D({ autoFlipInterval = 3500, theme = 'love' }: FlipBook
                     className="w-full h-full object-cover rounded"
                     alt="Hugging"
                   />
-                  <p className="font-handwriting text-xs text-gray-600 mt-1 text-center">Warm hug ♡</p>
+                  <p className="font-handwriting text-xs text-gray-600 mt-1 text-center">Warm hug </p>
                 </div>
                 <div className="relative aspect-square rounded-lg overflow-hidden shadow-md transform rotate-1 bg-white p-2">
                   <img 
@@ -91,7 +91,7 @@ export function FlipBook3D({ autoFlipInterval = 3500, theme = 'love' }: FlipBook
                     className="w-full h-full object-cover rounded"
                     alt="Walking together"
                   />
-                  <p className="font-handwriting text-xs text-gray-600 mt-1 text-center">City walk ♡</p>
+                  <p className="font-handwriting text-xs text-gray-600 mt-1 text-center">City walk </p>
                 </div>
                 <div className="relative aspect-square rounded-lg overflow-hidden shadow-md transform -rotate-3 bg-white p-2">
                   <img 
@@ -99,7 +99,7 @@ export function FlipBook3D({ autoFlipInterval = 3500, theme = 'love' }: FlipBook
                     className="w-full h-full object-cover rounded"
                     alt="Picnic"
                   />
-                  <p className="font-handwriting text-xs text-gray-600 mt-1 text-center">Picnic day ♡</p>
+                  <p className="font-handwriting text-xs text-gray-600 mt-1 text-center">Picnic day </p>
                 </div>
               </div>
             </div>
@@ -114,31 +114,31 @@ export function FlipBook3D({ autoFlipInterval = 3500, theme = 'love' }: FlipBook
         <div className="h-full bg-white p-6">
           <div className="h-full flex flex-col justify-between">
             <div className="space-y-4">
-              <h3 className="font-handwriting text-3xl text-purple-700 text-center">Những điều anh yêu ở em</h3>
+              <h3 className="font-handwriting text-3xl text-purple-700 text-center">Nhng iu anh yu  em</h3>
               <div className="space-y-3 text-sm text-gray-700">
                 <div className="flex items-start gap-2">
-                  <span className="text-rose-500 text-lg">♥</span>
-                  <p>Nụ cười tươi như hoa của em mỗi sáng</p>
+                  <span className="text-rose-500 text-lg"></span>
+                  <p>N ci ti nh hoa ca em mi sng</p>
                 </div>
                 <div className="flex items-start gap-2">
-                  <span className="text-pink-500 text-lg">♥</span>
-                  <p>Cách em quan tâm anh từng li từng tí</p>
+                  <span className="text-pink-500 text-lg"></span>
+                  <p>Cch em quan tm anh tng li tng t</p>
                 </div>
                 <div className="flex items-start gap-2">
-                  <span className="text-red-500 text-lg">♥</span>
-                  <p>Giọng nói ngọt ngào khi gọi tên anh</p>
+                  <span className="text-red-500 text-lg"></span>
+                  <p>Ging ni ngt ngo khi gi tn anh</p>
                 </div>
                 <div className="flex items-start gap-2">
-                  <span className="text-rose-500 text-lg">♥</span>
-                  <p>Sự dịu dàng và kiên nhẫn của em</p>
+                  <span className="text-rose-500 text-lg"></span>
+                  <p>S du dng v kin nhn ca em</p>
                 </div>
                 <div className="flex items-start gap-2">
-                  <span className="text-pink-500 text-lg">♥</span>
-                  <p>Tất cả mọi thứ ở em đều hoàn hảo</p>
+                  <span className="text-pink-500 text-lg"></span>
+                  <p>Tt c mi th  em u hon ho</p>
                 </div>
               </div>
               <div className="text-center mt-4">
-                <p className="font-handwriting text-2xl text-rose-600">I love everything about you ♡</p>
+                <p className="font-handwriting text-2xl text-rose-600">I love everything about you </p>
               </div>
             </div>
             <div className="flex justify-end items-center gap-2">
@@ -165,14 +165,14 @@ export function FlipBook3D({ autoFlipInterval = 3500, theme = 'love' }: FlipBook
                   />
                 </div>
                 <p className="font-handwriting text-sm text-gray-600 text-center italic">
-                  "Mỗi chuyến đi là một kỷ niệm đẹp..."
+                  "Mi chuyn i l mt k nim p..."
                 </p>
                 <div className="grid grid-cols-2 gap-2">
                   <div className="bg-white rounded p-2 shadow-sm">
-                    <p className="text-xs text-gray-600">🏖️ Beach trip</p>
+                    <p className="text-xs text-gray-600"> Beach trip</p>
                   </div>
                   <div className="bg-white rounded p-2 shadow-sm">
-                    <p className="text-xs text-gray-600">🏔️ Mountain hike</p>
+                    <p className="text-xs text-gray-600"> Mountain hike</p>
                   </div>
                 </div>
               </div>
@@ -199,16 +199,16 @@ export function FlipBook3D({ autoFlipInterval = 3500, theme = 'love' }: FlipBook
               <h3 className="font-handwriting text-3xl text-pink-700 text-center">Special Dates</h3>
               <div className="space-y-3">
                 <div className="bg-white/90 rounded-lg p-3 shadow-md border-l-4 border-rose-400">
-                  <p className="font-handwriting text-lg text-rose-700">Bữa tối lãng mạn đầu tiên</p>
-                  <p className="text-xs text-gray-500 mt-1">Nến lung linh, ánh mắt ngọt ngào...</p>
+                  <p className="font-handwriting text-lg text-rose-700">Ba ti lng mn u tin</p>
+                  <p className="text-xs text-gray-500 mt-1">Nn lung linh, nh mt ngt ngo...</p>
                 </div>
                 <div className="bg-white/90 rounded-lg p-3 shadow-md border-l-4 border-pink-400">
-                  <p className="font-handwriting text-lg text-pink-700">Ngày Valentine</p>
-                  <p className="text-xs text-gray-500 mt-1">Hoa hồng & chocolates</p>
+                  <p className="font-handwriting text-lg text-pink-700">Ngy Valentine</p>
+                  <p className="text-xs text-gray-500 mt-1">Hoa hng & chocolates</p>
                 </div>
                 <div className="bg-white/90 rounded-lg p-3 shadow-md border-l-4 border-purple-400">
-                  <p className="font-handwriting text-lg text-purple-700">Kỷ niệm 1 năm yêu</p>
-                  <p className="text-xs text-gray-500 mt-1">365 ngày hạnh phúc...</p>
+                  <p className="font-handwriting text-lg text-purple-700">K nim 1 nm yu</p>
+                  <p className="text-xs text-gray-500 mt-1">365 ngy hnh phc...</p>
                 </div>
               </div>
             </div>
@@ -245,7 +245,7 @@ export function FlipBook3D({ autoFlipInterval = 3500, theme = 'love' }: FlipBook
                     </div>
                   </div>
                   <p className="font-handwriting text-2xl text-indigo-700">Every Season with You</p>
-                  <p className="text-xs text-gray-500 italic mt-2">Mọi mùa đều đẹp khi có em</p>
+                  <p className="text-xs text-gray-500 italic mt-2">Mi ma u p khi c em</p>
                 </div>
               </div>
             </div>
@@ -262,17 +262,17 @@ export function FlipBook3D({ autoFlipInterval = 3500, theme = 'love' }: FlipBook
             <div className="space-y-4">
               <h3 className="font-handwriting text-4xl text-indigo-700 text-center">Thank You</h3>
               <div className="space-y-3 text-sm text-gray-700 text-center">
-                <p className="italic">Cảm ơn em đã đến bên anh</p>
-                <p className="italic">Cảm ơn em đã cho anh biết yêu thương là gì</p>
-                <p className="italic">Cảm ơn em đã làm cuộc đời anh có ý nghĩa</p>
+                <p className="italic">Cm n em  n bn anh</p>
+                <p className="italic">Cm n em  cho anh bit yu thng l g</p>
+                <p className="italic">Cm n em  lm cuc i anh c  ngha</p>
                 <div className="my-6 flex justify-center gap-2 text-3xl">
-                  💕 💖 💗 💓 💝
+                      
                 </div>
                 <p className="font-handwriting text-3xl text-rose-600 mt-4">
                   I Love You So Much
                 </p>
                 <p className="text-xs text-gray-500 mt-2">
-                  With all my heart, forever and always ♡
+                  With all my heart, forever and always 
                 </p>
               </div>
             </div>

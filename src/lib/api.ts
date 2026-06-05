@@ -22,9 +22,9 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
     // "Failed to fetch" = backend unreachable
     if (networkErr?.message === 'Failed to fetch' || networkErr?.name === 'TypeError') {
       throw new Error(
-        `Không thể kết nối tới backend (${url}).\n` +
-        'Hãy đảm bảo backend Spring Boot đang chạy ở port 8080.\n' +
-        'Chạy lệnh: cd backend && .\\mvnw.cmd spring-boot:run'
+        `Khng th kt ni ti backend (${url}).\n` +
+        'Hy m bo backend Spring Boot ang chy  port 8080.\n' +
+        'Chy lnh: cd backend && .\\mvnw.cmd spring-boot:run'
       );
     }
     throw networkErr;
@@ -86,9 +86,9 @@ export async function apiPostMultipart<T>(path: string, formData: FormData, opti
   } catch (networkErr: any) {
     if (networkErr?.message === 'Failed to fetch' || networkErr?.name === 'TypeError') {
       throw new Error(
-        `Không thể kết nối tới backend (${url}).\n` +
-        'Hãy đảm bảo backend Spring Boot đang chạy ở port 8080.\n' +
-        'Chạy lệnh: cd backend && .\\mvnw.cmd spring-boot:run'
+        `Khng th kt ni ti backend (${url}).\n` +
+        'Hy m bo backend Spring Boot ang chy  port 8080.\n' +
+        'Chy lnh: cd backend && .\\mvnw.cmd spring-boot:run'
       );
     }
     throw networkErr;

@@ -1,7 +1,7 @@
 /**
  * LocalTemplatePageViewer
- * Hiển thị toàn bộ ảnh trang của một local template (temp1/temp2/temp3).
- * Dùng ở Bước 3 thay thế cho editor khi templateId là local-template-*.
+ * Hin th ton b nh trang ca mt local template (temp1/temp2/temp3).
+ * Dng  Bc 3 thay th cho editor khi templateId l local-template-*.
  */
 import { useState } from 'react';
 import {
@@ -56,7 +56,7 @@ export function LocalTemplatePageViewer({
       return {
         id: p.id || `p-${idx}`,
         imageUrl: img,
-        label: idx === 0 ? 'Trang bìa' : `Trang ${idx}`,
+        label: idx === 0 ? 'Trang ba' : `Trang ${idx}`,
       };
     });
   }
@@ -64,7 +64,7 @@ export function LocalTemplatePageViewer({
   if (pages.length === 0) {
     return (
       <div className="flex items-center justify-center py-24">
-        <p className="text-[#9b9088]">Không tìm thấy trang sách.</p>
+        <p className="text-[#9b9088]">Khng tm thy trang sch.</p>
       </div>
     );
   }
@@ -72,9 +72,9 @@ export function LocalTemplatePageViewer({
   const total = pages.length;
 
   const displayTemplate = template || {
-    name: book.title || 'Mẫu thiết kế custom',
+    name: book.title || 'Mu thit k custom',
     thumbnail: pages[0]?.imageUrl || '',
-    description: 'Mẫu thiết kế được cá nhân hóa.'
+    description: 'Mu thit k c c nhn ha.'
   };
 
   const openLightbox = (idx: number) => setLightboxIdx(idx);
@@ -84,7 +84,7 @@ export function LocalTemplatePageViewer({
 
   return (
     <div className="space-y-6">
-      {/* ── Top Action Bar ─────────────────────────────────────────── */}
+      {/*  Top Action Bar  */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <button
           onClick={onBack}
@@ -94,7 +94,7 @@ export function LocalTemplatePageViewer({
           onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = 'transparent')}
         >
           <ArrowLeft className="w-5 h-5" />
-          <span>Quay lại</span>
+          <span>Quay li</span>
         </button>
 
         <div className="flex items-center gap-2">
@@ -111,9 +111,9 @@ export function LocalTemplatePageViewer({
             onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#ffffff')}
           >
             {viewMode === 'grid' ? (
-              <><BookOpen className="w-4 h-4" /> Đọc từng trang</>
+              <><BookOpen className="w-4 h-4" /> c tng trang</>
             ) : (
-              <><Grid3x3 className="w-4 h-4" /> Dạng lưới</>
+              <><Grid3x3 className="w-4 h-4" /> Dng li</>
             )}
           </button>
 
@@ -126,7 +126,7 @@ export function LocalTemplatePageViewer({
             onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#EDE9E3')}
           >
             <Sliders className="w-4 h-4" />
-            <span>Chỉnh sửa tự do</span>
+            <span>Chnh sa t do</span>
           </button>
 
           {/* Order */}
@@ -142,12 +142,12 @@ export function LocalTemplatePageViewer({
             onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = 'linear-gradient(135deg, #000000 0%, #5A5049 100%)')}
           >
             <ShoppingCart className="w-4 h-4" />
-            Đặt hàng
+            t hng
           </button>
         </div>
       </div>
 
-      {/* ── Template Info Banner ────────────────────────────────────── */}
+      {/*  Template Info Banner  */}
       <div
         className="rounded-2xl px-5 py-4 flex items-center gap-4"
         style={{ background: '#ffffff', border: '1px solid #EDE9E3', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}
@@ -160,16 +160,16 @@ export function LocalTemplatePageViewer({
         />
         <div>
           <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: '#9b9088' }}>
-            Phong cách đã chọn
+            Phong cch  chn
           </p>
           <h2 className="text-lg font-bold" style={{ color: '#111' }}>{displayTemplate.name}</h2>
           <p className="text-sm mt-0.5" style={{ color: '#7a6f66' }}>
-            {total} trang · {displayTemplate.description.split('–')[0].trim()}
+            {total} trang  {displayTemplate.description.split('')[0].trim()}
           </p>
         </div>
       </div>
 
-      {/* ── GRID VIEW ──────────────────────────────────────────────── */}
+      {/*  GRID VIEW  */}
       {viewMode === 'grid' && (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
           {pages.map((page, idx) => (
@@ -199,14 +199,14 @@ export function LocalTemplatePageViewer({
               </div>
               {/* Hover overlay */}
               <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                <span className="text-white text-xs font-semibold bg-black/50 px-2 py-1 rounded-lg">Xem lớn</span>
+                <span className="text-white text-xs font-semibold bg-black/50 px-2 py-1 rounded-lg">Xem ln</span>
               </div>
             </button>
           ))}
         </div>
       )}
 
-      {/* ── SINGLE PAGE VIEW ───────────────────────────────────────── */}
+      {/*  SINGLE PAGE VIEW  */}
       {viewMode === 'single' && (
         <div className="flex flex-col items-center gap-4">
           {/* Main page display */}
@@ -271,7 +271,7 @@ export function LocalTemplatePageViewer({
         </div>
       )}
 
-      {/* ── LIGHTBOX ───────────────────────────────────────────────── */}
+      {/*  LIGHTBOX  */}
       {lightboxIdx !== null && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center"
@@ -286,7 +286,7 @@ export function LocalTemplatePageViewer({
             {/* Header */}
             <div className="w-full flex items-center justify-between mb-3 px-1">
               <p className="text-sm font-semibold text-white">
-                {pages[lightboxIdx].label} &nbsp;·&nbsp; {lightboxIdx + 1} / {total}
+                {pages[lightboxIdx].label} &nbsp;&nbsp; {lightboxIdx + 1} / {total}
               </p>
               <button
                 onClick={closeLightbox}

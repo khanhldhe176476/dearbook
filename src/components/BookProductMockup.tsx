@@ -88,7 +88,7 @@ export default function BookProductMockup({ bookData, onClose }: BookProductMock
             lineHeight: '1.2',
             fontFamily: 'Poppins, sans-serif'
           }}>
-            {bookData?.title || 'Cuốn Sách Của Bạn'}
+            {bookData?.title || 'Cun Sch Ca Bn'}
           </div>
         </div>
       );
@@ -314,9 +314,9 @@ export default function BookProductMockup({ bookData, onClose }: BookProductMock
               fontFamily: 'Poppins, sans-serif',
               lineHeight: '1.6'
             }}>
-              Tạo bởi DearMemories
+              To bi DearMemories
               <br />
-              <span style={{ fontSize: '11px', opacity: 0.7 }}>Thiết kế sách cá nhân hoá</span>
+              <span style={{ fontSize: '11px', opacity: 0.7 }}>Thit k sch c nhn ho</span>
             </div>
           </div>
         </div>

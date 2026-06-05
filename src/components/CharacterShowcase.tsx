@@ -34,17 +34,17 @@ export function CharacterShowcase() {
     <div className="space-y-8 p-8">
       <div className="text-center">
         <h2 className="text-3xl font-bold text-gray-800 mb-3">
-          Thư viện nhân vật
+          Th vin nhn vt
         </h2>
         <p className="text-gray-600">
-          {showcaseCharacters.length} nhân vật mẫu · Tổng {genders.length * hairStyles.length * hairColors.length * outfits.length} combinations có thể
+          {showcaseCharacters.length} nhn vt mu  Tng {genders.length * hairStyles.length * hairColors.length * outfits.length} combinations c th
         </p>
       </div>
 
       {/* Female Characters */}
       <div>
         <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-          <span>👩</span> Nhân vật nữ
+          <span></span> Nhn vt n
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
           {showcaseCharacters
@@ -57,17 +57,17 @@ export function CharacterShowcase() {
                 <CharacterIllustration character={character} size="sm" />
                 <div className="mt-3 space-y-1 text-xs text-center">
                   <p className="font-semibold text-gray-800">
-                    {character.hairStyle === 'long' ? 'Tóc dài' : 'Tóc ngắn'}
+                    {character.hairStyle === 'long' ? 'Tc di' : 'Tc ngn'}
                   </p>
                   <p className="text-gray-600">
-                    {character.hairColor === 'black' ? 'Đen' :
-                     character.hairColor === 'brown' ? 'Nâu' :
-                     character.hairColor === 'blonde' ? 'Vàng' :
-                     character.hairColor === 'red' ? 'Đỏ' : 'Xám'}
+                    {character.hairColor === 'black' ? 'en' :
+                     character.hairColor === 'brown' ? 'Nu' :
+                     character.hairColor === 'blonde' ? 'Vng' :
+                     character.hairColor === 'red' ? '' : 'Xm'}
                   </p>
                   <p className="text-gray-500">
-                    {character.outfit === 'casual' ? 'Thường ngày' :
-                     character.outfit === 'formal' ? 'Lịch sự' : 'Lãng mạn'}
+                    {character.outfit === 'casual' ? 'Thng ngy' :
+                     character.outfit === 'formal' ? 'Lch s' : 'Lng mn'}
                   </p>
                 </div>
               </div>
@@ -78,7 +78,7 @@ export function CharacterShowcase() {
       {/* Male Characters */}
       <div>
         <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-          <span>👨</span> Nhân vật nam
+          <span></span> Nhn vt nam
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
           {showcaseCharacters
@@ -91,17 +91,17 @@ export function CharacterShowcase() {
                 <CharacterIllustration character={character} size="sm" />
                 <div className="mt-3 space-y-1 text-xs text-center">
                   <p className="font-semibold text-gray-800">
-                    {character.hairStyle === 'long' ? 'Tóc dài' : 'Tóc ngắn'}
+                    {character.hairStyle === 'long' ? 'Tc di' : 'Tc ngn'}
                   </p>
                   <p className="text-gray-600">
-                    {character.hairColor === 'black' ? 'Đen' :
-                     character.hairColor === 'brown' ? 'Nâu' :
-                     character.hairColor === 'blonde' ? 'Vàng' :
-                     character.hairColor === 'red' ? 'Đỏ' : 'Xám'}
+                    {character.hairColor === 'black' ? 'en' :
+                     character.hairColor === 'brown' ? 'Nu' :
+                     character.hairColor === 'blonde' ? 'Vng' :
+                     character.hairColor === 'red' ? '' : 'Xm'}
                   </p>
                   <p className="text-gray-500">
-                    {character.outfit === 'casual' ? 'Thường ngày' :
-                     character.outfit === 'formal' ? 'Lịch sự' : 'Lãng mạn'}
+                    {character.outfit === 'casual' ? 'Thng ngy' :
+                     character.outfit === 'formal' ? 'Lch s' : 'Lng mn'}
                   </p>
                 </div>
               </div>
@@ -111,23 +111,23 @@ export function CharacterShowcase() {
 
       {/* Info */}
       <div className="max-w-3xl mx-auto p-6 rounded-2xl bg-gradient-to-br from-rose-50 to-amber-50 border border-orange-200/50">
-        <h4 className="font-bold text-gray-800 mb-3">💡 Về nhân vật</h4>
+        <h4 className="font-bold text-gray-800 mb-3"> V nhn vt</h4>
         <ul className="space-y-2 text-sm text-gray-700">
           <li className="flex items-start gap-2">
-            <span className="text-rose-500 font-bold">•</span>
-            <span>Tất cả nhân vật được vẽ bằng <strong>SVG vector graphics</strong> - rõ nét ở mọi kích thước</span>
+            <span className="text-rose-500 font-bold"></span>
+            <span>Tt c nhn vt c v bng <strong>SVG vector graphics</strong> - r nt  mi kch thc</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-rose-500 font-bold">•</span>
-            <span>Có <strong>{genders.length * hairStyles.length * hairColors.length * outfits.length} combinations</strong> khác nhau: {genders.length} giới tính × {hairStyles.length} kiểu tóc × {hairColors.length} màu tóc × {outfits.length} trang phục</span>
+            <span className="text-rose-500 font-bold"></span>
+            <span>C <strong>{genders.length * hairStyles.length * hairColors.length * outfits.length} combinations</strong> khc nhau: {genders.length} gii tnh  {hairStyles.length} kiu tc  {hairColors.length} mu tc  {outfits.length} trang phc</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-rose-500 font-bold">•</span>
-            <span>Phong cách: <strong>2D illustration semi-realistic</strong> với màu sắc pastel ấm áp</span>
+            <span className="text-rose-500 font-bold"></span>
+            <span>Phong cch: <strong>2D illustration semi-realistic</strong> vi mu sc pastel m p</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-rose-500 font-bold">•</span>
-            <span>Nhân vật sẽ xuất hiện xuyên suốt trong cuốn sách của bạn</span>
+            <span className="text-rose-500 font-bold"></span>
+            <span>Nhn vt s xut hin xuyn sut trong cun sch ca bn</span>
           </li>
         </ul>
       </div>

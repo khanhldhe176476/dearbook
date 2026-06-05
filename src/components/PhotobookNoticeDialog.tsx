@@ -48,8 +48,8 @@ export function PhotobookNoticeDialog({ isOpen, onConfirm, onCancel }: Photobook
                 <BookOpen className="w-6 h-6 text-amber-100 animate-pulse" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-white tracking-wide">Lưu ý khi đặt photobook</h2>
-                <p className="text-white/60 text-xs mt-0.5 font-medium">Vui lòng đọc kỹ thông tin trước khi thiết kế</p>
+                <h2 className="text-xl font-bold text-white tracking-wide">Lu  khi t photobook</h2>
+                <p className="text-white/60 text-xs mt-0.5 font-medium">Vui lng c k thng tin trc khi thit k</p>
               </div>
             </div>
             
@@ -65,81 +65,81 @@ export function PhotobookNoticeDialog({ isOpen, onConfirm, onCancel }: Photobook
         {/* Content - Scrollable */}
         <div className="px-6 py-5 overflow-y-auto space-y-4 flex-1">
           <h3 className="text-base font-bold text-gray-800 border-b pb-2 border-gray-100">
-            Những lưu ý khi đặt photobook
+            Nhng lu  khi t photobook
           </h3>
 
           <div className="space-y-4">
-            {/* 1. Chất lượng ảnh */}
+            {/* 1. Cht lng nh */}
             <div className="flex gap-3.5 p-3 rounded-2xl transition-colors hover:bg-gray-50/80">
               <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0 text-blue-500 border border-blue-100">
                 <Image className="w-5 h-5" />
               </div>
               <div className="space-y-1 flex-1">
                 <h4 className="font-bold text-sm text-gray-800 flex items-center gap-1.5">
-                  📸 Chất lượng ảnh
+                   Cht lng nh
                 </h4>
                 <p className="text-xs text-gray-600 leading-relaxed">
-                  Để đảm bảo chất lượng in tốt nhất, vui lòng sử dụng ảnh có độ phân giải cao và hạn chế sử dụng ảnh bị mờ, vỡ hoặc ảnh chụp màn hình.
+                   m bo cht lng in tt nht, vui lng s dng nh c  phn gii cao v hn ch s dng nh b m, v hoc nh chp mn hnh.
                 </p>
               </div>
             </div>
 
-            {/* 2. Màu sắc khi in */}
+            {/* 2. Mu sc khi in */}
             <div className="flex gap-3.5 p-3 rounded-2xl transition-colors hover:bg-gray-50/80">
               <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center flex-shrink-0 text-amber-500 border border-amber-100">
                 <Palette className="w-5 h-5" />
               </div>
               <div className="space-y-1 flex-1">
                 <h4 className="font-bold text-sm text-gray-800 flex items-center gap-1.5">
-                  🎨 Màu sắc khi in
+                   Mu sc khi in
                 </h4>
                 <p className="text-xs text-gray-600 leading-relaxed">
-                  Màu sắc thực tế của photobook có thể có sự chênh lệch nhỏ so với hình ảnh hiển thị trên màn hình do sự khác biệt giữa các thiết bị và công nghệ in ấn.
+                  Mu sc thc t ca photobook c th c s chnh lch nh so vi hnh nh hin th trn mn hnh do s khc bit gia cc thit b v cng ngh in n.
                 </p>
               </div>
             </div>
 
-            {/* 3. Thông tin nhận hàng */}
+            {/* 3. Thng tin nhn hng */}
             <div className="flex gap-3.5 p-3 rounded-2xl transition-colors hover:bg-gray-50/80">
               <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0 text-purple-500 border border-purple-100">
                 <Package className="w-5 h-5" />
               </div>
               <div className="space-y-1 flex-1">
                 <h4 className="font-bold text-sm text-gray-800 flex items-center gap-1.5">
-                  📦 Thông tin nhận hàng
+                   Thng tin nhn hng
                 </h4>
                 <p className="text-xs text-gray-600 leading-relaxed">
-                  Vui lòng kiểm tra kỹ họ tên, số điện thoại và địa chỉ nhận hàng trước khi xác nhận đơn đặt hàng.
+                  Vui lng kim tra k h tn, s in thoi v a ch nhn hng trc khi xc nhn n t hng.
                 </p>
               </div>
             </div>
 
-            {/* 4. Thời gian sản xuất */}
+            {/* 4. Thi gian sn xut */}
             <div className="flex gap-3.5 p-3 rounded-2xl transition-colors hover:bg-gray-50/80">
               <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center flex-shrink-0 text-orange-500 border border-orange-100">
                 <Clock className="w-5 h-5" />
               </div>
               <div className="space-y-1 flex-1">
                 <h4 className="font-bold text-sm text-gray-800 flex items-center gap-1.5">
-                  ⏳ Thời gian sản xuất
+                   Thi gian sn xut
                 </h4>
                 <p className="text-xs text-gray-600 leading-relaxed">
-                  Photobook là sản phẩm được cá nhân hóa theo từng đơn hàng. Thời gian hoàn thiện dự kiến từ 3–5 ngày làm việc (không bao gồm thời gian vận chuyển).
+                  Photobook l sn phm c c nhn ha theo tng n hng. Thi gian hon thin d kin t 35 ngy lm vic (khng bao gm thi gian vn chuyn).
                 </p>
               </div>
             </div>
 
-            {/* 5. Chỉnh sửa & hỗ trợ sau khi nhận hàng */}
+            {/* 5. Chnh sa & h tr sau khi nhn hng */}
             <div className="flex gap-3.5 p-3 rounded-2xl transition-colors hover:bg-gray-50/80">
               <div className="w-10 h-10 rounded-xl bg-rose-50 flex items-center justify-center flex-shrink-0 text-rose-500 border border-rose-100">
                 <RefreshCw className="w-5 h-5" />
               </div>
               <div className="space-y-1 flex-1">
                 <h4 className="font-bold text-sm text-gray-800 flex items-center gap-1.5">
-                  🔄 Chỉnh sửa & hỗ trợ sau khi nhận hàng
+                   Chnh sa & h tr sau khi nhn hng
                 </h4>
                 <p className="text-xs text-gray-600 leading-relaxed">
-                  Sau khi đơn hàng được xác nhận và đưa vào sản xuất, nội dung thiết kế sẽ không thể chỉnh sửa. Nếu sản phẩm gặp lỗi từ phía sản xuất hoặc vận chuyển, vui lòng liên hệ <span className="font-semibold text-rose-600">dearmemories.</span> trong vòng 48 giờ kể từ khi nhận hàng để được hỗ trợ. Để đảm bảo quyền lợi, khách hàng vui lòng quay video quá trình mở hàng và cung cấp hình ảnh hoặc video sản phẩm khi gửi yêu cầu hỗ trợ.
+                  Sau khi n hng c xc nhn v a vo sn xut, ni dung thit k s khng th chnh sa. Nu sn phm gp li t pha sn xut hoc vn chuyn, vui lng lin h <span className="font-semibold text-rose-600">dearmemories.</span> trong vng 48 gi k t khi nhn hng  c h tr.  m bo quyn li, khch hng vui lng quay video qu trnh m hng v cung cp hnh nh hoc video sn phm khi gi yu cu h tr.
                 </p>
               </div>
             </div>
@@ -156,7 +156,7 @@ export function PhotobookNoticeDialog({ isOpen, onConfirm, onCancel }: Photobook
               className="mt-0.5 w-4 h-4 rounded text-amber-600 border-gray-300 focus:ring-amber-500 cursor-pointer"
             />
             <span className="text-xs text-gray-700 font-medium group-hover:text-gray-900 transition-colors">
-              Tôi đã đọc và đồng ý với các lưu ý khi đặt photobook
+              Ti  c v ng  vi cc lu  khi t photobook
             </span>
           </label>
 
@@ -165,7 +165,7 @@ export function PhotobookNoticeDialog({ isOpen, onConfirm, onCancel }: Photobook
               onClick={handleCancelClick}
               className="flex-1 px-5 py-3 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 font-semibold rounded-2xl transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] text-sm"
             >
-              Hủy bỏ
+              Hy b
             </button>
             
             <button
@@ -176,7 +176,7 @@ export function PhotobookNoticeDialog({ isOpen, onConfirm, onCancel }: Photobook
                   ? 'bg-amber-600 hover:bg-amber-700 text-white hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-amber-600/25 cursor-pointer' 
                   : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
             >
-              Xác nhận
+              Xc nhn
             </button>
           </div>
         </div>

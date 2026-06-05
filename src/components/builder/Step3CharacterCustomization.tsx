@@ -14,7 +14,7 @@ interface Step3CharacterCustomizationProps {
 const CHARACTER_PRESETS: Array<{ id: string; name: string; character: CharacterData }> = [
   {
     id: 'cute-girl-1',
-    name: 'Cô gái dễ thương',
+    name: 'C gi d thng',
     character: {
       skinTone: '#FFE4C4',
       hairStyle: 'long-straight',
@@ -27,7 +27,7 @@ const CHARACTER_PRESETS: Array<{ id: string; name: string; character: CharacterD
   },
   {
     id: 'elegant-lady',
-    name: 'Quý cô thanh lịch',
+    name: 'Qu c thanh lch',
     character: {
       skinTone: '#F5D5C5',
       hairStyle: 'bun',
@@ -40,7 +40,7 @@ const CHARACTER_PRESETS: Array<{ id: string; name: string; character: CharacterD
   },
   {
     id: 'sweet-girl',
-    name: 'Cô gái ngọt ngào',
+    name: 'C gi ngt ngo',
     character: {
       skinTone: '#E8B898',
       hairStyle: 'ponytail',
@@ -53,7 +53,7 @@ const CHARACTER_PRESETS: Array<{ id: string; name: string; character: CharacterD
   },
   {
     id: 'modern-girl',
-    name: 'Cô gái hiện đại',
+    name: 'C gi hin i',
     character: {
       skinTone: '#F5D5C5',
       hairStyle: 'bob',
@@ -66,7 +66,7 @@ const CHARACTER_PRESETS: Array<{ id: string; name: string; character: CharacterD
   },
   {
     id: 'cool-girl',
-    name: 'Cô gái cá tính',
+    name: 'C gi c tnh',
     character: {
       skinTone: '#D4A574',
       hairStyle: 'short-messy',
@@ -79,7 +79,7 @@ const CHARACTER_PRESETS: Array<{ id: string; name: string; character: CharacterD
   },
   {
     id: 'romantic-girl',
-    name: 'Cô gái lãng mạn',
+    name: 'C gi lng mn',
     character: {
       skinTone: '#FFE4C4',
       hairStyle: 'wavy',
@@ -147,16 +147,16 @@ export function Step3CharacterCustomization({
         className="flex items-center gap-2 px-4 py-2 hover:bg-rose-50 rounded-xl transition-all text-gray-700"
       >
         <ArrowLeft className="w-5 h-5" />
-        <span>Quay lại chọn mẫu</span>
+        <span>Quay li chn mu</span>
       </button>
 
       {/* Header */}
       <div className="text-center max-w-2xl mx-auto">
         <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-3">
-          ✨ Tạo nhân vật của bạn
+           To nhn vt ca bn
         </h2>
         <p className="text-lg text-gray-600">
-          Nhân vật này sẽ xuất hiện trong cuốn sách của bạn
+          Nhn vt ny s xut hin trong cun sch ca bn
         </p>
       </div>
 
@@ -165,7 +165,7 @@ export function Step3CharacterCustomization({
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-md border border-orange-100/50">
           <div className="flex items-center gap-2 mb-6">
             <Sparkles className="w-5 h-5 text-rose-500" />
-            <h3 className="font-bold text-gray-800 text-lg">Chọn nhanh từ mẫu có sẵn</h3>
+            <h3 className="font-bold text-gray-800 text-lg">Chn nhanh t mu c sn</h3>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -202,7 +202,7 @@ export function Step3CharacterCustomization({
                   </div>
                   <div className="absolute -bottom-3 left-1/2 -translate-x-1/2">
                     <div className="px-4 py-2 bg-white rounded-full shadow-lg border-2 border-pink-200">
-                      <p className="text-sm font-semibold text-gray-700">Nhân vật của bạn</p>
+                      <p className="text-sm font-semibold text-gray-700">Nhn vt ca bn</p>
                     </div>
                   </div>
                 </div>
@@ -212,10 +212,10 @@ export function Step3CharacterCustomization({
               <div className="flex-1 text-center lg:text-left space-y-4">
                 <div>
                   <h3 className="text-2xl font-bold text-gray-800 mb-2">
-                    Hài lòng với nhân vật này?
+                    Hi lng vi nhn vt ny?
                   </h3>
                   <p className="text-gray-600">
-                    Bạn có thể tuỳ chỉnh chi tiết hơn như màu da, kiểu tóc, mắt, môi, trang phục và phụ kiện
+                    Bn c th tu chnh chi tit hn nh mu da, kiu tc, mt, mi, trang phc v ph kin
                   </p>
                 </div>
 
@@ -225,7 +225,7 @@ export function Step3CharacterCustomization({
                     className={`flex-1 py-3 px-6 rounded-xl bg-gradient-to-r ${colors.from} ${colors.to} text-white font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2`}
                   >
                     <User className="w-5 h-5" />
-                    Tùy chỉnh chi tiết
+                    Ty chnh chi tit
                   </button>
 
                   <button
@@ -233,7 +233,7 @@ export function Step3CharacterCustomization({
                     className="flex-1 py-3 px-6 rounded-xl bg-white border-2 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition-all flex items-center justify-center gap-2"
                   >
                     <ArrowRight className="w-5 h-5" />
-                    Tiếp tục với nhân vật này
+                    Tip tc vi nhn vt ny
                   </button>
                 </div>
               </div>
@@ -250,10 +250,10 @@ export function Step3CharacterCustomization({
               </div>
               <div>
                 <h3 className="text-xl font-bold text-gray-800 mb-2">
-                  Chưa chọn nhân vật
+                  Cha chn nhn vt
                 </h3>
                 <p className="text-gray-600">
-                  Chọn một nhân vật mẫu ở trên hoặc tạo nhân vật hoàn toàn mới
+                  Chn mt nhn vt mu  trn hoc to nhn vt hon ton mi
                 </p>
               </div>
               <button
@@ -261,7 +261,7 @@ export function Step3CharacterCustomization({
                 className={`py-3 px-8 rounded-xl bg-gradient-to-r ${colors.from} ${colors.to} text-white font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all inline-flex items-center gap-2`}
               >
                 <Sparkles className="w-5 h-5" />
-                Tạo nhân vật mới
+                To nhn vt mi
               </button>
             </div>
           </div>
@@ -274,7 +274,7 @@ export function Step3CharacterCustomization({
               onClick={handleContinue}
               className={`py-4 px-12 rounded-2xl bg-gradient-to-r ${colors.from} ${colors.to} text-white font-bold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all flex items-center gap-3`}
             >
-              Tiếp tục chỉnh sửa nội dung
+              Tip tc chnh sa ni dung
               <ArrowRight className="w-6 h-6" />
             </button>
           </div>

@@ -17,12 +17,12 @@ export function AssetLibrary({ onAddElement, onApplyTemplate, onAddTextCombinati
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   const tabs = [
-    { id: 'templates' as TabType, label: 'Mẫu', icon: Layout },
+    { id: 'templates' as TabType, label: 'Mu', icon: Layout },
     { id: 'stickers' as TabType, label: 'Sticker', icon: Sparkles },
     { id: 'icons' as TabType, label: 'Icon', icon: Heart },
-    { id: 'shapes' as TabType, label: 'Hình', icon: Shapes },
+    { id: 'shapes' as TabType, label: 'Hnh', icon: Shapes },
     { id: 'frames' as TabType, label: 'Khung', icon: Frame },
-    { id: 'images' as TabType, label: 'Ảnh', icon: ImageIcon },
+    { id: 'images' as TabType, label: 'nh', icon: ImageIcon },
   ];
 
   const handleAddSticker = (emoji: string) => {
@@ -80,7 +80,7 @@ export function AssetLibrary({ onAddElement, onApplyTemplate, onAddTextCombinati
 
   const handleAddText = () => {
     onAddElement('text', {
-      content: 'Nhập nội dung...',
+      content: 'Nhp ni dung...',
       fontFamily: 'Poppins',
       fontSize: 24,
       fontWeight: 'normal',
@@ -121,7 +121,7 @@ export function AssetLibrary({ onAddElement, onApplyTemplate, onAddTextCombinati
           <section className="space-y-3">
             <h4 className="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wider">
               <Type className="w-3.5 h-3.5" />
-              Tổ hợp chữ nghệ thuật
+              T hp ch ngh thut
             </h4>
             <div className="grid grid-cols-1 gap-2">
               {filteredTextCombinations.map(tc => (
@@ -134,7 +134,7 @@ export function AssetLibrary({ onAddElement, onApplyTemplate, onAddTextCombinati
                     {tc.name}
                   </div>
                   <div className="text-[11px] text-gray-500 line-clamp-1 opacity-70">
-                    {tc.elements.map(el => el.content).join(' • ')}
+                    {tc.elements.map(el => el.content).join('  ')}
                   </div>
                 </button>
               ))}
@@ -147,7 +147,7 @@ export function AssetLibrary({ onAddElement, onApplyTemplate, onAddTextCombinati
           <section className="space-y-3">
             <h4 className="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wider">
               <Layout className="w-3.5 h-3.5" />
-              Mẫu trang thiết kế
+              Mu trang thit k
             </h4>
             <div className="grid grid-cols-2 gap-4">
               {filteredTemplates.map(template => (
@@ -169,7 +169,7 @@ export function AssetLibrary({ onAddElement, onApplyTemplate, onAddTextCombinati
         {filteredTemplates.length === 0 && filteredTextCombinations.length === 0 && (
           <div className="text-center py-10 opacity-40">
             <Search className="w-10 h-10 mx-auto mb-2" />
-            <p className="text-sm">Không tìm thấy mẫu nào phù hợp</p>
+            <p className="text-sm">Khng tm thy mu no ph hp</p>
           </div>
         )}
       </div>
@@ -193,7 +193,7 @@ export function AssetLibrary({ onAddElement, onApplyTemplate, onAddTextCombinati
                 : 'bg-gray-100 hover:bg-gray-200'
             }`}
           >
-            Tất cả
+            Tt c
           </button>
           {stickerCategories.map(cat => (
             <button
@@ -321,7 +321,7 @@ export function AssetLibrary({ onAddElement, onApplyTemplate, onAddTextCombinati
       <div className="space-y-4">
         <div className="text-center py-8">
           <ImageIcon className="w-12 h-12 mx-auto text-gray-300 mb-3" />
-          <p className="text-sm text-gray-500 mb-4">Thêm ảnh từ máy tính hoặc URL</p>
+          <p className="text-sm text-gray-500 mb-4">Thm nh t my tnh hoc URL</p>
           <div className="space-y-2">
             <button
               onClick={() => {
@@ -351,11 +351,11 @@ export function AssetLibrary({ onAddElement, onApplyTemplate, onAddTextCombinati
               }}
               className="w-full px-4 py-2 bg-rose-500 text-white rounded-lg hover:bg-rose-600 transition-all"
             >
-              📁 Chọn từ máy tính
+               Chn t my tnh
             </button>
             <button
               onClick={() => {
-                const url = prompt('Nhập URL ảnh:');
+                const url = prompt('Nhp URL nh:');
                 if (url) {
                   onAddElement('image', {
                     src: url,
@@ -371,15 +371,15 @@ export function AssetLibrary({ onAddElement, onApplyTemplate, onAddTextCombinati
               }}
               className="w-full px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-all"
             >
-              🔗 Thêm từ URL
+               Thm t URL
             </button>
           </div>
         </div>
 
         <div className="border-t pt-4">
-          <h4 className="text-sm font-semibold text-gray-700 mb-1">🎨 Ảnh minh họa</h4>
+          <h4 className="text-sm font-semibold text-gray-700 mb-1"> nh minh ha</h4>
           <p className="text-xs text-gray-400 mb-3">
-            💡 Kéo ảnh thả vào khung trên canvas để tự động fit
+             Ko nh th vo khung trn canvas  t ng fit
           </p>
           <div className="grid grid-cols-2 gap-2">
             {[
@@ -392,7 +392,7 @@ export function AssetLibrary({ onAddElement, onApplyTemplate, onAddTextCombinati
             ].map((img, idx) => (
               <div
                 key={idx}
-                // ✅ Draggable: set dataTransfer so canvas can detect drop-into-frame
+                //  Draggable: set dataTransfer so canvas can detect drop-into-frame
                 draggable
                 onDragStart={(e) => handleFileDragStart(e, img.url)}
                 onClick={() => {
@@ -408,7 +408,7 @@ export function AssetLibrary({ onAddElement, onApplyTemplate, onAddTextCombinati
                   });
                 }}
                 className="aspect-square rounded-lg overflow-hidden hover:ring-2 hover:ring-rose-500 transition-all cursor-grab active:cursor-grabbing"
-                title={`Kéo vào khung hoặc click để thêm: ${img.name}`}
+                title={`Ko vo khung hoc click  thm: ${img.name}`}
               >
                 <img src={img.url} alt={img.name} className="w-full h-full object-cover pointer-events-none" />
               </div>
@@ -428,7 +428,7 @@ export function AssetLibrary({ onAddElement, onApplyTemplate, onAddTextCombinati
           className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-xl hover:shadow-lg transition-all font-bold shadow-md transform hover:scale-[1.02] active:scale-95"
         >
           <Type className="w-5 h-5" />
-          <span>Thêm văn bản rỗng</span>
+          <span>Thm vn bn rng</span>
         </button>
 
         {/* Search */}
@@ -438,7 +438,7 @@ export function AssetLibrary({ onAddElement, onApplyTemplate, onAddTextCombinati
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Tìm kiếm mẫu, sticker..."
+            placeholder="Tm kim mu, sticker..."
             className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 outline-none text-sm transition-all shadow-sm"
           />
         </div>

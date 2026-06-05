@@ -11,27 +11,27 @@ interface PaymentProps {
 const paymentMethods = [
   {
     id: 'bank',
-    name: 'Chuyển khoản ngân hàng',
+    name: 'Chuyn khon ngn hng',
     icon: Building2,
-    desc: 'Chuyển khoản qua Internet Banking'
+    desc: 'Chuyn khon qua Internet Banking'
   },
   {
     id: 'momo',
-    name: 'Ví MoMo',
+    name: 'V MoMo',
     icon: Smartphone,
-    desc: 'Thanh toán qua ví điện tử MoMo'
+    desc: 'Thanh ton qua v in t MoMo'
   },
   {
     id: 'card',
-    name: 'Thẻ tín dụng/ghi nợ',
+    name: 'Th tn dng/ghi n',
     icon: CreditCard,
     desc: 'Visa, Mastercard, JCB'
   },
   {
     id: 'cod',
-    name: 'Thanh toán khi nhận hàng',
+    name: 'Thanh ton khi nhn hng',
     icon: CreditCard,
-    desc: 'Thanh toán tiền mặt khi nhận sách'
+    desc: 'Thanh ton tin mt khi nhn sch'
   }
 ];
 
@@ -75,14 +75,14 @@ export function Payment({ orderData, onSuccess, onBack }: PaymentProps) {
           <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-6 animate-bounce">
             <Check className="w-10 h-10 text-white" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Đặt hàng thành công!</h2>
-          <p className="text-gray-600 mb-2">Mã đơn hàng: <span className="font-mono font-bold">BK{Date.now()}</span></p>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">t hng thnh cng!</h2>
+          <p className="text-gray-600 mb-2">M n hng: <span className="font-mono font-bold">BK{Date.now()}</span></p>
           <p className="text-gray-600 mb-8">
-            Chúng tôi sẽ liên hệ xác nhận và bắt đầu in sách của bạn trong 24h.
+            Chng ti s lin h xc nhn v bt u in sch ca bn trong 24h.
           </p>
           <div className="bg-gradient-to-r from-rose-50 to-pink-50 rounded-xl p-6 mb-8">
             <p className="text-sm text-gray-700">
-              Thông tin chi tiết đơn hàng đã được gửi qua email{' '}
+              Thng tin chi tit n hng  c gi qua email{' '}
               {orderData.customerInfo.email && (
                 <span className="font-medium">{orderData.customerInfo.email}</span>
               )}
@@ -92,7 +92,7 @@ export function Payment({ orderData, onSuccess, onBack }: PaymentProps) {
             onClick={onSuccess}
             className="w-full py-4 bg-gradient-to-r from-rose-600 to-pink-600 text-white rounded-xl hover:shadow-xl transition font-medium"
           >
-            Về trang chủ
+            V trang ch
           </button>
         </div>
       </div>
@@ -111,9 +111,9 @@ export function Payment({ orderData, onSuccess, onBack }: PaymentProps) {
               disabled={processing}
             >
               <ArrowLeft className="w-5 h-5" />
-              <span>Quay lại</span>
+              <span>Quay li</span>
             </button>
-            <h1 className="text-2xl font-bold text-gray-900">Thanh toán</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Thanh ton</h1>
           </div>
         </div>
       </header>
@@ -124,7 +124,7 @@ export function Payment({ orderData, onSuccess, onBack }: PaymentProps) {
             {/* Payment Methods */}
             <div className="lg:col-span-2">
               <div className="bg-white rounded-2xl shadow-md p-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-6">Chọn phương thức thanh toán</h2>
+                <h2 className="text-xl font-bold text-gray-900 mb-6">Chn phng thc thanh ton</h2>
                 
                 <div className="space-y-3">
                   {paymentMethods.map((method) => {
@@ -165,12 +165,12 @@ export function Payment({ orderData, onSuccess, onBack }: PaymentProps) {
                 {/* Bank Transfer Info */}
                 {selectedMethod === 'bank' && (
                   <div className="mt-6 p-6 bg-blue-50 border border-blue-200 rounded-xl">
-                    <h3 className="font-medium text-gray-900 mb-4">Thông tin chuyển khoản</h3>
+                    <h3 className="font-medium text-gray-900 mb-4">Thng tin chuyn khon</h3>
                     <div className="space-y-2 text-sm">
-                      <p><span className="text-gray-600">Ngân hàng:</span> <span className="font-medium">Vietcombank</span></p>
-                      <p><span className="text-gray-600">Số tài khoản:</span> <span className="font-mono font-medium">0123456789</span></p>
-                      <p><span className="text-gray-600">Chủ tài khoản:</span> <span className="font-medium">BOOKIFY CO., LTD</span></p>
-                      <p><span className="text-gray-600">Nội dung:</span> <span className="font-mono font-medium">BK{Date.now()}</span></p>
+                      <p><span className="text-gray-600">Ngn hng:</span> <span className="font-medium">Vietcombank</span></p>
+                      <p><span className="text-gray-600">S ti khon:</span> <span className="font-mono font-medium">0123456789</span></p>
+                      <p><span className="text-gray-600">Ch ti khon:</span> <span className="font-medium">BOOKIFY CO., LTD</span></p>
+                      <p><span className="text-gray-600">Ni dung:</span> <span className="font-mono font-medium">BK{Date.now()}</span></p>
                     </div>
                   </div>
                 )}
@@ -181,7 +181,7 @@ export function Payment({ orderData, onSuccess, onBack }: PaymentProps) {
                     <div className="w-48 h-48 bg-white rounded-xl mx-auto mb-4 flex items-center justify-center">
                       <p className="text-gray-400">QR Code MoMo</p>
                     </div>
-                    <p className="text-sm text-gray-600">Quét mã QR để thanh toán</p>
+                    <p className="text-sm text-gray-600">Qut m QR  thanh ton</p>
                   </div>
                 )}
 
@@ -189,7 +189,7 @@ export function Payment({ orderData, onSuccess, onBack }: PaymentProps) {
                 {selectedMethod === 'cod' && (
                   <div className="mt-6 p-6 bg-green-50 border border-green-200 rounded-xl">
                     <p className="text-sm text-gray-700">
-                      💰 Bạn sẽ thanh toán tiền mặt khi nhận sách. Shipper sẽ liên hệ trước khi giao hàng.
+                       Bn s thanh ton tin mt khi nhn sch. Shipper s lin h trc khi giao hng.
                     </p>
                   </div>
                 )}
@@ -199,41 +199,41 @@ export function Payment({ orderData, onSuccess, onBack }: PaymentProps) {
             {/* Order Summary */}
             <div className="lg:col-span-1">
               <div className="bg-white rounded-2xl shadow-md p-6 sticky top-6">
-                <h3 className="font-bold text-gray-900 mb-4">Thông tin đơn hàng</h3>
+                <h3 className="font-bold text-gray-900 mb-4">Thng tin n hng</h3>
                 
                 <div className="space-y-3 text-sm mb-6">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Người nhận:</span>
+                    <span className="text-gray-600">Ngi nhn:</span>
                     <span className="font-medium text-gray-900">{orderData.customerInfo.name}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">SĐT:</span>
+                    <span className="text-gray-600">ST:</span>
                     <span className="font-medium text-gray-900">{orderData.customerInfo.phone}</span>
                   </div>
                   <div className="pt-3 border-t border-gray-200">
-                    <p className="text-gray-600 mb-1">Địa chỉ:</p>
+                    <p className="text-gray-600 mb-1">a ch:</p>
                     <p className="font-medium text-gray-900">{orderData.customerInfo.address}</p>
                   </div>
                   <div className="pt-3 border-t border-gray-200">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Kích thước:</span>
+                      <span className="text-gray-600">Kch thc:</span>
                       <span className="text-gray-900">{orderData.size}</span>
                     </div>
                     <div className="flex justify-between mt-1">
-                      <span className="text-gray-600">Loại bìa:</span>
-                      <span className="text-gray-900">{orderData.coverType === 'hard' ? 'Bìa cứng' : 'Bìa mềm'}</span>
+                      <span className="text-gray-600">Loi ba:</span>
+                      <span className="text-gray-900">{orderData.coverType === 'hard' ? 'Ba cng' : 'Ba mm'}</span>
                     </div>
                     <div className="flex justify-between mt-1">
-                      <span className="text-gray-600">Số lượng:</span>
-                      <span className="text-gray-900">×{orderData.quantity}</span>
+                      <span className="text-gray-600">S lng:</span>
+                      <span className="text-gray-900">{orderData.quantity}</span>
                     </div>
                   </div>
                 </div>
 
                 <div className="pt-4 border-t-2 border-gray-300 mb-6">
                   <div className="flex justify-between text-lg font-bold">
-                    <span className="text-gray-900">Tổng thanh toán</span>
-                    <span className="text-rose-600">{orderData.totalPrice.toLocaleString()}đ</span>
+                    <span className="text-gray-900">Tng thanh ton</span>
+                    <span className="text-rose-600">{orderData.totalPrice.toLocaleString()}</span>
                   </div>
                 </div>
 
@@ -248,10 +248,10 @@ export function Payment({ orderData, onSuccess, onBack }: PaymentProps) {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                      Đang xử lý...
+                      ang x l...
                     </span>
                   ) : (
-                    'Xác nhận thanh toán'
+                    'Xc nhn thanh ton'
                   )}
                 </button>
               </div>

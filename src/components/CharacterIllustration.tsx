@@ -336,13 +336,13 @@ export function CharacterIllustration({ character, size = 'md', className = '', 
             fontWeight="600"
             fill="#4A5568"
           >
-            {isFemale ? '👩' : '👨'} {' '}
-            {character.hairColor === 'black' ? 'Đen' :
-             character.hairColor === 'brown' ? 'Nâu' :
-             character.hairColor === 'red' ? 'Đỏ' :
-             character.hairColor === 'blonde' ? 'Vàng' : 'Xám'}
-            {' · '}
-            {isLongHair ? 'Dài' : 'Ngắn'}
+            {isFemale ? '' : ''} {' '}
+            {character.hairColor === 'black' ? 'en' :
+             character.hairColor === 'brown' ? 'Nu' :
+             character.hairColor === 'red' ? '' :
+             character.hairColor === 'blonde' ? 'Vng' : 'Xm'}
+            {'  '}
+            {isLongHair ? 'Di' : 'Ngn'}
           </text>
         </g>
       </svg>

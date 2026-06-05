@@ -28,7 +28,7 @@ export function Preview3D({ book, onBack, onOrder }: Preview3DProps) {
                 className="flex items-center gap-2 text-gray-300 hover:text-white transition"
               >
                 <ArrowLeft className="w-5 h-5" />
-                <span>Quay lại chỉnh sửa</span>
+                <span>Quay li chnh sa</span>
               </button>
             </div>
 
@@ -46,7 +46,7 @@ export function Preview3D({ book, onBack, onOrder }: Preview3DProps) {
                 className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-rose-600 to-pink-600 text-white rounded-full hover:shadow-xl transition"
               >
                 <ShoppingCart className="w-5 h-5" />
-                Đặt in sách này
+                t in sch ny
               </button>
             </div>
           </div>

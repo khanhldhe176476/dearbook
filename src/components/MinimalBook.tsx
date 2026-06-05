@@ -84,7 +84,7 @@ export function MinimalBook({ bookData, currentPage }: MinimalBookProps) {
         groupRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.02;
       }
     } catch (error) {
-      console.error('❌ MinimalBook animation error:', error);
+      console.error(' MinimalBook animation error:', error);
     }
   });
 

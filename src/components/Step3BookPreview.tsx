@@ -11,31 +11,31 @@ interface Step3BookPreviewProps {
 
 const themeContent = {
   love: {
-    title: 'Tình Yêu',
-    quote: '"Trong em, anh tìm thấy cả thế giới"',
-    scene1: 'Khoảnh khắc đầu tiên gặp gỡ',
-    scene2: 'Những ngày bên nhau',
+    title: 'Tnh Yu',
+    quote: '"Trong em, anh tm thy c th gii"',
+    scene1: 'Khonh khc u tin gp g',
+    scene2: 'Nhng ngy bn nhau',
     color: 'from-pink-400 to-rose-500'
   },
   family: {
-    title: 'Gia Đình',
-    quote: '"Gia đình là nơi tình yêu bắt đầu"',
-    scene1: 'Những buổi sáng ấm áp',
-    scene2: 'Kỷ niệm bên nhau',
+    title: 'Gia nh',
+    quote: '"Gia nh l ni tnh yu bt u"',
+    scene1: 'Nhng bui sng m p',
+    scene2: 'K nim bn nhau',
     color: 'from-blue-400 to-indigo-500'
   },
   birthday: {
-    title: 'Sinh Nhật',
-    quote: '"Chúc mừng sinh nhật người thân yêu"',
-    scene1: 'Ngày đặc biệt của bạn',
-    scene2: 'Lời chúc từ trái tim',
+    title: 'Sinh Nht',
+    quote: '"Chc mng sinh nht ngi thn yu"',
+    scene1: 'Ngy c bit ca bn',
+    scene2: 'Li chc t tri tim',
     color: 'from-yellow-400 to-orange-500'
   },
   friendship: {
-    title: 'Tình Bạn',
-    quote: '"Bạn là món quà đẹp nhất cuộc đời"',
-    scene1: 'Những kỷ niệm không quên',
-    scene2: 'Bên nhau mãi mãi',
+    title: 'Tnh Bn',
+    quote: '"Bn l mn qu p nht cuc i"',
+    scene1: 'Nhng k nim khng qun',
+    scene2: 'Bn nhau mi mi',
     color: 'from-green-400 to-emerald-500'
   }
 };
@@ -50,14 +50,14 @@ export function Step3BookPreview({ theme, character, onContinue }: Step3BookPrev
         <div className="inline-block px-6 py-2 bg-purple-100 rounded-full mb-2">
           <p className="text-purple-600 font-medium flex items-center gap-2">
             <Sparkles className="w-4 h-4" />
-            Xem trước cuốn sách của bạn
+            Xem trc cun sch ca bn
           </p>
         </div>
         <h2 className="text-4xl md:text-5xl font-serif text-gray-900">
-          Đây là cuốn sách của bạn
+          y l cun sch ca bn
         </h2>
         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-          Nhân vật đã được tạo sẽ xuất hiện trong những trang sách với câu chuyện cảm động
+          Nhn vt  c to s xut hin trong nhng trang sch vi cu chuyn cm ng
         </p>
       </div>
 
@@ -80,7 +80,7 @@ export function Step3BookPreview({ theme, character, onContinue }: Step3BookPrev
                       fontSize: `${Math.random() * 20 + 10}px`
                     }}
                   >
-                    ✨
+                    
                   </div>
                 ))}
               </div>
@@ -93,10 +93,10 @@ export function Step3BookPreview({ theme, character, onContinue }: Step3BookPrev
                     <div className="relative">
                       <CoupleIllustration character={character} theme={theme} size="lg" />
                       {/* Love decorations */}
-                      <div className="absolute -top-2 -right-2 text-3xl animate-pulse">💕</div>
-                      <div className="absolute -bottom-2 -left-2 text-2xl animate-pulse delay-150">💖</div>
-                      <div className="absolute top-1/4 -left-3 text-2xl animate-pulse delay-300">✨</div>
-                      <div className="absolute top-3/4 -right-3 text-2xl animate-pulse">✨</div>
+                      <div className="absolute -top-2 -right-2 text-3xl animate-pulse"></div>
+                      <div className="absolute -bottom-2 -left-2 text-2xl animate-pulse delay-150"></div>
+                      <div className="absolute top-1/4 -left-3 text-2xl animate-pulse delay-300"></div>
+                      <div className="absolute top-3/4 -right-3 text-2xl animate-pulse"></div>
                     </div>
                   ) : (
                     <div className="relative">
@@ -104,20 +104,20 @@ export function Step3BookPreview({ theme, character, onContinue }: Step3BookPrev
                       {/* Scene decoration based on theme */}
                       {theme === 'family' && (
                         <>
-                          <div className="absolute -top-4 -right-4 text-4xl animate-pulse">👨‍👩‍👧</div>
-                          <div className="absolute -bottom-4 -left-4 text-3xl animate-pulse delay-150">🏠</div>
+                          <div className="absolute -top-4 -right-4 text-4xl animate-pulse"></div>
+                          <div className="absolute -bottom-4 -left-4 text-3xl animate-pulse delay-150"></div>
                         </>
                       )}
                       {theme === 'birthday' && (
                         <>
-                          <div className="absolute -top-4 -right-4 text-4xl animate-pulse">🎂</div>
-                          <div className="absolute -bottom-4 -left-4 text-3xl animate-pulse delay-150">🎈</div>
+                          <div className="absolute -top-4 -right-4 text-4xl animate-pulse"></div>
+                          <div className="absolute -bottom-4 -left-4 text-3xl animate-pulse delay-150"></div>
                         </>
                       )}
                       {theme === 'friendship' && (
                         <>
-                          <div className="absolute -top-4 -right-4 text-4xl animate-pulse">🤝</div>
-                          <div className="absolute -bottom-4 -left-4 text-3xl animate-pulse delay-150">🌟</div>
+                          <div className="absolute -top-4 -right-4 text-4xl animate-pulse"></div>
+                          <div className="absolute -bottom-4 -left-4 text-3xl animate-pulse delay-150"></div>
                         </>
                       )}
                     </div>
@@ -144,22 +144,22 @@ export function Step3BookPreview({ theme, character, onContinue }: Step3BookPrev
               {/* Character Info */}
               <div className="space-y-4">
                 <div className="p-4 rounded-2xl bg-white/80 backdrop-blur shadow-md">
-                  <p className="text-sm text-gray-600 mb-3">Nhân vật của bạn:</p>
+                  <p className="text-sm text-gray-600 mb-3">Nhn vt ca bn:</p>
                   <div className="flex items-center gap-4">
                     <div className="w-20 h-24 rounded-2xl bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center overflow-hidden">
                       <CharacterIllustration character={character} size="sm" />
                     </div>
                     <div>
                       <p className="font-bold text-gray-900">
-                        {character.gender === 'male' ? 'Nam' : 'Nữ'} · Tóc {character.hairStyle === 'long' ? 'dài' : 'ngắn'}
+                        {character.gender === 'male' ? 'Nam' : 'N'}  Tc {character.hairStyle === 'long' ? 'di' : 'ngn'}
                       </p>
                       <p className="text-sm text-gray-600">
-                        {character.hairColor === 'black' ? 'Đen' :
-                         character.hairColor === 'brown' ? 'Nâu' :
-                         character.hairColor === 'red' ? 'Đỏ' :
-                         character.hairColor === 'blonde' ? 'Vàng' : 'Xám'} · 
-                        {character.outfit === 'casual' ? ' Thoải mái' :
-                         character.outfit === 'formal' ? ' Lịch sự' : ' Lãng mạn'}
+                        {character.hairColor === 'black' ? 'en' :
+                         character.hairColor === 'brown' ? 'Nu' :
+                         character.hairColor === 'red' ? '' :
+                         character.hairColor === 'blonde' ? 'Vng' : 'Xm'}  
+                        {character.outfit === 'casual' ? ' Thoi mi' :
+                         character.outfit === 'formal' ? ' Lch s' : ' Lng mn'}
                       </p>
                     </div>
                   </div>
@@ -202,8 +202,8 @@ export function Step3BookPreview({ theme, character, onContinue }: Step3BookPrev
       {/* Info Box */}
       <div className="max-w-3xl mx-auto mt-12 p-6 rounded-2xl bg-gradient-to-r from-pink-50 to-purple-50 border border-pink-200">
         <p className="text-center text-gray-700 leading-relaxed">
-          🎨 <strong>Quý khách hãy cứ thoải mái ngồi chỉnh sửa</strong>, đây là cuốn sách riêng khách, 
-          và khách sẽ chỉ chốt đơn cho đến khi nào ưng thôi! 💕
+           <strong>Qu khch hy c thoi mi ngi chnh sa</strong>, y l cun sch ring khch, 
+          v khch s ch cht n cho n khi no ng thi! 
         </p>
       </div>
 
@@ -213,7 +213,7 @@ export function Step3BookPreview({ theme, character, onContinue }: Step3BookPrev
           onClick={onContinue}
           className="flex-1 py-5 px-8 bg-black text-white rounded-full text-xl font-bold hover:bg-gray-800 transition-all hover:scale-105 shadow-xl flex items-center justify-center gap-3 group"
         >
-          Đặt hàng ngay
+          t hng ngay
           <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
         </button>
       </div>

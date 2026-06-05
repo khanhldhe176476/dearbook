@@ -88,7 +88,7 @@ export function MobileEditorToolbar({
 
             {/* Header */}
             <div className="px-6 py-4 border-b border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900">Công cụ chỉnh sửa</h3>
+              <h3 className="text-lg font-semibold text-gray-900">Cng c chnh sa</h3>
             </div>
 
             {/* Main Actions */}
@@ -105,7 +105,7 @@ export function MobileEditorToolbar({
                     className="flex flex-col items-center gap-2 p-4 rounded-xl border-2 border-gray-200 hover:border-pink-300 hover:bg-pink-50 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     <Undo2 className="w-6 h-6 text-gray-700" />
-                    <span className="text-sm font-medium text-gray-900">Hoàn tác</span>
+                    <span className="text-sm font-medium text-gray-900">Hon tc</span>
                   </button>
                   <button
                     onClick={() => {
@@ -116,14 +116,14 @@ export function MobileEditorToolbar({
                     className="flex flex-col items-center gap-2 p-4 rounded-xl border-2 border-gray-200 hover:border-pink-300 hover:bg-pink-50 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     <Redo2 className="w-6 h-6 text-gray-700" />
-                    <span className="text-sm font-medium text-gray-900">Làm lại</span>
+                    <span className="text-sm font-medium text-gray-900">Lm li</span>
                   </button>
                 </div>
 
                 {/* Add Elements */}
                 <div className="space-y-2">
                   <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    Thêm phần tử
+                    Thm phn t
                   </h4>
                   <div className="grid grid-cols-2 gap-3">
                     <button
@@ -134,7 +134,7 @@ export function MobileEditorToolbar({
                       className="flex flex-col items-center gap-2 p-4 rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200 hover:border-purple-300 hover:shadow-md transition-all"
                     >
                       <Type className="w-6 h-6 text-purple-600" />
-                      <span className="text-sm font-medium text-gray-900">Thêm chữ</span>
+                      <span className="text-sm font-medium text-gray-900">Thm ch</span>
                     </button>
                     <button
                       onClick={() => {
@@ -144,7 +144,7 @@ export function MobileEditorToolbar({
                       className="flex flex-col items-center gap-2 p-4 rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-200 hover:border-blue-300 hover:shadow-md transition-all"
                     >
                       <Image className="w-6 h-6 text-blue-600" />
-                      <span className="text-sm font-medium text-gray-900">Thêm ảnh</span>
+                      <span className="text-sm font-medium text-gray-900">Thm nh</span>
                     </button>
                   </div>
                 </div>
@@ -152,7 +152,7 @@ export function MobileEditorToolbar({
                 {/* View Controls */}
                 <div className="space-y-2">
                   <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    Quản lý
+                    Qun l
                   </h4>
                   <div className="grid grid-cols-2 gap-3">
                     <button
@@ -173,7 +173,7 @@ export function MobileEditorToolbar({
                       className="flex flex-col items-center gap-2 p-4 rounded-xl border-2 border-gray-200 hover:border-pink-300 hover:bg-pink-50 transition-all"
                     >
                       <Settings className="w-6 h-6 text-gray-700" />
-                      <span className="text-sm font-medium text-gray-900">Thuộc tính</span>
+                      <span className="text-sm font-medium text-gray-900">Thuc tnh</span>
                     </button>
                   </div>
                 </div>
@@ -181,7 +181,7 @@ export function MobileEditorToolbar({
                 {/* Actions */}
                 <div className="space-y-2">
                   <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    Hành động
+                    Hnh ng
                   </h4>
                   <div className="grid grid-cols-2 gap-3">
                     <button
@@ -195,12 +195,12 @@ export function MobileEditorToolbar({
                       {isSaving ? (
                         <>
                           <div className="w-6 h-6 border-2 border-green-600 border-t-transparent rounded-full animate-spin" />
-                          <span className="text-sm font-medium text-gray-900">Đang lưu...</span>
+                          <span className="text-sm font-medium text-gray-900">ang lu...</span>
                         </>
                       ) : (
                         <>
                           <Save className="w-6 h-6 text-green-600" />
-                          <span className="text-sm font-medium text-gray-900">Lưu</span>
+                          <span className="text-sm font-medium text-gray-900">Lu</span>
                         </>
                       )}
                     </button>
@@ -212,7 +212,7 @@ export function MobileEditorToolbar({
                       className="flex flex-col items-center gap-2 p-4 rounded-xl bg-gradient-to-br from-orange-50 to-amber-50 border-2 border-orange-200 hover:border-orange-300 hover:shadow-md transition-all"
                     >
                       <Download className="w-6 h-6 text-orange-600" />
-                      <span className="text-sm font-medium text-gray-900">Xuất file</span>
+                      <span className="text-sm font-medium text-gray-900">Xut file</span>
                     </button>
                   </div>
                 </div>

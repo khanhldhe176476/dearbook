@@ -16,19 +16,19 @@ export function Book3DPreviewPanel({ book, className = '' }: Book3DPreviewPanelP
       <div className="space-y-4">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <h3 className="font-bold text-gray-800">Xem trước 3D</h3>
+          <h3 className="font-bold text-gray-800">Xem trc 3D</h3>
           <div className="flex gap-2">
             <button
               onClick={() => setRotation(0)}
               className="p-2 hover:bg-gray-100 rounded-lg transition-all"
-              title="Reset góc nhìn"
+              title="Reset gc nhn"
             >
               <RotateCcw className="w-4 h-4 text-gray-600" />
             </button>
             <button
               onClick={() => setIsFullscreen(true)}
               className="p-2 hover:bg-gray-100 rounded-lg transition-all"
-              title="Toàn màn hình"
+              title="Ton mn hnh"
             >
               <Maximize2 className="w-4 h-4 text-gray-600" />
             </button>
@@ -59,7 +59,7 @@ export function Book3DPreviewPanel({ book, className = '' }: Book3DPreviewPanelP
               {/* Cover */}
               <div className="absolute inset-0 bg-gradient-to-br from-rose-400 via-pink-400 to-amber-400 rounded-r-lg flex items-center justify-center p-6">
                 <div className="text-center text-white">
-                  <p className="text-sm font-bold">{book.title || 'Cuốn sách của tôi'}</p>
+                  <p className="text-sm font-bold">{book.title || 'Cun sch ca ti'}</p>
                   <p className="text-xs mt-2 opacity-90">{book.pages?.length || 0} trang</p>
                 </div>
               </div>
@@ -78,14 +78,14 @@ export function Book3DPreviewPanel({ book, className = '' }: Book3DPreviewPanelP
           {/* Instructions */}
           <div className="absolute bottom-4 left-0 right-0 text-center">
             <p className="text-xs text-gray-600 bg-white/80 backdrop-blur-sm inline-block px-3 py-1 rounded-full">
-              🖱️ Kéo để xoay
+               Ko  xoay
             </p>
           </div>
         </div>
 
         {/* Controls */}
         <div className="space-y-2">
-          <label className="text-xs font-semibold text-gray-700">Góc xoay</label>
+          <label className="text-xs font-semibold text-gray-700">Gc xoay</label>
           <input
             type="range"
             min="0"
@@ -98,12 +98,12 @@ export function Book3DPreviewPanel({ book, className = '' }: Book3DPreviewPanelP
 
         {/* Info */}
         <div className="p-4 bg-gradient-to-br from-rose-50 to-amber-50 rounded-xl text-sm space-y-2">
-          <p className="font-semibold text-gray-800">📚 Chi tiết sách</p>
+          <p className="font-semibold text-gray-800"> Chi tit sch</p>
           <div className="space-y-1 text-xs text-gray-700">
-            <p>• Kích thước: 20×25cm</p>
-            <p>• Số trang: {book.pages?.length || 0}</p>
-            <p>• Chất liệu: Giấy cao cấp</p>
-            <p>• Bìa: Cứng, bo góc</p>
+            <p> Kch thc: 2025cm</p>
+            <p> S trang: {book.pages?.length || 0}</p>
+            <p> Cht liu: Giy cao cp</p>
+            <p> Ba: Cng, bo gc</p>
           </div>
         </div>
       </div>
@@ -115,7 +115,7 @@ export function Book3DPreviewPanel({ book, className = '' }: Book3DPreviewPanelP
             onClick={() => setIsFullscreen(false)}
             className="absolute top-4 right-4 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 flex items-center justify-center text-white text-2xl transition-all"
           >
-            ✕
+            
           </button>
 
           <div className="max-w-4xl w-full aspect-square flex items-center justify-center">
@@ -130,7 +130,7 @@ export function Book3DPreviewPanel({ book, className = '' }: Book3DPreviewPanelP
               <div className="w-48 h-64 bg-white rounded-r-lg shadow-2xl relative">
                 <div className="absolute inset-0 bg-gradient-to-br from-rose-400 via-pink-400 to-amber-400 rounded-r-lg flex items-center justify-center p-6">
                   <div className="text-center text-white">
-                    <p className="text-sm font-bold">{book.title || 'Cuốn sách của tôi'}</p>
+                    <p className="text-sm font-bold">{book.title || 'Cun sch ca ti'}</p>
                     <p className="text-xs mt-2 opacity-90">{book.pages?.length || 0} trang</p>
                   </div>
                 </div>

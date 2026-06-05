@@ -23,10 +23,10 @@ export function DesignFlow({ onComplete, onBackToProduct }: DesignFlowProps) {
   });
 
   const steps = [
-    { number: 1, label: 'Chọn chủ đề' },
-    { number: 2, label: 'Tạo nhân vật' },
-    { number: 3, label: 'Xem trước' },
-    { number: 4, label: 'Đặt hàng' }
+    { number: 1, label: 'Chn ch ' },
+    { number: 2, label: 'To nhn vt' },
+    { number: 3, label: 'Xem trc' },
+    { number: 4, label: 't hng' }
   ];
 
   const handleThemeSelect = (theme: 'love' | 'family' | 'birthday' | 'friendship') => {
@@ -48,7 +48,7 @@ export function DesignFlow({ onComplete, onBackToProduct }: DesignFlowProps) {
       const order: BookOrder = {
         theme: selectedTheme,
         character: character,
-        bookTitle: 'Em Yêu Anh',
+        bookTitle: 'Em Yu Anh',
         pages: 40,
         price: 570000
       };
@@ -76,11 +76,11 @@ export function DesignFlow({ onComplete, onBackToProduct }: DesignFlowProps) {
             >
               <ArrowLeft className="w-5 h-5" />
               <span className="font-medium">
-                {currentStep === 1 ? 'Trở lại trang sản phẩm' : 'Quay lại'}
+                {currentStep === 1 ? 'Tr li trang sn phm' : 'Quay li'}
               </span>
             </button>
             <div className="text-sm text-gray-600">
-              Bước {currentStep} / {steps.length}
+              Bc {currentStep} / {steps.length}
             </div>
           </div>
 

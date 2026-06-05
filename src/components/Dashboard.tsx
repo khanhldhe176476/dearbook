@@ -10,7 +10,7 @@ interface DashboardProps {
   onEditBook: (book: Book) => void;
 }
 
-/* ── Neutral palette tokens ── */
+/*  Neutral palette tokens  */
 const N = {
   ivory:      '#FAFAF8',
   cream:      '#F5F2EE',
@@ -47,23 +47,23 @@ export function Dashboard({ user, onLogout, onCreateBook, onEditBook }: Dashboar
   );
 
   const themes: { id: Theme; name: string; icon: any; description: string }[] = [
-    { id: 'love',       name: 'Tình yêu',  icon: Heart,    description: 'Cho người thương yêu' },
-    { id: 'family',     name: 'Gia đình',  icon: Users,    description: 'Kỷ niệm gia đình' },
-    { id: 'birthday',   name: 'Sinh nhật', icon: Cake,     description: 'Chúc mừng sinh nhật' },
-    { id: 'friendship', name: 'Tình bạn',  icon: Sparkles, description: 'Dành cho bạn bè' },
+    { id: 'love',       name: 'Tnh yu',  icon: Heart,    description: 'Cho ngi thng yu' },
+    { id: 'family',     name: 'Gia nh',  icon: Users,    description: 'K nim gia nh' },
+    { id: 'birthday',   name: 'Sinh nht', icon: Cake,     description: 'Chc mng sinh nht' },
+    { id: 'friendship', name: 'Tnh bn',  icon: Sparkles, description: 'Dnh cho bn b' },
   ];
 
   return (
     <div className="min-h-screen" style={{ background: N.ivory }}>
 
-      {/* ── Subtle dot pattern ── */}
+      {/*  Subtle dot pattern  */}
       <div className="fixed inset-0 pointer-events-none opacity-40"
            style={{
              backgroundImage: `radial-gradient(circle, ${N.sand} 1px, transparent 1px)`,
              backgroundSize: '28px 28px',
            }} />
 
-      {/* ── Header ── */}
+      {/*  Header  */}
       <header
         className="sticky top-0 z-50"
         style={{
@@ -102,7 +102,7 @@ export function Dashboard({ user, onLogout, onCreateBook, onEditBook }: Dashboar
             <button
               onClick={onLogout}
               className="p-2.5 rounded-xl transition-colors"
-              title="Đăng xuất"
+              title="ng xut"
               style={{ color: N.stone }}
               onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = N.sandLight)}
               onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = 'transparent')}
@@ -115,23 +115,23 @@ export function Dashboard({ user, onLogout, onCreateBook, onEditBook }: Dashboar
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 py-8">
 
-        {/* ── Welcome Section ── */}
+        {/*  Welcome Section  */}
         <div className="mb-8">
           <div className="flex flex-col lg:flex-row gap-6 items-start">
             <div className="flex-1">
               <h2 className="text-3xl font-bold mb-2" style={{ color: N.espresso }}>
-                Chào mừng trở lại, {user.name} 👋
+                Cho mng tr li, {user.name} 
               </h2>
               <p className="text-base" style={{ color: N.taupe }}>
-                Tạo những cuốn sách tuyệt vời với câu chuyện của riêng bạn
+                To nhng cun sch tuyt vi vi cu chuyn ca ring bn
               </p>
 
               {/* Stats */}
               <div className="grid grid-cols-3 gap-3 mt-5">
                 {[
-                  { icon: BookOpen, label: 'Sách của bạn', value: savedBooks.length,                                         color: N.espresso },
-                  { icon: Star,     label: 'Đã hoàn thành', value: savedBooks.filter(b => b.pages.length >= 8).length,       color: N.accent },
-                  { icon: Zap,      label: 'Đang làm',      value: savedBooks.filter(b => b.pages.length < 8).length,        color: N.taupe },
+                  { icon: BookOpen, label: 'Sch ca bn', value: savedBooks.length,                                         color: N.espresso },
+                  { icon: Star,     label: ' hon thnh', value: savedBooks.filter(b => b.pages.length >= 8).length,       color: N.accent },
+                  { icon: Zap,      label: 'ang lm',      value: savedBooks.filter(b => b.pages.length < 8).length,        color: N.taupe },
                 ].map((stat, i) => {
                   const Icon = stat.icon;
                   return (
@@ -164,7 +164,7 @@ export function Dashboard({ user, onLogout, onCreateBook, onEditBook }: Dashboar
                   style={{ background: 'linear-gradient(to top, rgba(28,23,21,0.75), transparent)' }}
                 >
                   <p className="text-xs font-medium" style={{ color: N.sandLight }}>
-                    "Mỗi cuốn sách là một món quà từ trái tim" 💝
+                    "Mi cun sch l mt mn qu t tri tim" 
                   </p>
                 </div>
               </div>
@@ -172,7 +172,7 @@ export function Dashboard({ user, onLogout, onCreateBook, onEditBook }: Dashboar
           </div>
         </div>
 
-        {/* ── Create New Book Button ── */}
+        {/*  Create New Book Button  */}
         <div className="mb-8">
           <button
             onClick={() => setShowCreateModal(true)}
@@ -197,19 +197,19 @@ export function Dashboard({ user, onLogout, onCreateBook, onEditBook }: Dashboar
               <Plus className="w-7 h-7" style={{ color: N.sandLight }} strokeWidth={2.5} />
             </div>
             <div className="text-left">
-              <p className="text-xl font-bold" style={{ color: N.espresso }}>Tạo sách mới</p>
-              <p className="text-sm" style={{ color: N.taupe }}>Bắt đầu hành trình sáng tạo của bạn</p>
+              <p className="text-xl font-bold" style={{ color: N.espresso }}>To sch mi</p>
+              <p className="text-sm" style={{ color: N.taupe }}>Bt u hnh trnh sng to ca bn</p>
             </div>
           </button>
         </div>
 
-        {/* ── Search & View Toggle ── */}
+        {/*  Search & View Toggle  */}
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
           <div className="flex-1 relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: N.stone }} />
             <input
               type="text"
-              placeholder="Tìm kiếm sách..."
+              placeholder="Tm kim sch..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-11 pr-4 py-3 rounded-xl outline-none transition-all text-sm"
@@ -241,11 +241,11 @@ export function Dashboard({ user, onLogout, onCreateBook, onEditBook }: Dashboar
           </div>
         </div>
 
-        {/* ── Library ── */}
+        {/*  Library  */}
         <div className="mb-10">
           <h3 className="text-xl font-bold mb-5 flex items-center gap-2" style={{ color: N.espresso }}>
             <BookOpen className="w-5 h-5" style={{ color: N.taupe }} />
-            Thư viện của tôi ({filteredBooks.length})
+            Th vin ca ti ({filteredBooks.length})
           </h3>
 
           {filteredBooks.length === 0 ? (
@@ -260,12 +260,12 @@ export function Dashboard({ user, onLogout, onCreateBook, onEditBook }: Dashboar
                 <BookHeart className="w-12 h-12" style={{ color: N.stone }} />
               </div>
               <h4 className="text-xl font-bold mb-2" style={{ color: N.espresso }}>
-                {searchQuery ? 'Không tìm thấy sách nào' : 'Chưa có cuốn sách nào'}
+                {searchQuery ? 'Khng tm thy sch no' : 'Cha c cun sch no'}
               </h4>
               <p className="text-sm mb-6 max-w-sm mx-auto" style={{ color: N.taupe }}>
                 {searchQuery
-                  ? 'Thử tìm kiếm với từ khoá khác nhé!'
-                  : 'Bắt đầu tạo cuốn sách đầu tiên và lưu giữ những khoảnh khắc đáng nhớ'}
+                  ? 'Th tm kim vi t kho khc nh!'
+                  : 'Bt u to cun sch u tin v lu gi nhng khonh khc ng nh'}
               </p>
               {!searchQuery && (
                 <button
@@ -273,7 +273,7 @@ export function Dashboard({ user, onLogout, onCreateBook, onEditBook }: Dashboar
                   className="px-7 py-3 rounded-xl font-semibold transition-all hover:-translate-y-0.5"
                   style={{ background: N.espresso, color: N.sandLight, boxShadow: `0 4px 16px rgba(60,46,40,0.20)` }}
                 >
-                  Tạo sách đầu tiên
+                  To sch u tin
                 </button>
               )}
             </div>
@@ -292,23 +292,23 @@ export function Dashboard({ user, onLogout, onCreateBook, onEditBook }: Dashboar
           )}
         </div>
 
-        {/* ── Inspiration Footer Banner ── */}
+        {/*  Inspiration Footer Banner  */}
         {filteredBooks.length > 0 && (
           <div
             className="rounded-2xl p-7 flex flex-col md:flex-row items-center gap-6"
             style={{ background: N.cream, border: `1px solid ${N.sand}` }}
           >
             <div className="flex-1">
-              <h3 className="text-xl font-bold mb-2" style={{ color: N.espresso }}>Tiếp tục sáng tạo!</h3>
+              <h3 className="text-xl font-bold mb-2" style={{ color: N.espresso }}>Tip tc sng to!</h3>
               <p className="text-sm mb-4" style={{ color: N.taupe }}>
-                Hãy tiếp tục tạo thêm những cuốn sách tuyệt vời nữa nhé.
+                Hy tip tc to thm nhng cun sch tuyt vi na nh.
               </p>
               <button
                 onClick={() => setShowCreateModal(true)}
                 className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all"
                 style={{ background: N.espresso, color: N.sandLight }}
               >
-                Tạo thêm sách mới
+                To thm sch mi
               </button>
             </div>
             <div className="w-full md:w-56">
@@ -322,7 +322,7 @@ export function Dashboard({ user, onLogout, onCreateBook, onEditBook }: Dashboar
         )}
       </div>
 
-      {/* ── Create Modal ── */}
+      {/*  Create Modal  */}
       {showCreateModal && (
         <div
           className="fixed inset-0 flex items-center justify-center p-4 z-50"
@@ -336,8 +336,8 @@ export function Dashboard({ user, onLogout, onCreateBook, onEditBook }: Dashboar
             <div className="p-7">
               <div className="flex items-start justify-between mb-6">
                 <div>
-                  <h3 className="text-2xl font-bold mb-1" style={{ color: N.espresso }}>Chọn chủ đề sách</h3>
-                  <p className="text-sm" style={{ color: N.taupe }}>Chọn chủ đề phù hợp với câu chuyện của bạn</p>
+                  <h3 className="text-2xl font-bold mb-1" style={{ color: N.espresso }}>Chn ch  sch</h3>
+                  <p className="text-sm" style={{ color: N.taupe }}>Chn ch  ph hp vi cu chuyn ca bn</p>
                 </div>
                 <button
                   onClick={() => setShowCreateModal(false)}
@@ -346,7 +346,7 @@ export function Dashboard({ user, onLogout, onCreateBook, onEditBook }: Dashboar
                   onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = N.sandLight)}
                   onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = 'transparent')}
                 >
-                  ✕
+                  
                 </button>
               </div>
 
@@ -394,7 +394,7 @@ export function Dashboard({ user, onLogout, onCreateBook, onEditBook }: Dashboar
   );
 }
 
-/* ── BookCard Component ─────────────────────────────────────────── */
+/*  BookCard Component  */
 function BookCard({
   book, viewMode, onEdit, onDelete,
 }: {
@@ -404,10 +404,10 @@ function BookCard({
   onDelete: () => void;
 }) {
   const themeIcons: Record<string, string> = {
-    love: '💕', family: '👨‍👩‍👧', birthday: '🎂', friendship: '🤝',
+    love: '', family: '', birthday: '', friendship: '',
   };
   const themeLabels: Record<string, string> = {
-    love: 'Tình yêu', family: 'Gia đình', birthday: 'Sinh nhật', friendship: 'Tình bạn',
+    love: 'Tnh yu', family: 'Gia nh', birthday: 'Sinh nht', friendship: 'Tnh bn',
   };
 
   const bgMap: Record<string, string> = {
@@ -436,7 +436,7 @@ function BookCard({
             {new Date(book.updatedAt).toLocaleDateString('vi-VN')}
           </p>
           <p className="text-xs mt-0.5" style={{ color: N.stone }}>
-            {book.pages.length} trang · {themeLabels[book.theme]}
+            {book.pages.length} trang  {themeLabels[book.theme]}
           </p>
         </div>
         <div className="flex gap-2">
@@ -489,7 +489,7 @@ function BookCard({
             onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = N.ink)}
             onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = N.espresso)}
           >
-            <Edit className="w-3.5 h-3.5" /> Chỉnh sửa
+            <Edit className="w-3.5 h-3.5" /> Chnh sa
           </button>
           <button
             onClick={onDelete}

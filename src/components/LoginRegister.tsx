@@ -50,8 +50,8 @@ export function LoginRegister({ onLogin, onRegister, onLoginSuccess, onBack }: L
             </div>
 
             <h2 className="text-4xl font-bold mb-6 leading-tight">
-              Tạo sách quà tặng<br />
-              <span className="font-handwriting gradient-text">đầy cảm xúc</span>
+              To sch qu tng<br />
+              <span className="font-handwriting gradient-text">y cm xc</span>
             </h2>
 
             <div className="space-y-4 mb-8">
@@ -62,8 +62,8 @@ export function LoginRegister({ onLogin, onRegister, onLoginSuccess, onBack }: L
                   </svg>
                 </div>
                 <div>
-                  <p className="font-semibold text-gray-800">Hơn 20 mẫu đẹp</p>
-                  <p className="text-sm text-gray-600">Được thiết kế bởi chuyên gia</p>
+                  <p className="font-semibold text-gray-800">Hn 20 mu p</p>
+                  <p className="text-sm text-gray-600">c thit k bi chuyn gia</p>
                 </div>
               </div>
 
@@ -74,8 +74,8 @@ export function LoginRegister({ onLogin, onRegister, onLoginSuccess, onBack }: L
                   </svg>
                 </div>
                 <div>
-                  <p className="font-semibold text-gray-800">Chỉnh sửa dễ dàng</p>
-                  <p className="text-sm text-gray-600">Kéo thả, thay đổi mọi thứ</p>
+                  <p className="font-semibold text-gray-800">Chnh sa d dng</p>
+                  <p className="text-sm text-gray-600">Ko th, thay i mi th</p>
                 </div>
               </div>
 
@@ -86,8 +86,8 @@ export function LoginRegister({ onLogin, onRegister, onLoginSuccess, onBack }: L
                   </svg>
                 </div>
                 <div>
-                  <p className="font-semibold text-gray-800">Xem trước 3D</p>
-                  <p className="text-sm text-gray-600">Như cuốn sách thật</p>
+                  <p className="font-semibold text-gray-800">Xem trc 3D</p>
+                  <p className="text-sm text-gray-600">Nh cun sch tht</p>
                 </div>
               </div>
             </div>
@@ -114,12 +114,12 @@ export function LoginRegister({ onLogin, onRegister, onLoginSuccess, onBack }: L
 
           <div className="mb-8">
             <h3 className="text-3xl font-bold mb-2">
-              {isLogin ? 'Chào mừng trở lại!' : 'Tạo tài khoản'}
+              {isLogin ? 'Cho mng tr li!' : 'To ti khon'}
             </h3>
             <p className="text-gray-600">
               {isLogin 
-                ? 'Đăng nhập để tiếp tục sáng tạo' 
-                : 'Bắt đầu tạo sách của bạn ngay hôm nay'}
+                ? 'ng nhp  tip tc sng to' 
+                : 'Bt u to sch ca bn ngay hm nay'}
             </p>
           </div>
 
@@ -135,7 +135,7 @@ export function LoginRegister({ onLogin, onRegister, onLoginSuccess, onBack }: L
               <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
               <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
             </svg>
-            <span className="font-medium">Tiếp tục với Google</span>
+            <span className="font-medium">Tip tc vi Google</span>
           </button>
 
           {/* Divider */}
@@ -144,7 +144,7 @@ export function LoginRegister({ onLogin, onRegister, onLoginSuccess, onBack }: L
               <div className="w-full border-t border-gray-200"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white text-gray-500">Hoặc</span>
+              <span className="px-4 bg-white text-gray-500">Hoc</span>
             </div>
           </div>
 
@@ -153,7 +153,7 @@ export function LoginRegister({ onLogin, onRegister, onLoginSuccess, onBack }: L
             {!isLogin && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Họ và tên
+                  H v tn
                 </label>
                 <div className="relative">
                   <User className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -161,7 +161,7 @@ export function LoginRegister({ onLogin, onRegister, onLoginSuccess, onBack }: L
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Nguyễn Văn A"
+                    placeholder="Nguyn Vn A"
                     className="input pl-12"
                     required={!isLogin}
                   />
@@ -188,7 +188,7 @@ export function LoginRegister({ onLogin, onRegister, onLoginSuccess, onBack }: L
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Mật khẩu
+                Mt khu
               </label>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -196,7 +196,7 @@ export function LoginRegister({ onLogin, onRegister, onLoginSuccess, onBack }: L
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder=""
                   className="input pl-12 pr-12"
                   required
                 />
@@ -214,10 +214,10 @@ export function LoginRegister({ onLogin, onRegister, onLoginSuccess, onBack }: L
               <div className="flex items-center justify-between text-sm">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-pink-600 focus:ring-pink-500" />
-                  <span className="text-gray-600">Ghi nhớ đăng nhập</span>
+                  <span className="text-gray-600">Ghi nh ng nhp</span>
                 </label>
                 <a href="#" className="text-pink-600 hover:text-pink-700 font-medium">
-                  Quên mật khẩu?
+                  Qun mt khu?
                 </a>
               </div>
             )}
@@ -230,7 +230,7 @@ export function LoginRegister({ onLogin, onRegister, onLoginSuccess, onBack }: L
               {loading ? (
                 <div className="spinner"></div>
               ) : (
-                isLogin ? 'Đăng nhập' : 'Tạo tài khoản'
+                isLogin ? 'ng nhp' : 'To ti khon'
               )}
             </button>
           </form>
@@ -238,24 +238,24 @@ export function LoginRegister({ onLogin, onRegister, onLoginSuccess, onBack }: L
           {/* Toggle Form */}
           <div className="mt-6 text-center">
             <p className="text-gray-600">
-              {isLogin ? 'Chưa có tài khoản?' : 'Đã có tài khoản?'}
+              {isLogin ? 'Cha c ti khon?' : ' c ti khon?'}
               {' '}
               <button
                 type="button"
                 onClick={() => setIsLogin(!isLogin)}
                 className="text-pink-600 hover:text-pink-700 font-semibold"
               >
-                {isLogin ? 'Đăng ký ngay' : 'Đăng nhập'}
+                {isLogin ? 'ng k ngay' : 'ng nhp'}
               </button>
             </p>
           </div>
 
           {/* Terms */}
           <p className="mt-6 text-xs text-gray-500 text-center">
-            Bằng cách tiếp tục, bạn đồng ý với{' '}
-            <a href="#" className="text-pink-600 hover:underline">Điều khoản sử dụng</a>
-            {' '}và{' '}
-            <a href="#" className="text-pink-600 hover:underline">Chính sách bảo mật</a>
+            Bng cch tip tc, bn ng  vi{' '}
+            <a href="#" className="text-pink-600 hover:underline">iu khon s dng</a>
+            {' '}v{' '}
+            <a href="#" className="text-pink-600 hover:underline">Chnh sch bo mt</a>
           </p>
         </div>
       </div>

@@ -245,7 +245,7 @@ function RealisticBook({
           color: 'rgba(255,255,255,0.9)',
           filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))'
         }}>
-          ✦
+          
         </div>
 
         {/* Main Title */}
@@ -280,7 +280,7 @@ function RealisticBook({
             fontSize: '1rem',
             color: 'rgba(255,255,255,0.8)'
           }}>
-            ❖
+            
           </div>
           <div style={{
             width: '60px',
@@ -299,10 +299,10 @@ function RealisticBook({
           textShadow: '0 2px 8px rgba(0,0,0,0.3)',
           marginBottom: '2.5rem'
         }}>
-          {theme === 'love' && '💝'}
-          {theme === 'family' && '👨‍👩‍👧‍👦'}
-          {theme === 'birthday' && '🎂'}
-          {theme === 'friendship' && '🤝'}
+          {theme === 'love' && ''}
+          {theme === 'family' && ''}
+          {theme === 'birthday' && ''}
+          {theme === 'friendship' && ''}
         </div>
         
         {/* Bottom ornament */}
@@ -313,7 +313,7 @@ function RealisticBook({
           filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))',
           marginBottom: '1.5rem'
         }}>
-          ✦
+          
         </div>
 
         {/* DearBook brand */}
@@ -338,8 +338,8 @@ function RealisticBook({
 
   // Helper to format page label
   const getPageLabel = (pageIndex: number) => {
-    if (pageIndex === 0) return 'Bìa trước';
-    if (pageIndex === totalPages - 1) return 'Bìa sau';
+    if (pageIndex === 0) return 'Ba trc';
+    if (pageIndex === totalPages - 1) return 'Ba sau';
     return `${pageIndex}`;
   };
 
@@ -501,8 +501,8 @@ function RealisticBook({
               fontWeight: 600,
               letterSpacing: '0.5px'
             }}>
-              {currentPageIndex === 0 ? 'Bìa trước' : 
-               currentPageIndex === totalPages - 1 ? 'Bìa sau' : 
+              {currentPageIndex === 0 ? 'Ba trc' : 
+               currentPageIndex === totalPages - 1 ? 'Ba sau' : 
                `Trang ${currentPageIndex} / ${totalPages - 2}`}
             </div>
           </div>
@@ -1306,8 +1306,8 @@ function LoadingView() {
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
       <Loader2 className="w-16 h-16 text-pink-400 animate-spin mb-4" />
-      <p className="text-gray-600 text-lg font-medium">Đang tạo bản xem trước 3D...</p>
-      <p className="text-gray-400 text-sm mt-2">Vui lòng đợi trong giây lát</p>
+      <p className="text-gray-600 text-lg font-medium">ang to bn xem trc 3D...</p>
+      <p className="text-gray-400 text-sm mt-2">Vui lng i trong giy lt</p>
     </div>
   );
 }
@@ -1319,8 +1319,8 @@ function EmptyView() {
       <div className="w-24 h-24 mb-6 rounded-2xl bg-gradient-to-br from-pink-200 to-purple-200 flex items-center justify-center">
         <BookOpen className="w-12 h-12 text-white" />
       </div>
-      <h3 className="text-2xl font-semibold text-gray-800 mb-2">Chưa có nội dung</h3>
-      <p className="text-gray-500">Hãy thêm nội dung vào cuốn sách của bạn</p>
+      <h3 className="text-2xl font-semibold text-gray-800 mb-2">Cha c ni dung</h3>
+      <p className="text-gray-500">Hy thm ni dung vo cun sch ca bn</p>
     </div>
   );
 }
@@ -1362,7 +1362,7 @@ export default function Book3DOverviewPreview({
       {
         id: 'back-text-1',
         type: 'text' as const,
-        content: 'Tạo bởi DearMemories',
+        content: 'To bi DearMemories',
         x: 150,
         y: 450,
         width: 300,
@@ -1376,7 +1376,7 @@ export default function Book3DOverviewPreview({
       {
         id: 'back-text-2',
         type: 'text' as const,
-        content: 'Thiết kế sách cá nhân hoá',
+        content: 'Thit k sch c nhn ho',
         x: 150,
         y: 485,
         width: 300,
@@ -1533,11 +1533,11 @@ export default function Book3DOverviewPreview({
             onClick={onClose}
             className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition font-medium text-gray-700"
           >
-            ← Quay lại
+             Quay li
           </button>
           <div className="h-6 w-px bg-gray-300" />
           <h2 className="text-lg font-semibold text-gray-800">
-            {bookData?.title || 'Xem trước 3D'}
+            {bookData?.title || 'Xem trc 3D'}
           </h2>
         </div>
 
@@ -1553,10 +1553,10 @@ export default function Book3DOverviewPreview({
                 ? 'bg-white text-rose-600 shadow-sm'
                 : 'text-gray-600 hover:text-gray-900'
             }`}
-            title="Chế độ tổng quan"
+            title="Ch  tng quan"
           >
             <Maximize2 className="w-4 h-4" />
-            Tổng quan
+            Tng quan
           </button>
           <button
             onClick={() => setViewMode('flip')}
@@ -1565,10 +1565,10 @@ export default function Book3DOverviewPreview({
                 ? 'bg-white text-rose-600 shadow-sm'
                 : 'text-gray-600 hover:text-gray-900'
             }`}
-            title="Chế độ lật trang"
+            title="Ch  lt trang"
           >
             <BookOpen className="w-4 h-4" />
-            Lật trang
+            Lt trang
           </button>
           <button
             onClick={() => setViewMode('read')}
@@ -1577,10 +1577,10 @@ export default function Book3DOverviewPreview({
                 ? 'bg-white text-rose-600 shadow-sm'
                 : 'text-gray-600 hover:text-gray-900'
             }`}
-            title="Chế độ đọc"
+            title="Ch  c"
           >
             <FileText className="w-4 h-4" />
-            Đọc
+            c
           </button>
         </div>
       </div>
@@ -1621,7 +1621,7 @@ export default function Book3DOverviewPreview({
             <button
               onClick={handleZoomOut}
               className="p-2.5 hover:bg-gray-100 rounded-xl transition-all hover:scale-110 active:scale-95"
-              title="Thu nhỏ (hoặc lăn chuột)"
+              title="Thu nh (hoc ln chut)"
             >
               <ZoomOut className="w-5 h-5 text-gray-700" />
             </button>
@@ -1631,7 +1631,7 @@ export default function Book3DOverviewPreview({
             <button
               onClick={handleZoomIn}
               className="p-2.5 hover:bg-gray-100 rounded-xl transition-all hover:scale-110 active:scale-95"
-              title="Phóng to (hoặc lăn chuột)"
+              title="Phng to (hoc ln chut)"
             >
               <ZoomIn className="w-5 h-5 text-gray-700" />
             </button>
@@ -1639,7 +1639,7 @@ export default function Book3DOverviewPreview({
             <button
               onClick={handleReset}
               className="p-2.5 hover:bg-rose-50 rounded-xl transition-all hover:scale-110 active:scale-95 group"
-              title="Đặt lại góc nhìn sản phẩm"
+              title="t li gc nhn sn phm"
             >
               <Home className="w-5 h-5 text-gray-700 group-hover:text-rose-600 transition-colors" />
             </button>
@@ -1648,7 +1648,7 @@ export default function Book3DOverviewPreview({
                 setRotation({ x: -30, y: 180 });
               }}
               className="p-2.5 hover:bg-purple-50 rounded-xl transition-all hover:scale-110 active:scale-95 group"
-              title="Xoay 180° (xem bìa sau)"
+              title="Xoay 180 (xem ba sau)"
             >
               <RotateCw className="w-5 h-5 text-gray-700 group-hover:text-purple-600 transition-colors" />
             </button>
@@ -1662,13 +1662,13 @@ export default function Book3DOverviewPreview({
               onClick={handlePrevPage}
               disabled={currentPageIndex === 0 || isFlipping}
               className="p-2 hover:bg-gray-100 rounded-lg transition disabled:opacity-40 disabled:cursor-not-allowed"
-              title="Trang trước"
+              title="Trang trc"
             >
               <ChevronLeft className="w-5 h-5 text-gray-700" />
             </button>
             <div className="px-3 py-1 bg-gray-100 rounded-md text-sm font-medium text-gray-700">
-              {currentPageIndex === 0 ? 'Bìa trước' : 
-               currentPageIndex === totalPages - 1 ? 'Bìa sau' : 
+              {currentPageIndex === 0 ? 'Ba trc' : 
+               currentPageIndex === totalPages - 1 ? 'Ba sau' : 
                `Trang ${currentPageIndex} / ${totalPages - 2}`}
             </div>
             <button
@@ -1683,7 +1683,7 @@ export default function Book3DOverviewPreview({
             <button
               onClick={handleReset}
               className="p-2 hover:bg-gray-100 rounded-lg transition"
-              title="Về đầu"
+              title="V u"
             >
               <Home className="w-5 h-5 text-gray-700" />
             </button>
@@ -1699,9 +1699,9 @@ export default function Book3DOverviewPreview({
               <Maximize2 className="w-5 h-5 text-white" />
             </div>
             <div>
-              <p className="text-xs font-semibold text-gray-800 mb-0.5">Điều khiển 3D</p>
+              <p className="text-xs font-semibold text-gray-800 mb-0.5">iu khin 3D</p>
               <p className="text-xs text-gray-500">
-                🖱️ Kéo để xoay • 🔍 Lăn để zoom
+                 Ko  xoay   Ln  zoom
               </p>
             </div>
           </div>
@@ -1711,7 +1711,7 @@ export default function Book3DOverviewPreview({
       {/* Quality indicator badge */}
       <div className="absolute top-24 right-6 bg-gradient-to-br from-emerald-500 to-teal-600 backdrop-blur-xl px-4 py-2 rounded-xl shadow-xl border border-emerald-400/30">
         <p className="text-xs font-bold text-white tracking-wide">
-          ✨ PHOTOREALISTIC 3D
+           PHOTOREALISTIC 3D
         </p>
       </div>
     </div>

@@ -26,23 +26,23 @@ export function CoverTemplateSelector({
 
   const themeInfo = {
     love: {
-      icon: '💕',
-      title: 'Trang bìa tình yêu',
+      icon: '',
+      title: 'Trang ba tnh yu',
       gradient: 'from-pink-500 to-rose-500'
     },
     family: {
-      icon: '👨‍👩‍👧',
-      title: 'Trang bìa gia đình',
+      icon: '',
+      title: 'Trang ba gia nh',
       gradient: 'from-blue-500 to-cyan-500'
     },
     birthday: {
-      icon: '🎂',
-      title: 'Trang bìa sinh nhật',
+      icon: '',
+      title: 'Trang ba sinh nht',
       gradient: 'from-purple-500 to-pink-500'
     },
     friendship: {
-      icon: '🤝',
-      title: 'Trang bìa tình bạn',
+      icon: '',
+      title: 'Trang ba tnh bn',
       gradient: 'from-amber-500 to-orange-500'
     }
   };
@@ -61,7 +61,7 @@ export function CoverTemplateSelector({
               </div>
               <div>
                 <h2 className="text-2xl font-bold">{info.title}</h2>
-                <p className="text-white/90 text-sm">Chọn thiết kế yêu thích của bạn</p>
+                <p className="text-white/90 text-sm">Chn thit k yu thch ca bn</p>
               </div>
             </div>
             <button
@@ -140,7 +140,7 @@ export function CoverTemplateSelector({
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
                     <div className="bg-white/95 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold text-gray-900 flex items-center gap-2">
                       <Sparkles className="w-4 h-4 text-pink-500" />
-                      Chọn mẫu này
+                      Chn mu ny
                     </div>
                   </div>
 
@@ -164,7 +164,7 @@ export function CoverTemplateSelector({
                 <div className="p-4 bg-white">
                   <h3 className="font-semibold text-gray-900">{template.name}</h3>
                   <p className="text-xs text-gray-500 mt-1 capitalize">
-                    Phong cách {template.style}
+                    Phong cch {template.style}
                   </p>
                 </div>
               </div>
@@ -178,10 +178,10 @@ export function CoverTemplateSelector({
                 <Palette className="w-10 h-10 text-gray-400" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Chưa có mẫu nào
+                Cha c mu no
               </h3>
               <p className="text-gray-500">
-                Chúng tôi đang phát triển thêm các mẫu trang bìa cho chủ đề này
+                Chng ti ang pht trin thm cc mu trang ba cho ch  ny
               </p>
             </div>
           )}
@@ -191,13 +191,13 @@ export function CoverTemplateSelector({
         <div className="border-t border-gray-200 p-4 bg-gray-50">
           <div className="flex items-center justify-between">
             <p className="text-sm text-gray-600">
-              💡 Bạn có thể chỉnh sửa trang bìa sau khi chọn
+               Bn c th chnh sa trang ba sau khi chn
             </p>
             <button
               onClick={onClose}
               className="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-xl font-medium transition-colors"
             >
-              Đóng
+              ng
             </button>
           </div>
         </div>

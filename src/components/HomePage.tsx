@@ -21,11 +21,11 @@ interface HomePageProps {
   onLogout?: () => void;
 }
 
-/* ═══════════════════════════════════════════════════════════
+/* 
    CSS-in-JS styles for hover effects & animations
-   ═══════════════════════════════════════════════════════════ */
+    */
 const styles = `
-  /* ── Keyframes ── */
+  /*  Keyframes  */
   @keyframes floatSlow {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-12px); }
@@ -66,7 +66,7 @@ const styles = `
   .animate-slide-left { animation: slideInLeft 0.7s ease-out forwards; }
   .animate-slide-right { animation: slideInRight 0.7s ease-out forwards; }
 
-  /* ── Product Card Hover ── */
+  /*  Product Card Hover  */
   .product-card {
     transition: all 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     position: relative;
@@ -90,7 +90,7 @@ const styles = `
     opacity: 1;
   }
 
-  /* ── Image hover zoom ── */
+  /*  Image hover zoom  */
   .img-zoom {
     transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.6s ease;
   }
@@ -99,7 +99,7 @@ const styles = `
     filter: brightness(1.05);
   }
 
-  /* ── Badge pulse on hover ── */
+  /*  Badge pulse on hover  */
   .price-badge {
     transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
@@ -107,7 +107,7 @@ const styles = `
     transform: scale(1.15) rotate(-3deg);
   }
 
-  /* ── Tier card ── */
+  /*  Tier card  */
   .tier-card {
     transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     position: relative;
@@ -130,7 +130,7 @@ const styles = `
     width: 80%;
   }
 
-  /* ── Book mockup hover ── */
+  /*  Book mockup hover  */
   .book-mockup {
     transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
@@ -139,7 +139,7 @@ const styles = `
     box-shadow: 0 20px 40px -10px rgba(107, 75, 67, 0.2);
   }
 
-  /* ── Blind box hover ── */
+  /*  Blind box hover  */
   .blind-box-card {
     transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     position: relative;
@@ -162,7 +162,7 @@ const styles = `
     opacity: 1;
   }
 
-  /* ── Nav link underline effect ── */
+  /*  Nav link underline effect  */
   .nav-link {
     position: relative;
     transition: color 0.3s ease;
@@ -183,7 +183,7 @@ const styles = `
     width: 100%;
   }
 
-  /* ── CTA Button ── */
+  /*  CTA Button  */
   .cta-btn {
     position: relative;
     overflow: hidden;
@@ -207,7 +207,7 @@ const styles = `
     width: 300px; height: 300px;
   }
 
-  /* ── Shimmer text ── */
+  /*  Shimmer text  */
   .shimmer-text {
     background: linear-gradient(90deg, #B9423A, #E6C7B8, #F7E2D4, #E6C7B8, #B9423A);
     background-size: 200% auto;
@@ -217,7 +217,7 @@ const styles = `
     animation: shimmer 4s linear infinite;
   }
 
-  /* ── Glassmorphism ── */
+  /*  Glassmorphism  */
   .glass {
     background: rgba(255, 248, 241, 0.9);
     backdrop-filter: blur(20px);
@@ -225,7 +225,7 @@ const styles = `
     border-bottom: 1px solid rgba(230, 199, 184, 0.5);
   }
 
-  /* ── Photo strip hover ── */
+  /*  Photo strip hover  */
   .photo-strip {
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
@@ -234,7 +234,7 @@ const styles = `
     box-shadow: 0 20px 40px -10px rgba(107, 75, 67, 0.15);
   }
 
-  /* ── Scroll reveal ── */
+  /*  Scroll reveal  */
   .reveal {
     opacity: 0;
     transform: translateY(30px);
@@ -245,22 +245,22 @@ const styles = `
     transform: translateY(0);
   }
 
-  /* ── Section divider ── */
+  /*  Section divider  */
   .section-divider {
     background: linear-gradient(90deg, transparent, rgba(185, 66, 58, 0.3), transparent);
     height: 1px;
   }
 
-  /* ── Decorative dot pattern ── */
+  /*  Decorative dot pattern  */
   .dot-pattern {
     background-image: radial-gradient(circle, rgba(185, 66, 58, 0.08) 1px, transparent 1px);
     background-size: 24px 24px;
   }
 `;
 
-/* ═══════════════════════════════════════════════════════════
+/* 
    Sub-components
-   ═══════════════════════════════════════════════════════════ */
+    */
 
 const PriceTag = ({ price, size = 'md' }: { price: string; size?: 'sm' | 'md' | 'lg' }) => {
   const sizeMap = {
@@ -422,9 +422,9 @@ const AutoFlipRightPage = ({ pages, bgColor }: { pages: any[]; bgColor: string }
   );
 };
 
-/* ═══════════════════════════════════════════════════════════
+/* 
    Main HomePage
-   ═══════════════════════════════════════════════════════════ */
+    */
 
 export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
   const [showAbout, setShowAbout] = useState(false);
@@ -460,7 +460,7 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
     <div className="min-h-screen overflow-x-hidden" style={{ background: '#FFF8F1', fontFamily: '"Lora", ui-serif, Georgia, serif' }}>
       <style>{styles}</style>
 
-      {/* ── Navigation ── */}
+      {/*  Navigation  */}
       <nav className="glass sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-8 py-3">
           <div 
@@ -489,7 +489,7 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
                 showAbout ? 'text-[#B9423A] font-bold' : ''
               }`}
             >
-              Giới thiệu
+              Gii thiu
             </button>
             <button
               onClick={() => handleNavClick('ptb-box')}
@@ -501,23 +501,23 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
               onClick={() => handleNavClick('categories')}
               className="nav-link hover:text-[#B9423A] transition-colors focus:outline-none"
             >
-              Danh mục
+              Danh mc
             </button>
             <button
               onClick={() => handleNavClick('themes')}
               className="nav-link hover:text-[#B9423A] transition-colors focus:outline-none"
             >
-              Chủ đề
+              Ch 
             </button>
           </div>
 
           <div className="hidden md:flex items-center gap-4 text-[#6B4B43] text-sm font-medium">
             {user ? (
               <div className="flex items-center gap-3">
-                <span className="font-medium text-[#6B4B43] text-sm">Chào, <strong className="text-[#3B2925]">{user.name}</strong></span>
+                <span className="font-medium text-[#6B4B43] text-sm">Cho, <strong className="text-[#3B2925]">{user.name}</strong></span>
                 <button onClick={onGetStarted}
                   className="cta-btn bg-[#B9423A] text-white px-5 py-2.5 rounded-full font-medium text-sm relative z-10 hover:bg-[#96332E]">
-                  Thư viện của tôi
+                  Th vin ca ti
                 </button>
                 <InteractiveLogoutButton
                   onLogout={onLogout}
@@ -528,7 +528,7 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
               <div className="flex items-center gap-3">
                 <button onClick={onGetStarted}
                   className="cta-btn bg-[#B9423A] text-white px-5 py-2.5 rounded-full font-medium text-sm relative z-10 hover:bg-[#96332E]">
-                  Đăng nhập
+                  ng nhp
                 </button>
               </div>
             )}
@@ -593,7 +593,7 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
             {/* Right: Premium Glassmorphism content card */}
             <div className="flex-1 bg-white/70 backdrop-blur-md p-8 md:p-10 rounded-3xl shadow-xl border border-[#E6C7B8]/40">
               <div className="text-center md:text-left mb-6">
-                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#B9423A] block mb-2">Giới thiệu</span>
+                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#B9423A] block mb-2">Gii thiu</span>
 
                 <h3 
                   className="text-lg font-serif italic text-[#7A4A42] font-semibold mt-2"
@@ -604,10 +604,10 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
 
               <div className="space-y-4 text-[#543A34] text-base leading-relaxed font-serif text-justify md:text-left">
                 <p>
-                  <strong className="text-[#B9423A] font-sans">dearmemories.</strong> là nền tảng photobook cá nhân hóa được tạo ra để giúp bạn lưu giữ những khoảnh khắc đáng nhớ theo cách riêng của mình. Chúng tôi tin rằng mỗi bức ảnh đều mang theo một câu chuyện và mỗi câu chuyện đều xứng đáng được lưu giữ lâu dài thay vì bị lãng quên trong thư viện ảnh của điện thoại.
+                  <strong className="text-[#B9423A] font-sans">dearmemories.</strong> l nn tng photobook c nhn ha c to ra  gip bn lu gi nhng khonh khc ng nh theo cch ring ca mnh. Chng ti tin rng mi bc nh u mang theo mt cu chuyn v mi cu chuyn u xng ng c lu gi lu di thay v b lng qun trong th vin nh ca in thoi.
                 </p>
                 <p>
-                  Thông qua những mẫu thiết kế được chọn lọc sẵn cùng trải nghiệm tùy chỉnh đơn giản, <strong className="text-[#B9423A] font-sans">dearmemories.</strong> giúp bạn dễ dàng biến những kỷ niệm, cảm xúc và câu chuyện cá nhân thành một cuốn photobook mang dấu ấn riêng.
+                  Thng qua nhng mu thit k c chn lc sn cng tri nghim ty chnh n gin, <strong className="text-[#B9423A] font-sans">dearmemories.</strong> gip bn d dng bin nhng k nim, cm xc v cu chuyn c nhn thnh mt cun photobook mang du n ring.
                 </p>
               </div>
 
@@ -624,7 +624,7 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
                   }}
                 >
                   <ArrowLeft className="w-4 h-4" />
-                  Quay lại trang chủ
+                  Quay li trang ch
                 </button>
               </div>
             </div>
@@ -634,9 +634,9 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
       )}
 
       <div className={showAbout ? 'hidden' : ''}>
-        {/* ══════════════════════════════════════════════════════
-            SECTION 1 — Hero: Photobook Box
-            ══════════════════════════════════════════════════════ */}
+        {/* 
+            SECTION 1  Hero: Photobook Box
+             */}
         <section id="ptb-box" className="relative w-full min-h-[620px] overflow-hidden flex items-center scroll-mt-24"
         style={{
           background: 'linear-gradient(160deg, #FFF8F1 0%, #F7E2D4 40%, #FFF8F1 100%)',
@@ -689,7 +689,7 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
                     textAlign: 'center',
                   }}
                 >
-                  nhỏ xinh nhưng đầy cảm xúc
+                  nh xinh nhng y cm xc
                 </span>
               </h1>
 
@@ -698,19 +698,19 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
                   <span className="w-6 h-6 rounded-full bg-[#B9423A]/10 flex items-center justify-center flex-shrink-0">
                     <span className="w-2 h-2 rounded-full bg-[#B9423A]" />
                   </span>
-                  1 quyển PTB
+                  1 quyn PTB
                 </p>
                 <p className="flex items-center gap-3">
                   <span className="w-6 h-6 rounded-full bg-[#B9423A]/10 flex items-center justify-center flex-shrink-0">
                     <span className="w-2 h-2 rounded-full bg-[#B9423A]" />
                   </span>
-                  1 kẹo mút
+                  1 ko mt
                 </p>
                 <p className="flex items-center gap-3">
                   <span className="w-6 h-6 rounded-full bg-[#B9423A]/10 flex items-center justify-center flex-shrink-0">
                     <span className="w-2 h-2 rounded-full bg-[#B9423A]" />
                   </span>
-                  1 thư cảm ơn
+                  1 th cm n
                 </p>
               </div>
 
@@ -720,7 +720,7 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
                   background: 'linear-gradient(135deg, #B9423A, #96332E)',
                   boxShadow: '0 8px 30px rgba(185, 66, 58, 0.4)',
                 }}>
-                Tạo sách ngay →
+                To sch ngay 
               </button>
             </div>
 
@@ -745,32 +745,32 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
         </div>
       </section>
 
-      {/* ── Divider ── */}
+      {/*  Divider  */}
       <div className="section-divider" />
 
-      {/* ══════════════════════════════════════════════════════
-          SECTION 2 — Danh mục loại PTB
-          ══════════════════════════════════════════════════════ */}
+      {/* 
+          SECTION 2  Danh mc loi PTB
+           */}
       <section id="categories" className="w-full py-24 relative overflow-hidden scroll-mt-24" style={{ background: '#FFFDF9' }}>
         <div className="absolute inset-0 pointer-events-none opacity-5 dot-pattern" />
 
         <div className="max-w-7xl mx-auto px-8 relative z-10">
           {/* Section title */}
           <div className="reveal text-center mb-16">
-            <p className="text-[#B9423A] text-sm tracking-[0.3em] uppercase mb-3 font-semibold">Bộ sưu tập sách</p>
+            <p className="text-[#B9423A] text-sm tracking-[0.3em] uppercase mb-3 font-semibold">B su tp sch</p>
             <h2
               className="text-[#3B2925] mb-3"
               style={{ fontFamily: '"Lora", serif', fontSize: 'clamp(2.5rem, 5vw, 3.75rem)', fontWeight: '700', letterSpacing: '-0.01em' }}
-            >Danh mục loại PTB</h2>
-            <p className="text-[#6B4B43] text-lg">Nhiều lựa chọn phù hợp với nhu cầu và ngân sách của bạn</p>
+            >Danh mc loi PTB</h2>
+            <p className="text-[#6B4B43] text-lg">Nhiu la chn ph hp vi nhu cu v ngn sch ca bn</p>
           </div>
 
           {/* Categories Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {[
-              { id: 1, title: 'PTB bìa mềm', description: 'Nhẹ nhàng, mỏng nhẹ, tinh tế. Dành cho các album ảnh thường ngày.', price: '245K', color: '#FFF', img: loveImg, secondImg: hanoiImg },
-              { id: 2, title: 'PTB bìa cứng', description: 'Bìa cứng cáp, bền bỉ, sang trọng. Phù hợp làm quà lưu niệm lâu dài.', price: '375K', color: '#F4E5E6', img: hanoiImg, secondImg: familyImg },
-              { id: 3, title: 'PTB bìa bồi liền mở phẳng', description: 'Trải rộng 180 độ không gáy, in sắc nét. Trải nghiệm xem ảnh trọn vẹn.', price: '399K', color: '#F0E5E7', img: familyImg, secondImg: loveImg },
+              { id: 1, title: 'PTB ba mm', description: 'Nh nhng, mng nh, tinh t. Dnh cho cc album nh thng ngy.', price: '245K', color: '#FFF', img: loveImg, secondImg: hanoiImg },
+              { id: 2, title: 'PTB ba cng', description: 'Ba cng cp, bn b, sang trng. Ph hp lm qu lu nim lu di.', price: '375K', color: '#F4E5E6', img: hanoiImg, secondImg: familyImg },
+              { id: 3, title: 'PTB ba bi lin m phng', description: 'Tri rng 180  khng gy, in sc nt. Tri nghim xem nh trn vn.', price: '399K', color: '#F0E5E7', img: familyImg, secondImg: loveImg },
             ].map((category) => (
               <div key={category.id}
                 className="tier-card rounded-2xl overflow-hidden cursor-pointer group flex flex-col justify-between"
@@ -807,7 +807,7 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
                             <div className="grid grid-cols-2 gap-2 p-3 h-full bg-white"><img src={hanoiImg} className="w-full h-20 object-cover rounded" alt="" /><img src={familyImg} className="w-full h-20 object-cover rounded" alt="" /><img src={loveImg} className="w-full h-20 object-cover rounded" alt="" /><div className="w-full h-20 bg-gray-100 rounded" /></div>,
                             <div className="p-4 h-full bg-white flex items-center justify-center"><img src={familyImg} className="w-28 h-28 rounded-full object-cover shadow-lg border-4 border-gray-100" alt="" /></div>,
                           ] : [
-                            <div className="p-5 h-full bg-[#68252C]"><div className="w-full h-full bg-[#E5D2BA] shadow-inner p-3 rounded"><p className="text-xs font-serif text-center text-[#E5D2BA]">Mở phẳng 180°...</p></div></div>,
+                            <div className="p-5 h-full bg-[#68252C]"><div className="w-full h-full bg-[#E5D2BA] shadow-inner p-3 rounded"><p className="text-xs font-serif text-center text-[#E5D2BA]">M phng 180...</p></div></div>,
                             <div className="p-5 h-full bg-[#68252C]"><div className="w-full h-full bg-[#E5D2BA] shadow-inner p-3 rounded flex justify-center items-center"><img src={loveImg} className="w-20 h-20 rounded-full border-2 border-white" alt="" /></div></div>,
                           ]
                         }
@@ -824,7 +824,7 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
                   <p className="text-[#6B4B43] text-sm mb-4 leading-relaxed">{category.description}</p>
                   <button onClick={(e) => { e.stopPropagation(); onGetStarted(); }}
                     className="w-full py-2.5 rounded-xl border border-[#B9423A] text-[#B9423A] bg-white hover:bg-[#B9423A] hover:text-white font-semibold transition duration-300">
-                    Chọn loại này
+                    Chn loi ny
                   </button>
                 </div>
               </div>
@@ -833,35 +833,35 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
         </div>
       </section>
 
-      {/* ── Divider ── */}
+      {/*  Divider  */}
       <div className="section-divider" />
 
-      {/* ══════════════════════════════════════════════════════
-          SECTION 3 — Chủ đề
-          ══════════════════════════════════════════════════════ */}
+      {/* 
+          SECTION 3  Ch 
+           */}
       <section id="themes" className="w-full py-24 relative overflow-hidden scroll-mt-24" style={{ background: '#F7E2D4' }}>
         <div className="absolute inset-0 pointer-events-none opacity-5 dot-pattern" />
 
         <div className="max-w-7xl mx-auto px-8 relative z-10">
           {/* Section title */}
           <div className="reveal text-center mb-16">
-            <p className="text-[#B9423A] text-sm tracking-[0.3em] uppercase mb-3 font-semibold">Chủ đề thiết kế</p>
+            <p className="text-[#B9423A] text-sm tracking-[0.3em] uppercase mb-3 font-semibold">Ch  thit k</p>
             <h2
               className="text-[#3B2925] mb-3"
               style={{ fontFamily: '"Lora", serif', fontSize: 'clamp(2.5rem, 5vw, 3.75rem)', fontWeight: '700', letterSpacing: '-0.01em' }}
-            >Chủ đề</h2>
-            <p className="text-[#6B4B43] text-lg">Mỗi chủ đề đều mang một câu chuyện và xúc cảm trọn vẹn riêng biệt</p>
+            >Ch </h2>
+            <p className="text-[#6B4B43] text-lg">Mi ch  u mang mt cu chuyn v xc cm trn vn ring bit</p>
           </div>
 
           {/* Themes Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              { id: 'love', title: 'Tình yêu', emoji: '💕', description: 'Hâm nóng tình cảm với câu chuyện lãng mạn.', color: 'from-pink-400 to-rose-500', image: loveImg },
-              { id: 'friends', title: 'Bạn bè', emoji: '🎉', description: 'Lưu giữ kỷ niệm thanh xuân, bạn bè thân thương.', color: 'from-cyan-400 to-blue-400', image: hanoiImg },
-              { id: 'family', title: 'Gia đình', emoji: '👨‍👩‍👧‍👦', description: 'Ấm áp tình thân, những khoảnh khắc sum vầy.', color: 'from-orange-400 to-rose-400', image: familyImg },
-              { id: 'travel', title: 'Du lịch', emoji: '✈️', description: 'Ghi lại hành trình khám phá những vùng đất mới.', color: 'from-emerald-400 to-teal-500', image: hanoiImg },
-              { id: 'graduation', title: 'Tốt nghiệp', emoji: '🎓', description: 'Kỷ niệm ngày tốt nghiệp, bạn bè và mái trường.', color: 'from-indigo-400 to-purple-500', image: familyImg },
-              { id: 'birthday', title: 'Sinh nhật', emoji: '🎂', description: 'Món quà bất ngờ dành riêng cho ngày tuổi mới.', color: 'from-amber-400 to-orange-500', image: loveImg },
+              { id: 'love', title: 'Tnh yu', emoji: '', description: 'Hm nng tnh cm vi cu chuyn lng mn.', color: 'from-pink-400 to-rose-500', image: loveImg },
+              { id: 'friends', title: 'Bn b', emoji: '', description: 'Lu gi k nim thanh xun, bn b thn thng.', color: 'from-cyan-400 to-blue-400', image: hanoiImg },
+              { id: 'family', title: 'Gia nh', emoji: '', description: 'm p tnh thn, nhng khonh khc sum vy.', color: 'from-orange-400 to-rose-400', image: familyImg },
+              { id: 'travel', title: 'Du lch', emoji: '', description: 'Ghi li hnh trnh khm ph nhng vng t mi.', color: 'from-emerald-400 to-teal-500', image: hanoiImg },
+              { id: 'graduation', title: 'Tt nghip', emoji: '', description: 'K nim ngy tt nghip, bn b v mi trng.', color: 'from-indigo-400 to-purple-500', image: familyImg },
+              { id: 'birthday', title: 'Sinh nht', emoji: '', description: 'Mn qu bt ng dnh ring cho ngy tui mi.', color: 'from-amber-400 to-orange-500', image: loveImg },
             ].map((theme) => (
               <div key={theme.id}
                 className="blind-box-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer group flex flex-col justify-between"
@@ -892,7 +892,7 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
                 <div className="p-6 pt-0">
                   <button onClick={(e) => { e.stopPropagation(); onGetStarted(); }}
                     className="w-full py-2 rounded-xl bg-[#B9423A] text-white hover:bg-[#96332E] font-semibold transition duration-300 text-sm">
-                    Dùng chủ đề này
+                    Dng ch  ny
                   </button>
                 </div>
               </div>
@@ -901,7 +901,7 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
         </div>
       </section>
 
-      {/* ── Divider ── */}
+      {/*  Divider  */}
       <div className="section-divider" />
       </div>
 

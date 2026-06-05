@@ -48,11 +48,11 @@ export function PageSelectionStep({ pages, cover, onNext, onBack }: PageSelectio
 
   const handleContinue = () => {
     if (isOdd) {
-      toast.error('Vui lòng chọn số trang chẵn để tiếp tục.');
+      toast.error('Vui lng chn s trang chn  tip tc.');
       return;
     }
     if (!hasExportedPdf) {
-      toast.error('Vui lòng xuất file PDF thiết kế trước khi tiếp tục.');
+      toast.error('Vui lng xut file PDF thit k trc khi tip tc.');
       return;
     }
 
@@ -72,21 +72,21 @@ export function PageSelectionStep({ pages, cover, onNext, onBack }: PageSelectio
         <div className="flex items-center gap-2 mb-1">
           <BookOpen className="w-5 h-5" style={{ color: '#7A6F66' }} />
           <h2 className="text-lg font-bold" style={{ color: '#000000' }}>
-            Chọn trang muốn in
+            Chn trang mun in
           </h2>
         </div>
         <p className="text-xs" style={{ color: '#7A6F66' }}>
-          Chọn những trang bạn muốn in trong cuốn sách. Trang bìa luôn được in kèm.
+          Chn nhng trang bn mun in trong cun sch. Trang ba lun c in km.
         </p>
 
         {/* Toolbar */}
         <div className="flex items-center justify-between mt-5 mb-4">
           <div className="flex items-center gap-2">
             <span className="text-sm font-semibold" style={{ color: '#000000' }}>
-              📄 {totalPages} trang
+               {totalPages} trang
             </span>
             <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: '#EDE9E3', color: '#5A5049' }}>
-              <span className="font-bold">{selectedCount}</span> được chọn
+              <span className="font-bold">{selectedCount}</span> c chn
             </span>
           </div>
           <div className="flex items-center gap-2">
@@ -96,7 +96,7 @@ export function PageSelectionStep({ pages, cover, onNext, onBack }: PageSelectio
               className="text-[11px] font-semibold px-3 py-1.5 rounded-lg transition-all hover:bg-[#DDD8D0]"
               style={{ color: '#5A5049', background: '#EDE9E3' }}
             >
-              Chọn tất cả
+              Chn tt c
             </button>
             <button
               type="button"
@@ -104,7 +104,7 @@ export function PageSelectionStep({ pages, cover, onNext, onBack }: PageSelectio
               className="text-[11px] font-semibold px-3 py-1.5 rounded-lg transition-all hover:bg-[#DDD8D0]"
               style={{ color: '#5A5049', background: '#EDE9E3' }}
             >
-              Bỏ chọn
+              B chn
             </button>
           </div>
         </div>
@@ -115,11 +115,11 @@ export function PageSelectionStep({ pages, cover, onNext, onBack }: PageSelectio
             <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#d97706' }} />
             <div>
               <p className="text-sm font-bold" style={{ color: '#92400e' }}>
-                Số trang sách phải là số chẵn
+                S trang sch phi l s chn
               </p>
               <p className="text-xs mt-0.5" style={{ color: '#a16207' }}>
-                Bạn đang chọn <span className="font-bold">{selectedCount} trang (số lẻ)</span>. Sách in yêu cầu số trang chẵn để đóng gáy.
-                Vui lòng chọn thêm 1 trang hoặc bỏ bớt 1 trang để được số chẵn.
+                Bn ang chn <span className="font-bold">{selectedCount} trang (s l)</span>. Sch in yu cu s trang chn  ng gy.
+                Vui lng chn thm 1 trang hoc b bt 1 trang  c s chn.
               </p>
             </div>
           </div>
@@ -130,10 +130,10 @@ export function PageSelectionStep({ pages, cover, onNext, onBack }: PageSelectio
           <div className="text-center py-16 rounded-xl" style={{ background: '#FAFAF8', border: '1.5px dashed #DDD8D0' }}>
             <ImageOff className="w-12 h-12 mx-auto mb-3" style={{ color: '#C8C2BA' }} />
             <p className="text-sm font-medium" style={{ color: '#9B9088' }}>
-              Chưa có trang nào
+              Cha c trang no
             </p>
             <p className="text-xs mt-1" style={{ color: '#C8C2BA' }}>
-              Vui lòng quay lại bước thiết kế để thêm trang cho cuốn sách.
+              Vui lng quay li bc thit k  thm trang cho cun sch.
             </p>
           </div>
         ) : (
@@ -174,7 +174,7 @@ export function PageSelectionStep({ pages, cover, onNext, onBack }: PageSelectio
                     ) : (
                       <div className="absolute inset-0 flex items-center justify-center">
                         <span className="text-[11px] font-bold" style={{ color: '#C8C2BA' }}>
-                          {isCover ? 'Bìa' : idx + 1}
+                          {isCover ? 'Ba' : idx + 1}
                         </span>
                       </div>
                     )}
@@ -191,7 +191,7 @@ export function PageSelectionStep({ pages, cover, onNext, onBack }: PageSelectio
                     {isCover && (
                       <div className="absolute bottom-1 left-1 flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] bg-black/50 text-white/90">
                         <Lock className="w-2.5 h-2.5" />
-                        Bìa
+                        Ba
                       </div>
                     )}
                   </div>
@@ -201,7 +201,7 @@ export function PageSelectionStep({ pages, cover, onNext, onBack }: PageSelectio
                     className={`text-[10px] font-bold truncate max-w-full ${isSelected ? 'text-black' : ''}`}
                     style={{ color: isSelected ? '#000000' : '#9B9088' }}
                   >
-                    {isCover ? '📔 Bìa' : `📄 Trang ${idx + 1}`}
+                    {isCover ? ' Ba' : ` Trang ${idx + 1}`}
                   </span>
                 </button>
               );
@@ -212,7 +212,7 @@ export function PageSelectionStep({ pages, cover, onNext, onBack }: PageSelectio
 
       {/* Action buttons */}
       <div className="space-y-3">
-        {/* PDF Export Section — BẮT BUỘC */}
+        {/* PDF Export Section  BT BUC */}
         <div
           className="rounded-2xl p-6 transition-all"
           style={{
@@ -233,14 +233,14 @@ export function PageSelectionStep({ pages, cover, onNext, onBack }: PageSelectio
               </div>
               <div>
                 <p className="text-sm font-bold" style={{ color: '#000000' }}>
-                  {hasExportedPdf ? '✓ Đã xuất file PDF thiết kế' : 'Bước 1: Xuất file PDF thiết kế'}
+                  {hasExportedPdf ? '  xut file PDF thit k' : 'Bc 1: Xut file PDF thit k'}
                 </p>
                 <p className="text-xs" style={{ color: hasExportedPdf ? '#16a34a' : '#dc2626' }}>
                   {hasExportedPdf
-                    ? 'File PDF đã sẵn sàng. Bạn có thể xuất lại nếu cần.'
+                    ? 'File PDF  sn sng. Bn c th xut li nu cn.'
                     : isOdd
-                      ? `Cần chọn số trang chẵn để xuất PDF (hiện có ${selectedCount} trang - lẻ).`
-                      : 'Bắt buộc: xuất sách ra PDF trước khi sang bước giao hàng.'
+                      ? `Cn chn s trang chn  xut PDF (hin c ${selectedCount} trang - l).`
+                      : 'Bt buc: xut sch ra PDF trc khi sang bc giao hng.'
                   }
                 </p>
               </div>
@@ -264,10 +264,10 @@ export function PageSelectionStep({ pages, cover, onNext, onBack }: PageSelectio
                   (e.currentTarget as HTMLElement).style.background = hasExportedPdf ? '#16a34a' : '#000000';
                 }
               }}
-              title={isOdd ? 'Cần số trang chẵn để xuất PDF' : undefined}
+              title={isOdd ? 'Cn s trang chn  xut PDF' : undefined}
             >
               <FileText className="w-4 h-4" />
-              <span>{isOdd ? `Cần số chẵn (${selectedCount} trang)` : hasExportedPdf ? 'Xuất lại' : 'Xuất PDF'}</span>
+              <span>{isOdd ? `Cn s chn (${selectedCount} trang)` : hasExportedPdf ? 'Xut li' : 'Xut PDF'}</span>
             </button>
           </div>
         </div>
@@ -282,7 +282,7 @@ export function PageSelectionStep({ pages, cover, onNext, onBack }: PageSelectio
             onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = '#DDD8D0')}
             onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#EDE9E3')}
           >
-            Quay lại
+            Quay li
           </button>
           <button
             type="button"
@@ -300,15 +300,15 @@ export function PageSelectionStep({ pages, cover, onNext, onBack }: PageSelectio
             }}
           >
             {!hasExportedPdf
-              ? '⚠️ Cần xuất PDF trước khi tiếp tục'
+              ? ' Cn xut PDF trc khi tip tc'
               : isOdd
-                ? `Cần số trang chẵn (hiện tại: ${selectedCount})`
-                : `Tiếp tục (${selectedCount} trang)`}
+                ? `Cn s trang chn (hin ti: ${selectedCount})`
+                : `Tip tc (${selectedCount} trang)`}
           </button>
         </div>
       </div>
 
-      {/* Export Modal — kế thừa từ trang chỉnh sửa tự do, giữ nguyên các trang đã chọn */}
+      {/* Export Modal  k tha t trang chnh sa t do, gi nguyn cc trang  chn */}
       {showExportModal && (
         <ExportModal
           title={cover?.text || 'Photobook'}

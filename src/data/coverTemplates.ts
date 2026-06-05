@@ -153,7 +153,7 @@ function createPremiumCover(
         {
           id: 'corner-tl',
           type: 'text',
-          content: '✦',
+          content: '',
           x: 50,
           y: 50,
           width: 40,
@@ -171,7 +171,7 @@ function createPremiumCover(
         {
           id: 'corner-tr',
           type: 'text',
-          content: '✦',
+          content: '',
           x: 410,
           y: 50,
           width: 40,
@@ -189,7 +189,7 @@ function createPremiumCover(
         {
           id: 'corner-bl',
           type: 'text',
-          content: '✦',
+          content: '',
           x: 50,
           y: 610,
           width: 40,
@@ -207,7 +207,7 @@ function createPremiumCover(
         {
           id: 'corner-br',
           type: 'text',
-          content: '✦',
+          content: '',
           x: 410,
           y: 610,
           width: 40,
@@ -225,7 +225,7 @@ function createPremiumCover(
         {
           id: 'center-decor',
           type: 'text',
-          content: '❧',
+          content: '',
           x: 230,
           y: 180,
           width: 40,
@@ -291,7 +291,7 @@ function createPremiumCover(
         {
           id: 'bottom-decor',
           type: 'text',
-          content: '━',
+          content: '',
           x: 200,
           y: 520,
           width: 100,
@@ -512,42 +512,42 @@ export const coverTemplates: CoverTemplate[] = [
   // ========== LOVE COVERS ==========
   {
     id: 'love-modern-1',
-    name: 'Tình yêu lãng mạn',
+    name: 'Tnh yu lng mn',
     theme: 'love',
     style: 'modern',
     thumbnail: 'https://images.unsplash.com/photo-1620455970942-5fca5840d5ee?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400&h=500',
     cover: createPremiumCover(
       'love',
-      'Câu Chuyện Tình Yêu Của Chúng Ta',
-      'Khoảnh khắc đẹp nhất bên em',
+      'Cu Chuyn Tnh Yu Ca Chng Ta',
+      'Khonh khc p nht bn em',
       'https://images.unsplash.com/photo-1620455970942-5fca5840d5ee?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800&h=1200',
       'modern'
     )
   },
   {
     id: 'love-elegant-1',
-    name: 'Tình yêu thanh lịch',
+    name: 'Tnh yu thanh lch',
     theme: 'love',
     style: 'elegant',
     thumbnail: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&h=500&fit=crop',
     cover: createPremiumCover(
       'love',
-      'Trọn Đời Bên Em',
-      'Tình yêu là hành trình đẹp nhất',
+      'Trn i Bn Em',
+      'Tnh yu l hnh trnh p nht',
       '',
       'elegant'
     )
   },
   {
     id: 'love-minimal-1',
-    name: 'Tình yêu tối giản',
+    name: 'Tnh yu ti gin',
     theme: 'love',
     style: 'minimal',
     thumbnail: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&h=500&fit=crop',
     cover: createPremiumCover(
       'love',
-      'Yêu Em',
-      'Đơn giản nhưng chân thành',
+      'Yu Em',
+      'n gin nhng chn thnh',
       '',
       'minimal'
     )
@@ -556,42 +556,42 @@ export const coverTemplates: CoverTemplate[] = [
   // ========== FAMILY COVERS ==========
   {
     id: 'family-modern-1',
-    name: 'Gia đình hạnh phúc',
+    name: 'Gia nh hnh phc',
     theme: 'family',
     style: 'modern',
     thumbnail: 'https://images.unsplash.com/photo-1624448445915-97154f5e688c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400&h=500',
     cover: createPremiumCover(
       'family',
-      'Gia Đình Tôi',
-      'Nơi tình yêu thương bắt đầu',
+      'Gia nh Ti',
+      'Ni tnh yu thng bt u',
       'https://images.unsplash.com/photo-1624448445915-97154f5e688c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800&h=1200',
       'modern'
     )
   },
   {
     id: 'family-elegant-1',
-    name: 'Gia đình thanh lịch',
+    name: 'Gia nh thanh lch',
     theme: 'family',
     style: 'elegant',
     thumbnail: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?w=400&h=500&fit=crop',
     cover: createPremiumCover(
       'family',
-      'Kỷ Niệm Gia Đình',
-      'Những khoảnh khắc đáng nhớ',
+      'K Nim Gia nh',
+      'Nhng khonh khc ng nh',
       '',
       'elegant'
     )
   },
   {
     id: 'family-minimal-1',
-    name: 'Gia đình tối giản',
+    name: 'Gia nh ti gin',
     theme: 'family',
     style: 'minimal',
     thumbnail: 'https://images.unsplash.com/photo-1609220136736-443140cffec6?w=400&h=500&fit=crop',
     cover: createPremiumCover(
       'family',
-      'Tình Thân',
-      'Luôn bên nhau',
+      'Tnh Thn',
+      'Lun bn nhau',
       '',
       'minimal'
     )
@@ -600,42 +600,42 @@ export const coverTemplates: CoverTemplate[] = [
   // ========== BIRTHDAY COVERS ==========
   {
     id: 'birthday-modern-1',
-    name: 'Sinh nhật rực rỡ',
+    name: 'Sinh nht rc r',
     theme: 'birthday',
     style: 'modern',
     thumbnail: 'https://images.unsplash.com/photo-1715281007002-0c6951203c55?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400&h=500',
     cover: createPremiumCover(
       'birthday',
-      'Chúc Mừng Sinh Nhật',
-      'Một năm tuổi mới tuyệt vời',
+      'Chc Mng Sinh Nht',
+      'Mt nm tui mi tuyt vi',
       'https://images.unsplash.com/photo-1715281007002-0c6951203c55?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800&h=1200',
       'modern'
     )
   },
   {
     id: 'birthday-playful-1',
-    name: 'Sinh nhật vui nhộn',
+    name: 'Sinh nht vui nhn',
     theme: 'birthday',
     style: 'elegant',
     thumbnail: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400&h=500&fit=crop',
     cover: createPremiumCover(
       'birthday',
       'Happy Birthday',
-      'Một ngày đặc biệt dành cho bạn',
+      'Mt ngy c bit dnh cho bn',
       '',
       'elegant'
     )
   },
   {
     id: 'birthday-minimal-1',
-    name: 'Sinh nhật tối giản',
+    name: 'Sinh nht ti gin',
     theme: 'birthday',
     style: 'minimal',
     thumbnail: 'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=400&h=500&fit=crop',
     cover: createPremiumCover(
       'birthday',
-      'Sinh Nhật Vui Vẻ',
-      'Chúc bạn thật nhiều niềm vui',
+      'Sinh Nht Vui V',
+      'Chc bn tht nhiu nim vui',
       '',
       'minimal'
     )
@@ -644,42 +644,42 @@ export const coverTemplates: CoverTemplate[] = [
   // ========== FRIENDSHIP COVERS ==========
   {
     id: 'friendship-modern-1',
-    name: 'Tình bạn phiêu lưu',
+    name: 'Tnh bn phiu lu',
     theme: 'friendship',
     style: 'modern',
     thumbnail: 'https://images.unsplash.com/photo-1506869640319-fe1a24fd76dc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400&h=500',
     cover: createPremiumCover(
       'friendship',
-      'Bạn Thân Của Tôi',
-      'Những kỷ niệm không thể quên',
+      'Bn Thn Ca Ti',
+      'Nhng k nim khng th qun',
       'https://images.unsplash.com/photo-1506869640319-fe1a24fd76dc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800&h=1200',
       'modern'
     )
   },
   {
     id: 'friendship-elegant-1',
-    name: 'Tình bạn thanh lịch',
+    name: 'Tnh bn thanh lch',
     theme: 'friendship',
     style: 'elegant',
     thumbnail: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&h=500&fit=crop',
     cover: createPremiumCover(
       'friendship',
-      'Tình Bạn Đẹp',
-      'Cùng nhau trên mọi nẻo đường',
+      'Tnh Bn p',
+      'Cng nhau trn mi no ng',
       '',
       'elegant'
     )
   },
   {
     id: 'friendship-minimal-1',
-    name: 'Tình bạn tối giản',
+    name: 'Tnh bn ti gin',
     theme: 'friendship',
     style: 'minimal',
     thumbnail: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=400&h=500&fit=crop',
     cover: createPremiumCover(
       'friendship',
-      'Bạn Bè',
-      'Luôn ở bên nhau',
+      'Bn B',
+      'Lun  bn nhau',
       '',
       'minimal'
     )

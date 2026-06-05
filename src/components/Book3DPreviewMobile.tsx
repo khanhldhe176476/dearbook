@@ -38,19 +38,19 @@ export function Book3DPreviewMobile({ book, onBack, onOrder }: Book3DPreviewMobi
       position: { x: 1.2, y: 0.8, z: 2.5 },
       target: { x: 0, y: 0, z: 0 },
       fov: 50,
-      description: 'Xoay 360°'
+      description: 'Xoay 360'
     },
     flip: {
       position: { x: 0, y: 1.2, z: 2.0 },
       target: { x: 0, y: 0, z: 0 },
       fov: 45,
-      description: 'Góc lật trang'
+      description: 'Gc lt trang'
     },
     read: {
       position: { x: 0, y: 0, z: 1.6 },
       target: { x: 0, y: 0, z: 0 },
       fov: 40,
-      description: 'Đọc nội dung'
+      description: 'c ni dung'
     }
   };
 
@@ -113,7 +113,7 @@ export function Book3DPreviewMobile({ book, onBack, onOrder }: Book3DPreviewMobi
               <BookOpen className="w-12 h-12 text-white" />
             </div>
           </div>
-          <p className="text-xl font-bold text-gray-900">Đang tạo 3D Preview...</p>
+          <p className="text-xl font-bold text-gray-900">ang to 3D Preview...</p>
         </div>
       </div>
     );
@@ -199,7 +199,7 @@ export function Book3DPreviewMobile({ book, onBack, onOrder }: Book3DPreviewMobi
 
           {/* Page Badge */}
           <div className="absolute top-4 left-4 px-3 py-1.5 bg-white/90 backdrop-blur-md rounded-lg shadow-lg text-sm font-semibold text-gray-900">
-            {currentPage === 0 ? 'Bìa' : `Trang ${currentPage}`} / {totalPages}
+            {currentPage === 0 ? 'Ba' : `Trang ${currentPage}`} / {totalPages}
           </div>
 
           {/* Zoom Badge */}
@@ -211,7 +211,7 @@ export function Book3DPreviewMobile({ book, onBack, onOrder }: Book3DPreviewMobi
 
           {/* Tooltip */}
           <div className="absolute bottom-24 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-gray-900/80 backdrop-blur-md rounded-lg text-white text-xs">
-            Kéo để xoay • Chạm 2 ngón để zoom
+            Ko  xoay  Chm 2 ngn  zoom
           </div>
         </div>
 
@@ -232,7 +232,7 @@ export function Book3DPreviewMobile({ book, onBack, onOrder }: Book3DPreviewMobi
               className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-rose-500 to-pink-600 text-white rounded-xl font-semibold shadow-lg"
             >
               <ShoppingCart className="w-5 h-5" />
-              <span>Đặt hàng</span>
+              <span>t hng</span>
             </button>
 
             <button
@@ -279,14 +279,14 @@ export function Book3DPreviewMobile({ book, onBack, onOrder }: Book3DPreviewMobi
                     <Sparkles className="w-5 h-5 text-rose-600" />
                     <h2 className="text-lg font-bold text-gray-900">Controls</h2>
                   </div>
-                  <p className="text-sm text-gray-600">Điều khiển 3D Preview</p>
+                  <p className="text-sm text-gray-600">iu khin 3D Preview</p>
                 </div>
 
                 {/* View Mode */}
                 <div>
                   <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
                     <Eye className="w-4 h-4 text-purple-600" />
-                    Chế độ xem
+                    Ch  xem
                   </h3>
                   <div className="grid grid-cols-3 gap-2 p-1.5 bg-gray-100 rounded-xl">
                     {(['showcase', 'flip', 'read'] as ViewMode[]).map((mode) => (
@@ -371,8 +371,8 @@ export function Book3DPreviewMobile({ book, onBack, onOrder }: Book3DPreviewMobi
                   >
                     <ShoppingCart className="w-6 h-6" />
                     <div className="text-left">
-                      <div className="text-xs opacity-90">Đặt in ngay</div>
-                      <div className="text-lg">{(book.pageCount * 5000).toLocaleString('vi-VN')}đ</div>
+                      <div className="text-xs opacity-90">t in ngay</div>
+                      <div className="text-lg">{(book.pageCount * 5000).toLocaleString('vi-VN')}</div>
                     </div>
                   </button>
 
@@ -380,14 +380,14 @@ export function Book3DPreviewMobile({ book, onBack, onOrder }: Book3DPreviewMobi
                     onClick={onBack}
                     className="w-full px-6 py-3 bg-gray-100 text-gray-700 font-semibold rounded-xl"
                   >
-                    Quay lại Editor
+                    Quay li Editor
                   </button>
                 </div>
 
                 {/* Delivery Info */}
                 <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-3 border border-green-200/50">
                   <p className="text-xs text-green-800 text-center">
-                    ⚡ <span className="font-bold">Miễn phí ship</span> • Giao trong <span className="font-bold">3-7 ngày</span>
+                     <span className="font-bold">Min ph ship</span>  Giao trong <span className="font-bold">3-7 ngy</span>
                   </p>
                 </div>
               </div>

@@ -24,7 +24,7 @@ export function Step4PageEditor({
   onFinish,
 }: Step4PageEditorProps) {
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
-  const [bookTitle, setBookTitle] = useState(title || 'Cuốn sách của tôi');
+  const [bookTitle, setBookTitle] = useState(title || 'Cun sch ca ti');
   const [localPages, setLocalPages] = useState(pages);
   const [showPreview, setShowPreview] = useState(false);
 
@@ -47,20 +47,20 @@ export function Step4PageEditor({
 
   const getPlaceholder = (fieldKey: string): string => {
     const placeholders: { [key: string]: string } = {
-      title: 'Nhập tiêu đề cuốn sách...',
-      subtitle: 'Dòng phụ đề (tùy chọn)',
-      heading: 'Tiêu đề trang',
-      content: 'Viết nội dung của bạn ở đây. Hãy chia sẻ những cảm xúc, kỷ niệm đáng nhớ...',
-      message: 'Lời nhắn cuối sách',
+      title: 'Nhp tiu  cun sch...',
+      subtitle: 'Dng ph  (ty chn)',
+      heading: 'Tiu  trang',
+      content: 'Vit ni dung ca bn  y. Hy chia s nhng cm xc, k nim ng nh...',
+      message: 'Li nhn cui sch',
     };
-    return placeholders[fieldKey] || 'Nhập nội dung...';
+    return placeholders[fieldKey] || 'Nhp ni dung...';
   };
 
   const getGuidance = (fieldKey: string): string => {
     const guidance: { [key: string]: string } = {
-      title: '💝 Gợi ý: "Câu chuyện tình yêu của chúng ta", "Kỷ niệm gia đình", "Sinh nhật đáng nhớ"',
-      content: '✍️ Gợi ý: Kể về một khoảnh khắc đặc biệt, cảm xúc của bạn, hoặc lời chúc từ trái tim',
-      message: '💌 Gợi ý: Một lời nhắn ngắn gọn nhưng ý nghĩa để kết thúc cuốn sách',
+      title: ' Gi : "Cu chuyn tnh yu ca chng ta", "K nim gia nh", "Sinh nht ng nh"',
+      content: ' Gi : K v mt khonh khc c bit, cm xc ca bn, hoc li chc t tri tim',
+      message: ' Gi : Mt li nhn ngn gn nhng  ngha  kt thc cun sch',
     };
     return guidance[fieldKey] || '';
   };
@@ -81,7 +81,7 @@ export function Step4PageEditor({
           className="flex items-center gap-2 px-4 py-2 hover:bg-rose-50 rounded-xl transition-all text-gray-700"
         >
           <ArrowLeft className="w-5 h-5" />
-          <span className="hidden sm:inline">Quay lại</span>
+          <span className="hidden sm:inline">Quay li</span>
         </button>
 
         <div className="flex items-center gap-2">
@@ -90,14 +90,14 @@ export function Step4PageEditor({
             className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all text-gray-700 font-medium"
           >
             <Eye className="w-4 h-4" />
-            <span className="hidden sm:inline">Xem trước</span>
+            <span className="hidden sm:inline">Xem trc</span>
           </button>
           <button
             onClick={onFinish}
             className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-rose-500 to-amber-500 text-white rounded-xl hover:shadow-lg transition-all font-bold"
           >
             <ShoppingCart className="w-4 h-4" />
-            <span>Đặt hàng</span>
+            <span>t hng</span>
           </button>
         </div>
       </div>
@@ -105,14 +105,14 @@ export function Step4PageEditor({
       {/* Title Editor */}
       <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-md border border-orange-100/50">
         <label className="block font-semibold text-gray-800 mb-3">
-          📖 Tên cuốn sách
+           Tn cun sch
         </label>
         <input
           type="text"
           value={bookTitle}
           onChange={(e) => handleTitleChange(e.target.value)}
           className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-rose-400 focus:ring-4 focus:ring-rose-200/50 outline-none transition-all text-lg font-semibold"
-          placeholder="Nhập tên cuốn sách..."
+          placeholder="Nhp tn cun sch..."
         />
       </div>
 
@@ -133,10 +133,10 @@ export function Step4PageEditor({
             </p>
             <p className="text-xs text-gray-600">
               {currentPageIndex === 0
-                ? 'Bìa trước'
+                ? 'Ba trc'
                 : currentPageIndex === localPages.length - 1
-                ? 'Bìa sau'
-                : `Trang nội dung ${currentPageIndex}`}
+                ? 'Ba sau'
+                : `Trang ni dung ${currentPageIndex}`}
             </p>
           </div>
 
@@ -175,7 +175,7 @@ export function Step4PageEditor({
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Left: Form */}
         <div className="space-y-4">
-          <h3 className="font-bold text-gray-800 text-lg">Chỉnh sửa nội dung</h3>
+          <h3 className="font-bold text-gray-800 text-lg">Chnh sa ni dung</h3>
 
           {Object.entries(currentPage.texts).map(([fieldKey, value]) => {
             const isLongText = fieldKey === 'content';
@@ -188,15 +188,15 @@ export function Step4PageEditor({
               >
                 <label className="block font-semibold text-gray-700 mb-2 capitalize">
                   {fieldKey === 'title'
-                    ? 'Tiêu đề'
+                    ? 'Tiu '
                     : fieldKey === 'subtitle'
-                    ? 'Phụ đề'
+                    ? 'Ph '
                     : fieldKey === 'heading'
-                    ? 'Tiêu đề trang'
+                    ? 'Tiu  trang'
                     : fieldKey === 'content'
-                    ? 'Nội dung'
+                    ? 'Ni dung'
                     : fieldKey === 'message'
-                    ? 'Lời nhắn'
+                    ? 'Li nhn'
                     : fieldKey}
                 </label>
 
@@ -227,7 +227,7 @@ export function Step4PageEditor({
 
           {Object.keys(currentPage.texts).length === 0 && (
             <div className="text-center py-12 text-gray-500">
-              <p>Trang này không có nội dung văn bản để chỉnh sửa</p>
+              <p>Trang ny khng c ni dung vn bn  chnh sa</p>
             </div>
           )}
         </div>
@@ -236,7 +236,7 @@ export function Step4PageEditor({
         <div className="lg:sticky lg:top-8 h-fit">
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-orange-100/50">
             <p className="text-sm font-semibold text-gray-700 mb-4 text-center">
-              👁️ Xem trước trang
+               Xem trc trang
             </p>
 
             <div className={`bg-gradient-to-br ${themeColors[theme]} rounded-xl p-8 aspect-[1/1.4] relative overflow-hidden`}>
@@ -252,7 +252,7 @@ export function Step4PageEditor({
               <div className="relative bg-white/90 backdrop-blur-sm rounded-lg p-6 h-full flex flex-col">
                 {currentPage.texts.title && (
                   <h2 className="text-2xl font-bold text-gray-800 mb-2 text-center">
-                    {currentPage.texts.title || 'Tiêu đề'}
+                    {currentPage.texts.title || 'Tiu '}
                   </h2>
                 )}
                 {currentPage.texts.subtitle && (
@@ -279,7 +279,7 @@ export function Step4PageEditor({
             </div>
 
             <p className="text-xs text-gray-600 text-center mt-3">
-              Bố cục và kiểu chữ được tối ưu tự động
+              B cc v kiu ch c ti u t ng
             </p>
           </div>
         </div>
@@ -288,7 +288,7 @@ export function Step4PageEditor({
       {/* Auto-save indicator */}
       <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
         <Save className="w-4 h-4" />
-        <span>Tự động lưu nháp</span>
+        <span>T ng lu nhp</span>
       </div>
 
       {/* Preview Modal */}
@@ -304,7 +304,7 @@ export function Step4PageEditor({
                 onClick={() => setShowPreview(false)}
                 className="w-10 h-10 rounded-xl hover:bg-gray-100 flex items-center justify-center transition-colors text-2xl"
               >
-                ✕
+                
               </button>
             </div>
 
@@ -349,7 +349,7 @@ export function Step4PageEditor({
                 onClick={() => setShowPreview(false)}
                 className="flex-1 py-3 px-6 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold transition-all"
               >
-                Đóng
+                ng
               </button>
               <button
                 onClick={() => {
@@ -359,7 +359,7 @@ export function Step4PageEditor({
                 className="flex-1 py-3 px-6 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 text-white font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"
               >
                 <ShoppingCart className="w-5 h-5" />
-                Đặt hàng ngay
+                t hng ngay
               </button>
             </div>
           </div>

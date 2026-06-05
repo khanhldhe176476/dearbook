@@ -50,16 +50,16 @@ export function LayerPanel({
   };
 
   const getElementLabel = (element: PageElement): string => {
-    if (isTemplateFrame(element)) return '🖼 Template';
+    if (isTemplateFrame(element)) return ' Template';
     switch (element.type) {
       case 'text':
-        return (element as any).content?.substring(0, 22) + ((element as any).content?.length > 22 ? '…' : '') || 'Văn bản';
-      case 'image': return 'Hình ảnh';
-      case 'shape': return `Hình ${(element as any).shape || ''}`;
+        return (element as any).content?.substring(0, 22) + ((element as any).content?.length > 22 ? '' : '') || 'Vn bn';
+      case 'image': return 'Hnh nh';
+      case 'shape': return `Hnh ${(element as any).shape || ''}`;
       case 'sticker': return (element as any).emoji || 'Sticker';
       case 'icon': return `Icon`;
-      case 'frame': return 'Khung viền';
-      default: return 'Phần tử';
+      case 'frame': return 'Khung vin';
+      default: return 'Phn t';
     }
   };
 
@@ -73,7 +73,7 @@ export function LayerPanel({
     return src;
   };
 
-  // ────────── Drag-and-drop handlers ──────────
+  //  Drag-and-drop handlers 
   const handleDragStart = (e: React.DragEvent, index: number) => {
     dragIndexRef.current = index;
     e.dataTransfer.effectAllowed = 'move';
@@ -117,7 +117,7 @@ export function LayerPanel({
     <div className="h-full flex flex-col bg-white select-none">
       {/* Header */}
       <div className="px-4 py-3 border-b bg-gradient-to-r from-purple-50 to-indigo-50">
-        <p className="text-xs text-gray-500 mt-0.5">Kéo thả để sắp xếp thứ tự</p>
+        <p className="text-xs text-gray-500 mt-0.5">Ko th  sp xp th t</p>
       </div>
 
       {/* Layers List */}
@@ -125,7 +125,7 @@ export function LayerPanel({
         {sortedElements.length === 0 ? (
           <div className="p-8 text-center text-gray-400">
             <Circle className="w-10 h-10 mx-auto mb-3 opacity-25" />
-            <p className="text-sm">Chưa có phần tử nào</p>
+            <p className="text-sm">Cha c phn t no</p>
           </div>
         ) : (
           <div className="p-2 space-y-1">
@@ -196,7 +196,7 @@ export function LayerPanel({
                     <button
                       onClick={(e) => { e.stopPropagation(); onToggleVisibility(element.id); }}
                       className="p-1 rounded hover:bg-gray-200 transition-colors"
-                      title={element.visible ? 'Ẩn' : 'Hiện'}
+                      title={element.visible ? 'n' : 'Hin'}
                     >
                       {element.visible
                         ? <Eye className="w-3.5 h-3.5 text-gray-600" />
@@ -207,7 +207,7 @@ export function LayerPanel({
                     <button
                       onClick={(e) => { e.stopPropagation(); onToggleLock(element.id); }}
                       className="p-1 rounded hover:bg-gray-200 transition-colors"
-                      title={element.locked ? 'Mở khoá' : 'Khoá'}
+                      title={element.locked ? 'M kho' : 'Kho'}
                     >
                       {element.locked
                         ? <Lock className="w-3.5 h-3.5 text-amber-600" />
@@ -219,7 +219,7 @@ export function LayerPanel({
                       <button
                         onClick={(e) => { e.stopPropagation(); onDuplicate(element.id); }}
                         className="p-1 rounded hover:bg-blue-100 transition-colors"
-                        title="Nhân bản"
+                        title="Nhn bn"
                       >
                         <Copy className="w-3.5 h-3.5 text-blue-600" />
                       </button>
@@ -230,7 +230,7 @@ export function LayerPanel({
                       <button
                         onClick={(e) => { e.stopPropagation(); onDelete(element.id); }}
                         className="p-1 rounded hover:bg-red-100 transition-colors"
-                        title="Xoá"
+                        title="Xo"
                       >
                         <Trash2 className="w-3.5 h-3.5 text-red-500" />
                       </button>
@@ -245,9 +245,9 @@ export function LayerPanel({
 
       {/* Tips */}
       <div className="p-3 border-t bg-gray-50 text-[11px] text-gray-500 space-y-1">
-        <div>🖱 Kéo thả để đổi thứ tự lớp</div>
-        <div>👁 Click 👁 để ẩn/hiện · 🔒 để khoá lớp</div>
-        <div>⇧ + Click để chọn nhiều phần tử</div>
+        <div> Ko th  i th t lp</div>
+        <div> Click   n/hin    kho lp</div>
+        <div> + Click  chn nhiu phn t</div>
       </div>
     </div>
   );

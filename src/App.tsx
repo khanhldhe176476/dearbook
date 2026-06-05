@@ -76,11 +76,11 @@ function App() {
   const [user, setUser] = useState<User | null>(null);
   const [currentBook, setCurrentBook] = useState<BookData | null>(null);
 
-  // Refs để track currentBook trong beforeunload và navigation guards
+  // Refs  track currentBook trong beforeunload v navigation guards
   const currentBookRef = useRef<BookData | null>(null);
   const isSavingRef = useRef(false);
 
-  // Đồng bộ currentBook vào ref
+  // ng b currentBook vo ref
   useEffect(() => {
     currentBookRef.current = currentBook;
   }, [currentBook]);
@@ -105,12 +105,12 @@ function App() {
       );
 
       if (error) {
-        console.warn('⚠️ Gửi profile lên Supabase thất bại:', error);
+        console.warn(' Gi profile ln Supabase tht bi:', error);
       } else {
-        console.log('✅ Gửi profile lên Supabase thành công:', authUser.email);
+        console.log(' Gi profile ln Supabase thnh cng:', authUser.email);
       }
     } catch (err) {
-      console.warn('⚠️ Lỗi khi đồng bộ profile lên Supabase:', err);
+      console.warn(' Li khi ng b profile ln Supabase:', err);
     }
   };
 
@@ -155,35 +155,35 @@ function App() {
     checkSession();
   }, []);
 
-  // Migration: di trú sách và ảnh từ localStorage sang IndexedDB (chạy 1 lần)
+  // Migration: di tr sch v nh t localStorage sang IndexedDB (chy 1 ln)
   useEffect(() => {
     const runMigration = async () => {
       if (isMigrationDone()) return;
       if (!isIndexedDBAvailable()) {
-        console.warn('IndexedDB không khả dụng, bỏ qua migration');
+        console.warn('IndexedDB khng kh dng, b qua migration');
         return;
       }
 
       try {
-        console.log('🔄 Bắt đầu migration sang IndexedDB...');
+        console.log(' Bt u migration sang IndexedDB...');
         const bookCount = await migrateBooksFromLocalStorage();
-        console.log(`✅ Đã migrate ${bookCount} sách`);
+        console.log(`  migrate ${bookCount} sch`);
 
         const imageCount = await dbMigrateFromLocalStorage();
-        console.log(`✅ Đã migrate ${imageCount} ảnh`);
+        console.log(`  migrate ${imageCount} nh`);
 
         markMigrationDone();
-        console.log('✅ Migration hoàn tất');
+        console.log(' Migration hon tt');
       } catch (err) {
-        console.error('Migration thất bại:', err);
-        // Không chặn app — vẫn chạy bình thường với localStorage
+        console.error('Migration tht bi:', err);
+        // Khng chn app  vn chy bnh thng vi localStorage
       }
     };
 
     runMigration();
   }, []);
 
-  // beforeunload: backup đồng bộ vào localStorage khi đóng tab
+  // beforeunload: backup ng b vo localStorage khi ng tab
   useEffect(() => {
     const handleBeforeUnload = (_e: BeforeUnloadEvent) => {
       const book = currentBookRef.current;
@@ -198,7 +198,7 @@ function App() {
           }
           localStorage.setItem('dearbook_books', JSON.stringify(books));
         } catch {
-          // Bỏ qua nếu localStorage đầy
+          // B qua nu localStorage y
         }
       }
     };
@@ -207,7 +207,7 @@ function App() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, []);
 
-  // Safe save helper — lưu sách vào IndexedDB, fallback localStorage
+  // Safe save helper  lu sch vo IndexedDB, fallback localStorage
   const safeSaveBook = useCallback(async (book: BookData): Promise<void> => {
     if (isSavingRef.current) return;
     isSavingRef.current = true;
@@ -217,7 +217,7 @@ function App() {
         const userId = user?.id || '00000000-0000-0000-0000-000000000000';
         await saveBook(book, userId);
       } else {
-        // Fallback localStorage nếu IDB không khả dụng
+        // Fallback localStorage nu IDB khng kh dng
         const books = JSON.parse(localStorage.getItem('dearbook_books') || '[]');
         const existingIndex = books.findIndex((b: BookData) => b.id === book.id);
         const updatedBook = { ...book, updatedAt: new Date().toISOString() };
@@ -230,7 +230,7 @@ function App() {
       }
     } catch (err) {
       console.error('safeSaveBook failed:', err);
-      // Fallback cuối cùng: localStorage
+      // Fallback cui cng: localStorage
       try {
         const books = JSON.parse(localStorage.getItem('dearbook_books') || '[]');
         const existingIndex = books.findIndex((b: BookData) => b.id === book.id);
@@ -242,7 +242,7 @@ function App() {
         }
         localStorage.setItem('dearbook_books', JSON.stringify(books));
       } catch {
-        console.error('Hoàn toàn không thể lưu sách');
+        console.error('Hon ton khng th lu sch');
       }
     } finally {
       isSavingRef.current = false;
@@ -258,12 +258,12 @@ function App() {
     try {
       if (isSignup) {
         await signUpWithEmail(email, password, name || email.split('@')[0]);
-        toast.success('Mã OTP xác thực đã được gửi tới email của bạn!');
+        toast.success('M OTP xc thc  c gi ti email ca bn!');
         return { needsOtp: true };
       }
 
       const authUser = await signInWithEmail(email, password);
-      toast.success('Đăng nhập thành công!');
+      toast.success('ng nhp thnh cng!');
 
       const userData = {
         id: authUser.id,
@@ -281,7 +281,7 @@ function App() {
       }, 2000);
     } catch (err: any) {
       console.error('Auth error:', err);
-      toast.error(err.message || 'Có lỗi xảy ra, vui lòng thử lại.');
+      toast.error(err.message || 'C li xy ra, vui lng th li.');
       throw err;
     }
   };
@@ -294,7 +294,7 @@ function App() {
         name || email.split('@')[0]
       );
 
-      toast.success('Xác thực tài khoản thành công!');
+      toast.success('Xc thc ti khon thnh cng!');
 
       const userData = {
         id: authUser.id,
@@ -310,13 +310,13 @@ function App() {
       setCurrentScreen('home');
     } catch (err: any) {
       console.error('OTP verify error:', err);
-      toast.error(err.message || 'Mã xác thực không hợp lệ hoặc đã hết hạn.');
+      toast.error(err.message || 'M xc thc khng hp l hoc  ht hn.');
       throw err;
     }
   };
 
   const handleLogout = async () => {
-    // Lưu sách hiện tại trước khi logout
+    // Lu sch hin ti trc khi logout
     if (currentBook) {
       try {
         await safeSaveBook(currentBook);
@@ -338,7 +338,7 @@ function App() {
   };
 
   const handleCreateNewBook = async () => {
-    // Lưu sách hiện tại trước khi tạo mới
+    // Lu sch hin ti trc khi to mi
     if (currentBook) {
       try {
         await safeSaveBook(currentBook);
@@ -363,17 +363,17 @@ function App() {
     setCurrentBook(updatedBook);
     await safeSaveBook(updatedBook);
 
-    // Đồng bộ lên backend (non-blocking)
+    // ng b ln backend (non-blocking)
     const userId = user?.id || '00000000-0000-0000-0000-000000000000';
     try {
       if (book.templateId) {
         const books = JSON.parse(localStorage.getItem('dearbook_books') || '[]');
         const existingIndex = books.findIndex((b: BookData) => b.id === book.id);
         if (existingIndex < 0) {
-          // Sách mới — tạo trên backend
+          // Sch mi  to trn backend
           await bookApi.createBook(userId, {
             templateId: book.templateId,
-            title: book.title || 'Sách mới',
+            title: book.title || 'Sch mi',
           });
         }
       }
@@ -383,7 +383,7 @@ function App() {
   };
 
   const handleBackToLibrary = async () => {
-    // Lưu sách hiện tại trước khi rời builder
+    // Lu sch hin ti trc khi ri builder
     if (currentBook) {
       try {
         await safeSaveBook(currentBook);
@@ -401,7 +401,7 @@ function App() {
   };
 
   const handleOrderComplete = async () => {
-    // Lưu sách trước khi hoàn tất đơn hàng
+    // Lu sch trc khi hon tt n hng
     if (currentBook) {
       try {
         await safeSaveBook(currentBook);

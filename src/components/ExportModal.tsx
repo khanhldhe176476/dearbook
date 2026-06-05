@@ -12,22 +12,22 @@ interface ExportModalProps {
   pages: any[];
   book?: any;
   onClose: () => void;
-  /** Các trang được chọn sẵn khi mở modal (từ bên ngoài, ví dụ từ PageSelectionStep) */
+  /** Cc trang c chn sn khi m modal (t bn ngoi, v d t PageSelectionStep) */
   initialSelectedPages?: Set<number>;
-  /** Callback khi export PDF hoàn tất — để parent biết đã export xong */
+  /** Callback khi export PDF hon tt   parent bit  export xong */
   onExportComplete?: () => void;
 }
 
 const QUALITY_OPTIONS: { value: ExportQuality; label: string; desc: string }[] = [
-  { value: 'standard', label: 'Tiêu chuẩn', desc: '150 DPI · File nhẹ · ~2-5MB' },
-  { value: 'high',     label: 'Cao',        desc: '200 DPI · Rõ nét · ~5-10MB' },
-  { value: 'print',    label: 'In ấn',      desc: '300 DPI · In chuyên nghiệp · ~10-25MB' },
+  { value: 'standard', label: 'Tiu chun', desc: '150 DPI  File nh  ~2-5MB' },
+  { value: 'high',     label: 'Cao',        desc: '200 DPI  R nt  ~5-10MB' },
+  { value: 'print',    label: 'In n',      desc: '300 DPI  In chuyn nghip  ~10-25MB' },
 ];
 
 const PAGE_SIZES = [
-  { value: 'A4' as const,     label: 'A4 (210×297mm)' },
-  { value: 'A5' as const,     label: 'A5 (148×210mm)' },
-  { value: 'letter' as const, label: 'Letter (215×279mm)' },
+  { value: 'A4' as const,     label: 'A4 (210297mm)' },
+  { value: 'A5' as const,     label: 'A5 (148210mm)' },
+  { value: 'letter' as const, label: 'Letter (215279mm)' },
 ];
 
 export function ExportModal({ title, pages, book, onClose, initialSelectedPages, onExportComplete }: ExportModalProps) {
@@ -58,22 +58,22 @@ export function ExportModal({ title, pages, book, onClose, initialSelectedPages,
   const selectAll = () => setSelectedPages(new Set(pages.map((_, i) => i)));
   const deselectAll = () => setSelectedPages(new Set());
 
-  // ── Export PDF ──────────────────────────────────────────────────────────
+  //  Export PDF 
   const handleExportPDF = async () => {
     if (selectedCount === 0) {
-      toast.error('Vui lòng chọn ít nhất 1 trang để xuất.');
+      toast.error('Vui lng chn t nht 1 trang  xut.');
       return;
     }
 
     setIsExporting(true);
     setProgress(10);
-    setProgressMsg('Đang khởi tạo...');
+    setProgressMsg('ang khi to...');
 
     try {
       const pageIndices = [...selectedPages].sort((a, b) => a - b);
 
       setProgress(20);
-      setProgressMsg(`Đang render ${pageIndices.length} trang ở chất lượng ${quality}...`);
+      setProgressMsg(`ang render ${pageIndices.length} trang  cht lng ${quality}...`);
 
       const pdfBlob = await exportBookAsPDF(
         book || { id: '', theme: 'love', templateId: '', pages, status: 'draft', createdAt: '', updatedAt: '' },
@@ -82,14 +82,14 @@ export function ExportModal({ title, pages, book, onClose, initialSelectedPages,
       );
 
       setProgress(90);
-      setProgressMsg('Đang tạo file...');
+      setProgressMsg('ang to file...');
 
-      const safeTitle = (title || 'sach').replace(/[^a-z0-9à-ỹ]/gi, '_').substring(0, 40);
+      const safeTitle = (title || 'sach').replace(/[^a-z0-9-]/gi, '_').substring(0, 40);
       downloadBlob(pdfBlob, `${safeTitle}_${quality}.pdf`);
 
       setProgress(100);
-      setProgressMsg('Hoàn tất!');
-      toast.success(`✅ Đã xuất ${pageIndices.length} trang thành PDF chất lượng ${quality}!`);
+      setProgressMsg('Hon tt!');
+      toast.success(`  xut ${pageIndices.length} trang thnh PDF cht lng ${quality}!`);
 
       // Notify parent that PDF has been exported
       onExportComplete?.();
@@ -97,7 +97,7 @@ export function ExportModal({ title, pages, book, onClose, initialSelectedPages,
       setTimeout(onClose, 1000);
     } catch (err: any) {
       console.error('PDF export error:', err);
-      toast.error(err.message || 'Không thể xuất PDF. Vui lòng thử lại.');
+      toast.error(err.message || 'Khng th xut PDF. Vui lng th li.');
     } finally {
       setIsExporting(false);
       setProgress(0);
@@ -105,16 +105,16 @@ export function ExportModal({ title, pages, book, onClose, initialSelectedPages,
     }
   };
 
-  // ── Export Images ───────────────────────────────────────────────────────
+  //  Export Images 
   const handleExportImages = async () => {
     if (selectedCount === 0) {
-      toast.error('Vui lòng chọn ít nhất 1 trang.');
+      toast.error('Vui lng chn t nht 1 trang.');
       return;
     }
 
     setIsExporting(true);
     setProgress(0);
-    setProgressMsg('Đang xuất ảnh...');
+    setProgressMsg('ang xut nh...');
 
     try {
       const pageIndices = [...selectedPages].sort((a, b) => a - b);
@@ -123,12 +123,12 @@ export function ExportModal({ title, pages, book, onClose, initialSelectedPages,
         const page = pages[idx];
         if (!page) continue;
 
-        setProgressMsg(`Đang render trang ${idx + 1}/${totalPages}...`);
+        setProgressMsg(`ang render trang ${idx + 1}/${totalPages}...`);
 
-        // Render ở 2400x3600 (tương đương 300 DPI cho A4 portrait)
+        // Render  2400x3600 (tng ng 300 DPI cho A4 portrait)
         const imgUrl = await exportPageAsImage(page, 2400, 3600);
 
-        const safeTitle = (title || 'sach').replace(/[^a-z0-9à-ỹ]/gi, '_').substring(0, 30);
+        const safeTitle = (title || 'sach').replace(/[^a-z0-9-]/gi, '_').substring(0, 30);
         const link = document.createElement('a');
         link.href = imgUrl;
         link.download = `${safeTitle}_trang_${idx + 1}.png`;
@@ -140,11 +140,11 @@ export function ExportModal({ title, pages, book, onClose, initialSelectedPages,
         await new Promise(r => setTimeout(r, 200));
       }
 
-      toast.success(`✅ Đã xuất ${pageIndices.length} ảnh PNG!`);
+      toast.success(`  xut ${pageIndices.length} nh PNG!`);
       setTimeout(onClose, 1000);
     } catch (err: any) {
       console.error('Image export error:', err);
-      toast.error('Không thể xuất ảnh. Vui lòng thử lại.');
+      toast.error('Khng th xut nh. Vui lng th li.');
     } finally {
       setIsExporting(false);
       setProgress(0);
@@ -156,13 +156,13 @@ export function ExportModal({ title, pages, book, onClose, initialSelectedPages,
     <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <div className="w-full max-w-3xl max-h-[92vh] bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col">
 
-        {/* ── Header ──────────────────────────────────────────────────── */}
+        {/*  Header  */}
         <div className="flex items-center justify-between p-5 border-b border-gray-100 shrink-0"
           style={{ background: 'linear-gradient(135deg, #faf8f5 0%, #f5f2ee 100%)' }}>
           <div>
-            <h2 className="text-xl font-bold" style={{ color: '#1a1a1a' }}>📤 Xuất sách</h2>
+            <h2 className="text-xl font-bold" style={{ color: '#1a1a1a' }}> Xut sch</h2>
             <p className="text-xs mt-0.5" style={{ color: '#999' }}>
-              {totalPages} trang · <span className="font-semibold text-black">{selectedCount} được chọn</span>
+              {totalPages} trang  <span className="font-semibold text-black">{selectedCount} c chn</span>
             </p>
           </div>
           <button onClick={onClose} disabled={isExporting}
@@ -171,25 +171,25 @@ export function ExportModal({ title, pages, book, onClose, initialSelectedPages,
           </button>
         </div>
 
-        {/* ── Body ─────────────────────────────────────────────────────── */}
+        {/*  Body  */}
         <div className="flex-1 overflow-y-auto p-5 space-y-5">
 
           {/* Page Selection Grid */}
           <div>
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-bold flex items-center gap-2" style={{ color: '#333' }}>
-                📄 Chọn trang xuất
+                 Chn trang xut
               </h3>
               <div className="flex items-center gap-2">
                 <button onClick={selectAll}
                   className="text-[11px] font-semibold px-3 py-1.5 rounded-lg transition-all hover:bg-gray-200"
                   style={{ color: '#555', background: '#f0ede8' }}>
-                  Chọn tất cả
+                  Chn tt c
                 </button>
                 <button onClick={deselectAll}
                   className="text-[11px] font-semibold px-3 py-1.5 rounded-lg transition-all hover:bg-gray-200"
                   style={{ color: '#555', background: '#f0ede8' }}>
-                  Bỏ chọn
+                  B chn
                 </button>
               </div>
             </div>
@@ -229,7 +229,7 @@ export function ExportModal({ title, pages, book, onClose, initialSelectedPages,
                       ) : (
                         <div className="absolute inset-0 flex items-center justify-center">
                           <span className="text-[11px] font-bold" style={{ color: '#ddd' }}>
-                            {i === 0 ? 'Bìa' : i + 1}
+                            {i === 0 ? 'Ba' : i + 1}
                           </span>
                         </div>
                       )}
@@ -244,7 +244,7 @@ export function ExportModal({ title, pages, book, onClose, initialSelectedPages,
                       {hasTemplateFrame(page) && !preview && (
                         <div className="absolute bottom-1 left-1">
                           <span className="text-[9px] px-1.5 py-0.5 rounded bg-black/40 text-white/80">
-                            Mẫu
+                            Mu
                           </span>
                         </div>
                       )}
@@ -252,7 +252,7 @@ export function ExportModal({ title, pages, book, onClose, initialSelectedPages,
 
                     {/* Page number */}
                     <span className={`text-[10px] font-bold ${isSelected ? 'text-amber-700' : 'text-gray-400'}`}>
-                      {i === 0 ? '📔 Bìa' : `📄 Trang ${i + 1}`}
+                      {i === 0 ? ' Ba' : ` Trang ${i + 1}`}
                     </span>
                   </button>
                 );
@@ -263,12 +263,12 @@ export function ExportModal({ title, pages, book, onClose, initialSelectedPages,
           {/* Settings */}
           <div className="bg-gray-50/80 rounded-xl p-4 space-y-3">
             <h3 className="text-sm font-bold flex items-center gap-2" style={{ color: '#333' }}>
-              <Settings className="w-4 h-4" /> Cài đặt xuất
+              <Settings className="w-4 h-4" /> Ci t xut
             </h3>
 
             {/* Quality */}
             <div>
-              <label className="text-[11px] font-bold uppercase tracking-wider" style={{ color: '#aaa' }}>Chất lượng</label>
+              <label className="text-[11px] font-bold uppercase tracking-wider" style={{ color: '#aaa' }}>Cht lng</label>
               <div className="grid grid-cols-3 gap-2 mt-1.5">
                 {QUALITY_OPTIONS.map(opt => (
                   <button key={opt.value}
@@ -288,7 +288,7 @@ export function ExportModal({ title, pages, book, onClose, initialSelectedPages,
             {/* Page size + Orientation */}
             <div className="flex gap-3">
               <div className="flex-1">
-                <label className="text-[11px] font-bold uppercase tracking-wider" style={{ color: '#aaa' }}>Khổ giấy</label>
+                <label className="text-[11px] font-bold uppercase tracking-wider" style={{ color: '#aaa' }}>Kh giy</label>
                 <select value={pageSize} onChange={e => setPageSize(e.target.value as any)}
                   className="w-full mt-1.5 px-3 py-2.5 text-sm rounded-xl border border-gray-200 bg-white outline-none focus:border-gray-400"
                   style={{ color: '#333' }}>
@@ -296,17 +296,17 @@ export function ExportModal({ title, pages, book, onClose, initialSelectedPages,
                 </select>
               </div>
               <div className="flex-1">
-                <label className="text-[11px] font-bold uppercase tracking-wider" style={{ color: '#aaa' }}>Hướng</label>
+                <label className="text-[11px] font-bold uppercase tracking-wider" style={{ color: '#aaa' }}>Hng</label>
                 <div className="flex gap-2 mt-1.5">
                   <button onClick={() => setOrientation('portrait')}
                     className={`flex-1 py-2.5 rounded-xl text-sm font-bold border-2 transition-all ${
                       orientation === 'portrait' ? 'border-black/80 bg-white' : 'border-gray-200 bg-white/60'}`}>
-                    📱 Dọc
+                     Dc
                   </button>
                   <button onClick={() => setOrientation('landscape')}
                     className={`flex-1 py-2.5 rounded-xl text-sm font-bold border-2 transition-all ${
                       orientation === 'landscape' ? 'border-black/80 bg-white' : 'border-gray-200 bg-white/60'}`}>
-                    🖥 Ngang
+                     Ngang
                   </button>
                 </div>
               </div>
@@ -315,12 +315,12 @@ export function ExportModal({ title, pages, book, onClose, initialSelectedPages,
             {/* File size estimate */}
             <div className="flex items-center gap-2 text-[11px]" style={{ color: '#bbb' }}>
               <AlertTriangle className="w-3 h-3 flex-shrink-0" />
-              Dung lượng ước tính: ~{estimateSize(selectedCount, quality)}MB · Định dạng: PDF vector + ảnh PNG
+              Dung lng c tnh: ~{estimateSize(selectedCount, quality)}MB  nh dng: PDF vector + nh PNG
             </div>
           </div>
         </div>
 
-        {/* ── Progress bar ──────────────────────────────────────────────── */}
+        {/*  Progress bar  */}
         {isExporting && (
           <div className="px-5 pb-2 shrink-0">
             <div className="flex items-center justify-between text-sm mb-2">
@@ -337,7 +337,7 @@ export function ExportModal({ title, pages, book, onClose, initialSelectedPages,
           </div>
         )}
 
-        {/* ── Footer buttons ────────────────────────────────────────────── */}
+        {/*  Footer buttons  */}
         <div className="p-5 border-t border-gray-100 flex gap-3 shrink-0">
           <button
             onClick={handleExportImages}
@@ -346,7 +346,7 @@ export function ExportModal({ title, pages, book, onClose, initialSelectedPages,
               disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50"
             style={{ borderColor: '#e8e4de', color: '#555' }}>
             <Image className="w-4 h-4" />
-            Xuất ảnh PNG{selectedCount > 0 ? ` (${selectedCount})` : ''}
+            Xut nh PNG{selectedCount > 0 ? ` (${selectedCount})` : ''}
           </button>
           <button
             onClick={handleExportPDF}
@@ -359,7 +359,7 @@ export function ExportModal({ title, pages, book, onClose, initialSelectedPages,
             ) : (
               <Download className="w-4 h-4" />
             )}
-            {isExporting ? 'Đang xuất...' : `Xuất PDF (${selectedCount} trang)`}
+            {isExporting ? 'ang xut...' : `Xut PDF (${selectedCount} trang)`}
           </button>
         </div>
       </div>
@@ -367,7 +367,7 @@ export function ExportModal({ title, pages, book, onClose, initialSelectedPages,
   );
 }
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
+//  Helpers 
 
 function estimateSize(pageCount: number, quality: ExportQuality): string {
   const perPage: Record<ExportQuality, number> = { standard: 1.0, high: 2.0, print: 4.5 };

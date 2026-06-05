@@ -28,7 +28,7 @@ const FONT_FAMILIES = [
   { value: 'Courier New', label: 'Courier New' },
 ];
 
-// ── InlineTextEditor: component tách biệt ngăn React re-render khi đang gõ ──
+//  InlineTextEditor: component tch bit ngn React re-render khi ang g 
 const InlineTextEditor = React.memo(
   ({
     textEl,
@@ -56,7 +56,7 @@ const InlineTextEditor = React.memo(
         sel?.removeAllRanges();
         sel?.addRange(range);
       }
-    }, []); // Only mount — never re-run
+    }, []); // Only mount  never re-run
 
     const handleBlur = () => {
       const newContent = editorRef.current?.innerText || '';
@@ -107,7 +107,7 @@ const InlineTextEditor = React.memo(
       />
     );
   },
-  // NEVER re-render — contentEditable DOM manages itself
+  // NEVER re-render  contentEditable DOM manages itself
   () => true
 );
 InlineTextEditor.displayName = 'InlineTextEditor';
@@ -188,7 +188,7 @@ export function AdvancedPageEditorV2({
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-center">
-          <p className="text-gray-500">Không tìm thấy trang</p>
+          <p className="text-gray-500">Khng tm thy trang</p>
         </div>
       </div>
     );
@@ -302,7 +302,7 @@ export function AdvancedPageEditorV2({
   };
 
   const canvasRef = useRef<HTMLDivElement>(null);
-  // ✅ Global rule: hidden file input for click-to-fill upload slots
+  //  Global rule: hidden file input for click-to-fill upload slots
   const slotFileInputRef = useRef<HTMLInputElement>(null);
   const pendingSlotIdRef = useRef<string | null>(null);
   const PAGE_WIDTH = 400;
@@ -319,7 +319,7 @@ export function AdvancedPageEditorV2({
       const src = ev.target?.result as string;
       // Fill the slot: set src, enforce cover fit
       handleUpdateElement(slotId, { src, objectFit: 'cover' });
-      toast.success('✅ Ảnh đã được fit vào khung!');
+      toast.success(' nh  c fit vo khung!');
     };
     reader.readAsDataURL(file);
     // Reset so same file can be re-selected
@@ -354,7 +354,7 @@ export function AdvancedPageEditorV2({
         newElement = {
           ...baseElement,
           type: 'text',
-          content: data.content || 'Nhập nội dung...',
+          content: data.content || 'Nhp ni dung...',
           fontFamily: data.fontFamily || 'Poppins',
           fontSize: data.fontSize || 24,
           fontWeight: data.fontWeight || 'normal',
@@ -426,7 +426,7 @@ export function AdvancedPageEditorV2({
     if (type === 'text') {
       setEditingTextId(newElement.id);
     }
-    toast.success('Đã thêm phần tử mới');
+    toast.success(' thm phn t mi');
   };
 
   const handleUpdateElement = (id: string, updates: Partial<PageElement>) => {
@@ -442,7 +442,7 @@ export function AdvancedPageEditorV2({
 
   const handleSaveOrder = () => {
     forceSave(); // Ensure latest changes are saved before proceeding
-    toast.success('Đã gửi thiết kế cho Admin thành công! Chúng tôi sẽ sớm liên hệ với bạn.');
+    toast.success(' gi thit k cho Admin thnh cng! Chng ti s sm lin h vi bn.');
     if (onSaveOrder) onSaveOrder();
   };
 
@@ -460,7 +460,7 @@ export function AdvancedPageEditorV2({
     const newElements = elements.filter((el) => el.id !== id);
     setEditorState(prev => ({ ...prev, elements: newElements }));
     setSelectedIds(selectedIds.filter((sid) => sid !== id));
-    toast.info('Đã xóa phần tử');
+    toast.info(' xa phn t');
   };
 
   const handleApplyTemplate = (template: any) => {
@@ -476,7 +476,7 @@ export function AdvancedPageEditorV2({
     setEditorState(prev => ({ ...prev, elements: newElements as PageElement[] }));
     setSelectedIds([]);
     setShowLayerPanel(true);
-    toast.success(`Đã áp dụng mẫu: ${template.name}`);
+    toast.success(` p dng mu: ${template.name}`);
   };
 
   const handleAddTextCombination = (combination: any) => {
@@ -499,7 +499,7 @@ export function AdvancedPageEditorV2({
     });
     setEditorState(prev => ({ ...prev, elements: newElements as PageElement[] }));
     setShowLayerPanel(true);
-    toast.success(`Đã thêm: ${combination.name}`);
+    toast.success(` thm: ${combination.name}`);
   };
 
   const handleSelectElement = (id: string, multiSelect?: boolean) => {
@@ -531,7 +531,7 @@ export function AdvancedPageEditorV2({
     });
 
     setEditorState(prev => ({ ...prev, elements: newElements }));
-    toast.success('Đã nhân đôi phần tử');
+    toast.success(' nhn i phn t');
   };
 
   const handleAlign = (type: 'left' | 'center' | 'right' | 'top' | 'middle' | 'bottom') => {
@@ -559,7 +559,7 @@ export function AdvancedPageEditorV2({
     });
 
     setEditorState(prev => ({ ...prev, elements: newElements }));
-    toast.success('Đã căn chỉnh phần tử');
+    toast.success(' cn chnh phn t');
   };
 
   const handleReorderElement = (id: string, direction: 'up' | 'down') => {
@@ -594,7 +594,7 @@ export function AdvancedPageEditorV2({
         if (e.key === 's') {
           e.preventDefault();
           forceSave();
-          toast.success('Đã lưu thủ công');
+          toast.success(' lu th cng');
         } else if (e.key === 'd') {
           e.preventDefault();
           handleDuplicate();
@@ -611,7 +611,7 @@ export function AdvancedPageEditorV2({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedIds, forceSave, editingTextId]);
 
-  // Global mouse handlers — bắt sự kiện trên toàn window để kéo/thả vượt ra ngoài canvas
+  // Global mouse handlers  bt s kin trn ton window  ko/th vt ra ngoi canvas
   useEffect(() => {
     const isActive = draggedElement || resizingElement || rotatingElement;
     if (!isActive) return;
@@ -674,7 +674,7 @@ export function AdvancedPageEditorV2({
         const rect = canvas.getBoundingClientRect();
         const mouseX = e.clientX - rect.left;
         const mouseY = e.clientY - rect.top;
-        // Không giới hạn vị trí — cho phép kéo ra ngoài trang
+        // Khng gii hn v tr  cho php ko ra ngoi trang
         handleUpdateElement(draggedElement.id, {
           x: (mouseX - draggedElement.offsetX) / zoom,
           y: (mouseY - draggedElement.offsetY) / zoom,
@@ -716,11 +716,11 @@ export function AdvancedPageEditorV2({
     }
   };
 
-  // ─── Drop-Into-Frame: Universal rule for all templates ───────────────────────
+  //  Drop-Into-Frame: Universal rule for all templates 
   // When an image is dragged from the AssetLibrary onto the canvas:
   //   1. Check if the drop point hits an isUploadSlot element
-  //   2. If YES → set the slot's src to the dragged image (auto-fit cover)
-  //   3. If NO  → add a new free-floating image element as before
+  //   2. If YES  set the slot's src to the dragged image (auto-fit cover)
+  //   3. If NO   add a new free-floating image element as before
   const handleCanvasDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'copy';
@@ -781,7 +781,7 @@ export function AdvancedPageEditorV2({
           const fileSrc = ev.target?.result as string;
           if (slotUnder) {
             handleUpdateElement(slotUnder.id, { src: fileSrc, objectFit: 'cover' });
-            toast.success('✅ Ảnh đã được fit vào khung!');
+            toast.success(' nh  c fit vo khung!');
           } else {
             handleAddElement('image', {
               src: fileSrc,
@@ -805,14 +805,14 @@ export function AdvancedPageEditorV2({
     if (!src) return;
 
     if (slotUnder) {
-      // ✅ Drop into frame: replace slot src, keep frame dimensions
+      //  Drop into frame: replace slot src, keep frame dimensions
       handleUpdateElement(slotUnder.id, {
         src,
         objectFit: 'cover',
       });
-      toast.success('✅ Ảnh đã được fit vào khung!');
+      toast.success(' nh  c fit vo khung!');
     } else {
-      // Drop onto empty canvas area → add as new free-floating element
+      // Drop onto empty canvas area  add as new free-floating element
       handleAddElement('image', {
         src,
         objectFit: 'cover',
@@ -825,7 +825,7 @@ export function AdvancedPageEditorV2({
       });
     }
   };
-  // ─────────────────────────────────────────────────────────────────────────────
+  // 
 
   const handleResizeStart = (e: React.MouseEvent, id: string, handle: string) => {
     e.stopPropagation();
@@ -870,7 +870,7 @@ export function AdvancedPageEditorV2({
       // Update cover page
       onUpdatePage(currentPageIndex, cover.elements, cover.background);
       setEditorState({ elements: cover.elements, background: cover.background });
-      toast.success('Đã áp dụng trang bìa mới');
+      toast.success(' p dng trang ba mi');
     }
     setShowCoverSelector(false);
   };
@@ -1040,7 +1040,7 @@ export function AdvancedPageEditorV2({
               cursor: isUploadSlot && !imgSrc ? 'pointer' : (element.locked ? 'not-allowed' : 'move'),
             }}
             onMouseDown={(e) => {
-              // ✅ If it's an empty upload slot, open file picker on click instead of drag
+              //  If it's an empty upload slot, open file picker on click instead of drag
               if (isUploadSlot && !imgSrc) {
                 e.stopPropagation();
                 pendingSlotIdRef.current = element.id;
@@ -1049,7 +1049,7 @@ export function AdvancedPageEditorV2({
                 handleMouseDown(e, element.id);
               }
             }}
-            // ✅ If slot already has image, double-click to replace
+            //  If slot already has image, double-click to replace
             onDoubleClick={(e) => {
               if (isUploadSlot && imgSrc) {
                 e.stopPropagation();
@@ -1063,7 +1063,7 @@ export function AdvancedPageEditorV2({
               style={{
                 width: '100%',
                 height: '100%',
-                // ✅ GLOBAL RULE: always clip image to its frame bounds
+                //  GLOBAL RULE: always clip image to its frame bounds
                 overflow: 'hidden',
                 borderRadius: 'inherit',
                 background: isUploadSlot && !imgSrc
@@ -1076,7 +1076,7 @@ export function AdvancedPageEditorV2({
                   src={imgSrc}
                   alt={(imgEl as any).alt || (imgEl as any).uploadLabel || 'Image'}
                   style={{
-                    // ✅ GLOBAL RULE: absolute fill ensures 100% coverage regardless of zoom
+                    //  GLOBAL RULE: absolute fill ensures 100% coverage regardless of zoom
                     position: 'absolute',
                     inset: 0,
                     width: '100%',
@@ -1106,7 +1106,7 @@ export function AdvancedPageEditorV2({
                     <line x1="12" y1="3" x2="12" y2="15"/>
                   </svg>
                   <span style={{ fontSize: '11px', fontWeight: 500, textAlign: 'center', padding: '0 4px', fontFamily: 'var(--font-secondary), sans-serif' }}>
-                    {isDragTarget ? '↓ Thả ảnh vào đây' : ((imgEl as any).uploadLabel || 'Click tải ảnh')}
+                    {isDragTarget ? ' Th nh vo y' : ((imgEl as any).uploadLabel || 'Click ti nh')}
                   </span>
                 </div>
               ) : null}
@@ -1189,7 +1189,7 @@ export function AdvancedPageEditorV2({
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      {/* ✅ Global hidden file input for click-to-fill upload slots */}
+      {/*  Global hidden file input for click-to-fill upload slots */}
       <input
         ref={slotFileInputRef}
         type="file"
@@ -1201,7 +1201,7 @@ export function AdvancedPageEditorV2({
       {!isMobile && showAssetLibrary && (
         <div className="w-72 bg-white border-r border-gray-200 overflow-y-auto animate-in slide-in-from-left duration-200">
           <div className="p-4 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-white z-10">
-            <h3 className="font-semibold text-gray-900">🎨 Thư viện</h3>
+            <h3 className="font-semibold text-gray-900"> Th vin</h3>
             <button
               onClick={() => setShowAssetLibrary(false)}
               className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
@@ -1222,7 +1222,7 @@ export function AdvancedPageEditorV2({
         {/* Compact Toolbar */}
         {!isMobile && (
           <EditorToolbarCompact
-            title={book.title || 'Chỉnh sửa trang'}
+            title={book.title || 'Chnh sa trang'}
             zoom={zoom}
             canUndo={canUndo}
             canRedo={canRedo}
@@ -1244,7 +1244,7 @@ export function AdvancedPageEditorV2({
             onToggleLayerPanel={() => setShowLayerPanel(!showLayerPanel)}
             onAddText={() =>
               handleAddElement('text', {
-                content: 'Nhập nội dung...',
+                content: 'Nhp ni dung...',
                 fontSize: 24,
               })
             }
@@ -1279,7 +1279,7 @@ export function AdvancedPageEditorV2({
               backgroundRepeat: 'no-repeat',
             }}
             // Mouse drag/resize/rotate handled globally via window listeners
-            // ✅ Drop-Into-Frame handlers
+            //  Drop-Into-Frame handlers
             onDragOver={handleCanvasDragOver}
             onDragLeave={() => setDragOverSlotId(null)}
             onDrop={handleCanvasDrop}
@@ -1337,16 +1337,16 @@ export function AdvancedPageEditorV2({
             <div>
               <div className="flex items-center gap-2">
                 <Layers className="w-5 h-5 text-purple-600" />
-                <h3 className="font-semibold text-gray-900">Lớp (Layers)</h3>
+                <h3 className="font-semibold text-gray-900">Lp (Layers)</h3>
               </div>
               <p className="text-xs text-gray-500 mt-1">
-                {elements.length} phần tử
+                {elements.length} phn t
               </p>
             </div>
             <button
               onClick={() => setShowLayerPanel(false)}
               className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors text-gray-500 hover:text-gray-700"
-              title="Ẩn danh sách lớp"
+              title="n danh sch lp"
             >
               <X className="w-4 h-4" />
             </button>
@@ -1387,7 +1387,7 @@ export function AdvancedPageEditorV2({
           onExport={() => setShowExportModal(true)}
           onAddText={() =>
             handleAddElement('text', {
-              content: 'Nhập nội dung...',
+              content: 'Nhp ni dung...',
               fontSize: 24,
             })
           }
@@ -1410,7 +1410,7 @@ export function AdvancedPageEditorV2({
       {/* Export Modal */}
       {showExportModal && (
         <ExportModal
-          title={book.title || 'Cuốn sách của tôi'}
+          title={book.title || 'Cun sch ca ti'}
           pages={pages}
           book={book}
           onClose={() => setShowExportModal(false)}
@@ -1422,7 +1422,7 @@ export function AdvancedPageEditorV2({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
           <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 animate-in zoom-in-95 duration-200">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">📷 Thêm hình ảnh</h3>
+              <h3 className="text-lg font-semibold text-gray-900"> Thm hnh nh</h3>
               <button
                 onClick={() => setShowImageUploader(false)}
                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -1446,18 +1446,18 @@ export function AdvancedPageEditorV2({
         <FloatingActionMenu
           onAddText={() =>
             handleAddElement('text', {
-              content: 'Nhập nội dung...',
+              content: 'Nhp ni dung...',
               fontSize: 24,
             })
           }
           onAddImage={() => setShowImageUploader(true)}
           onAddShape={() => {
             setShowAssetLibrary(true);
-            toast.info('Chọn hình khối từ thư viện');
+            toast.info('Chn hnh khi t th vin');
           }}
           onAddSticker={() => {
             setShowAssetLibrary(true);
-            toast.info('Chọn sticker từ thư viện');
+            toast.info('Chn sticker t th vin');
           }}
         />
       )}
@@ -1476,8 +1476,8 @@ export function AdvancedPageEditorV2({
   );
 }
 
-// ── Element Properties Bar ─────────────────────────────────────────────────
-// Hiển thị thuộc tính của element đang được chọn ngay trên thanh toolbar
+//  Element Properties Bar 
+// Hin th thuc tnh ca element ang c chn ngay trn thanh toolbar
 
 function ElementPropertiesBar({
   element,
@@ -1487,13 +1487,13 @@ function ElementPropertiesBar({
   onUpdate: (updates: Partial<PageElement>) => void;
 }) {
   const typeLabel = {
-    text: '📝 Văn bản',
-    image: '🖼️ Hình ảnh',
-    shape: '⬛ Hình khối',
-    sticker: '😊 Sticker',
-    icon: '🔷 Icon',
-    frame: '🖼️ Khung',
-  }[element.type] || 'Phần tử';
+    text: ' Vn bn',
+    image: ' Hnh nh',
+    shape: ' Hnh khi',
+    sticker: ' Sticker',
+    icon: ' Icon',
+    frame: ' Khung',
+  }[element.type] || 'Phn t';
 
   return (
     <div className="bg-white border-b border-gray-200 px-3 py-2 flex items-center gap-3 overflow-x-auto shadow-sm">
@@ -1537,9 +1537,9 @@ function ElementPropertiesBar({
 
       <div className="w-px h-6 bg-gray-200 flex-shrink-0" />
 
-      {/* Rotation + Opacity (chung cho mọi loại) */}
+      {/* Rotation + Opacity (chung cho mi loi) */}
       <div className="flex items-center gap-1 text-[11px] text-gray-500">
-        <span className="text-gray-400">↻</span>
+        <span className="text-gray-400"></span>
         <input
           type="number"
           value={Math.round(element.rotation || 0)}
@@ -1547,7 +1547,7 @@ function ElementPropertiesBar({
           className="w-12 px-1 py-0.5 border border-gray-200 rounded text-center text-[11px]"
           min={-180} max={180}
         />
-        <span className="text-gray-400 ml-1">°</span>
+        <span className="text-gray-400 ml-1"></span>
         <span className="text-gray-400 ml-2">Opacity</span>
         <input
           type="range"
@@ -1608,7 +1608,7 @@ function ElementPropertiesBar({
                   className={`px-1.5 py-0.5 text-[10px] transition-colors ${
                     (element as TextElement).textAlign === align ? 'bg-gray-200 text-gray-800' : 'bg-white text-gray-400'
                   }`}
-                >{align === 'left' ? '≡' : align === 'center' ? '≡' : '≡'}</button>
+                >{align === 'left' ? '' : align === 'center' ? '' : ''}</button>
               ))}
             </div>
             <input
@@ -1616,7 +1616,7 @@ function ElementPropertiesBar({
               value={(element as TextElement).color || '#000000'}
               onChange={e => onUpdate({ color: e.target.value })}
               className="w-6 h-6 rounded border border-gray-200 cursor-pointer p-0"
-              title="Màu chữ"
+              title="Mu ch"
             />
             {['#000000','#FF0000','#FF6B6B','#FF9800','#4CAF50','#2196F3','#9C27B0','#FFFFFF'].map(c => (
               <button
@@ -1669,26 +1669,26 @@ function ElementPropertiesBar({
               onChange={e => onUpdate({ shape: e.target.value as any })}
               className="px-1.5 py-0.5 border border-gray-200 rounded text-[11px] bg-white"
             >
-              <option value="rectangle">▬ Chữ nhật</option>
-              <option value="square">◼ Vuông</option>
-              <option value="circle">● Tròn</option>
-              <option value="triangle">▲ Tam giác</option>
-              <option value="star">★ Sao</option>
-              <option value="heart">♥ Tim</option>
+              <option value="rectangle"> Ch nht</option>
+              <option value="square"> Vung</option>
+              <option value="circle"> Trn</option>
+              <option value="triangle"> Tam gic</option>
+              <option value="star"> Sao</option>
+              <option value="heart"> Tim</option>
             </select>
             <input
               type="color"
               value={(element as ShapeElement).fill || '#000000'}
               onChange={e => onUpdate({ fill: e.target.value })}
               className="w-6 h-6 rounded border border-gray-200 cursor-pointer p-0"
-              title="Màu nền"
+              title="Mu nn"
             />
             <input
               type="color"
               value={(element as ShapeElement).stroke || '#000000'}
               onChange={e => onUpdate({ stroke: e.target.value })}
               className="w-6 h-6 rounded border border-gray-200 cursor-pointer p-0"
-              title="Màu viền"
+              title="Mu vin"
             />
             <input
               type="number"
@@ -1697,12 +1697,12 @@ function ElementPropertiesBar({
               className="w-12 px-1 py-0.5 border border-gray-200 rounded text-center text-[11px]"
               min={0}
             />
-            <span className="text-[10px] text-gray-400">viền</span>
+            <span className="text-[10px] text-gray-400">vin</span>
           </div>
         </>
       )}
 
-      {/* Sticker-specific — chỉ hiện emoji */}
+      {/* Sticker-specific  ch hin emoji */}
       {element.type === 'sticker' && (
         <>
           <div className="w-px h-6 bg-gray-200 flex-shrink-0" />
@@ -1714,11 +1714,11 @@ function ElementPropertiesBar({
       <div className="flex-1" />
       <button
         onClick={() => {
-          // Deselect bằng cách click ra ngoài (handled elsewhere)
+          // Deselect bng cch click ra ngoi (handled elsewhere)
         }}
         className="text-[10px] text-gray-400 hover:text-gray-600 px-2 py-0.5"
       >
-        ✕
+        
       </button>
     </div>
   );

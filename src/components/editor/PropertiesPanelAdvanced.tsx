@@ -55,7 +55,7 @@ export function PropertiesPanelAdvanced({
     return (
       <div className="h-full flex flex-col items-center justify-center p-8 text-center" style={{ background: '#FAFAF8', color: '#9B9088' }}>
         <Settings className="w-16 h-16 mb-4 opacity-30" />
-        <p className="text-sm">Chọn phần tử để chỉnh sửa</p>
+        <p className="text-sm">Chn phn t  chnh sa</p>
       </div>
     );
   }
@@ -66,7 +66,7 @@ export function PropertiesPanelAdvanced({
     return (
       <div className="h-full flex flex-col items-center justify-center p-8 text-center" style={{ background: '#FAFAF8', color: '#9B9088' }}>
         <Settings className="w-16 h-16 mb-4 opacity-30" />
-        <p className="text-sm">Chọn phần tử để chỉnh sửa</p>
+        <p className="text-sm">Chn phn t  chnh sa</p>
       </div>
     );
   }
@@ -91,9 +91,9 @@ export function PropertiesPanelAdvanced({
     return (
       <>
         {/* Content Section */}
-        <Section id="content" title="Nội dung" icon={Type}>
+        <Section id="content" title="Ni dung" icon={Type}>
           <div>
-            <label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Văn bản</label>
+            <label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Vn bn</label>
             <textarea
               value={textEl.content || ''}
               onChange={(e) => handleUpdate({ content: e.target.value })}
@@ -106,13 +106,13 @@ export function PropertiesPanelAdvanced({
               onFocus={(e) => e.target.style.borderColor = '#8C6E5D'}
               onBlur={(e) => e.target.style.borderColor = '#DDD8D0'}
               rows={4}
-              placeholder="Nhập nội dung..."
+              placeholder="Nhp ni dung..."
             />
           </div>
         </Section>
 
         {/* Style Section */}
-        <Section id="style" title="Kiểu chữ" icon={Palette}>
+        <Section id="style" title="Kiu ch" icon={Palette}>
           {/* Font Family */}
           <div>
             <label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Font</label>
@@ -143,7 +143,7 @@ export function PropertiesPanelAdvanced({
           {/* Font Size */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-xs font-medium" style={{ color: '#7A6F66' }}>Cỡ chữ</label>
+              <label className="text-xs font-medium" style={{ color: '#7A6F66' }}>C ch</label>
               <span className="text-xs font-medium px-2 py-0.5 rounded" style={{ background: '#EDE9E3', color: '#5A5049' }}>
                 {textEl.fontSize || 16}px
               </span>
@@ -179,7 +179,7 @@ export function PropertiesPanelAdvanced({
 
           {/* Font Weight & Style */}
           <div>
-            <label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Định dạng</label>
+            <label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>nh dng</label>
             <div className="grid grid-cols-3 gap-2">
               <button
                 onMouseDown={(e) => e.preventDefault()}
@@ -222,7 +222,7 @@ export function PropertiesPanelAdvanced({
 
           {/* Text Alignment */}
           <div>
-            <label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Căn lề</label>
+            <label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Cn l</label>
             <div className="grid grid-cols-4 gap-2">
               {[
                 { value: 'left', icon: AlignLeft },
@@ -249,7 +249,7 @@ export function PropertiesPanelAdvanced({
 
           {/* Color */}
           <div>
-            <label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Màu chữ</label>
+            <label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Mu ch</label>
             <div className="flex items-center gap-2 mb-3">
               <div 
                 className="w-10 h-10 rounded-lg border-2 cursor-pointer relative overflow-hidden"
@@ -305,7 +305,7 @@ export function PropertiesPanelAdvanced({
           {/* Line Height */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-xs font-medium" style={{ color: '#7A6F66' }}>Khoảng cách dòng</label>
+              <label className="text-xs font-medium" style={{ color: '#7A6F66' }}>Khong cch dng</label>
               <span className="text-xs font-medium px-2 py-0.5 rounded" style={{ background: '#EDE9E3', color: '#5A5049' }}>
                 {textEl.lineHeight || 1.4}
               </span>
@@ -325,7 +325,7 @@ export function PropertiesPanelAdvanced({
           {/* Letter Spacing */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-xs font-medium" style={{ color: '#7A6F66' }}>Khoảng cách chữ</label>
+              <label className="text-xs font-medium" style={{ color: '#7A6F66' }}>Khong cch ch</label>
               <span className="text-xs font-medium px-2 py-0.5 rounded" style={{ background: '#EDE9E3', color: '#5A5049' }}>
                 {textEl.letterSpacing || 0}px
               </span>
@@ -344,7 +344,7 @@ export function PropertiesPanelAdvanced({
         </Section>
 
         {/* Position Section */}
-        <Section id="position" title="Vị trí & Kích thước" icon={Settings}>
+        <Section id="position" title="V tr & Kch thc" icon={Settings}>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>X</label>
@@ -375,7 +375,7 @@ export function PropertiesPanelAdvanced({
               />
             </div>
             <div>
-              <label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Rộng</label>
+              <label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Rng</label>
               <input
                 type="number"
                 value={Math.round(textEl.width)}
@@ -409,7 +409,7 @@ export function PropertiesPanelAdvanced({
             <div className="flex items-center justify-between mb-2">
               <label className="text-xs font-medium" style={{ color: '#7A6F66' }}>Xoay</label>
               <span className="text-xs font-medium px-2 py-0.5 rounded" style={{ background: '#EDE9E3', color: '#5A5049' }}>
-                {textEl.rotation || 0}°
+                {textEl.rotation || 0}
               </span>
             </div>
             <input
@@ -426,7 +426,7 @@ export function PropertiesPanelAdvanced({
           {/* Opacity */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-xs font-medium" style={{ color: '#7A6F66' }}>Độ mờ</label>
+              <label className="text-xs font-medium" style={{ color: '#7A6F66' }}> m</label>
               <span className="text-xs font-medium px-2 py-0.5 rounded" style={{ background: '#EDE9E3', color: '#5A5049' }}>
                 {Math.round((textEl.opacity || 1) * 100)}%
               </span>
@@ -450,9 +450,9 @@ export function PropertiesPanelAdvanced({
   const renderImageProperties = (imgEl: ImageElement) => {
     return (
       <>
-        <Section id="image" title="Hình ảnh" icon={ImageIcon}>
+        <Section id="image" title="Hnh nh" icon={ImageIcon}>
           <div>
-            <label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Kiểu hiển thị</label>
+            <label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Kiu hin th</label>
             <select
               value={imgEl.objectFit || 'cover'}
               onChange={(e) => handleUpdate({ objectFit: e.target.value as any })}
@@ -463,14 +463,14 @@ export function PropertiesPanelAdvanced({
                 color: '#000000'
               }}
             >
-              <option value="cover">Lấp đầy</option>
-              <option value="contain">Vừa khung</option>
-              <option value="fill">Kéo giãn</option>
+              <option value="cover">Lp y</option>
+              <option value="contain">Va khung</option>
+              <option value="fill">Ko gin</option>
             </select>
           </div>
         </Section>
 
-        <Section id="position" title="Vị trí & Kích thước" icon={Settings}>
+        <Section id="position" title="V tr & Kch thc" icon={Settings}>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>X</label>
@@ -493,7 +493,7 @@ export function PropertiesPanelAdvanced({
               />
             </div>
             <div>
-              <label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Rộng</label>
+              <label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Rng</label>
               <input
                 type="number"
                 value={Math.round(imgEl.width)}
@@ -518,7 +518,7 @@ export function PropertiesPanelAdvanced({
             <div className="flex items-center justify-between mb-2">
               <label className="text-xs font-medium" style={{ color: '#7A6F66' }}>Xoay</label>
               <span className="text-xs font-medium px-2 py-0.5 rounded" style={{ background: '#EDE9E3', color: '#5A5049' }}>
-                {imgEl.rotation || 0}°
+                {imgEl.rotation || 0}
               </span>
             </div>
             <input
@@ -534,7 +534,7 @@ export function PropertiesPanelAdvanced({
 
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-xs font-medium" style={{ color: '#7A6F66' }}>Độ mờ</label>
+              <label className="text-xs font-medium" style={{ color: '#7A6F66' }}> m</label>
               <span className="text-xs font-medium px-2 py-0.5 rounded" style={{ background: '#EDE9E3', color: '#5A5049' }}>
                 {Math.round((imgEl.opacity || 1) * 100)}%
               </span>
@@ -558,9 +558,9 @@ export function PropertiesPanelAdvanced({
   const renderShapeProperties = (shapeEl: ShapeElement) => {
     return (
       <>
-        <Section id="style" title="Màu sắc" icon={Palette}>
+        <Section id="style" title="Mu sc" icon={Palette}>
           <div>
-            <label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Màu nền</label>
+            <label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Mu nn</label>
             <div className="flex items-center gap-2 mb-3">
               <div 
                 className="w-10 h-10 rounded-lg border-2 cursor-pointer relative overflow-hidden"
@@ -604,7 +604,7 @@ export function PropertiesPanelAdvanced({
           </div>
         </Section>
 
-        <Section id="position" title="Vị trí & Kích thước" icon={Settings}>
+        <Section id="position" title="V tr & Kch thc" icon={Settings}>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>X</label>
@@ -615,7 +615,7 @@ export function PropertiesPanelAdvanced({
               <input type="number" value={Math.round(shapeEl.y)} onChange={(e) => handleUpdate({ y: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#000000' }} />
             </div>
             <div>
-              <label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Rộng</label>
+              <label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Rng</label>
               <input type="number" value={Math.round(shapeEl.width)} onChange={(e) => handleUpdate({ width: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#000000' }} />
             </div>
             <div>
@@ -626,7 +626,7 @@ export function PropertiesPanelAdvanced({
 
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-xs font-medium" style={{ color: '#7A6F66' }}>Độ mờ</label>
+              <label className="text-xs font-medium" style={{ color: '#7A6F66' }}> m</label>
               <span className="text-xs font-medium px-2 py-0.5 rounded" style={{ background: '#EDE9E3', color: '#5A5049' }}>
                 {Math.round((shapeEl.opacity || 1) * 100)}%
               </span>
@@ -645,11 +645,11 @@ export function PropertiesPanelAdvanced({
         {element.type === 'image' && renderImageProperties(element as ImageElement)}
         {element.type === 'shape' && renderShapeProperties(element as ShapeElement)}
         {(element.type === 'sticker' || element.type === 'icon' || element.type === 'frame') && (
-          <Section id="position" title="Vị trí & Kích thước" icon={Settings}>
+          <Section id="position" title="V tr & Kch thc" icon={Settings}>
             <div className="grid grid-cols-2 gap-3">
               <div><label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>X</label><input type="number" value={Math.round(element.x)} onChange={(e) => handleUpdate({ x: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#000000' }} /></div>
               <div><label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Y</label><input type="number" value={Math.round(element.y)} onChange={(e) => handleUpdate({ y: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#000000' }} /></div>
-              <div><label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Rộng</label><input type="number" value={Math.round(element.width)} onChange={(e) => handleUpdate({ width: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#000000' }} /></div>
+              <div><label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Rng</label><input type="number" value={Math.round(element.width)} onChange={(e) => handleUpdate({ width: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#000000' }} /></div>
               <div><label className="block text-xs font-medium mb-2" style={{ color: '#7A6F66' }}>Cao</label><input type="number" value={Math.round(element.height)} onChange={(e) => handleUpdate({ height: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-lg" style={{ borderColor: '#DDD8D0', background: '#FFFFFF', color: '#000000' }} /></div>
             </div>
           </Section>

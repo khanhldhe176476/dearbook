@@ -256,7 +256,7 @@ export function Book3DViewer({ book, onClose }: Book3DViewerProps) {
 
       {/* Page indicator */}
       <div className="absolute top-8 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-md rounded-full px-6 py-2 text-white text-sm">
-        {currentPage === 0 ? 'Cover' : `Page ${currentPage * 2 - 1}–${currentPage * 2}`}
+        {currentPage === 0 ? 'Cover' : `Page ${currentPage * 2 - 1}${currentPage * 2}`}
       </div>
     </div>
   );
