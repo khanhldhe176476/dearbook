@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+﻿import { useState, useRef } from 'react';
 import { ArrowLeft, Package, CreditCard, CheckCircle, MapPin, Phone, Mail, User, Loader2, BookOpen, Layers, Ruler, AlertTriangle, Upload, FileText, X } from 'lucide-react';
 import { BookData, User as UserData } from '../App';
 import { orderApi } from '../lib/orderApi';
@@ -26,42 +26,42 @@ const products = [
   {
     id: 'softcover' as const,
     name: 'Softcover Photobook',
-    nameVi: 'Sách ảnh Bìa Mềm',
+    nameVi: 'SÃ¡ch áº£nh BÃ¬a Má»m',
     sizes: [
       { label: 'A4 (21x30cm)', value: 'A4' as const, price: 245000 },
       { label: '20x20cm', value: '20x20' as const, price: 245000 },
     ],
     pagesLimit: 40,
-    pagesLabel: '40 trang = 20 tờ (cả bìa)',
-    paperType: 'Bìa: Giấy C300 · Trang trong: Giấy C150',
-    extraPageCost: 6000, // 6.000đ / trang = 12.000đ / tờ (Giấy C150)
+    pagesLabel: '40 trang = 20 tá» (cáº£ bÃ¬a)',
+    paperType: 'BÃ¬a: Giáº¥y C300 Â· Trang trong: Giáº¥y C150',
+    extraPageCost: 6000, // 6.000Ä‘ / trang = 12.000Ä‘ / tá» (Giáº¥y C150)
     extraSheetCost: 12000,
   },
   {
     id: 'hardcover' as const,
     name: 'Hardcover Photobook',
-    nameVi: 'Sách ảnh Bìa Cứng',
+    nameVi: 'SÃ¡ch áº£nh BÃ¬a Cá»©ng',
     sizes: [
       { label: 'A4 (21x30cm)', value: 'A4' as const, price: 375000 },
       { label: '20x20cm', value: '20x20' as const, price: 375000 },
     ],
     pagesLimit: 40,
-    pagesLabel: '40 trang = 20 tờ (cả bìa)',
-    paperType: 'Bìa: Bìa carton cứng · Trang trong: Giấy C150',
-    extraPageCost: 6000, // 6.000đ / trang = 12.000đ / tờ (Giấy C150)
+    pagesLabel: '40 trang = 20 tá» (cáº£ bÃ¬a)',
+    paperType: 'BÃ¬a: BÃ¬a carton cá»©ng Â· Trang trong: Giáº¥y C150',
+    extraPageCost: 6000, // 6.000Ä‘ / trang = 12.000Ä‘ / tá» (Giáº¥y C150)
     extraSheetCost: 12000,
   },
   {
     id: 'layflat' as const,
     name: 'Lay-flat Hardcover Photobook',
-    nameVi: 'Sách ảnh Bìa Cứng Mở Phẳng',
+    nameVi: 'SÃ¡ch áº£nh BÃ¬a Cá»©ng Má»Ÿ Pháº³ng',
     sizes: [
       { label: '20x20cm', value: '20x20' as const, price: 399000 },
     ],
     pagesLimit: 14,
-    pagesLabel: '14 trang = 7 tờ (cả bìa)',
-    paperType: 'Bìa carton cứng cáng mờ, hiệu ứng mở phẳng liền mạch khi mở 2 trang đối diện',
-    extraPageCost: 15000, // 15.000đ / trang = 30.000đ / tờ
+    pagesLabel: '14 trang = 7 tá» (cáº£ bÃ¬a)',
+    paperType: 'BÃ¬a carton cá»©ng cÃ¡ng má», hiá»‡u á»©ng má»Ÿ pháº³ng liá»n máº¡ch khi má»Ÿ 2 trang Ä‘á»‘i diá»‡n',
+    extraPageCost: 15000, // 15.000Ä‘ / trang = 30.000Ä‘ / tá»
     extraSheetCost: 30000,
   }
 ];
@@ -94,7 +94,11 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
   const validatePhone = (phone: string): boolean => {
     if (!phone) { setPhoneError(''); return false; }
     if (!/^0\d{9}$/.test(phone)) {
+<<<<<<< HEAD
       setPhoneError('Số điện thoại phải gồm 10 chữ số và bắt đầu bằng 0');
+=======
+      setPhoneError('Sá»‘ Ä‘iá»‡n thoáº¡i pháº£i gá»“m 10 chá»¯ sá»‘ vÃ  báº¯t Ä‘áº§u báº±ng 0');
+>>>>>>> a97a5b3417b6318d93b97db6d59c6018d8b711ce
       return false;
     }
     setPhoneError('');
@@ -154,12 +158,12 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
     if (isBelowMinimum) {
       if (compatibleProducts.length > 0) {
         toast.error(
-          `Không đủ ${currentProduct.pagesLimit} trang tối thiểu cho ${currentProduct.nameVi}. Vui lòng chọn: ${compatibleProducts.map(p => p.nameVi).join(' hoặc ')}.`,
+          `KhÃ´ng Ä‘á»§ ${currentProduct.pagesLimit} trang tá»‘i thiá»ƒu cho ${currentProduct.nameVi}. Vui lÃ²ng chá»n: ${compatibleProducts.map(p => p.nameVi).join(' hoáº·c ')}.`,
           { duration: 6000 }
         );
       } else {
         toast.error(
-          `Cần tối thiểu ${currentProduct.pagesLimit} trang. Vui lòng quay lại bước chọn trang để thêm ít nhất ${currentProduct.pagesLimit - selectedPageCount} trang nữa.`,
+          `Cáº§n tá»‘i thiá»ƒu ${currentProduct.pagesLimit} trang. Vui lÃ²ng quay láº¡i bÆ°á»›c chá»n trang Ä‘á»ƒ thÃªm Ã­t nháº¥t ${currentProduct.pagesLimit - selectedPageCount} trang ná»¯a.`,
           { duration: 6000 }
         );
       }
@@ -168,6 +172,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
 
     // Validate required fields
     if (!shippingInfo.fullName.trim()) {
+<<<<<<< HEAD
       toast.error('Vui lòng nhập họ và tên.');
       return;
     }
@@ -193,6 +198,33 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
     }
     if (!shippingInfo.address.trim()) {
       toast.error('Vui lòng nhập địa chỉ chi tiết.');
+=======
+      toast.error('Vui lÃ²ng nháº­p há» vÃ  tÃªn.');
+      return;
+    }
+    if (!shippingInfo.phone.trim()) {
+      toast.error('Vui lÃ²ng nháº­p sá»‘ Ä‘iá»‡n thoáº¡i.');
+      return;
+    }
+    if (!validatePhone(shippingInfo.phone)) {
+      toast.error(phoneError || 'Sá»‘ Ä‘iá»‡n thoáº¡i khÃ´ng há»£p lá»‡.');
+      return;
+    }
+    if (!shippingInfo.email.trim()) {
+      toast.error('Vui lÃ²ng nháº­p email.');
+      return;
+    }
+    if (!shippingInfo.city) {
+      toast.error('Vui lÃ²ng chá»n tá»‰nh/thÃ nh phá»‘.');
+      return;
+    }
+    if (!shippingInfo.district.trim()) {
+      toast.error('Vui lÃ²ng nháº­p quáº­n/huyá»‡n.');
+      return;
+    }
+    if (!shippingInfo.address.trim()) {
+      toast.error('Vui lÃ²ng nháº­p Ä‘á»‹a chá»‰ chi tiáº¿t.');
+>>>>>>> a97a5b3417b6318d93b97db6d59c6018d8b711ce
       return;
     }
 
@@ -206,7 +238,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
 
     // Validate file type
     if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
-      toast.error('Vui lòng chọn file PDF hợp lệ.');
+      toast.error('Vui lÃ²ng chá»n file PDF há»£p lá»‡.');
       // Reset input
       if (pdfInputRef.current) pdfInputRef.current.value = '';
       return;
@@ -214,13 +246,13 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
 
     // Validate file size (max 500MB)
     if (file.size > MAX_PDF_SIZE) {
-      toast.error(`File quá lớn (${(file.size / 1024 / 1024).toFixed(1)}MB). Vui lòng chọn file PDF dưới 500MB.`);
+      toast.error(`File quÃ¡ lá»›n (${(file.size / 1024 / 1024).toFixed(1)}MB). Vui lÃ²ng chá»n file PDF dÆ°á»›i 500MB.`);
       if (pdfInputRef.current) pdfInputRef.current.value = '';
       return;
     }
 
     setPdfFile(file);
-    toast.success(`Đã tải lên: ${file.name} (${(file.size / 1024 / 1024).toFixed(1)}MB)`);
+    toast.success(`ÄÃ£ táº£i lÃªn: ${file.name} (${(file.size / 1024 / 1024).toFixed(1)}MB)`);
   };
 
   const handleRemovePdf = () => {
@@ -231,7 +263,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
   const handlePaymentSubmit = async () => {
     try {
       setLoading(true);
-      console.log('[OrderFlow] 1️⃣ Bắt đầu gửi đơn hàng...');
+      console.log('[OrderFlow] 1ï¸âƒ£ Báº¯t Ä‘áº§u gá»­i Ä‘Æ¡n hÃ ng...');
 
       // Collect the actual designed pages data
       const allPages = book.pages || [];
@@ -239,12 +271,12 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
         const id = p?.id || p?.templatePageId || `page-${i}`;
         return selectedPageIds.includes(id);
       });
-      console.log('[OrderFlow] 2️⃣ Design pages:', designPages.length, 'items');
+      console.log('[OrderFlow] 2ï¸âƒ£ Design pages:', designPages.length, 'items');
 
-      // CHỈ gửi tên file PDF, KHÔNG gửi nội dung để tránh Connection Reset (100MB+ payload)
+      // CHá»ˆ gá»­i tÃªn file PDF, KHÃ”NG gá»­i ná»™i dung Ä‘á»ƒ trÃ¡nh Connection Reset (100MB+ payload)
       const pdfFileName = pdfFile ? pdfFile.name : null;
       const pdfFileSize = pdfFile ? `${(pdfFile.size / 1024 / 1024).toFixed(1)}MB` : null;
-      console.log('[OrderFlow] 3️⃣ PDF file:', pdfFileName, pdfFileSize || '(không có)');
+      console.log('[OrderFlow] 3ï¸âƒ£ PDF file:', pdfFileName, pdfFileSize || '(khÃ´ng cÃ³)');
 
       const orderData = {
         userBookId: book.id,
@@ -256,6 +288,14 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
         city: shippingInfo.city,
         district: shippingInfo.district,
         note: shippingInfo.notes || null,
+<<<<<<< HEAD
+=======
+
+        note: [
+          shippingInfo.notes,
+          pdfFileName ? `[PDF Ä‘Ã­nh kÃ¨m: ${pdfFileName} - ${pdfFileSize}]` : null,
+        ].filter(Boolean).join(' | '),
+>>>>>>> a97a5b3417b6318d93b97db6d59c6018d8b711ce
         collectionName: book.title || book.templateName || 'Photobook',
         productType: selectedProduct,
         productSize: selectedSize,
@@ -264,50 +304,50 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
         paymentMethod: paymentMethod.toUpperCase(),
         designPages: designPages,
         pdfFileName: pdfFileName,
-        pdfFileData: null, // Không gửi binary data để tránh payload quá lớn
+        pdfFileData: null, // KhÃ´ng gá»­i binary data Ä‘á»ƒ trÃ¡nh payload quÃ¡ lá»›n
       };
-      console.log('[OrderFlow] 4️⃣ OrderData prepared, designPages:', designPages.length);
+      console.log('[OrderFlow] 4ï¸âƒ£ OrderData prepared, designPages:', designPages.length);
 
-      // Kiểm tra JSON.stringify không lỗi trước khi gửi
+      // Kiá»ƒm tra JSON.stringify khÃ´ng lá»—i trÆ°á»›c khi gá»­i
       try {
         const testJson = JSON.stringify(orderData);
-        console.log('[OrderFlow] 5️⃣ JSON.stringify OK, size:', (testJson.length / 1024).toFixed(0), 'KB');
+        console.log('[OrderFlow] 5ï¸âƒ£ JSON.stringify OK, size:', (testJson.length / 1024).toFixed(0), 'KB');
       } catch (jsonErr) {
-        console.error('[OrderFlow] 5️⃣❌ JSON.stringify FAILED:', jsonErr);
-        throw new Error('Dữ liệu đơn hàng quá lớn hoặc chứa nội dung không hợp lệ. Vui lòng thử lại.');
+        console.error('[OrderFlow] 5ï¸âƒ£âŒ JSON.stringify FAILED:', jsonErr);
+        throw new Error('Dá»¯ liá»‡u Ä‘Æ¡n hÃ ng quÃ¡ lá»›n hoáº·c chá»©a ná»™i dung khÃ´ng há»£p lá»‡. Vui lÃ²ng thá»­ láº¡i.');
       }
 
-      console.log('[OrderFlow] 6️⃣ Gọi API placeOrder...');
+      console.log('[OrderFlow] 6ï¸âƒ£ Gá»i API placeOrder...');
       const response = await orderApi.placeOrder(userId, orderData);
-      console.log('[OrderFlow] 7️⃣✅ API thành công:', response);
+      console.log('[OrderFlow] 7ï¸âƒ£âœ… API thÃ nh cÃ´ng:', response);
 
       if (pdfFile) {
-        toast.info('⏳ Đang tải file PDF thiết kế lên hệ thống...');
+        toast.info('â³ Äang táº£i file PDF thiáº¿t káº¿ lÃªn há»‡ thá»‘ng...');
         await orderApi.uploadPdf(response.id, userId, pdfFile);
-        console.log('[OrderFlow] 8️⃣✅ Tải file PDF thành công');
+        console.log('[OrderFlow] 8ï¸âƒ£âœ… Táº£i file PDF thÃ nh cÃ´ng');
       }
 
       setOrderId(response.id);
       setStep('confirmation');
-      toast.success('🎉 Đặt hàng thành công!');
+      toast.success('ðŸŽ‰ Äáº·t hÃ ng thÃ nh cÃ´ng!');
     } catch (err: any) {
-      console.error('[OrderFlow] ❌ Đặt hàng thất bại:', err);
+      console.error('[OrderFlow] âŒ Äáº·t hÃ ng tháº¥t báº¡i:', err);
 
-      // Trích xuất message lỗi cụ thể để hiển thị cho user
+      // TrÃ­ch xuáº¥t message lá»—i cá»¥ thá»ƒ Ä‘á»ƒ hiá»ƒn thá»‹ cho user
       let errorDetail = '';
       if (err?.message) {
-        // Lấy phần message sau "API error XXX: " nếu có
+        // Láº¥y pháº§n message sau "API error XXX: " náº¿u cÃ³
         const match = err.message.match(/API error \d+:\s*(.+)/);
         errorDetail = match ? match[1] : err.message;
-        // Cắt ngắn nếu quá dài
+        // Cáº¯t ngáº¯n náº¿u quÃ¡ dÃ i
         if (errorDetail.length > 200) errorDetail = errorDetail.substring(0, 200) + '...';
       }
 
       toast.error(
-        `Không thể gửi đơn hàng.${errorDetail ? `\nLỗi: ${errorDetail}` : ''}\nKiểm tra: Backend đã chạy chưa? (port 8080)`,
+        `KhÃ´ng thá»ƒ gá»­i Ä‘Æ¡n hÃ ng.${errorDetail ? `\nLá»—i: ${errorDetail}` : ''}\nKiá»ƒm tra: Backend Ä‘Ã£ cháº¡y chÆ°a? (port 8080)`,
         { duration: 10000 }
       );
-      // Không chuyển sang confirmation — giữ user ở bước payment để thử lại
+      // KhÃ´ng chuyá»ƒn sang confirmation â€” giá»¯ user á»Ÿ bÆ°á»›c payment Ä‘á»ƒ thá»­ láº¡i
     } finally {
       setLoading(false);
     }
@@ -339,10 +379,10 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
               onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = 'transparent')}
             >
               <ArrowLeft className="w-4 h-4" />
-              <span>Quay lại</span>
+              <span>Quay láº¡i</span>
             </button>
 
-            <h1 className="text-lg font-bold" style={{ color: '#000000' }}>Đặt hàng</h1>
+            <h1 className="text-lg font-bold" style={{ color: '#000000' }}>Äáº·t hÃ ng</h1>
             <div className="w-20" />
           </div>
         </div>
@@ -380,10 +420,10 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                       transform: isActive ? 'scale(1.1)' : 'scale(1)',
                     }}
                   >
-                    {isCompleted ? '✓' : index + 1}
+                    {isCompleted ? 'âœ“' : index + 1}
                   </div>
                   <p className="text-xs font-medium" style={{ color: isActive ? '#000000' : '#9B9088' }}>
-                    {s === 'pages' ? 'Chọn trang' : s === 'shipping' ? 'Giao hàng' : s === 'payment' ? 'Thanh toán' : 'Hoàn tất'}
+                    {s === 'pages' ? 'Chá»n trang' : s === 'shipping' ? 'Giao hÃ ng' : s === 'payment' ? 'Thanh toÃ¡n' : 'HoÃ n táº¥t'}
                   </p>
                 </div>
               );
@@ -407,16 +447,16 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
 
             {step === 'shipping' && (
               <form onSubmit={handleShippingSubmit} className="space-y-6">
-                {/* 1. Chọn loại sách & chất liệu giấy */}
+                {/* 1. Chá»n loáº¡i sÃ¡ch & cháº¥t liá»‡u giáº¥y */}
                 <div className="rounded-2xl p-6 space-y-6 animate-in fade-in duration-300" style={{ background: 'white', border: '1.5px solid #DDD8D0' }}>
                   <div className="flex items-center gap-2">
                     <Package className="w-5 h-5" style={{ color: '#7A6F66' }} />
                     <h2 className="text-lg font-bold" style={{ color: '#000000' }}>
-                      Chọn loại sách & chất liệu giấy
+                      Chá»n loáº¡i sÃ¡ch & cháº¥t liá»‡u giáº¥y
                     </h2>
                   </div>
                   <p className="text-xs -mt-4 text-[#7A6F66]">
-                    Vui lòng chọn 1 trong 3 loại photobook cao cấp dưới đây:
+                    Vui lÃ²ng chá»n 1 trong 3 loáº¡i photobook cao cáº¥p dÆ°á»›i Ä‘Ã¢y:
                   </p>
 
                   {/* Minimum page count warning for current product */}
@@ -425,14 +465,14 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                       <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#d97706' }} />
                       <div>
                         <p className="text-sm font-bold" style={{ color: '#92400e' }}>
-                          Không đủ số trang tối thiểu cho {currentProduct.nameVi}
+                          KhÃ´ng Ä‘á»§ sá»‘ trang tá»‘i thiá»ƒu cho {currentProduct.nameVi}
                         </p>
                         <p className="text-xs mt-0.5" style={{ color: '#a16207' }}>
-                          Bạn đã chọn <span className="font-bold">{selectedPageCount} trang</span>, nhưng {currentProduct.nameVi} yêu cầu tối thiểu <span className="font-bold">{currentProduct.pagesLimit} trang</span>.
+                          Báº¡n Ä‘Ã£ chá»n <span className="font-bold">{selectedPageCount} trang</span>, nhÆ°ng {currentProduct.nameVi} yÃªu cáº§u tá»‘i thiá»ƒu <span className="font-bold">{currentProduct.pagesLimit} trang</span>.
                           {compatibleProducts.length > 0 ? (
-                            <span> Vui lòng chọn loại sách khác phù hợp hơn: <span className="font-bold text-green-700">{compatibleProducts.map(p => p.nameVi).join(', ')}</span>.</span>
+                            <span> Vui lÃ²ng chá»n loáº¡i sÃ¡ch khÃ¡c phÃ¹ há»£p hÆ¡n: <span className="font-bold text-green-700">{compatibleProducts.map(p => p.nameVi).join(', ')}</span>.</span>
                           ) : (
-                            <span> Vui lòng quay lại bước chọn trang để chọn thêm ít nhất {currentProduct.pagesLimit - selectedPageCount} trang nữa.</span>
+                            <span> Vui lÃ²ng quay láº¡i bÆ°á»›c chá»n trang Ä‘á»ƒ chá»n thÃªm Ã­t nháº¥t {currentProduct.pagesLimit - selectedPageCount} trang ná»¯a.</span>
                           )}
                         </p>
                       </div>
@@ -454,7 +494,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                         >
                           {isSelected && (
                             <div className="absolute top-0 right-0 w-8 h-8 bg-black flex items-center justify-center text-[#EDE9E3] rounded-bl-xl text-xs font-bold">
-                              ✓
+                              âœ“
                             </div>
                           )}
 
@@ -475,7 +515,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                                 {isProdBelowMin && (
                                   <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-100 text-amber-700 border border-amber-200">
                                     <AlertTriangle className="w-2.5 h-2.5" />
-                                    Cần tối thiểu {prod.pagesLimit} trang
+                                    Cáº§n tá»‘i thiá»ƒu {prod.pagesLimit} trang
                                   </span>
                                 )}
                               </p>
@@ -490,7 +530,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                             {/* Sizes Selection within the Card */}
                             <div>
                               <p className="text-[9px] font-bold text-[#9B9088] uppercase tracking-wider mb-1 flex items-center gap-1">
-                                <Ruler className="w-2.5 h-2.5" /> Kích thước:
+                                <Ruler className="w-2.5 h-2.5" /> KÃ­ch thÆ°á»›c:
                               </p>
                               <div className="flex gap-1.5">
                                 {prod.sizes.map((sz) => {
@@ -521,11 +561,11 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                             {/* Prices display */}
                             <div>
                               <p className="text-[9px] font-bold text-[#9B9088] uppercase tracking-wider leading-none">
-                                Giá cơ bản:
+                                GiÃ¡ cÆ¡ báº£n:
                               </p>
                               <p className="text-sm font-extrabold text-[#000000] mt-1">
-                                {prod.sizes[0].price.toLocaleString('vi-VN')} ₫
-                                {prod.sizes.length > 1 && prod.sizes[0].price !== prod.sizes[1].price && ` - ${prod.sizes[1].price.toLocaleString('vi-VN')} ₫`}
+                                {prod.sizes[0].price.toLocaleString('vi-VN')} â‚«
+                                {prod.sizes.length > 1 && prod.sizes[0].price !== prod.sizes[1].price && ` - ${prod.sizes[1].price.toLocaleString('vi-VN')} â‚«`}
                               </p>
                             </div>
                           </div>
@@ -539,42 +579,42 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                       <div>
                         <h3 className="text-sm font-bold text-[#000000] flex items-center gap-1.5">
-                          Số trang đã chọn để in
+                          Sá»‘ trang Ä‘Ã£ chá»n Ä‘á»ƒ in
                         </h3>
                         <p className="text-xs text-[#7A6F66]">
-                          Số trang bạn đã chọn ở bước trước. Tối thiểu {currentProduct.pagesLimit} trang đã bao gồm trong giá cơ bản.
+                          Sá»‘ trang báº¡n Ä‘Ã£ chá»n á»Ÿ bÆ°á»›c trÆ°á»›c. Tá»‘i thiá»ƒu {currentProduct.pagesLimit} trang Ä‘Ã£ bao gá»“m trong giÃ¡ cÆ¡ báº£n.
                         </p>
                       </div>
                       <div className="text-center px-4">
                         <p className="text-lg font-bold text-[#000000] leading-none">{selectedPageCount} trang</p>
-                        <p className="text-[10px] text-[#7A6F66] mt-1 font-semibold">{Math.ceil(selectedPageCount / 2)} tờ</p>
+                        <p className="text-[10px] text-[#7A6F66] mt-1 font-semibold">{Math.ceil(selectedPageCount / 2)} tá»</p>
                       </div>
                     </div>
 
                     <div className="p-3.5 rounded-xl bg-[#F5F2EE] text-xs text-[#7A6F66] flex flex-col gap-1.5 animate-in fade-in duration-300">
                       <p>
-                        • Số trang mặc định đi kèm: <span className="font-semibold text-[#000000]">{currentProduct.pagesLimit} trang</span> (đã bao gồm trong giá cơ bản).
+                        â€¢ Sá»‘ trang máº·c Ä‘á»‹nh Ä‘i kÃ¨m: <span className="font-semibold text-[#000000]">{currentProduct.pagesLimit} trang</span> (Ä‘Ã£ bao gá»“m trong giÃ¡ cÆ¡ báº£n).
                       </p>
                       {selectedPageCount > currentProduct.pagesLimit ? (
                         <p className="text-[#10b981] font-semibold">
-                          • Bạn đang in thêm: {(selectedPageCount - currentProduct.pagesLimit)} trang ({Math.ceil((selectedPageCount - currentProduct.pagesLimit) / 2)} tờ). Phụ phí: +{pagePrice.toLocaleString('vi-VN')} ₫.
-                          {currentProduct.id !== 'layflat' ? ' (12.000 ₫/tờ C150)' : ' (30.000 ₫/tờ Lay-flat)'}
+                          â€¢ Báº¡n Ä‘ang in thÃªm: {(selectedPageCount - currentProduct.pagesLimit)} trang ({Math.ceil((selectedPageCount - currentProduct.pagesLimit) / 2)} tá»). Phá»¥ phÃ­: +{pagePrice.toLocaleString('vi-VN')} â‚«.
+                          {currentProduct.id !== 'layflat' ? ' (12.000 â‚«/tá» C150)' : ' (30.000 â‚«/tá» Lay-flat)'}
                         </p>
                       ) : (
-                        <p>• Số trang trong giới hạn tiêu chuẩn, không phát sinh phụ phí.</p>
+                        <p>â€¢ Sá»‘ trang trong giá»›i háº¡n tiÃªu chuáº©n, khÃ´ng phÃ¡t sinh phá»¥ phÃ­.</p>
                       )}
                     </div>
                   </div>
                 </div>
 
-                {/* 2. Upload file PDF thiết kế */}
+                {/* 2. Upload file PDF thiáº¿t káº¿ */}
                 <div className="rounded-2xl p-6" style={{ background: 'white', border: '1.5px solid #DDD8D0' }}>
                   <h2 className="text-lg font-bold mb-1 flex items-center gap-2" style={{ color: '#000000' }}>
                     <FileText className="w-5 h-5" style={{ color: '#7A6F66' }} />
-                    File thiết kế PDF
+                    File thiáº¿t káº¿ PDF
                   </h2>
                   <p className="text-xs mb-4" style={{ color: '#7A6F66' }}>
-                    Tải lên file PDF bạn đã xuất từ bước chọn trang. File sẽ được gửi kèm đơn hàng để in ấn chính xác.
+                    Táº£i lÃªn file PDF báº¡n Ä‘Ã£ xuáº¥t tá»« bÆ°á»›c chá»n trang. File sáº½ Ä‘Æ°á»£c gá»­i kÃ¨m Ä‘Æ¡n hÃ ng Ä‘á»ƒ in áº¥n chÃ­nh xÃ¡c.
                   </p>
 
                   {/* Hidden file input */}
@@ -596,7 +636,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                         <div className="min-w-0">
                           <p className="text-sm font-bold text-[#000000] truncate">{pdfFile.name}</p>
                           <p className="text-xs text-green-700 font-medium">
-                            ✓ Đã sẵn sàng · {(pdfFile.size / 1024 / 1024).toFixed(1)} MB
+                            âœ“ ÄÃ£ sáºµn sÃ ng Â· {(pdfFile.size / 1024 / 1024).toFixed(1)} MB
                           </p>
                         </div>
                       </div>
@@ -604,7 +644,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                         type="button"
                         onClick={handleRemovePdf}
                         className="p-2 rounded-lg hover:bg-red-100 transition-colors flex-shrink-0"
-                        title="Gỡ file"
+                        title="Gá»¡ file"
                       >
                         <X className="w-4 h-4 text-red-500" />
                       </button>
@@ -622,10 +662,10 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                         </div>
                         <div>
                           <p className="text-sm font-bold" style={{ color: '#000000' }}>
-                            Nhấn để tải lên file PDF
+                            Nháº¥n Ä‘á»ƒ táº£i lÃªn file PDF
                           </p>
                           <p className="text-xs mt-0.5" style={{ color: '#9B9088' }}>
-                            Hỗ trợ file PDF · Tối đa 500MB
+                            Há»— trá»£ file PDF Â· Tá»‘i Ä‘a 500MB
                           </p>
                         </div>
                       </div>
@@ -633,16 +673,20 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                   )}
                 </div>
 
-                {/* 3. Thông tin giao hàng */}
+                {/* 3. ThÃ´ng tin giao hÃ ng */}
                 <div className="rounded-2xl p-6" style={{ background: 'white', border: '1.5px solid #DDD8D0' }}>
                   <h2 className="text-lg font-bold mb-5 flex items-center gap-2" style={{ color: '#000000' }}>
                     <MapPin className="w-5 h-5" style={{ color: '#7A6F66' }} />
-                    Thông tin giao hàng
+                    ThÃ´ng tin giao hÃ ng
                   </h2>
 
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
+<<<<<<< HEAD
                       <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Họ và tên *</label>
+=======
+                      <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Há» vÃ  tÃªn *</label>
+>>>>>>> a97a5b3417b6318d93b97db6d59c6018d8b711ce
                       <div className="relative">
                         <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9B9088' }} />
                         <input
@@ -650,7 +694,11 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                           required
                           value={shippingInfo.fullName}
                           onChange={e => setShippingInfo({ ...shippingInfo, fullName: e.target.value })}
+<<<<<<< HEAD
                           placeholder="Nguyễn Văn A"
+=======
+                          placeholder="Nguyá»…n VÄƒn A"
+>>>>>>> a97a5b3417b6318d93b97db6d59c6018d8b711ce
                           className="w-full pl-10 pr-4 py-3 rounded-xl outline-none text-sm transition-all"
                           style={{ border: '1.5px solid #DDD8D0', color: '#000000', background: '#FAFAF8' }}
                           onFocus={e => ((e.target as HTMLElement).style.borderColor = '#7A6F66')}
@@ -660,7 +708,11 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     </div>
 
                     <div>
+<<<<<<< HEAD
                       <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Số điện thoại *</label>
+=======
+                      <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Sá»‘ Ä‘iá»‡n thoáº¡i *</label>
+>>>>>>> a97a5b3417b6318d93b97db6d59c6018d8b711ce
                       <div className="relative">
                         <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9B9088' }} />
                         <input
@@ -713,14 +765,22 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     </div>
 
                     <div>
+<<<<<<< HEAD
                       <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Tỉnh/Thành phố *</label>
+=======
+                      <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Tá»‰nh/ThÃ nh phá»‘ *</label>
+>>>>>>> a97a5b3417b6318d93b97db6d59c6018d8b711ce
                       <select
                         required value={shippingInfo.city}
                         onChange={e => setShippingInfo({ ...shippingInfo, city: e.target.value })}
                         className="w-full px-4 py-3 rounded-xl outline-none text-sm transition-all"
                         style={{ border: '1.5px solid #DDD8D0', color: '#000000', background: '#FAFAF8' }}
                       >
+<<<<<<< HEAD
                         <option value="">Chọn tỉnh/thành phố</option>
+=======
+                        <option value="">Chá»n tá»‰nh/thÃ nh phá»‘</option>
+>>>>>>> a97a5b3417b6318d93b97db6d59c6018d8b711ce
                         {VIETNAM_PROVINCES.map(province => (
                           <option key={province} value={province}>{province}</option>
                         ))}
@@ -728,7 +788,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Quận/Huyện *</label>
+                      <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Quáº­n/Huyá»‡n *</label>
                       <input
                         type="text" required value={shippingInfo.district}
                         onChange={e => setShippingInfo({ ...shippingInfo, district: e.target.value })}
@@ -740,11 +800,11 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     </div>
 
                     <div className="sm:col-span-2">
-                      <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Địa chỉ chi tiết *</label>
+                      <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Äá»‹a chá»‰ chi tiáº¿t *</label>
                       <textarea
                         required value={shippingInfo.address}
                         onChange={e => setShippingInfo({ ...shippingInfo, address: e.target.value })}
-                        rows={3} placeholder="Số nhà, tên đường..."
+                        rows={3} placeholder="Sá»‘ nhÃ , tÃªn Ä‘Æ°á»ng..."
                         className="w-full px-4 py-3 rounded-xl outline-none text-sm transition-all resize-none"
                         style={{ border: '1.5px solid #DDD8D0', color: '#000000', background: '#FAFAF8' }}
                         onFocus={e => ((e.target as HTMLElement).style.borderColor = '#7A6F66')}
@@ -753,11 +813,11 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     </div>
 
                     <div className="sm:col-span-2">
-                      <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Ghi chú (tùy chọn)</label>
+                      <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Ghi chÃº (tÃ¹y chá»n)</label>
                       <textarea
                         value={shippingInfo.notes}
                         onChange={e => setShippingInfo({ ...shippingInfo, notes: e.target.value })}
-                        rows={2} placeholder="Ghi chú cho người giao hàng..."
+                        rows={2} placeholder="Ghi chÃº cho ngÆ°á»i giao hÃ ng..."
                         className="w-full px-4 py-3 rounded-xl outline-none text-sm transition-all resize-none"
                         style={{ border: '1.5px solid #DDD8D0', color: '#000000', background: '#FAFAF8' }}
                       />
@@ -774,8 +834,8 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                   onMouseLeave={e => { if (!isBelowMinimum) (e.currentTarget as HTMLElement).style.background = '#000000'; }}
                 >
                   {isBelowMinimum
-                    ? `Cần tối thiểu ${currentProduct.pagesLimit} trang (hiện có: ${selectedPageCount})`
-                    : 'Tiếp tục thanh toán'}
+                    ? `Cáº§n tá»‘i thiá»ƒu ${currentProduct.pagesLimit} trang (hiá»‡n cÃ³: ${selectedPageCount})`
+                    : 'Tiáº¿p tá»¥c thanh toÃ¡n'}
                 </button>
               </form>
             )}
@@ -785,13 +845,13 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                 <div className="rounded-2xl p-6" style={{ background: 'white', border: '1.5px solid #DDD8D0' }}>
                   <h2 className="text-lg font-bold mb-5 flex items-center gap-2" style={{ color: '#000000' }}>
                     <CreditCard className="w-5 h-5" style={{ color: '#7A6F66' }} />
-                    Phương thức thanh toán
+                    PhÆ°Æ¡ng thá»©c thanh toÃ¡n
                   </h2>
 
                   <div className="space-y-3">
                     {[
-                      { method: 'full', title: 'Thanh toán trước', sub: 'Thanh toán trước 100% giá trị đơn hàng qua VietQR' },
-                      { method: 'deposit', title: 'Đặt cọc 50% hàng', sub: 'Đặt cọc trước 50%, thanh toán 50% còn lại khi nhận hàng' },
+                      { method: 'full', title: 'Thanh toÃ¡n trÆ°á»›c', sub: 'Thanh toÃ¡n trÆ°á»›c 100% giÃ¡ trá»‹ Ä‘Æ¡n hÃ ng qua VietQR' },
+                      { method: 'deposit', title: 'Äáº·t cá»c 50% hÃ ng', sub: 'Äáº·t cá»c trÆ°á»›c 50%, thanh toÃ¡n 50% cÃ²n láº¡i khi nháº­n hÃ ng' },
                     ].map(({ method, title, sub }) => (
                       <button
                         key={method}
@@ -829,7 +889,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = '#DDD8D0')}
                     onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#EDE9E3')}
                   >
-                    Quay lại
+                    Quay láº¡i
                   </button>
                   <button
                     onClick={handlePaymentSubmit}
@@ -840,7 +900,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     onMouseLeave={e => !loading && ((e.currentTarget as HTMLElement).style.background = '#000000')}
                   >
                     {loading && <Loader2 className="w-5 h-5 animate-spin" />}
-                    {loading ? 'Đang xử lý...' : 'Xác nhận đặt hàng'}
+                    {loading ? 'Äang xá»­ lÃ½...' : 'XÃ¡c nháº­n Ä‘áº·t hÃ ng'}
                   </button>
                 </div>
               </div>
@@ -857,30 +917,30 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                   </div>
 
                   <h2 className="text-2xl font-bold mb-3" style={{ color: '#000000' }}>
-                    Đặt hàng thành công! 🎉
+                    Äáº·t hÃ ng thÃ nh cÃ´ng! ðŸŽ‰
                   </h2>
                   <p className="mb-6 text-sm" style={{ color: '#7A6F66' }}>
-                    Cảm ơn bạn đã tin tưởng DearMemories. Cuốn sách của bạn đang được xử lý thiết kế và in ấn!
+                    Cáº£m Æ¡n báº¡n Ä‘Ã£ tin tÆ°á»Ÿng DearMemories. Cuá»‘n sÃ¡ch cá»§a báº¡n Ä‘ang Ä‘Æ°á»£c xá»­ lÃ½ thiáº¿t káº¿ vÃ  in áº¥n!
                   </p>
 
                   {/* 1. QR Code Payment */}
                   <div className="p-6 rounded-2xl border border-[#DDD8D0] bg-[#FAFAF8] mb-6 text-center space-y-4 max-w-sm mx-auto">
                     <p className="font-bold text-sm text-[#000000]">
-                      {paymentMethod === 'deposit' ? 'Quét mã để chuyển khoản đặt cọc 50%:' : 'Quét mã để thanh toán 100%:'}
+                      {paymentMethod === 'deposit' ? 'QuÃ©t mÃ£ Ä‘á»ƒ chuyá»ƒn khoáº£n Ä‘áº·t cá»c 50%:' : 'QuÃ©t mÃ£ Ä‘á»ƒ thanh toÃ¡n 100%:'}
                     </p>
                     <div className="w-48 h-48 mx-auto border-2 border-neutral-100 rounded-xl overflow-hidden shadow-sm p-1 bg-white">
                       <img
-                        src="/NgọcQR.jpg"
+                        src="/Ngá»cQR.jpg"
                         alt="Payment QR Code"
                         className="w-full h-full object-cover"
                       />
                     </div>
                     <div className="space-y-1 text-xs text-[#7A6F66]">
                       <p>
-                        Số tiền cần chuyển: <span className="font-extrabold text-base text-emerald-600">{totalPrice.toLocaleString('vi-VN')} ₫</span>
+                        Sá»‘ tiá»n cáº§n chuyá»ƒn: <span className="font-extrabold text-base text-emerald-600">{totalPrice.toLocaleString('vi-VN')} â‚«</span>
                       </p>
                       <p>
-                        Nội dung chuyển khoản: <span className="font-mono font-bold text-[#000000]">BK{orderId || 'DEARBOOK'}</span>
+                        Ná»™i dung chuyá»ƒn khoáº£n: <span className="font-mono font-bold text-[#000000]">BK{orderId || 'DEARBOOK'}</span>
                       </p>
                     </div>
                   </div>
@@ -888,13 +948,13 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                   {/* 2. Confirmation Form Link */}
                   <div className="p-5 rounded-2xl border-2 border-amber-200 bg-amber-50 text-left space-y-3 mb-6 max-w-md mx-auto">
                     <div className="flex items-center gap-2 text-amber-800">
-                      <span className="text-lg">⚠️</span>
+                      <span className="text-lg">âš ï¸</span>
                       <p className="font-bold text-sm">
-                        Hoàn tất chuyển khoản đơn hàng
+                        HoÃ n táº¥t chuyá»ƒn khoáº£n Ä‘Æ¡n hÃ ng
                       </p>
                     </div>
                     <p className="text-xs text-amber-700 leading-relaxed">
-                      Để xác nhận chuyển khoản thành công và đẩy nhanh sản xuất, bạn vui lòng điền thông tin và tải ảnh hóa đơn giao dịch tại Form xác nhận sau:
+                      Äá»ƒ xÃ¡c nháº­n chuyá»ƒn khoáº£n thÃ nh cÃ´ng vÃ  Ä‘áº©y nhanh sáº£n xuáº¥t, báº¡n vui lÃ²ng Ä‘iá»n thÃ´ng tin vÃ  táº£i áº£nh hÃ³a Ä‘Æ¡n giao dá»‹ch táº¡i Form xÃ¡c nháº­n sau:
                     </p>
                     <a
                       href="https://forms.gle/Svy4UUKsFnFUkW7u9"
@@ -902,7 +962,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                       rel="noopener noreferrer"
                       className="inline-flex items-center justify-center w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold transition-all shadow-md text-center animate-pulse"
                     >
-                      Click điền Form xác nhận chuyển khoản 📝
+                      Click Ä‘iá»n Form xÃ¡c nháº­n chuyá»ƒn khoáº£n ðŸ“
                     </a>
                   </div>
 
@@ -911,17 +971,17 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     className="rounded-xl p-5 text-left space-y-2 mb-6"
                     style={{ background: '#F5F2EE' }}
                   >
-                    <p className="font-semibold text-sm" style={{ color: '#000000' }}>📦 Thông tin đơn hàng:</p>
+                    <p className="font-semibold text-sm" style={{ color: '#000000' }}>ðŸ“¦ ThÃ´ng tin Ä‘Æ¡n hÃ ng:</p>
                     <div className="space-y-1.5 text-sm" style={{ color: '#7A6F66' }}>
-                      <p>• Mã đơn: <span className="font-mono font-bold text-[#000000]">#{orderId || `BK${Date.now()}`}</span></p>
-                      <p>• Loại photobook: <span className="font-semibold text-[#000000]">{currentProduct.nameVi}</span></p>
-                      <p>• Kích thước: <span className="font-semibold text-[#000000]">{selectedSize}</span></p>
-                      <p>• Số trang: <span className="font-semibold text-[#000000]">{selectedPageCount} trang</span></p>
-                      <p>• Hình thức thanh toán: <span className="font-bold text-orange-600">{paymentMethod === 'deposit' ? 'Đặt cọc trước 50%' : 'Thanh toán trước 100%'}</span></p>
-                      <p>• Người nhận: <span className="font-semibold text-[#000000]">{shippingInfo.fullName}</span></p>
-                      <p>• SĐT: <span className="font-semibold text-[#000000]">{shippingInfo.phone}</span></p>
-                      <p>• Email: <span className="font-semibold text-[#000000]">{shippingInfo.email}</span></p>
-                      <p>• Số tiền cần chuyển khoản: <span className="font-bold text-[#000000]">{totalPrice.toLocaleString('vi-VN')} ₫</span></p>
+                      <p>â€¢ MÃ£ Ä‘Æ¡n: <span className="font-mono font-bold text-[#000000]">#{orderId || `BK${Date.now()}`}</span></p>
+                      <p>â€¢ Loáº¡i photobook: <span className="font-semibold text-[#000000]">{currentProduct.nameVi}</span></p>
+                      <p>â€¢ KÃ­ch thÆ°á»›c: <span className="font-semibold text-[#000000]">{selectedSize}</span></p>
+                      <p>â€¢ Sá»‘ trang: <span className="font-semibold text-[#000000]">{selectedPageCount} trang</span></p>
+                      <p>â€¢ HÃ¬nh thá»©c thanh toÃ¡n: <span className="font-bold text-orange-600">{paymentMethod === 'deposit' ? 'Äáº·t cá»c trÆ°á»›c 50%' : 'Thanh toÃ¡n trÆ°á»›c 100%'}</span></p>
+                      <p>â€¢ NgÆ°á»i nháº­n: <span className="font-semibold text-[#000000]">{shippingInfo.fullName}</span></p>
+                      <p>â€¢ SÄT: <span className="font-semibold text-[#000000]">{shippingInfo.phone}</span></p>
+                      <p>â€¢ Email: <span className="font-semibold text-[#000000]">{shippingInfo.email}</span></p>
+                      <p>â€¢ Sá»‘ tiá»n cáº§n chuyá»ƒn khoáº£n: <span className="font-bold text-[#000000]">{totalPrice.toLocaleString('vi-VN')} â‚«</span></p>
                     </div>
                   </div>
 
@@ -932,7 +992,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = '#000000')}
                     onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#000000')}
                   >
-                    Về trang chủ
+                    Vá» trang chá»§
                   </button>
                 </div>
               </div>
@@ -947,7 +1007,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
             >
               <h3 className="font-bold mb-4 flex items-center gap-2" style={{ color: '#000000' }}>
                 <Package className="w-4 h-4" style={{ color: '#7A6F66' }} />
-                Đơn hàng
+                ÄÆ¡n hÃ ng
               </h3>
 
               <div className="space-y-4 mb-5">
@@ -956,17 +1016,17 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     className="w-14 h-18 rounded-lg flex-shrink-0 flex items-center justify-center text-2xl"
                     style={{ background: '#EDE9E3', minHeight: '72px' }}
                   >
-                    📖
+                    ðŸ“–
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-sm truncate" style={{ color: '#000000' }}>
-                      {book.title || 'Cuốn sách của tôi'}
+                      {book.title || 'Cuá»‘n sÃ¡ch cá»§a tÃ´i'}
                     </p>
                     <p className="text-xs mt-1 font-bold text-neutral-800">
                       {currentProduct.nameVi}
                     </p>
                     <p className="text-[11px] mt-0.5" style={{ color: '#7A6F66' }}>
-                      Kích thước: {selectedSize} · {selectedPageCount} trang
+                      KÃ­ch thÆ°á»›c: {selectedSize} Â· {selectedPageCount} trang
                     </p>
                     <p className="text-[10px] italic mt-0.5 leading-snug" style={{ color: '#9B9088' }}>
                       {currentProduct.paperType}
@@ -976,31 +1036,31 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
 
                 <div className="space-y-2 text-sm pt-3" style={{ borderTop: '1px solid #EDE9E3' }}>
                   <div className="flex justify-between">
-                    <span style={{ color: '#7A6F66' }}>Giá cơ bản ({currentProduct.pagesLimit} trang)</span>
-                    <span className="font-medium" style={{ color: '#000000' }}>{basePrice.toLocaleString('vi-VN')} ₫</span>
+                    <span style={{ color: '#7A6F66' }}>GiÃ¡ cÆ¡ báº£n ({currentProduct.pagesLimit} trang)</span>
+                    <span className="font-medium" style={{ color: '#000000' }}>{basePrice.toLocaleString('vi-VN')} â‚«</span>
                   </div>
                   {additionalPages > 0 && (
                     <div className="flex justify-between">
-                      <span style={{ color: '#7A6F66' }}>Trang thêm ({additionalPages})</span>
-                      <span className="font-medium" style={{ color: '#000000' }}>{pagePrice.toLocaleString('vi-VN')} ₫</span>
+                      <span style={{ color: '#7A6F66' }}>Trang thÃªm ({additionalPages})</span>
+                      <span className="font-medium" style={{ color: '#000000' }}>{pagePrice.toLocaleString('vi-VN')} â‚«</span>
                     </div>
                   )}
                   <div className="flex justify-between">
-                    <span style={{ color: '#7A6F66' }}>Phí vận chuyển</span>
-                    <span className="font-medium" style={{ color: '#000000' }}>{shippingFee.toLocaleString('vi-VN')} ₫</span>
+                    <span style={{ color: '#7A6F66' }}>PhÃ­ váº­n chuyá»ƒn</span>
+                    <span className="font-medium" style={{ color: '#000000' }}>{shippingFee.toLocaleString('vi-VN')} â‚«</span>
                   </div>
                 </div>
 
                 <div className="pt-3" style={{ borderTop: '1px solid #EDE9E3' }}>
                   {paymentMethod === 'deposit' && (
                     <div className="flex justify-between text-xs text-[#7A6F66] mb-1.5 animate-in fade-in duration-300">
-                      <span>Đã bớt 50% đặt cọc:</span>
-                      <span className="font-semibold text-rose-500">-( {(totalOriginal * 0.5).toLocaleString('vi-VN')} ₫ )</span>
+                      <span>ÄÃ£ bá»›t 50% Ä‘áº·t cá»c:</span>
+                      <span className="font-semibold text-rose-500">-( {(totalOriginal * 0.5).toLocaleString('vi-VN')} â‚« )</span>
                     </div>
                   )}
                   <div className="flex justify-between font-bold">
-                    <span style={{ color: '#000000' }}>{paymentMethod === 'deposit' ? 'Đặt cọc 50%' : 'Tổng cộng'}</span>
-                    <span style={{ color: '#000000' }}>{totalPrice.toLocaleString('vi-VN')} ₫</span>
+                    <span style={{ color: '#000000' }}>{paymentMethod === 'deposit' ? 'Äáº·t cá»c 50%' : 'Tá»•ng cá»™ng'}</span>
+                    <span style={{ color: '#000000' }}>{totalPrice.toLocaleString('vi-VN')} â‚«</span>
                   </div>
                 </div>
               </div>
@@ -1009,10 +1069,10 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                 className="p-4 rounded-xl text-xs space-y-1"
                 style={{ background: '#F5F2EE' }}
               >
-                <p className="font-semibold" style={{ color: '#5A5049' }}>📝 Cam kết chất lượng:</p>
-                <p style={{ color: '#7A6F66' }}>✓ In ấn cao cấp</p>
-                <p style={{ color: '#7A6F66' }}>✓ Hoàn tiền 100% nếu không hài lòng</p>
-                <p style={{ color: '#7A6F66' }}>✓ Giao hàng đúng hẹn</p>
+                <p className="font-semibold" style={{ color: '#5A5049' }}>ðŸ“ Cam káº¿t cháº¥t lÆ°á»£ng:</p>
+                <p style={{ color: '#7A6F66' }}>âœ“ In áº¥n cao cáº¥p</p>
+                <p style={{ color: '#7A6F66' }}>âœ“ HoÃ n tiá»n 100% náº¿u khÃ´ng hÃ i lÃ²ng</p>
+                <p style={{ color: '#7A6F66' }}>âœ“ Giao hÃ ng Ä‘Ãºng háº¹n</p>
               </div>
             </div>
           </div>
@@ -1022,7 +1082,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
   );
 }
 
-/** Đọc File thành data URL (base64) */
+/** Äá»c File thÃ nh data URL (base64) */
 function readFileAsDataURL(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
