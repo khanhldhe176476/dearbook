@@ -242,7 +242,8 @@ export function EditorToolbarCompact({
             {onPreview && (
               <button
                 onClick={onPreview}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg hover:shadow-lg transition-all text-sm font-medium"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-white rounded-lg hover:shadow-lg transition-all text-sm font-medium"
+                style={{ background: 'linear-gradient(to right, #3b82f6, #06b6d4)' }}
               >
                 <Eye className="w-4 h-4" />
                 <span className="hidden sm:inline">Xem 3D</span>
@@ -260,7 +261,8 @@ export function EditorToolbarCompact({
             {onSaveOrder && (
               <button
                 onClick={onSaveOrder}
-                className="flex items-center gap-1.5 px-4 py-1.5 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-lg hover:shadow-lg transition-all text-sm font-bold shadow-md transform hover:scale-[1.02] active:scale-95"
+                className="flex items-center gap-1.5 px-4 py-1.5 text-white rounded-lg hover:shadow-lg transition-all text-sm font-bold shadow-md transform hover:scale-[1.02] active:scale-95"
+                style={{ background: 'linear-gradient(to right, #f43f5e, #ec4899)' }}
               >
                 <Send className="w-4 h-4" />
                 <span>Gửi cho Admin</span>

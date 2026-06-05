@@ -185,6 +185,15 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
 
             <nav className="hidden md:flex items-center gap-3">
               <button 
+                onClick={() => {
+                  setShowAbout(true);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }} 
+                className={`px-4 py-2 rounded-full text-[#5B4038] hover:bg-[#F7D9CF] hover:text-[#B9423A] font-semibold transition focus:outline-none ${showAbout ? 'text-[#B9423A] bg-[#F7D9CF]' : ''}`}
+              >
+                Giới thiệu
+              </button>
+              <button 
                 onClick={() => handleNavClick('ptb-box')} 
                 className="px-4 py-2 rounded-full text-[#5B4038] hover:bg-[#F7D9CF] hover:text-[#B9423A] font-semibold transition focus:outline-none"
               >
@@ -201,15 +210,6 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
                 className="px-4 py-2 rounded-full text-[#5B4038] hover:bg-[#F7D9CF] hover:text-[#B9423A] font-semibold transition focus:outline-none"
               >
                 Chủ đề
-              </button>
-              <button 
-                onClick={() => {
-                  setShowAbout(true);
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }} 
-                className={`px-4 py-2 rounded-full text-[#5B4038] hover:bg-[#F7D9CF] hover:text-[#B9423A] font-semibold transition focus:outline-none ${showAbout ? 'text-[#B9423A] bg-[#F7D9CF]' : ''}`}
-              >
-                Giới thiệu
               </button>
             </nav>
 
@@ -248,39 +248,39 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
           <div className="max-w-5xl w-full flex flex-col md:flex-row items-center gap-12 relative z-10">
             
             {/* Left: Beautiful stacked polaroids/photo cards */}
-            <div className="flex-1 flex justify-center items-center relative min-h-[320px] md:min-h-[400px]">
-              <div className="relative w-64 h-80">
+            <div className="flex-1 flex justify-center items-center relative min-h-[320px] md:min-h-[440px] md:-translate-x-12">
+              <div className="relative w-96 h-[420px]">
                 {/* Polaroid 1 (bottom layer) */}
                 <div 
-                  className="absolute top-0 left-0 bg-white p-3 pb-8 rounded shadow-md border border-[#E6C7B8]/30 transform -rotate-12 transition-all duration-500 hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer"
-                  style={{ width: '180px' }}
+                  className="absolute top-0 left-0 bg-white p-4 pb-10 rounded shadow-md border border-[#E6C7B8]/30 transform -rotate-12 transition-all duration-500 hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer"
+                  style={{ width: '260px' }}
                 >
                   <div className="aspect-square bg-[#FFF8F1] overflow-hidden rounded-sm">
                     <img src={loveImg} className="w-full h-full object-cover" alt="" />
                   </div>
-                  <p className="text-center mt-3" style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A', fontSize: '1.2rem', lineHeight: 1 }}>love stories</p>
+                  <p className="text-center mt-4" style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A', fontSize: '1.7rem', lineHeight: 1 }}>love stories</p>
                 </div>
 
                 {/* Polaroid 2 (middle layer) */}
                 <div 
-                  className="absolute top-8 left-16 bg-white p-3 pb-8 rounded shadow-lg border border-[#E6C7B8]/30 transform rotate-6 transition-all duration-500 hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer"
-                  style={{ width: '190px' }}
+                  className="absolute top-12 left-28 bg-white p-4 pb-10 rounded shadow-lg border border-[#E6C7B8]/30 transform rotate-6 transition-all duration-500 hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer"
+                  style={{ width: '270px' }}
                 >
                   <div className="aspect-square bg-[#FFF8F1] overflow-hidden rounded-sm">
                     <img src={familyImg} className="w-full h-full object-cover" alt="" />
                   </div>
-                  <p className="text-center mt-3" style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A', fontSize: '1.2rem', lineHeight: 1 }}>family moments</p>
+                  <p className="text-center mt-4" style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A', fontSize: '1.7rem', lineHeight: 1 }}>family moments</p>
                 </div>
 
                 {/* Polaroid 3 (top layer) */}
                 <div 
-                  className="absolute top-20 left-4 bg-white p-3 pb-8 rounded shadow-xl border border-[#E6C7B8]/30 transform -rotate-3 transition-all duration-500 hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer"
-                  style={{ width: '180px' }}
+                  className="absolute top-24 left-6 bg-white p-4 pb-10 rounded shadow-xl border border-[#E6C7B8]/30 transform -rotate-3 transition-all duration-500 hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer"
+                  style={{ width: '260px' }}
                 >
                   <div className="aspect-square bg-[#FFF8F1] overflow-hidden rounded-sm">
                     <img src={hanoiImg} className="w-full h-full object-cover" alt="" />
                   </div>
-                  <p className="text-center mt-3" style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A', fontSize: '1.2rem', lineHeight: 1 }}>dear memories</p>
+                  <p className="text-center mt-4" style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A', fontSize: '1.7rem', lineHeight: 1 }}>dear memories</p>
                 </div>
               </div>
             </div>
@@ -289,15 +289,7 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
             <div className="flex-1 bg-white/70 backdrop-blur-md p-8 md:p-10 rounded-3xl shadow-xl border border-[#E6C7B8]/40">
               <div className="text-center md:text-left mb-6">
                 <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#B9423A] block mb-2">Giới thiệu</span>
-                <h2 
-                  className="text-[#3B2925] leading-none mb-2"
-                  style={{
-                    fontFamily: '"Pinyon Script", "Great Vibes", cursive',
-                    fontSize: '4.5rem',
-                  }}
-                >
-                  About Us
-                </h2>
+
                 <h3 
                   className="text-lg font-serif italic text-[#7A4A42] font-semibold mt-2"
                   style={{ fontFamily: 'ui-serif, Georgia, serif' }}
@@ -349,8 +341,8 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
               <span className="text-sm font-medium text-[#5B4038]">Photobook box dành cho những món quà kỷ niệm</span>
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-in">
-              Photobook Box
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-in" style={{ fontFamily: '"Cooper BT", "Cooper Black", Georgia, serif' }}>
+              <span style={{ whiteSpace: 'nowrap' }}>Photobook Box</span>
               <br />
               <span
                 style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A', display: 'block', fontSize: 'clamp(2.5rem, 7vw, 5rem)', lineHeight: 1.1 }}

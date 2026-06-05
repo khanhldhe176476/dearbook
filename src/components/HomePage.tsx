@@ -475,11 +475,22 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
               src="/logo.png"
               alt="dearmemories"
               className="object-contain block"
-              style={{ height: '175px', margin: '-58.5px 0' }}
+              style={{ height: '140px', margin: '-41px 0' }}
             />
           </div>
 
           <div className="hidden md:flex items-center gap-8 text-[#6B4B43] text-sm font-semibold">
+            <button
+              onClick={() => {
+                setShowAbout(true);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className={`nav-link hover:text-[#B9423A] transition-colors focus:outline-none ${
+                showAbout ? 'text-[#B9423A] font-bold' : ''
+              }`}
+            >
+              Giới thiệu
+            </button>
             <button
               onClick={() => handleNavClick('ptb-box')}
               className="nav-link hover:text-[#B9423A] transition-colors focus:outline-none"
@@ -497,17 +508,6 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
               className="nav-link hover:text-[#B9423A] transition-colors focus:outline-none"
             >
               Chủ đề
-            </button>
-            <button
-              onClick={() => {
-                setShowAbout(true);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              className={`nav-link hover:text-[#B9423A] transition-colors focus:outline-none ${
-                showAbout ? 'text-[#B9423A] font-bold' : ''
-              }`}
-            >
-              Giới thiệu
             </button>
           </div>
 
@@ -553,39 +553,39 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
           <div className="max-w-5xl w-full flex flex-col md:flex-row items-center gap-12 relative z-10">
             
             {/* Left: Beautiful stacked polaroids/photo cards */}
-            <div className="flex-1 flex justify-center items-center relative min-h-[320px] md:min-h-[400px]">
-              <div className="relative w-64 h-80">
+            <div className="flex-1 flex justify-center items-center relative min-h-[320px] md:min-h-[440px] md:-translate-x-12">
+              <div className="relative w-96 h-[420px]">
                 {/* Polaroid 1 (bottom layer) */}
                 <div 
-                  className="absolute top-0 left-0 bg-white p-3 pb-8 rounded shadow-md border border-[#E6C7B8]/30 transform -rotate-12 transition-all duration-500 hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer"
-                  style={{ width: '180px' }}
+                  className="absolute top-0 left-0 bg-white p-4 pb-10 rounded shadow-md border border-[#E6C7B8]/30 transform -rotate-12 transition-all duration-500 hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer"
+                  style={{ width: '260px' }}
                 >
                   <div className="aspect-square bg-[#FFF8F1] overflow-hidden rounded-sm">
                     <img src={loveImg} className="w-full h-full object-cover" alt="" />
                   </div>
-                  <p className="text-center mt-3" style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A', fontSize: '1.2rem', lineHeight: 1 }}>love stories</p>
+                  <p className="text-center mt-4" style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A', fontSize: '1.7rem', lineHeight: 1 }}>love stories</p>
                 </div>
 
                 {/* Polaroid 2 (middle layer) */}
                 <div 
-                  className="absolute top-8 left-16 bg-white p-3 pb-8 rounded shadow-lg border border-[#E6C7B8]/30 transform rotate-6 transition-all duration-500 hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer"
-                  style={{ width: '190px' }}
+                  className="absolute top-12 left-28 bg-white p-4 pb-10 rounded shadow-lg border border-[#E6C7B8]/30 transform rotate-6 transition-all duration-500 hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer"
+                  style={{ width: '270px' }}
                 >
                   <div className="aspect-square bg-[#FFF8F1] overflow-hidden rounded-sm">
                     <img src={familyImg} className="w-full h-full object-cover" alt="" />
                   </div>
-                  <p className="text-center mt-3" style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A', fontSize: '1.2rem', lineHeight: 1 }}>family moments</p>
+                  <p className="text-center mt-4" style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A', fontSize: '1.7rem', lineHeight: 1 }}>family moments</p>
                 </div>
 
                 {/* Polaroid 3 (top layer) */}
                 <div 
-                  className="absolute top-20 left-4 bg-white p-3 pb-8 rounded shadow-xl border border-[#E6C7B8]/30 transform -rotate-3 transition-all duration-500 hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer"
-                  style={{ width: '180px' }}
+                  className="absolute top-24 left-6 bg-white p-4 pb-10 rounded shadow-xl border border-[#E6C7B8]/30 transform -rotate-3 transition-all duration-500 hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer"
+                  style={{ width: '260px' }}
                 >
                   <div className="aspect-square bg-[#FFF8F1] overflow-hidden rounded-sm">
                     <img src={hanoiImg} className="w-full h-full object-cover" alt="" />
                   </div>
-                  <p className="text-center mt-3" style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A', fontSize: '1.2rem', lineHeight: 1 }}>dear memories</p>
+                  <p className="text-center mt-4" style={{ fontFamily: '"Pinyon Script", "Great Vibes", cursive', color: '#B9423A', fontSize: '1.7rem', lineHeight: 1 }}>dear memories</p>
                 </div>
               </div>
             </div>
@@ -594,15 +594,7 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
             <div className="flex-1 bg-white/70 backdrop-blur-md p-8 md:p-10 rounded-3xl shadow-xl border border-[#E6C7B8]/40">
               <div className="text-center md:text-left mb-6">
                 <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#B9423A] block mb-2">Giới thiệu</span>
-                <h2 
-                  className="text-[#3B2925] leading-none mb-2"
-                  style={{
-                    fontFamily: '"Pinyon Script", "Great Vibes", cursive',
-                    fontSize: '4.5rem',
-                  }}
-                >
-                  About Us
-                </h2>
+
                 <h3 
                   className="text-lg font-serif italic text-[#7A4A42] font-semibold mt-2"
                 >
@@ -669,15 +661,17 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
                 <span className="text-sm font-semibold text-[#B9423A]">Photobook Box</span>
               </div>
 
-              <h1 className="leading-[0.95] mb-6">
+              <h1 className="leading-[0.95] mb-6 inline-flex flex-col items-center">
                 <span
                   className="block"
                   style={{
-                    fontFamily: '"Pinyon Script", "Great Vibes", cursive',
-                    fontSize: 'clamp(3.5rem, 9vw, 7.5rem)',
-                    lineHeight: 1.05,
+                    fontFamily: '"Cooper BT", "Cooper Black", "Cooper", Georgia, serif',
+                    fontSize: 'clamp(2.2rem, 5.5vw, 4.2rem)',
+                    fontWeight: '900',
+                    lineHeight: 1.1,
                     color: '#3B2925',
                     letterSpacing: '0.01em',
+                    whiteSpace: 'nowrap',
                   }}
                 >
                   Photobook Box
@@ -689,9 +683,10 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
                     fontSize: 'clamp(1.15rem, 2.6vw, 1.7rem)',
                     lineHeight: 1.35,
                     color: '#7A4A42',
-                    fontWeight: '900',
+                    fontWeight: '400',
                     fontStyle: 'italic',
                     letterSpacing: '0.01em',
+                    textAlign: 'center',
                   }}
                 >
                   nhỏ xinh nhưng đầy cảm xúc
@@ -909,45 +904,6 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
       {/* ── Divider ── */}
       <div className="section-divider" />
       </div>
-
-      {/* ══════════════════════════════════════════════════════
-          FOOTER
-          ══════════════════════════════════════════════════════ */}
-      <footer className="py-12" style={{ background: '#3B2925' }}>
-        <div className="max-w-7xl mx-auto px-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            <div 
-              className="flex items-center cursor-pointer" 
-              style={{ height: '40px', overflow: 'visible' }}
-              onClick={() => {
-                setShowAbout(false);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-            >
-              <img src="/logo.png" alt="dearmemories" className="object-contain block"
-                style={{ height: '120px', margin: '-40px 0', filter: 'brightness(1.5)' }} />
-            </div>
-            <p className="text-[#E6C7B8] text-sm">© 2026 Dear Memories. All rights reserved. Made with ❤️ in Vietnam</p>
-            <div className="flex items-center gap-6 text-[#E6C7B8] text-sm font-semibold">
-              <button onClick={() => handleNavClick('ptb-box')} className="nav-link hover:text-[#B9423A] transition-colors focus:outline-none">
-                Photobook Box
-              </button>
-              <button onClick={() => handleNavClick('categories')} className="nav-link hover:text-[#B9423A] transition-colors focus:outline-none">
-                Danh mục
-              </button>
-              <button onClick={() => handleNavClick('themes')} className="nav-link hover:text-[#B9423A] transition-colors focus:outline-none">
-                Chủ đề
-              </button>
-              <button onClick={() => {
-                setShowAbout(true);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }} className={`nav-link hover:text-[#B9423A] transition-colors focus:outline-none ${showAbout ? 'text-[#B9423A]' : ''}`}>
-                Giới thiệu
-              </button>
-            </div>
-          </div>
-        </div>
-      </footer>
 
     </div>
   );

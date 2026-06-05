@@ -1,4 +1,4 @@
-﻿spring:
+spring:
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
@@ -20,10 +20,18 @@
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
+
 server:
   port: 8080
   error:
     include-stacktrace: never
+  tomcat:
+    max-swallow-size: -1
+    max-http-form-post-size: -1
 
 app:
   admin:

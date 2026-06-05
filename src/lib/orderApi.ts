@@ -1,4 +1,4 @@
-import { apiGet, apiPost } from './api';
+import { apiGet, apiPost, apiPostMultipart } from './api';
 
 export interface OrderRequest {
   userBookId: string;
@@ -32,4 +32,12 @@ export const orderApi = {
   getMyOrders: (userId: string) => apiGet<OrderResponse[]>('/api/orders/my', { headers: { 'X-User-Id': userId } }),
   placeOrder: (userId: string, data: OrderRequest) => 
     apiPost<OrderResponse>('/api/orders', data, { headers: { 'X-User-Id': userId } }),
+  uploadPdf: (orderId: string, userId: string, file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return apiPostMultipart<string>(`/api/orders/${orderId}/pdf`, formData, {
+      headers: { 'X-User-Id': userId }
+    });
+  }
 };
+

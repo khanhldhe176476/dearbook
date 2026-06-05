@@ -254,8 +254,15 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
         email: shippingInfo.email,
         address: shippingInfo.address,
         city: shippingInfo.city,
+ long1
         district: shippingInfo.district,
         note: shippingInfo.notes || null,
+
+        note: [
+          shippingInfo.notes,
+          pdfFileName ? `[PDF đính kèm: ${pdfFileName} - ${pdfFileSize}]` : null,
+        ].filter(Boolean).join(' | '),
+ main
         collectionName: book.title || book.templateName || 'Photobook',
         productType: selectedProduct,
         productSize: selectedSize,

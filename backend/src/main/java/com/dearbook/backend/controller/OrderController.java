@@ -41,7 +41,11 @@ public class OrderController {
     @PostMapping("/{id}/pdf")
     public ResponseEntity<String> uploadPdf(
             @PathVariable UUID id,
+ long1
             @RequestHeader(value = "X-User-Id", required = false) UUID userId,
+
+            @RequestHeader("X-User-Id") UUID userId,
+ main
             @RequestParam("file") MultipartFile file) {
         orderService.savePdfFile(id, file);
         return ResponseEntity.ok("PDF uploaded successfully");

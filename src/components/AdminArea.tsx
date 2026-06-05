@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { API_BASE_URL } from "../lib/api";
 
 type OrderStatus = "PENDING" | "CONFIRMED" | "PRINTING" | "COMPLETED" | "CANCELLED";
 
@@ -711,8 +712,11 @@ export default function AdminArea() {
                                             </div>
                                             <button
                                                 onClick={() => {
+                                                    const downloadUrl = selectedOrder.pdfFileData?.startsWith('http') 
+                                                        ? selectedOrder.pdfFileData 
+                                                        : `${API_BASE_URL}${selectedOrder.pdfFileData}`;
                                                     const link = document.createElement('a');
-                                                    link.href = selectedOrder.pdfFileData!;
+                                                    link.href = downloadUrl;
                                                     link.download = selectedOrder.pdfFileName || 'design.pdf';
                                                     document.body.appendChild(link);
                                                     link.click();

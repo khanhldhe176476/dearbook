@@ -16,8 +16,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 
+ long1
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+ main
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
@@ -257,11 +259,18 @@ public class OrderService {
     public void savePdfFile(UUID orderId, MultipartFile file) {
         Order order = orderRepo.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+ long1
 
         try {
             Path uploadPath = Paths.get(uploadDir, "pdf");
             Files.createDirectories(uploadPath);
 
+
+        
+        try {
+            Path uploadPath = Paths.get("uploads", "pdf");
+            Files.createDirectories(uploadPath);
+ main
             String originalFilename = file.getOriginalFilename();
             String fileExtension = "";
             if (originalFilename != null && originalFilename.contains(".")) {
@@ -269,12 +278,20 @@ public class OrderService {
             }
             String savedFileName = orderId.toString() + "_" + System.currentTimeMillis() + fileExtension;
             Path filePath = uploadPath.resolve(savedFileName);
+long1
 
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
             order.setPdfFileName(originalFilename);
             // Store relative path for portability (uploadDir/pdf/filename)
             order.setPdfFileData(Paths.get("pdf", savedFileName).toString());
+
+            
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            
+            order.setPdfFileName(originalFilename);
+            order.setPdfFileData(filePath.toString());
+ main
             orderRepo.save(order);
         } catch (IOException e) {
             throw new RuntimeException("Failed to store PDF file", e);
@@ -284,11 +301,16 @@ public class OrderService {
     public Resource loadPdfFileAsResource(UUID orderId) {
         Order order = orderRepo.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+ long1
 
+
+        
+ main
         String filePathString = order.getPdfFileData();
         if (filePathString == null || filePathString.isBlank()) {
             throw new IllegalArgumentException("No PDF file uploaded for this order");
         }
+ long1
 
         try {
             // Resolve relative path against configured upload directory
@@ -299,6 +321,13 @@ public class OrderService {
             }
             Resource resource = new UrlResource(filePath.toUri());
             if (resource.exists() && resource.isReadable()) {
+
+        
+        try {
+            Path filePath = Paths.get(filePathString);
+            Resource resource = new UrlResource(filePath.toUri());
+            if (resource.exists() || resource.isReadable()) {
+ main
                 return resource;
             } else {
                 throw new IllegalArgumentException("File not found or not readable");
