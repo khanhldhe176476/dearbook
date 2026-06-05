@@ -58,9 +58,11 @@ jobs:
       - name: Build with Maven
         run: ./mvnw clean package -DskipTests
 
-    deploy:
+  deploy:
     name: Deploy to Server
-    needs: [build-frontend, build-backend]
+    needs:
+      - build-frontend
+      - build-backend
     runs-on: self-hosted
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     steps:
