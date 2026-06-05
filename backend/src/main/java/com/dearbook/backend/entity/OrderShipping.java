@@ -11,6 +11,7 @@ public class OrderShipping {
     private String phone;
     private String address;
     private String city;
+    private String district;
     @Column(name = "tracking_number") private String trackingNumber;
     @Column(name = "created_at", updatable = false) private OffsetDateTime createdAt;
 
@@ -28,6 +29,7 @@ public class OrderShipping {
     public String getPhone() { return phone; } public void setPhone(String phone) { this.phone = phone; }
     public String getAddress() { return address; } public void setAddress(String address) { this.address = address; }
     public String getCity() { return city; } public void setCity(String city) { this.city = city; }
+    public String getDistrict() { return district; } public void setDistrict(String district) { this.district = district; }
     public String getTrackingNumber() { return trackingNumber; } public void setTrackingNumber(String trackingNumber) { this.trackingNumber = trackingNumber; }
     public OffsetDateTime getCreatedAt() { return createdAt; } public void setCreatedAt(OffsetDateTime createdAt) { this.createdAt = createdAt; }
 }

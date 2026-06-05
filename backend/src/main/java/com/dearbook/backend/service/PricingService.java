@@ -96,7 +96,7 @@ public class PricingService {
             return totalOriginal.multiply(DEPOSIT_RATE).setScale(0, RoundingMode.HALF_UP);
         }
 
-        return totalOriginal.setScale(0, RoundingMode.UNNECESSARY);
+        return totalOriginal.setScale(0, RoundingMode.HALF_UP);
     }
 
     /**

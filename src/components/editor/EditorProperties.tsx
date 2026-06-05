@@ -1,5 +1,39 @@
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Settings, Type, Palette, Layout, Move, Maximize2 } from 'lucide-react';
 import { PageElement, BookPage, Book } from '../../App';
+
+const FONT_FAMILIES = [
+  { value: 'Poppins', label: 'Poppins' },
+  { value: 'Inter', label: 'Inter' },
+  { value: 'Dancing Script', label: 'Dancing Script' },
+  { value: 'Playfair Display', label: 'Playfair Display' },
+  { value: 'Merriweather', label: 'Merriweather' },
+  { value: 'Roboto', label: 'Roboto' },
+  { value: 'Open Sans', label: 'Open Sans' },
+  { value: 'Lora', label: 'Lora' },
+  { value: 'Montserrat', label: 'Montserrat' },
+  { value: 'Raleway', label: 'Raleway' },
+  { value: 'Pacifico', label: 'Pacifico' },
+  { value: 'Caveat', label: 'Caveat' },
+  { value: 'Great Vibes', label: 'Great Vibes' },
+  { value: 'Lobster', label: 'Lobster' },
+  { value: 'Arial', label: 'Arial' },
+  { value: 'Georgia', label: 'Georgia' },
+  { value: 'Times New Roman', label: 'Times New Roman' },
+  { value: 'Courier New', label: 'Courier New' },
+  { value: 'serif', label: 'Serif' },
+  { value: 'monospace', label: 'Monospace' },
+];
+
+const PRESET_COLORS = [
+  '#000000', '#333333', '#666666', '#999999', '#CCCCCC', '#FFFFFF',
+  '#FF0000', '#FF4444', '#FF6B6B', '#FF1493', '#E91E63', '#F06292',
+  '#FF9800', '#FFA726', '#FFC107', '#FFD54F', '#FFEB3B', '#FFF176',
+  '#4CAF50', '#66BB6A', '#81C784', '#2E7D32', '#00E676', '#69F0AE',
+  '#2196F3', '#42A5F5', '#64B5F6', '#1565C0', '#448AFF', '#82B1FF',
+  '#9C27B0', '#AB47BC', '#CE93D8', '#7C4DFF', '#B388FF', '#E040FB',
+  '#6B46C1', '#EC4899', '#3B82F6', '#10B981', '#F59E0B', '#EF4444',
+];
 
 interface EditorPropertiesProps {
   selectedElement: PageElement | undefined;
@@ -18,6 +52,39 @@ export function EditorProperties({
   onUpdatePage,
   onUpdateBook,
 }: EditorPropertiesProps) {
+  // ── Local text state — KHÔNG re-render canvas khi đang gõ ──
+  const [localTextContent, setLocalTextContent] = useState('');
+  const textCommitRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (selectedElement?.type === 'text') {
+      setLocalTextContent(selectedElement.content || '');
+    }
+  }, [selectedElement?.id]);
+
+  const handleTextChange = useCallback((newContent: string) => {
+    setLocalTextContent(newContent);
+    textCommitRef.current = newContent;
+  }, []);
+
+  const handleTextBlur = useCallback(() => {
+    if (textCommitRef.current !== null
+        && selectedElement
+        && textCommitRef.current !== selectedElement.content) {
+      onUpdateElement(selectedElement.id, { content: textCommitRef.current });
+    }
+  }, [selectedElement, onUpdateElement]);
+
+  // Commit khi chuyển sang element khác (tránh mất dữ liệu)
+  useEffect(() => {
+    return () => {
+      if (textCommitRef.current !== null
+          && selectedElement
+          && textCommitRef.current !== selectedElement.content) {
+        onUpdateElement(selectedElement.id, { content: textCommitRef.current });
+      }
+    };
+  }, [selectedElement?.id]);
   if (!selectedElement) {
     return (
       <div className="w-80 bg-white border-l border-gray-200 p-6">
@@ -73,11 +140,14 @@ export function EditorProperties({
               Nội dung
             </label>
             <textarea
-              value={selectedElement.content}
-              onChange={(e) => onUpdateElement(selectedElement.id, { content: e.target.value })}
+              value={localTextContent}
+              onChange={(e) => handleTextChange(e.target.value)}
+              onBlur={handleTextBlur}
               className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-purple-400 focus:ring-2 focus:ring-purple-200 outline-none transition-all resize-none"
               rows={4}
+              placeholder="Nhập nội dung..."
             />
+            <p className="text-[10px] text-gray-400 mt-1">Gõ mượt không giật — tự lưu khi click ra ngoài</p>
           </div>
         )}
 
@@ -93,13 +163,14 @@ export function EditorProperties({
                 style: { ...selectedElement.style, fontFamily: e.target.value }
               })}
               className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-purple-400 focus:ring-2 focus:ring-purple-200 outline-none transition-all"
+              style={{ fontFamily: selectedElement.style.fontFamily || 'inherit' }}
             >
               <option value="inherit">Mặc định</option>
-              <option value="Dancing Script">Dancing Script</option>
-              <option value="Poppins">Poppins</option>
-              <option value="Inter">Inter</option>
-              <option value="serif">Serif</option>
-              <option value="monospace">Monospace</option>
+              {FONT_FAMILIES.map((font) => (
+                <option key={font.value} value={font.value} style={{ fontFamily: font.value }}>
+                  {font.label}
+                </option>
+              ))}
             </select>
           </div>
         )}
@@ -291,15 +362,20 @@ export function EditorProperties({
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Màu nhanh
           </label>
-          <div className="grid grid-cols-6 gap-2">
-            {['#6B46C1', '#EC4899', '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#14B8A6'].map((color) => (
+          <div className="grid grid-cols-8 gap-1.5">
+            {PRESET_COLORS.map((color) => (
               <button
                 key={color}
                 onClick={() => onUpdateElement(selectedElement.id, {
                   style: { ...selectedElement.style, color }
                 })}
-                className="w-full aspect-square rounded-lg border-2 border-gray-200 hover:border-purple-400 transition-colors"
+                className={`w-full aspect-square rounded-lg border-2 transition-transform hover:scale-110 ${
+                  selectedElement.style.color === color
+                    ? 'border-purple-500 scale-110'
+                    : 'border-gray-200 hover:border-purple-400'
+                }`}
                 style={{ backgroundColor: color }}
+                title={color}
               />
             ))}
           </div>

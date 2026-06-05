@@ -8,6 +8,7 @@ export interface OrderRequest {
   email?: string;
   address: string;
   city: string;
+  district?: string;
   note?: string;
   collectionName?: string;
   productType?: string;
