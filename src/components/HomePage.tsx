@@ -465,7 +465,7 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
         <div className="max-w-7xl mx-auto flex items-center justify-between px-8 py-3">
           <div 
             className="flex items-center cursor-pointer" 
-            style={{ height: '58px', overflow: 'visible' }}
+            style={{ height: '68px', overflow: 'visible' }}
             onClick={() => {
               setShowAbout(false);
               window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -475,7 +475,7 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
               src="/logo.png"
               alt="dearmemories"
               className="object-contain block"
-              style={{ height: '140px', margin: '-41px 0' }}
+              style={{ height: '160px', margin: '-46px 0' }}
             />
           </div>
 

@@ -433,8 +433,8 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
                 : themeKey === 'family' || themeKey === 'kids'
                 ? sampleBook2
                 : themeKey === 'friendship' || themeKey === 'travel'
-                ? '/Bạn Bè/Vintage Style/aatbio_com_image_export_May_21_2026 (1).png'
-                : '/Cá nhân/Dust & Soul/aatbio_com_image_export_May_23_2026 (1).png'
+                ? '/ban-be/vintage-style/aatbio_com_image_export_May_21_2026%20(1).png'
+                : '/ca-nhan/dust-soul/aatbio_com_image_export_May_23_2026%20(1).png'
             )}
             alt={tpl.name}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
@@ -528,12 +528,12 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
               className="flex items-center group"
               title="Về trang chủ"
             >
-              <div className="flex flex-col justify-center leading-none" style={{ height: '58px', overflow: 'visible' }}>
+              <div className="flex flex-col justify-center leading-none" style={{ height: '68px', overflow: 'visible' }}>
                 <img 
                   src="/logo.png" 
                   alt="dearmemories" 
                   className="object-contain block transition-transform duration-300 group-hover:scale-105" 
-                  style={{ height: '140px', margin: '-41px 0' }}
+                  style={{ height: '160px', margin: '-46px 0' }}
                 />
               </div>
             </button>

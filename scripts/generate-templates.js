@@ -5,7 +5,22 @@ const PUBLIC_DIR = path.resolve(__dirname, '../public');
 const OUTPUT_FILE = path.resolve(__dirname, '../src/data/autoTemplates.json');
 
 // Những file hoặc thư mục nên bỏ qua
-const IGNORED = ['.DS_Store', 'logo.png', 'templates'];
+const IGNORED = ['.DS_Store', 'logo.png', 'templates', 'assets'];
+
+// Từ điển ánh xạ tên hiển thị tiếng Việt cho các thư mục đã được đặt tên URL-safe
+const THEME_DISPLAY_NAMES = {
+  'ban-be': 'Bạn Bè',
+  'ca-nhan': 'Cá nhân',
+  'tinh-yeu': 'Tình Yêu'
+};
+
+const TEMPLATE_DISPLAY_NAMES = {
+  'tinh-nghich': 'Tinh nghịch',
+  'vintage-style': 'Vintage Style',
+  'xanh-la-khong-xa-lanh': 'Xanh lá không xa lánh',
+  'dust-soul': 'Dust & Soul',
+  'firrst-love': 'Firrst love'
+};
 
 // Hàm chuyển tên thành id (ví dụ: Bạn Bè -> ban-be)
 const slugify = (text) => {
@@ -28,13 +43,14 @@ function generate() {
     for (const rootItem of rootItems) {
       if (!rootItem.isDirectory() || IGNORED.includes(rootItem.name)) continue;
 
-      const themeName = rootItem.name;
-      const themeSlug = slugify(themeName);
-      const themePath = path.join(PUBLIC_DIR, themeName);
+      const themeFolder = rootItem.name;
+      const themeSlug = slugify(themeFolder);
+      const themeDisplayName = THEME_DISPLAY_NAMES[themeSlug] || themeFolder;
+      const themePath = path.join(PUBLIC_DIR, themeFolder);
 
       const themeObj = {
         id: themeSlug,
-        name: themeName,
+        name: themeDisplayName,
         templates: []
       };
 
@@ -43,15 +59,18 @@ function generate() {
       for (const templateItem of templateItems) {
         if (!templateItem.isDirectory()) continue;
 
-        const templateName = templateItem.name;
+        const templateFolder = templateItem.name;
+        const templateSlug = slugify(templateFolder);
+        const templateDisplayName = TEMPLATE_DISPLAY_NAMES[templateSlug] || templateFolder;
+        
         // Bắt đầu bằng auto-template- để Step3 biết đây là Simple Editor
-        const templateId = `auto-template-${themeSlug}-${slugify(templateName)}`;
-        const templatePath = path.join(themePath, templateName);
+        const templateId = `auto-template-${themeSlug}-${templateSlug}`;
+        const templatePath = path.join(themePath, templateFolder);
 
         const templateObj = {
           id: templateId,
-          name: templateName,
-          description: `Sách ảnh ${templateName} với thiết kế tuyệt đẹp`,
+          name: templateDisplayName,
+          description: `Sách ảnh ${templateDisplayName} với thiết kế tuyệt đẹp`,
           pages: []
         };
 
@@ -66,9 +85,10 @@ function generate() {
         images.sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
 
         images.forEach((imgName, index) => {
+          const rawUrl = `/${themeFolder}/${templateFolder}/${imgName}`;
           templateObj.pages.push({
             id: `${templateId}-page-${index + 1}`,
-            imageUrl: `/${themeName}/${templateName}/${imgName}`,
+            imageUrl: encodeURI(rawUrl),
             label: `Trang ${index + 1}`
           });
         });
