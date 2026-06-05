@@ -30,6 +30,9 @@ jobs:
         run: npm install
 
       - name: Build Frontend
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
         run: npm run build
 
   build-backend:
@@ -55,7 +58,7 @@ jobs:
       - name: Build with Maven
         run: ./mvnw clean package -DskipTests
 
-  deploy:
+    deploy:
     name: Deploy to Server
     needs: [build-frontend, build-backend]
     runs-on: self-hosted
@@ -63,6 +66,13 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+
+      - name: Create frontend .env file
+        run: |
+          cat << EOF > .env
+          VITE_SUPABASE_URL=${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY=${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          EOF
 
       - name: Create backend .env file
         run: |
@@ -73,8 +83,5 @@ jobs:
 
       - name: Deploy using Docker Compose
         run: |
-          # Dừng container cũ nếu có
           docker-compose down || true
-          
-          # Build và chạy lại container mới
           docker-compose up -d --build
