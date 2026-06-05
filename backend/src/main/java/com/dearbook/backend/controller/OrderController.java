@@ -23,29 +23,19 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderResponse> placeOrder(
-            @RequestHeader(value = "X-User-Id", required = false) UUID userId,
-            @RequestBody OrderRequest req) {
+    public ResponseEntity<OrderResponse> placeOrder(@RequestHeader("X-User-Id") UUID userId, @RequestBody OrderRequest req) {
         return ResponseEntity.ok(orderService.placeOrder(userId, req));
     }
 
     @GetMapping("/my")
-    public ResponseEntity<List<OrderResponse>> getMyOrders(
-            @RequestHeader(value = "X-User-Id", required = false) UUID userId) {
-        if (userId == null) {
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<List<OrderResponse>> getMyOrders(@RequestHeader("X-User-Id") UUID userId) {
         return ResponseEntity.ok(orderService.getMyOrders(userId));
     }
 
     @PostMapping("/{id}/pdf")
     public ResponseEntity<String> uploadPdf(
             @PathVariable UUID id,
- long1
-            @RequestHeader(value = "X-User-Id", required = false) UUID userId,
-
             @RequestHeader("X-User-Id") UUID userId,
- main
             @RequestParam("file") MultipartFile file) {
         orderService.savePdfFile(id, file);
         return ResponseEntity.ok("PDF uploaded successfully");
