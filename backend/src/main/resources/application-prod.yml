@@ -13,7 +13,11 @@ spring:
 
   jpa:
     hibernate:
+ long1
+      ddl-auto: validate
+
       ddl-auto: update
+ main
     show-sql: false
     properties:
       hibernate:

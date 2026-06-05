@@ -1,5 +1,7 @@
 package com.dearbook.backend.entity;
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -7,7 +9,9 @@ import java.util.UUID;
 @Table(name = "payments")
 public class Payment {
     @Id @GeneratedValue(strategy = GenerationType.UUID) private UUID id;
-    @OneToOne @JoinColumn(name = "order_id") private Order order;
+    @OneToOne @JoinColumn(name = "order_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Order order;
     private BigDecimal amount;
     @Column(name = "payment_method") private String paymentMethod;
     private String status = "PENDING";

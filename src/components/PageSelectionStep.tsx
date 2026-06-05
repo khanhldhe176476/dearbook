@@ -19,6 +19,7 @@ export function PageSelectionStep({ pages, cover, onNext, onBack }: PageSelectio
 
   // Export modal state
   const [showExportModal, setShowExportModal] = useState(false);
+  const [hasExportedPdf, setHasExportedPdf] = useState(false);
 
   const totalPages = pages.length;
   const selectedCount = selectedIndices.size;
@@ -48,6 +49,10 @@ export function PageSelectionStep({ pages, cover, onNext, onBack }: PageSelectio
   const handleContinue = () => {
     if (isOdd) {
       toast.error('Vui lòng chọn số trang chẵn để tiếp tục.');
+      return;
+    }
+    if (!hasExportedPdf) {
+      toast.error('Vui lòng xuất file PDF thiết kế trước khi tiếp tục.');
       return;
     }
 
@@ -207,40 +212,62 @@ export function PageSelectionStep({ pages, cover, onNext, onBack }: PageSelectio
 
       {/* Action buttons */}
       <div className="space-y-3">
-        {/* PDF Export Section — tùy chọn, kế thừa từ ExportModal của trang chỉnh sửa tự do */}
-        <div className="rounded-2xl p-6" style={{ background: 'white', border: '1.5px solid #DDD8D0' }}>
+        {/* PDF Export Section — BẮT BUỘC */}
+        <div
+          className="rounded-2xl p-6 transition-all"
+          style={{
+            background: hasExportedPdf ? '#f0fdf4' : 'white',
+            border: hasExportedPdf ? '2px solid #22c55e' : '2px solid #f59e0b',
+          }}
+        >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div
                 className="w-10 h-10 rounded-full flex items-center justify-center"
-                style={{ background: '#F5F2EE', color: '#5A5049' }}
+                style={{
+                  background: hasExportedPdf ? '#dcfce7' : '#F5F2EE',
+                  color: hasExportedPdf ? '#16a34a' : '#5A5049',
+                }}
               >
-                <FileText className="w-5 h-5" />
+                {hasExportedPdf ? <Check className="w-5 h-5" /> : <FileText className="w-5 h-5" />}
               </div>
               <div>
                 <p className="text-sm font-bold" style={{ color: '#000000' }}>
-                  Xuất file PDF
+                  {hasExportedPdf ? '✓ Đã xuất file PDF thiết kế' : 'Bước 1: Xuất file PDF thiết kế'}
                 </p>
-                <p className="text-xs" style={{ color: '#7A6F66' }}>
-                  Tùy chọn: xuất sách ra PDF với chất lượng tùy chỉnh (in ấn lên đến 300 DPI).
+                <p className="text-xs" style={{ color: hasExportedPdf ? '#16a34a' : '#dc2626' }}>
+                  {hasExportedPdf
+                    ? 'File PDF đã sẵn sàng. Bạn có thể xuất lại nếu cần.'
+                    : isOdd
+                      ? `Cần chọn số trang chẵn để xuất PDF (hiện có ${selectedCount} trang - lẻ).`
+                      : 'Bắt buộc: xuất sách ra PDF trước khi sang bước giao hàng.'
+                  }
                 </p>
               </div>
             </div>
             <button
               type="button"
               onClick={() => setShowExportModal(true)}
-              disabled={selectedCount === 0}
+              disabled={selectedCount === 0 || isOdd}
               className="flex items-center gap-2 px-4 py-2 rounded-xl font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{ background: '#000000', color: '#EDE9E3' }}
+              style={{
+                background: hasExportedPdf ? '#16a34a' : '#000000',
+                color: '#EDE9E3',
+              }}
               onMouseEnter={e => {
-                if (selectedCount > 0) (e.currentTarget as HTMLElement).style.background = '#1a1a1a';
+                if (selectedCount > 0 && !isOdd) {
+                  (e.currentTarget as HTMLElement).style.background = hasExportedPdf ? '#15803d' : '#1a1a1a';
+                }
               }}
               onMouseLeave={e => {
-                if (selectedCount > 0) (e.currentTarget as HTMLElement).style.background = '#000000';
+                if (selectedCount > 0 && !isOdd) {
+                  (e.currentTarget as HTMLElement).style.background = hasExportedPdf ? '#16a34a' : '#000000';
+                }
               }}
+              title={isOdd ? 'Cần số trang chẵn để xuất PDF' : undefined}
             >
               <FileText className="w-4 h-4" />
-              <span>Xuất PDF</span>
+              <span>{isOdd ? `Cần số chẵn (${selectedCount} trang)` : hasExportedPdf ? 'Xuất lại' : 'Xuất PDF'}</span>
             </button>
           </div>
         </div>
@@ -260,21 +287,23 @@ export function PageSelectionStep({ pages, cover, onNext, onBack }: PageSelectio
           <button
             type="button"
             onClick={handleContinue}
-            disabled={selectedCount === 0 || isOdd}
+            disabled={selectedCount === 0 || isOdd || !hasExportedPdf}
             className="flex-1 py-4 px-6 rounded-2xl font-bold transition-all hover:-translate-y-0.5 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none"
             style={{ background: '#000000', color: '#EDE9E3', boxShadow: '0 6px 20px rgba(58,46,40,0.22)' }}
             onMouseEnter={e => {
               const t = e.currentTarget as HTMLElement;
-              if (selectedCount > 0 && !isOdd) t.style.background = '#1a1a1a';
+              if (selectedCount > 0 && !isOdd && hasExportedPdf) t.style.background = '#1a1a1a';
             }}
             onMouseLeave={e => {
               const t = e.currentTarget as HTMLElement;
-              if (selectedCount > 0 && !isOdd) t.style.background = '#000000';
+              if (selectedCount > 0 && !isOdd && hasExportedPdf) t.style.background = '#000000';
             }}
           >
-            {isOdd
-              ? `Cần số trang chẵn (hiện tại: ${selectedCount})`
-              : `Tiếp tục (${selectedCount} trang)`}
+            {!hasExportedPdf
+              ? '⚠️ Cần xuất PDF trước khi tiếp tục'
+              : isOdd
+                ? `Cần số trang chẵn (hiện tại: ${selectedCount})`
+                : `Tiếp tục (${selectedCount} trang)`}
           </button>
         </div>
       </div>
@@ -287,6 +316,7 @@ export function PageSelectionStep({ pages, cover, onNext, onBack }: PageSelectio
           book={null}
           initialSelectedPages={selectedIndices}
           onClose={() => setShowExportModal(false)}
+          onExportComplete={() => setHasExportedPdf(true)}
         />
       )}
     </div>

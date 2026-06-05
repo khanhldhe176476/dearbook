@@ -14,6 +14,8 @@ interface ExportModalProps {
   onClose: () => void;
   /** Các trang được chọn sẵn khi mở modal (từ bên ngoài, ví dụ từ PageSelectionStep) */
   initialSelectedPages?: Set<number>;
+  /** Callback khi export PDF hoàn tất — để parent biết đã export xong */
+  onExportComplete?: () => void;
 }
 
 const QUALITY_OPTIONS: { value: ExportQuality; label: string; desc: string }[] = [
@@ -28,7 +30,7 @@ const PAGE_SIZES = [
   { value: 'letter' as const, label: 'Letter (215×279mm)' },
 ];
 
-export function ExportModal({ title, pages, book, onClose, initialSelectedPages }: ExportModalProps) {
+export function ExportModal({ title, pages, book, onClose, initialSelectedPages, onExportComplete }: ExportModalProps) {
   const [selectedPages, setSelectedPages] = useState<Set<number>>(
     initialSelectedPages
       ? new Set(initialSelectedPages)
@@ -88,6 +90,9 @@ export function ExportModal({ title, pages, book, onClose, initialSelectedPages 
       setProgress(100);
       setProgressMsg('Hoàn tất!');
       toast.success(`✅ Đã xuất ${pageIndices.length} trang thành PDF chất lượng ${quality}!`);
+
+      // Notify parent that PDF has been exported
+      onExportComplete?.();
 
       setTimeout(onClose, 1000);
     } catch (err: any) {
