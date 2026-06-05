@@ -12,7 +12,6 @@ public record AdminOrderResponse(
     String email,
     String address,
     String city,
-    String district,
     // Photobook info
     String collectionName,
     String productType,
@@ -29,7 +28,6 @@ public record AdminOrderResponse(
     String pdfFileData,
     // Order state
     BigDecimal totalAmount,
-    String paymentMethod,
     String status,
     OffsetDateTime createdAt,
     OffsetDateTime updatedAt
