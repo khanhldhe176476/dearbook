@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import hanoiImg from 'figma:asset/d7b475113023469e96cb19c4ee78d3ffb04dfa29.png';
 import loveImg from 'figma:asset/4f81f59175575b9ebba78ca1d45401cd109f1941.png';
 import familyImg from 'figma:asset/03ef3be4e5a9d3f6b0010356d756eeaf3c80bb4c.png';
+import showcaseBirthday from '../assets/showcase_birthday.jpg';
+import showcaseTravel from '../assets/showcase_travel.jpg';
+import showcaseExplore from '../assets/showcase_explore.jpg';
 import { InteractiveLogoutButton } from './InteractiveLogoutButton';
 import {
   Heart,
@@ -160,6 +163,42 @@ const styles = `
   }
   .blind-box-card:hover::after {
     opacity: 1;
+  }
+
+  /* ── Fanned Cards Showcase ── */
+  .fanned-container {
+    position: relative;
+    width: 100%;
+    max-width: 540px;
+    height: 380px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.4s ease;
+  }
+  .fanned-card {
+    position: absolute;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), z-index 0.4s ease;
+    transform-origin: bottom center;
+  }
+  .fanned-card:hover {
+    transform: translate(var(--card-x), -30px) rotate(0deg) scale(1.08) !important;
+    z-index: 50 !important;
+  }
+  @media (max-width: 640px) {
+    .fanned-container {
+      transform: scale(0.65);
+      margin-top: -60px;
+      margin-bottom: -60px;
+    }
+  }
+  @media (max-width: 400px) {
+    .fanned-container {
+      transform: scale(0.55);
+      margin-top: -80px;
+      margin-bottom: -80px;
+    }
   }
 
   /* ── Nav link underline effect ── */
@@ -725,17 +764,86 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
             </div>
 
             {/* Right: Product showcase */}
-            <div className="flex-1 flex items-center justify-center gap-6 animate-slide-right" style={{ animationDelay: '0.4s' }}>
-              <div className="relative">
-                <div className="absolute -top-10 -left-6 z-30">
-                  <PriceTag price="249K" size="lg" />
-                </div>
-                <div className="flex gap-5 items-end">
-                  <div className="animate-float-slow" style={{ animationDelay: '0s' }}>
-                    <BlindBagCard imgUrl={loveImg} title="Begin again" subtitle="You have the courage to" />
+            <div className="flex-1 flex items-center justify-center animate-slide-right" style={{ animationDelay: '0.4s' }}>
+              <div className="relative w-full max-w-[540px]">
+                <div className="fanned-container">
+                  {/* Card 1 */}
+                  <div
+                    className="fanned-card"
+                    style={{
+                      transform: 'translate(-160px, 16px) rotate(-10deg)',
+                      zIndex: 10,
+                      // @ts-ignore
+                      '--card-x': '-160px',
+                    }}
+                  >
+                    <div className="animate-float-slow" style={{ animationDelay: '0s' }}>
+                      <BlindBagCard imgUrl={loveImg} title="Begin again" subtitle="You have the courage to" />
+                    </div>
                   </div>
-                  <div className="animate-float-slow" style={{ animationDelay: '1s' }}>
-                    <BlindBagCard imgUrl={hanoiImg} title="Always Love" subtitle="Museum of memories" />
+
+                  {/* Card 2 */}
+                  <div
+                    className="fanned-card"
+                    style={{
+                      transform: 'translate(-80px, 4px) rotate(-5deg)',
+                      zIndex: 20,
+                      // @ts-ignore
+                      '--card-x': '-80px',
+                    }}
+                  >
+                    <div className="relative animate-float-medium" style={{ animationDelay: '0.3s' }}>
+                      {/* Price Tag attached to Card 2 */}
+                      <div className="absolute -top-10 -left-8 z-30 pointer-events-none">
+                        <PriceTag price="249K" size="md" />
+                      </div>
+                      <BlindBagCard imgUrl={showcaseBirthday} title="Found home in you" subtitle="Happy Birthday!!" />
+                    </div>
+                  </div>
+
+                  {/* Card 3 */}
+                  <div
+                    className="fanned-card"
+                    style={{
+                      transform: 'translate(0px, 0px) rotate(0deg)',
+                      zIndex: 30,
+                      // @ts-ignore
+                      '--card-x': '0px',
+                    }}
+                  >
+                    <div className="animate-float-slow" style={{ animationDelay: '0.6s' }}>
+                      <BlindBagCard imgUrl={showcaseTravel} title="Joy in the random" subtitle="Random Things" />
+                    </div>
+                  </div>
+
+                  {/* Card 4 */}
+                  <div
+                    className="fanned-card"
+                    style={{
+                      transform: 'translate(80px, 4px) rotate(5deg)',
+                      zIndex: 20,
+                      // @ts-ignore
+                      '--card-x': '80px',
+                    }}
+                  >
+                    <div className="animate-float-medium" style={{ animationDelay: '0.9s' }}>
+                      <BlindBagCard imgUrl={showcaseExplore} title="Explore & Travel" subtitle="Dear Memories" />
+                    </div>
+                  </div>
+
+                  {/* Card 5 */}
+                  <div
+                    className="fanned-card"
+                    style={{
+                      transform: 'translate(160px, 16px) rotate(10deg)',
+                      zIndex: 10,
+                      // @ts-ignore
+                      '--card-x': '160px',
+                    }}
+                  >
+                    <div className="animate-float-slow" style={{ animationDelay: '1.2s' }}>
+                      <BlindBagCard imgUrl={hanoiImg} title="Always Love" subtitle="Museum of memories" />
+                    </div>
                   </div>
                 </div>
               </div>
