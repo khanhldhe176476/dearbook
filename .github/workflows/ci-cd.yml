@@ -6,16 +6,22 @@ on:
       - main
       - master
       - dev
+      - long1
+
   pull_request:
     branches:
       - main
       - master
       - dev
+      - long1
+
+  workflow_dispatch:
 
 jobs:
   build-frontend:
     name: Build Frontend (Vite/React)
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -38,9 +44,11 @@ jobs:
   build-backend:
     name: Build Backend (Spring Boot)
     runs-on: ubuntu-latest
+
     defaults:
       run:
         working-directory: ./backend
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -63,11 +71,14 @@ jobs:
     needs:
       - build-frontend
       - build-backend
+
     runs-on: self-hosted
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Create frontend .env file
         run: |
