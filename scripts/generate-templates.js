@@ -11,7 +11,8 @@ const IGNORED = ['.DS_Store', 'logo.png', 'templates', 'assets'];
 const THEME_DISPLAY_NAMES = {
   'ban-be': 'Bạn Bè',
   'ca-nhan': 'Cá nhân',
-  'tinh-yeu': 'Tình Yêu'
+  'tinh-yeu': 'Tình Yêu',
+  'gia-dinh': 'Gia Đình'
 };
 
 const TEMPLATE_DISPLAY_NAMES = {
@@ -19,7 +20,9 @@ const TEMPLATE_DISPLAY_NAMES = {
   'vintage-style': 'Vintage Style',
   'xanh-la-khong-xa-lanh': 'Xanh lá không xa lánh',
   'dust-soul': 'Dust & Soul',
-  'firrst-love': 'Firrst love'
+  'firrst-love': 'Firrst love',
+  'happy-anniversary': 'Happy Anniversary',
+  'binh-yen-nho': 'Gia đình nhỏ'
 };
 
 // Hàm chuyển tên thành id (ví dụ: Bạn Bè -> ban-be)
