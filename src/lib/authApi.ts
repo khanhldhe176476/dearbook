@@ -39,13 +39,21 @@ export async function signUpWithEmail(
     throw new Error(msg);
   }
 
-  const userId = authData.user?.id;
-  if (!userId) throw new Error('Không lấy được user ID sau khi đăng ký');
+  // ✅ FIX: Supabase silent duplicate — khi email đã tồn tại, Supabase không báo lỗi
+  // mà trả về user giả với identities = [] (mảng rỗng). Phải kiểm tra thủ công.
+  const user = authData.user;
+  if (!user) throw new Error('Không lấy được user ID sau khi đăng ký');
 
-  console.log('✅ Supabase Auth signUp OK, userId:', userId);
+  if (user.identities && user.identities.length === 0) {
+    // Email đã tồn tại trong hệ thống — Supabase giả vờ thành công nhưng không tạo tài khoản mới
+    console.warn('⚠️ signUp silent duplicate detected: email already registered:', email);
+    throw new Error('Email này đã được đăng ký. Vui lòng đăng nhập hoặc dùng email khác.');
+  }
+
+  console.log('✅ Supabase Auth signUp OK, userId:', user.id);
 
   return {
-    id: userId,
+    id: user.id,
     email,
     fullName,
     avatarUrl: undefined,
