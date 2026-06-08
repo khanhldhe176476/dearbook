@@ -681,7 +681,6 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Họ và tên *</label>
-                      <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Họ và tên *</label>
                       <div className="relative">
                         <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9B9088' }} />
                         <input
@@ -751,14 +750,12 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
 
                     <div>
                       <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Tỉnh/Thành phố *</label>
-                      <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Tỉnh/Thành phố *</label>
                       <select
                         required value={shippingInfo.city}
                         onChange={e => setShippingInfo({ ...shippingInfo, city: e.target.value })}
                         className="w-full px-4 py-3 rounded-xl outline-none text-sm transition-all"
                         style={{ border: '1.5px solid #DDD8D0', color: '#000000', background: '#FAFAF8' }}
                       >
-                        <option value="">Chọn tỉnh/thành phố</option>
                         <option value="">Chọn tỉnh/thành phố</option>
                         {VIETNAM_PROVINCES.map(province => (
                           <option key={province} value={province}>{province}</option>
