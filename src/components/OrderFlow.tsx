@@ -97,7 +97,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
   const basePrice = sizeConfig.price;
   const additionalPages = Math.max(0, selectedPageCount - currentProduct.pagesLimit);
   const pagePrice = additionalPages * currentProduct.extraPageCost;
-  const shippingFee = 30000;
+  const shippingFee = 0;
   const totalOriginal = basePrice + pagePrice + shippingFee;
   const totalPrice = paymentMethod === 'deposit' ? totalOriginal * 0.5 : totalOriginal;
 
@@ -702,8 +702,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
 
                   <div className="space-y-3">
                     {[
-                      { method: 'full', title: 'Thanh toán trước', sub: 'Thanh toán trước 100% giá trị đơn hàng qua VietQR' },
-                      { method: 'deposit', title: 'Đặt cọc 50% hàng', sub: 'Đặt cọc trước 50%, thanh toán 50% còn lại khi nhận hàng' },
+                      { method: 'full', title: 'Thanh toán trước', sub: 'Thanh toán trước 100% giá trị đơn hàng qua VietQR' }
                     ].map(({ method, title, sub }) => (
                       <button
                         key={method}
@@ -780,11 +779,11 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     <p className="font-bold text-sm text-[#000000]">
                       {paymentMethod === 'deposit' ? 'Quét mã để chuyển khoản đặt cọc 50%:' : 'Quét mã để thanh toán 100%:'}
                     </p>
-                    <div className="w-48 h-48 mx-auto border-2 border-neutral-100 rounded-xl overflow-hidden shadow-sm p-1 bg-white">
+                    <div className="w-64 mx-auto border-2 border-neutral-100 rounded-xl overflow-hidden shadow-sm p-1 bg-white">
                       <img
-                        src="/NgọcQR.jpg"
+                        src="/vietcombank_qr.png"
                         alt="Payment QR Code"
-                        className="w-full h-full object-cover"
+                        className="w-full h-auto object-contain"
                       />
                     </div>
                     <div className="space-y-1 text-xs text-[#7A6F66]">
@@ -897,10 +896,6 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                       <span className="font-medium" style={{ color: '#000000' }}>{pagePrice.toLocaleString('vi-VN')} ₫</span>
                     </div>
                   )}
-                  <div className="flex justify-between">
-                    <span style={{ color: '#7A6F66' }}>Phí vận chuyển</span>
-                    <span className="font-medium" style={{ color: '#000000' }}>{shippingFee.toLocaleString('vi-VN')} ₫</span>
-                  </div>
                 </div>
 
                 <div className="pt-3" style={{ borderTop: '1px solid #EDE9E3' }}>
@@ -923,7 +918,6 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
               >
                 <p className="font-semibold" style={{ color: '#5A5049' }}>📝 Cam kết chất lượng:</p>
                 <p style={{ color: '#7A6F66' }}>✓ In ấn cao cấp</p>
-                <p style={{ color: '#7A6F66' }}>✓ Hoàn tiền 100% nếu không hài lòng</p>
                 <p style={{ color: '#7A6F66' }}>✓ Giao hàng đúng hẹn</p>
               </div>
             </div>

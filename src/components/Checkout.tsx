@@ -28,7 +28,7 @@ export function Checkout({ book, onComplete, onBack }: CheckoutProps) {
   const sizePrice = bookSize === 'A4' ? 30000 : 0;
   const coverPrice = coverType === 'hard' ? 50000 : 0;
   const giftPrice = withGift ? 20000 : 0;
-  const shippingPrice = 25000;
+  const shippingPrice = 0;
   
   const subtotal = basePrice + sizePrice + coverPrice + giftPrice;
   const total = subtotal + shippingPrice - discount;
@@ -307,10 +307,6 @@ export function Checkout({ book, onComplete, onBack }: CheckoutProps) {
                   </div>
                 )}
 
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Phí vận chuyển</span>
-                  <span className="font-medium">{shippingPrice.toLocaleString('vi-VN')}đ</span>
-                </div>
 
                 {discount > 0 && (
                   <div className="flex justify-between text-green-600">
