@@ -1187,6 +1187,11 @@
     max-height: calc(90vh - 80px);
   }
 
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
   .min-h-screen {
     min-height: 100vh;
   }
@@ -4712,4 +4717,9 @@ button, a, input, select, textarea {
   object-fit: cover;
   object-position: center;
   display: block;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }

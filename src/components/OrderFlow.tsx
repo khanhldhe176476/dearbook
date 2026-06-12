@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, Package, CreditCard, CheckCircle, MapPin, Phone, Mail, User, Loader2, BookOpen, Layers, Ruler, AlertTriangle, Upload, FileText, X } from 'lucide-react';
 import { BookData, User as UserData } from '../App';
 import { orderApi } from '../lib/orderApi';
@@ -104,6 +104,19 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
   // PDF file upload state
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const pdfInputRef = useRef<HTMLInputElement>(null);
+  const [pdfUploadStatus, setPdfUploadStatus] = useState<'idle' | 'uploading' | 'success' | 'error'>('idle');
+  const [pdfUploadProgress, setPdfUploadProgress] = useState<number>(0);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (pdfUploadStatus === 'uploading') {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [pdfUploadStatus]);
 
   // Use the actual logged in user id or fallback
   const userId = user.id || '00000000-0000-0000-0000-000000000000';
@@ -284,24 +297,28 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
       const response = await orderApi.placeOrder(userId, orderData);
       console.log('[OrderFlow] 7️⃣✅ API thành công:', response);
 
-      // Upload PDF - AWAIT TRƯỚC KHI BÁO THÀNH CÔNG VÀ CHUYỂN TRANG
-      if (pdfFile) {
-        toast.info('⏳ Đang tải file PDF thiết kế lên hệ thống, vui lòng không đóng trang...', { duration: 10000 });
-        try {
-          await orderApi.uploadPdf(response.id, userId, pdfFile);
-          console.log('[OrderFlow] 8️⃣✅ Tải file PDF thành công');
-          toast.success('📎 File PDF đã tải lên thành công!');
-        } catch (pdfErr) {
-          console.error('[OrderFlow] 8️⃣❌ Tải file PDF thất bại:', pdfErr);
-          toast.error('⚠️ Không thể tải file PDF lên. Bạn có thể gửi lại sau qua email.', { duration: 8000 });
-        }
-      }
-
-      // Chuyển sang confirmation sau khi đã upload xong
+      // Chuyển sang confirmation NGAY LẬP TỨC để người dùng không nghĩ là bị treo
       setOrderId(response.id);
       setStep('confirmation');
       setLoading(false);
       toast.success('🎉 Đặt hàng thành công!');
+
+      // Bắt đầu upload PDF ngầm nếu có (kèm progress bar ở màn hình Hoàn tất)
+      if (pdfFile) {
+        setPdfUploadStatus('uploading');
+        setPdfUploadProgress(0);
+        try {
+          await orderApi.uploadPdfWithProgress(response.id, userId, pdfFile, (percent) => {
+            setPdfUploadProgress(percent);
+          });
+          console.log('[OrderFlow] 8️⃣✅ Tải file PDF thành công');
+          setPdfUploadStatus('success');
+        } catch (pdfErr) {
+          console.error('[OrderFlow] 8️⃣❌ Tải file PDF thất bại:', pdfErr);
+          setPdfUploadStatus('error');
+          toast.error('⚠️ Không thể tải file PDF lên. Bạn có thể gửi lại sau qua email.', { duration: 8000 });
+        }
+      }
     } catch (err: any) {
       console.error('[OrderFlow] ❌ Đặt hàng thất bại:', err);
 
@@ -870,6 +887,41 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                   <p className="mb-6 text-sm" style={{ color: '#7A6F66' }}>
                     Cảm ơn bạn đã tin tưởng DearMemories. Cuốn sách của bạn đang được xử lý thiết kế và in ấn!
                   </p>
+
+                  {/* 0. PDF Upload Progress (if any) */}
+                  {pdfUploadStatus !== 'idle' && (
+                    <div className="p-5 rounded-2xl border mb-6 text-left space-y-3 shadow-sm" style={{ borderColor: pdfUploadStatus === 'success' ? '#86efac' : pdfUploadStatus === 'error' ? '#fca5a5' : '#bfdbfe', background: pdfUploadStatus === 'success' ? '#f0fdf4' : pdfUploadStatus === 'error' ? '#fef2f2' : '#eff6ff' }}>
+                      <p className="font-bold text-sm flex items-center gap-2" style={{ color: '#000000' }}>
+                        <Upload className={`w-5 h-5 ${pdfUploadStatus === 'success' ? 'text-green-600' : pdfUploadStatus === 'error' ? 'text-red-600' : 'text-blue-600'}`} />
+                        File thiết kế PDF
+                      </p>
+                      
+                      {pdfUploadStatus === 'uploading' && (
+                        <>
+                          <div className="w-full bg-blue-100 rounded-full h-2.5 overflow-hidden">
+                            <div className="bg-blue-600 h-2.5 rounded-full transition-all duration-300 relative" style={{ width: `${pdfUploadProgress}%` }}>
+                                <div className="absolute top-0 left-0 right-0 bottom-0 bg-white/20 animate-[shimmer_1s_infinite]"></div>
+                            </div>
+                          </div>
+                          <p className="text-xs font-semibold text-blue-700 flex items-center gap-1.5">
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" /> Đang tải lên... {pdfUploadProgress}% (Vui lòng không đóng trang này)
+                          </p>
+                        </>
+                      )}
+                      
+                      {pdfUploadStatus === 'success' && (
+                        <p className="text-xs font-bold text-green-700 flex items-center gap-1.5">
+                          <CheckCircle className="w-4 h-4" /> Tải file PDF thiết kế lên máy chủ thành công!
+                        </p>
+                      )}
+                      
+                      {pdfUploadStatus === 'error' && (
+                        <p className="text-xs font-bold text-red-700 flex items-center gap-1.5">
+                          <AlertTriangle className="w-4 h-4" /> Tải file PDF thất bại hoặc bị gián đoạn. Chúng tôi sẽ liên hệ lại qua sđt/email để xin lại file.
+                        </p>
+                      )}
+                    </div>
+                  )}
 
                   {/* 1. QR Code Payment */}
                   <div className="p-6 rounded-2xl border border-[#DDD8D0] bg-[#FAFAF8] mb-6 text-center space-y-4 max-w-sm mx-auto">
