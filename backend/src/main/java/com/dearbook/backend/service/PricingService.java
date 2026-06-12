@@ -18,7 +18,10 @@ public class PricingService {
 
     // ── Product definitions (must match OrderFlow.tsx exactly) ──
 
-    private static final BigDecimal SHIPPING_FEE = BigDecimal.valueOf(30_000);
+    // Shipping fee is currently displayed as 0 on the frontend (OrderFlow.tsx: shippingFee = 0).
+    // Keep backend in sync to avoid price mismatch between what user sees and what is stored in DB.
+    // To re-enable shipping fee, update BOTH this constant AND OrderFlow.tsx shippingFee simultaneously.
+    private static final BigDecimal SHIPPING_FEE = BigDecimal.valueOf(0);
     private static final BigDecimal DEPOSIT_RATE = BigDecimal.valueOf(0.5);
 
     /**

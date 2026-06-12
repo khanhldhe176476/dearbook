@@ -4,6 +4,7 @@ import { BookData, User } from '../App';
 import { GoogleUserProfile } from './GoogleUserProfile';
 import { FlipBookReader } from './FlipBookReader';
 import { DeleteConfirmDialog } from './DeleteConfirmDialog';
+import { getAllBooks, saveBook, deleteBook, getBooksSync, isIndexedDBAvailable } from '../utils/bookStorage';
 
 interface MyBooksLibraryProps {
   user: User;
@@ -22,31 +23,28 @@ export function MyBooksLibrary({ user, onLogout, onCreateNew, onEditBook }: MyBo
     bookTitle: '',
   });
 
+  const userId = user.id || '00000000-0000-0000-0000-000000000000';
+
   useEffect(() => {
     loadBooks();
   }, []);
 
-  const loadBooks = () => {
-    const savedBooks = JSON.parse(localStorage.getItem('dearbook_books') || '[]');
-    
-    // Migrate old books: add default theme if missing
-    const migratedBooks = savedBooks.map((book: BookData) => {
-      if (!book.theme) {
-        console.log(`⚠️ Book "${book.title}" missing theme, adding default: love`);
-        return { ...book, theme: 'love' };
+  const loadBooks = async () => {
+    // Primary: IndexedDB (filtered by userId)
+    if (isIndexedDBAvailable()) {
+      try {
+        const booksSource = await getAllBooks(userId);
+        setBooks(booksSource);
+        return;
+      } catch (err) {
+        console.error('IndexedDB load failed, falling back to localStorage:', err);
       }
-      return book;
-    });
-    
-    // Save migrated books back
-    if (JSON.stringify(savedBooks) !== JSON.stringify(migratedBooks)) {
-      localStorage.setItem('dearbook_books', JSON.stringify(migratedBooks));
     }
-    
-    setBooks(migratedBooks);
+    // Fallback: localStorage (per-user key)
+    setBooks(getBooksSync(userId));
   };
 
-  const handleDuplicate = (book: BookData) => {
+  const handleDuplicate = async (book: BookData) => {
     const duplicated: BookData = {
       ...book,
       id: `book-${Date.now()}`,
@@ -55,10 +53,12 @@ export function MyBooksLibrary({ user, onLogout, onCreateNew, onEditBook }: MyBo
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
-    
-    const books = JSON.parse(localStorage.getItem('dearbook_books') || '[]');
-    books.push(duplicated);
-    localStorage.setItem('dearbook_books', JSON.stringify(books));
+
+    try {
+      await saveBook(duplicated, userId);
+    } catch (err) {
+      console.error('Failed to save duplicated book:', err);
+    }
     loadBooks();
   };
 
@@ -70,10 +70,12 @@ export function MyBooksLibrary({ user, onLogout, onCreateNew, onEditBook }: MyBo
     });
   };
 
-  const handleDeleteConfirm = () => {
-    const books = JSON.parse(localStorage.getItem('dearbook_books') || '[]');
-    const filtered = books.filter((b: BookData) => b.id !== deleteDialog.bookId);
-    localStorage.setItem('dearbook_books', JSON.stringify(filtered));
+  const handleDeleteConfirm = async () => {
+    try {
+      await deleteBook(deleteDialog.bookId, userId);
+    } catch (err) {
+      console.error('Failed to delete book:', err);
+    }
     loadBooks();
     setDeleteDialog({ isOpen: false, bookId: '', bookTitle: '' });
   };

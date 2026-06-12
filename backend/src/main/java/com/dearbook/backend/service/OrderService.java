@@ -8,6 +8,9 @@ import com.dearbook.backend.entity.OrderShipping;
 import com.dearbook.backend.entity.Payment;
 import com.dearbook.backend.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,12 +29,46 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
 public class OrderService {
 
     private static final Logger log = LoggerFactory.getLogger(OrderService.class);
+
+    /**
+     * Order status state machine — defines which transitions are allowed.
+     * PENDING → CONFIRMED | CANCELLED
+     * CONFIRMED → PRINTING | CANCELLED
+     * PRINTING → COMPLETED | CANCELLED
+     * COMPLETED → (terminal)
+     * CANCELLED → (terminal)
+     */
+    private static final Map<String, Set<String>> ALLOWED_TRANSITIONS = Map.of(
+        "PENDING",   Set.of("CONFIRMED", "CANCELLED"),
+        "CONFIRMED", Set.of("PRINTING", "CANCELLED"),
+        "PRINTING",  Set.of("COMPLETED", "CANCELLED"),
+        "COMPLETED", Set.of(),
+        "CANCELLED", Set.of()
+    );
+
+    private static final Set<String> VALID_STATUSES = Set.of(
+        "PENDING", "CONFIRMED", "PRINTING", "COMPLETED", "CANCELLED"
+    );
+
+    private static final Set<String> VALID_PRODUCT_TYPES = Set.of(
+        "softcover", "hardcover", "layflat"
+    );
+
+    private static final Set<String> VALID_PAYMENT_METHODS = Set.of(
+        "FULL", "DEPOSIT"
+    );
+
+    /** Vietnamese phone number: starts with 0, exactly 10 digits */
+    private static final java.util.regex.Pattern VN_PHONE_PATTERN =
+        java.util.regex.Pattern.compile("^0\\d{9}$");
 
     private final OrderRepository orderRepo;
     private final OrderShippingRepository shippingRepo;
@@ -65,8 +102,48 @@ public class OrderService {
         this.objectMapper = objectMapper;
     }
 
+    /**
+     * Validate order request fields that the frontend normally enforces,
+     * but could be bypassed by direct API calls.
+     */
+    private void validateOrderRequest(OrderRequest req) {
+        if (req.recipientName() == null || req.recipientName().isBlank()) {
+            throw new IllegalArgumentException("recipientName is required");
+        }
+        if (req.phone() == null || !VN_PHONE_PATTERN.matcher(req.phone()).matches()) {
+            throw new IllegalArgumentException("phone must be a valid Vietnamese phone number (10 digits, starting with 0)");
+        }
+        if (req.address() == null || req.address().isBlank()) {
+            throw new IllegalArgumentException("address is required");
+        }
+        if (req.city() == null || req.city().isBlank()) {
+            throw new IllegalArgumentException("city is required");
+        }
+        if (req.paymentMethod() == null || !VALID_PAYMENT_METHODS.contains(req.paymentMethod().toUpperCase())) {
+            throw new IllegalArgumentException("paymentMethod must be FULL or DEPOSIT, got: " + req.paymentMethod());
+        }
+
+        String productType = req.productType() != null ? req.productType().toLowerCase() : "hardcover";
+        if (!VALID_PRODUCT_TYPES.contains(productType)) {
+            throw new IllegalArgumentException("productType must be one of: " + String.join(", ", VALID_PRODUCT_TYPES));
+        }
+
+        int customPages = req.customPages() != null ? req.customPages() : 0;
+        int pagesLimit = pricingService.getPagesLimit(productType);
+        if (customPages < pagesLimit) {
+            throw new IllegalArgumentException(
+                "customPages (" + customPages + ") is below the minimum of " + pagesLimit + " for product type " + productType);
+        }
+
+        if (req.email() != null && !req.email().isBlank() && !req.email().contains("@")) {
+            throw new IllegalArgumentException("email is invalid: " + req.email());
+        }
+    }
+
     @Transactional
     public OrderResponse placeOrder(UUID userId, OrderRequest req) {
+        validateOrderRequest(req);
+
         var user = userId != null ? profileRepo.findById(userId).orElse(null) : null;
         UUID parsedBookId = null;
         if (req.userBookId() != null) {
@@ -155,11 +232,16 @@ public class OrderService {
                 .toList();
     }
 
-    public List<AdminOrderResponse> getAllOrdersForAdmin() {
-        return orderRepo.findAll(Sort.by(Sort.Direction.DESC, "createdAt"))
-                .stream()
-                .map(this::mapToAdminOrderResponse)
-                .toList();
+    /**
+     * Get all orders for admin with pagination.
+     * @param page zero-based page index (default 0)
+     * @param size page size (default 20, max 100)
+     */
+    public Page<AdminOrderResponse> getAllOrdersForAdmin(int page, int size) {
+        int safePage = Math.max(0, page);
+        int safeSize = Math.min(Math.max(1, size), 100); // clamp between 1 and 100
+        Pageable pageable = PageRequest.of(safePage, safeSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+        return orderRepo.findAll(pageable).map(this::mapToAdminOrderResponse);
     }
 
     public AdminOrderResponse getOrderDetails(UUID id) {
@@ -169,24 +251,37 @@ public class OrderService {
     }
 
     @Transactional
-    public AdminOrderResponse updateOrderStatus(UUID id, String status) {
+    public AdminOrderResponse updateOrderStatus(UUID id, String newStatus) {
+        if (newStatus == null || !VALID_STATUSES.contains(newStatus)) {
+            throw new IllegalArgumentException(
+                "Invalid status: " + newStatus + ". Must be one of: " + String.join(", ", VALID_STATUSES));
+        }
+
         Order order = orderRepo.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found"));
 
         String previousStatus = order.getStatus();
-        order.setStatus(status);
+        Set<String> allowedNext = ALLOWED_TRANSITIONS.getOrDefault(previousStatus, Set.of());
 
-        // Atomic update: all payments for this order in a single query
-        if ("COMPLETED".equals(status)) {
+        if (!allowedNext.contains(newStatus)) {
+            throw new IllegalArgumentException(
+                "Cannot transition order " + id + " from " + previousStatus + " to " + newStatus
+                + ". Allowed transitions: " + String.join(", ", allowedNext));
+        }
+
+        order.setStatus(newStatus);
+
+        // Atomically update all payments for this order in a single query
+        if ("COMPLETED".equals(newStatus)) {
             int updated = paymentRepo.updateStatusByOrderId(id, "COMPLETED");
             log.info("Order {}: status changed from {} → {} | {} payment(s) updated to COMPLETED",
-                    id, previousStatus, status, updated);
-        } else if ("CANCELLED".equals(status)) {
+                    id, previousStatus, newStatus, updated);
+        } else if ("CANCELLED".equals(newStatus)) {
             int updated = paymentRepo.updateStatusByOrderId(id, "FAILED");
             log.info("Order {}: status changed from {} → {} | {} payment(s) updated to FAILED",
-                    id, previousStatus, status, updated);
+                    id, previousStatus, newStatus, updated);
         } else {
-            log.info("Order {}: status changed from {} → {}", id, previousStatus, status);
+            log.info("Order {}: status changed from {} → {}", id, previousStatus, newStatus);
         }
 
         return mapToAdminOrderResponse(orderRepo.save(order));

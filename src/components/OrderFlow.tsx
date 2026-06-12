@@ -5,7 +5,7 @@ import { orderApi } from '../lib/orderApi';
 import { PageSelectionStep } from './PageSelectionStep';
 import { toast } from 'sonner@2.0.3';
 
-const MAX_PDF_SIZE = 500 * 1024 * 1024; // 500MB
+const MAX_PDF_SIZE = 1024 * 1024 * 1024; // 1GB
 
 // 63 tỉnh thành Việt Nam
 const VIETNAM_PROVINCES = [
@@ -193,31 +193,6 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
     }
     if (!shippingInfo.address.trim()) {
       toast.error('Vui lòng nhập địa chỉ chi tiết.');
-      toast.error('Vui lòng nhập họ và tên.');
-      return;
-    }
-    if (!shippingInfo.phone.trim()) {
-      toast.error('Vui lòng nhập số điện thoại.');
-      return;
-    }
-    if (!validatePhone(shippingInfo.phone)) {
-      toast.error(phoneError || 'Số điện thoại không hợp lệ.');
-      return;
-    }
-    if (!shippingInfo.email.trim()) {
-      toast.error('Vui lòng nhập email.');
-      return;
-    }
-    if (!shippingInfo.city) {
-      toast.error('Vui lòng chọn tỉnh/thành phố.');
-      return;
-    }
-    if (!shippingInfo.district.trim()) {
-      toast.error('Vui lòng nhập quận/huyện.');
-      return;
-    }
-    if (!shippingInfo.address.trim()) {
-      toast.error('Vui lòng nhập địa chỉ chi tiết.');
       return;
     }
 
@@ -239,7 +214,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
 
     // Validate file size (max 500MB)
     if (file.size > MAX_PDF_SIZE) {
-      toast.error(`File quá lớn (${(file.size / 1024 / 1024).toFixed(1)}MB). Vui lòng chọn file PDF dưới 500MB.`);
+      toast.error(`File quá lớn (${(file.size / 1024 / 1024).toFixed(1)}MB). Vui lòng chọn file PDF dưới 1GB.`);
       if (pdfInputRef.current) pdfInputRef.current.value = '';
       return;
     }
@@ -663,7 +638,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                             Nhấn để tải lên file PDF
                           </p>
                           <p className="text-xs mt-0.5" style={{ color: '#9B9088' }}>
-                            Hỗ trợ file PDF · Tối đa 500MB
+                            Hỗ trợ file PDF · Tối đa 1GB
                           </p>
                         </div>
                       </div>

@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -48,8 +47,17 @@ public class AdminController {
     }
 
     @GetMapping("/orders")
-    public ResponseEntity<List<AdminOrderResponse>> getAllOrders() {
-        return ResponseEntity.ok(orderService.getAllOrdersForAdmin());
+    public ResponseEntity<?> getAllOrders(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        var pageResult = orderService.getAllOrdersForAdmin(page, size);
+        return ResponseEntity.ok(Map.of(
+            "orders", pageResult.getContent(),
+            "page", pageResult.getNumber(),
+            "size", pageResult.getSize(),
+            "totalElements", pageResult.getTotalElements(),
+            "totalPages", pageResult.getTotalPages()
+        ));
     }
 
     @GetMapping("/orders/{id}")
@@ -62,17 +70,22 @@ public class AdminController {
     }
 
     @PutMapping("/orders/{id}/status")
-    public ResponseEntity<AdminOrderResponse> updateOrderStatus(
+    public ResponseEntity<?> updateOrderStatus(
             @PathVariable UUID id,
             @RequestBody Map<String, String> statusBody) {
         String status = statusBody.get("status");
         if (status == null) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(Map.of("message", "status is required"));
         }
         try {
             return ResponseEntity.ok(orderService.updateOrderStatus(id, status));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
+            String message = e.getMessage();
+            // Distinguish "not found" from validation errors
+            if (message != null && message.contains("Order not found")) {
+                return ResponseEntity.status(404).body(Map.of("message", message));
+            }
+            return ResponseEntity.badRequest().body(Map.of("message", message));
         }
     }
 }

@@ -3,8 +3,8 @@
  * Dùng chung DB dearbook_db_v2 với dbStorage.ts (store 'images').
  *
  * Kiến trúc:
- *   IndexedDB (primary, GB dung lượng) → lưu book JSON + metadata
- *   localStorage cache (secondary) → đọc nhanh không cần await
+ *   IndexedDB (primary, GB dung lượng) → lưu book JSON + metadata (có userId)
+ *   localStorage cache (secondary) → đọc nhanh không cần await, PHÂN BIỆT THEO USER
  *   In-memory Map → image cache (bên dbStorage.ts)
  */
 
@@ -15,8 +15,18 @@ const DB_VERSION = 2;
 const BOOKS_STORE = 'books';
 const IMAGES_STORE = 'images';
 
-const LOCAL_BOOKS_KEY = 'dearbook_books';
+const LOCAL_BOOKS_KEY_PREFIX = 'dearbook_books_';
 const MIGRATION_FLAG = 'dearbook_migration_v2_done';
+
+/** localStorage key riêng cho từng user */
+function getLocalBooksKey(userId: string): string {
+  return LOCAL_BOOKS_KEY_PREFIX + userId;
+}
+
+/** Fallback: đọc tất cả sách từ localStorage cũ (chưa phân biệt user) — dùng cho migration */
+function getLegacyBooksKey(): string {
+  return 'dearbook_books';
+}
 
 interface BookRecord {
   id: string;
@@ -71,10 +81,10 @@ function openDB(): Promise<IDBDatabase> {
 
 // ── Book CRUD ────────────────────────────────────────────────────────────
 
-/** Lưu/cập nhật sách vào IndexedDB + localStorage cache */
+/** Lưu/cập nhật sách vào IndexedDB + localStorage cache (phân biệt theo userId) */
 export async function saveBook(book: BookData, userId: string): Promise<void> {
-  // 1. Cập nhật localStorage cache (đồng bộ, nhanh)
-  updateLocalCache(book);
+  // 1. Cập nhật localStorage cache (đồng bộ, nhanh, theo user)
+  updateLocalCache(book, userId);
 
   // 2. Ghi IndexedDB (async, primary)
   const db = await openDB();
@@ -94,12 +104,13 @@ export async function saveBook(book: BookData, userId: string): Promise<void> {
   });
 }
 
-/** Lấy tất cả sách từ IndexedDB */
-export async function getAllBooks(): Promise<BookData[]> {
+/** Lấy tất cả sách CỦA MỘT USER từ IndexedDB (lọc theo userId) */
+export async function getAllBooks(userId: string): Promise<BookData[]> {
   const db = await openDB();
   return new Promise((resolve, reject) => {
     const tx = db.transaction(BOOKS_STORE, 'readonly');
-    const req = tx.objectStore(BOOKS_STORE).getAll();
+    const index = tx.objectStore(BOOKS_STORE).index('userId');
+    const req = index.getAll(userId);
     req.onsuccess = () => {
       const records: BookRecord[] = req.result || [];
       const books = records.map(r => {
@@ -117,7 +128,32 @@ export async function getAllBooks(): Promise<BookData[]> {
   });
 }
 
-/** Lấy 1 sách theo ID */
+/**
+ * Lấy tất cả sách từ IndexedDB KHÔNG lọc userId.
+ * CHỈ dùng cho migration và admin/debug. Không dùng cho hiển thị user.
+ */
+export async function getAllBooksUnfiltered(): Promise<BookData[]> {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(BOOKS_STORE, 'readonly');
+    const req = tx.objectStore(BOOKS_STORE).getAll();
+    req.onsuccess = () => {
+      const records: BookRecord[] = req.result || [];
+      const books = records.map(r => {
+        try {
+          return JSON.parse(r.data) as BookData;
+        } catch {
+          return null;
+        }
+      }).filter(Boolean) as BookData[];
+      books.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+      resolve(books);
+    };
+    req.onerror = () => reject(req.error);
+  });
+}
+
+/** Lấy 1 sách theo ID (không cần userId vì ID là unique) */
 export async function getBook(id: string): Promise<BookData | null> {
   const db = await openDB();
   return new Promise((resolve, reject) => {
@@ -139,9 +175,9 @@ export async function getBook(id: string): Promise<BookData | null> {
 }
 
 /** Xóa sách khỏi IndexedDB + localStorage cache */
-export async function deleteBook(id: string): Promise<void> {
-  // Xóa khỏi localStorage cache
-  removeFromLocalCache(id);
+export async function deleteBook(id: string, userId: string): Promise<void> {
+  // Xóa khỏi localStorage cache của user
+  removeFromLocalCache(id, userId);
 
   // Xóa khỏi IndexedDB
   const db = await openDB();
@@ -155,10 +191,10 @@ export async function deleteBook(id: string): Promise<void> {
 
 // ── Sync Cache (localStorage) ────────────────────────────────────────────
 
-/** Đọc nhanh từ localStorage cache (không cần await) */
-export function getBooksSync(): BookData[] {
+/** Đọc nhanh từ localStorage cache cho 1 user (không cần await) */
+export function getBooksSync(userId: string): BookData[] {
   try {
-    const raw = localStorage.getItem(LOCAL_BOOKS_KEY);
+    const raw = localStorage.getItem(getLocalBooksKey(userId));
     if (!raw) return [];
     return JSON.parse(raw) as BookData[];
   } catch {
@@ -166,36 +202,38 @@ export function getBooksSync(): BookData[] {
   }
 }
 
-function updateLocalCache(book: BookData): void {
+function updateLocalCache(book: BookData, userId: string): void {
   try {
-    const books = getBooksSync();
+    const key = getLocalBooksKey(userId);
+    const books = getBooksSync(userId);
     const idx = books.findIndex(b => b.id === book.id);
     if (idx >= 0) {
       books[idx] = book;
     } else {
       books.push(book);
     }
-    localStorage.setItem(LOCAL_BOOKS_KEY, JSON.stringify(books));
+    localStorage.setItem(key, JSON.stringify(books));
   } catch (err) {
     console.warn('Failed to update localStorage cache:', err);
   }
 }
 
-function removeFromLocalCache(id: string): void {
+function removeFromLocalCache(id: string, userId: string): void {
   try {
-    const books = getBooksSync();
+    const key = getLocalBooksKey(userId);
+    const books = getBooksSync(userId);
     const filtered = books.filter(b => b.id !== id);
-    localStorage.setItem(LOCAL_BOOKS_KEY, JSON.stringify(filtered));
+    localStorage.setItem(key, JSON.stringify(filtered));
   } catch (err) {
     console.warn('Failed to remove from localStorage cache:', err);
   }
 }
 
-/** Đồng bộ toàn bộ localStorage cache từ IndexedDB */
-export async function syncLocalCache(): Promise<void> {
+/** Đồng bộ toàn bộ localStorage cache từ IndexedDB cho 1 user */
+export async function syncLocalCache(userId: string): Promise<void> {
   try {
-    const books = await getAllBooks();
-    localStorage.setItem(LOCAL_BOOKS_KEY, JSON.stringify(books));
+    const books = await getAllBooks(userId);
+    localStorage.setItem(getLocalBooksKey(userId), JSON.stringify(books));
   } catch (err) {
     console.warn('Failed to sync localStorage cache:', err);
   }
@@ -214,11 +252,12 @@ export function markMigrationDone(): void {
 }
 
 /**
- * Di trú sách từ localStorage sang IndexedDB.
- * Giữ lại localStorage copy làm cache.
+ * Di trú sách từ localStorage cũ (dùng chung) sang IndexedDB.
+ * Các sách từ localStorage cũ sẽ được gán userId rỗng.
+ * Sau khi migrate, sách cũ sẽ hiển thị cho user đầu tiên login.
  */
 export async function migrateBooksFromLocalStorage(): Promise<number> {
-  const raw = localStorage.getItem(LOCAL_BOOKS_KEY);
+  const raw = localStorage.getItem(getLegacyBooksKey());
   if (!raw) return 0;
 
   let books: BookData[];
@@ -243,7 +282,7 @@ export async function migrateBooksFromLocalStorage(): Promise<number> {
         id: book.id,
         data: JSON.stringify(book),
         updatedAt: new Date(book.updatedAt || book.createdAt || Date.now()).getTime(),
-        userId: '',
+        userId: '', // Sách cũ không có userId — sẽ được migrate khi user đầu tiên login
         syncedToServer: false,
         version: 1,
       };
@@ -251,17 +290,47 @@ export async function migrateBooksFromLocalStorage(): Promise<number> {
       count++;
     }
 
-    tx.oncomplete = () => resolve(count);
+    tx.oncomplete = () => {
+      // Đổi tên key cũ để tránh đọc lại
+      try {
+        localStorage.setItem(getLegacyBooksKey() + '_migrated', raw);
+        localStorage.removeItem(getLegacyBooksKey());
+      } catch { /* ignore */ }
+      resolve(count);
+    };
     tx.onerror = () => reject(tx.error);
+  });
+}
+
+/** Di trú sách chưa có userId sang userId hiện tại */
+export async function migrateOrphanBooksToUser(userId: string): Promise<number> {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(BOOKS_STORE, 'readwrite');
+    const req = tx.objectStore(BOOKS_STORE).getAll();
+    req.onsuccess = () => {
+      const records: BookRecord[] = req.result || [];
+      let count = 0;
+      for (const r of records) {
+        if (!r.userId || r.userId === '') {
+          r.userId = userId;
+          tx.objectStore(BOOKS_STORE).put(r);
+          count++;
+        }
+      }
+      tx.oncomplete = () => resolve(count);
+      tx.onerror = () => reject(tx.error);
+    };
+    req.onerror = () => reject(req.error);
   });
 }
 
 // ── Quota / Health ────────────────────────────────────────────────────────
 
-/** Ước lượng dung lượng đã dùng trong IndexedDB (MB) */
+/** Ước lượng dung lượng đã dùng trong IndexedDB (MB) — tất cả user */
 export async function getStorageUsage(): Promise<number> {
   try {
-    const books = await getAllBooks();
+    const books = await getAllBooksUnfiltered();
     let totalBytes = 0;
     for (const book of books) {
       totalBytes += JSON.stringify(book).length * 2; // UTF-16 estimate
