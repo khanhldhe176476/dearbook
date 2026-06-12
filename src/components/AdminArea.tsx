@@ -309,6 +309,24 @@ export default function AdminArea() {
         }
     }
 
+    async function deleteOrder(orderId: string) {
+        if (!window.confirm("Bạn có chắc chắn muốn xóa đơn hàng này? Hành động này không thể hoàn tác.")) {
+            return;
+        }
+        try {
+            await adminFetch(`/orders/${orderId}`, {
+                method: "DELETE",
+            });
+            setOrders((prev) => prev.filter((item) => item.id !== orderId));
+            if (selectedOrder?.id === orderId) {
+                setSelectedOrder(null);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Không thể xóa đơn hàng: " + err);
+        }
+    }
+
     function handleLogout() {
         clearToken();
         setTokenState("");
@@ -571,12 +589,20 @@ export default function AdminArea() {
                                             </td>
                                             <td className="py-4 pr-4">{formatDate(order.createdAt)}</td>
                                             <td className="py-4 pr-4">
-                                                <button
-                                                    onClick={() => openOrderDetail(order.id)}
-                                                    className="rounded-lg bg-black px-3 py-2 text-xs font-semibold text-white hover:bg-stone-800"
-                                                >
-                                                    Xem chi tiết
-                                                </button>
+                                                <div className="flex gap-2">
+                                                    <button
+                                                        onClick={() => openOrderDetail(order.id)}
+                                                        className="rounded-lg bg-black px-3 py-2 text-xs font-semibold text-white hover:bg-stone-800"
+                                                    >
+                                                        Xem chi tiết
+                                                    </button>
+                                                    <button
+                                                        onClick={() => deleteOrder(order.id)}
+                                                        className="rounded-lg bg-red-100 px-3 py-2 text-xs font-semibold text-red-700 hover:bg-red-200"
+                                                    >
+                                                        Xóa
+                                                    </button>
+                                                </div>
                                             </td>
                                         </tr>
                                     ))}

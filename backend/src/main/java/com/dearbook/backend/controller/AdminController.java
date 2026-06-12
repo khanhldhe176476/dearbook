@@ -88,4 +88,18 @@ public class AdminController {
             return ResponseEntity.badRequest().body(Map.of("message", message));
         }
     }
+
+    @DeleteMapping("/orders/{id}")
+    public ResponseEntity<?> deleteOrder(@PathVariable UUID id) {
+        try {
+            orderService.deleteOrder(id);
+            return ResponseEntity.ok(Map.of("message", "Order deleted successfully"));
+        } catch (IllegalArgumentException e) {
+            String message = e.getMessage();
+            if (message != null && message.contains("Order not found")) {
+                return ResponseEntity.status(404).body(Map.of("message", message));
+            }
+            return ResponseEntity.badRequest().body(Map.of("message", message));
+        }
+    }
 }

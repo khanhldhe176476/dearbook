@@ -287,6 +287,20 @@ public class OrderService {
         return mapToAdminOrderResponse(orderRepo.save(order));
     }
 
+    @Transactional
+    public void deleteOrder(UUID id) {
+        Order order = orderRepo.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+
+        // Delete associated payment and shipping
+        paymentRepo.deleteByOrderId(id);
+        shippingRepo.deleteByOrderId(id);
+
+        // Delete the order itself
+        orderRepo.delete(order);
+        log.info("Order {}: deleted successfully", id);
+    }
+
     private AdminOrderResponse mapToAdminOrderResponse(Order o) {
         var shipping = shippingRepo.findByOrderId(o.getId()).orElse(null);
         var book = o.getUserBook();

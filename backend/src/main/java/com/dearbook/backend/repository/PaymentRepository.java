@@ -16,4 +16,8 @@ public interface PaymentRepository extends JpaRepository<Payment, UUID> {
     @Modifying
     @Query("UPDATE Payment p SET p.status = :status WHERE p.order.id = :orderId")
     int updateStatusByOrderId(UUID orderId, String status);
+
+    @Modifying
+    @Query("DELETE FROM Payment p WHERE p.order.id = :orderId")
+    void deleteByOrderId(UUID orderId);
 }
