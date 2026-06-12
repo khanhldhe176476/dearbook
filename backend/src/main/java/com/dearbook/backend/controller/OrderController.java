@@ -75,6 +75,40 @@ public class OrderController {
         return ResponseEntity.ok(Map.of("filePath", relativePath, "fileName", file.getOriginalFilename()));
     }
 
+    @PostMapping("/upload-pdf-chunk")
+    public ResponseEntity<?> uploadPdfChunk(
+            Authentication authentication,
+            @RequestParam("uploadId") String uploadId,
+            @RequestParam("chunkIndex") int chunkIndex,
+            @RequestParam("totalChunks") int totalChunks,
+            @RequestParam("file") MultipartFile file) {
+        try {
+            orderService.savePdfChunk(uploadId, chunkIndex, file);
+            return ResponseEntity.ok(Map.of("status", "chunk_uploaded", "chunkIndex", chunkIndex));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(Map.of("message", "Failed to upload chunk: " + e.getMessage()));
+        }
+    }
+
+    @PostMapping("/merge-pdf-chunks")
+    public ResponseEntity<?> mergePdfChunks(
+            Authentication authentication,
+            @RequestBody Map<String, String> payload) {
+        try {
+            String uploadId = payload.get("uploadId");
+            String fileName = payload.get("fileName");
+            if (uploadId == null || fileName == null) {
+                return ResponseEntity.badRequest().body(Map.of("message", "Missing uploadId or fileName"));
+            }
+            String relativePath = orderService.mergePdfChunks(uploadId, fileName);
+            return ResponseEntity.ok(Map.of("filePath", relativePath, "fileName", fileName));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(Map.of("message", "Failed to merge chunks: " + e.getMessage()));
+        }
+    }
+
     @GetMapping("/{id}/pdf/download")
     public ResponseEntity<Resource> downloadPdf(@PathVariable UUID id) {
         try {

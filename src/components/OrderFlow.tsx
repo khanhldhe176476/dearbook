@@ -106,6 +106,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
   const pdfInputRef = useRef<HTMLInputElement>(null);
   const [pdfUploadStatus, setPdfUploadStatus] = useState<'idle' | 'uploading' | 'success' | 'error'>('idle');
   const [pdfUploadProgress, setPdfUploadProgress] = useState<number>(0);
+  const [pdfUploadStatusText, setPdfUploadStatusText] = useState<string>('');
   const [uploadedPdfPath, setUploadedPdfPath] = useState<string | null>(null);
 
   useEffect(() => {
@@ -236,12 +237,16 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
     setPdfFile(file);
     setPdfUploadStatus('uploading');
     setPdfUploadProgress(0);
+    setPdfUploadStatusText('Đang chuẩn bị file...');
     setUploadedPdfPath(null);
 
     try {
       console.log('[OrderFlow] Bắt đầu tải file PDF lên máy chủ...');
-      const res = await orderApi.uploadPdfTempWithProgress(userId, file, (percent) => {
+      const res = await orderApi.uploadPdfTempChunked(userId, file, (percent, statusText) => {
         setPdfUploadProgress(percent);
+        if (statusText) {
+          setPdfUploadStatusText(statusText);
+        }
       });
       console.log('[OrderFlow] Tải file PDF thành công:', res);
       setUploadedPdfPath(res.filePath);
@@ -258,6 +263,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
     setPdfFile(null);
     setPdfUploadStatus('idle');
     setPdfUploadProgress(0);
+    setPdfUploadStatusText('');
     setUploadedPdfPath(null);
     if (pdfInputRef.current) pdfInputRef.current.value = '';
   };
@@ -643,7 +649,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                               <div className="min-w-0">
                                 <p className="text-sm font-bold text-[#000000] truncate">{pdfFile.name}</p>
                                 <p className="text-xs text-blue-700 font-semibold">
-                                  Đang tải lên... {pdfUploadProgress}% ({(pdfFile.size / 1024 / 1024).toFixed(1)} MB)
+                                  {pdfUploadStatusText || `Đang tải lên... ${pdfUploadProgress}%`} ({(pdfFile.size / 1024 / 1024).toFixed(1)} MB)
                                 </p>
                               </div>
                             </div>

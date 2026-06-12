@@ -170,6 +170,79 @@ export const orderApi = {
       formData.append('file', file);
       xhr.send(formData);
     });
+  },
+
+  uploadPdfTempChunked: async (
+    userId: string,
+    file: File,
+    onProgress: (percent: number, statusText?: string) => void
+  ): Promise<{ filePath: string; fileName: string }> => {
+    const token = await ensureBackendToken(userId);
+    const chunkSize = 5 * 1024 * 1024; // 5MB chunk
+    const totalChunks = Math.ceil(file.size / chunkSize);
+    // Safe characters only for uploadId
+    const safeName = file.name.replace(/[^a-zA-Z0-9]/g, '');
+    const uploadId = `${safeName}-${file.size}-${Date.now()}`;
+
+    for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
+      const start = chunkIndex * chunkSize;
+      const end = Math.min(start + chunkSize, file.size);
+      const chunk = file.slice(start, end);
+
+      const statusText = `Đang tải lên... Phần ${chunkIndex + 1}/${totalChunks}`;
+      onProgress(Math.round((chunkIndex / totalChunks) * 100), statusText);
+
+      await new Promise<void>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', `${API_BASE_URL}/api/orders/upload-pdf-chunk`, true);
+        xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+
+        xhr.upload.onprogress = (event) => {
+          if (event.lengthComputable) {
+            const chunkPercent = event.loaded / event.total;
+            const overallPercent = Math.round(((chunkIndex + chunkPercent) / totalChunks) * 100);
+            onProgress(overallPercent, statusText);
+          }
+        };
+
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve();
+          } else {
+            reject(new Error(`Failed to upload chunk ${chunkIndex + 1}/${totalChunks}: ${xhr.status} ${xhr.responseText}`));
+          }
+        };
+
+        xhr.onerror = () => reject(new Error(`Network error during chunk ${chunkIndex + 1} upload.`));
+
+        const formData = new FormData();
+        formData.append('uploadId', uploadId);
+        formData.append('chunkIndex', chunkIndex.toString());
+        formData.append('totalChunks', totalChunks.toString());
+        formData.append('file', chunk, `${file.name}.part${chunkIndex}`);
+
+        xhr.send(formData);
+      });
+    }
+
+    onProgress(99, 'Đang xử lý ghép file thiết kế...');
+
+    const mergeRes = await fetch(`${API_BASE_URL}/api/orders/merge-pdf-chunks`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ uploadId, fileName: file.name })
+    });
+
+    if (!mergeRes.ok) {
+      const errorText = await mergeRes.text();
+      throw new Error(`Ghép file thất bại: ${mergeRes.status} ${errorText}`);
+    }
+
+    onProgress(100, 'Tải lên thành công!');
+    return mergeRes.json();
   }
 };
 

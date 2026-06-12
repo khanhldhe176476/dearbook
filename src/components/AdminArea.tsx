@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { toast } from "sonner@2.0.3";
 import { API_BASE_URL } from "../lib/api";
 
 type OrderStatus = "PENDING" | "CONFIRMED" | "PRINTING" | "COMPLETED" | "CANCELLED";
@@ -843,46 +842,22 @@ export default function AdminArea() {
                                                     <p className="text-sm font-bold text-stone-900 truncate">
                                                         {selectedOrder.pdfFileName}
                                                     </p>
-                                                    <p className="text-xs text-green-700 font-bold">
-                                                        ✓ Đã tải lên thành công
+                                                    <p className="text-xs text-green-700 font-medium">
+                                                        ✓ Đã tải lên · {((selectedOrder.pdfFileData?.length || 0) / 1024).toFixed(0)} KB
                                                     </p>
                                                 </div>
                                             </div>
                                             <button
-                                                onClick={async () => {
+                                                onClick={() => {
                                                     const downloadUrl = selectedOrder.pdfFileData?.startsWith('http') 
                                                         ? selectedOrder.pdfFileData 
                                                         : `${API_BASE_URL}${selectedOrder.pdfFileData}`;
-                                                    
-                                                    const toastId = toast.loading('Đang tải file thiết kế xuống...');
-                                                    try {
-                                                        const token = getToken();
-                                                        const response = await fetch(downloadUrl, {
-                                                            headers: {
-                                                                'Authorization': `Bearer ${token}`
-                                                            }
-                                                        });
-                                                        
-                                                        if (!response.ok) {
-                                                            throw new Error(`Lỗi ${response.status}: Không thể tải xuống file.`);
-                                                        }
-                                                        
-                                                        const blob = await response.blob();
-                                                        const blobUrl = window.URL.createObjectURL(blob);
-                                                        
-                                                        const link = document.createElement('a');
-                                                        link.href = blobUrl;
-                                                        link.download = selectedOrder.pdfFileName || 'design.pdf';
-                                                        document.body.appendChild(link);
-                                                        link.click();
-                                                        
-                                                        document.body.removeChild(link);
-                                                        window.URL.revokeObjectURL(blobUrl);
-                                                        toast.success('Tải file xuống thành công!', { id: toastId });
-                                                    } catch (err: any) {
-                                                        console.error('Lỗi khi tải file:', err);
-                                                        toast.error(`Không thể tải file: ${err.message || err}`, { id: toastId });
-                                                    }
+                                                    const link = document.createElement('a');
+                                                    link.href = downloadUrl;
+                                                    link.download = selectedOrder.pdfFileName || 'design.pdf';
+                                                    document.body.appendChild(link);
+                                                    link.click();
+                                                    document.body.removeChild(link);
                                                 }}
                                                 className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-xl font-semibold text-sm hover:bg-stone-800 transition-colors flex-shrink-0"
                                             >

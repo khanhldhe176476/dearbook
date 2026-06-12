@@ -423,6 +423,88 @@ public class OrderService {
         }
     }
 
+    public void savePdfChunk(String uploadId, int chunkIndex, MultipartFile file) {
+        try {
+            // Target directory: uploads/pdf/chunks/<uploadId>/
+            Path chunkDir = Paths.get(uploadDir, "pdf", "chunks", uploadId);
+            Files.createDirectories(chunkDir);
+
+            Path chunkPath = chunkDir.resolve("chunk_" + chunkIndex);
+            Files.copy(file.getInputStream(), chunkPath, StandardCopyOption.REPLACE_EXISTING);
+            log.info("Saved chunk {} for uploadId {}", chunkIndex, uploadId);
+        } catch (IOException e) {
+            log.error("Error saving chunk {} for uploadId {}", chunkIndex, uploadId, e);
+            throw new RuntimeException("Failed to store chunk " + chunkIndex, e);
+        }
+    }
+
+    public String mergePdfChunks(String uploadId, String originalFilename) {
+        try {
+            Path chunkDir = Paths.get(uploadDir, "pdf", "chunks", uploadId);
+            if (!Files.exists(chunkDir) || !Files.isDirectory(chunkDir)) {
+                throw new IllegalArgumentException("No chunks found for upload ID: " + uploadId);
+            }
+
+            // Find all chunk files and sort them numerically by their index suffix
+            List<Path> chunkFiles;
+            try (java.util.stream.Stream<Path> stream = Files.list(chunkDir)) {
+                chunkFiles = stream
+                        .filter(path -> path.getFileName().toString().startsWith("chunk_"))
+                        .sorted((p1, p2) -> {
+                            String name1 = p1.getFileName().toString().substring(6);
+                            String name2 = p2.getFileName().toString().substring(6);
+                            return Integer.compare(Integer.parseInt(name1), Integer.parseInt(name2));
+                        })
+                        .toList();
+            }
+
+            if (chunkFiles.isEmpty()) {
+                throw new IllegalArgumentException("No chunk files found to merge");
+            }
+
+            // Create target file name in uploads/pdf
+            Path uploadPath = Paths.get(uploadDir, "pdf");
+            Files.createDirectories(uploadPath);
+
+            String fileExtension = "";
+            if (originalFilename != null && originalFilename.contains(".")) {
+                fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            }
+            String savedFileName = UUID.randomUUID().toString() + "_" + System.currentTimeMillis() + fileExtension;
+            Path mergedFilePath = uploadPath.resolve(savedFileName);
+
+            // Merge chunks using FileChannel
+            try (java.nio.channels.FileChannel outChannel = java.nio.channels.FileChannel.open(mergedFilePath,
+                    java.nio.file.StandardOpenOption.CREATE,
+                    java.nio.file.StandardOpenOption.WRITE)) {
+                long position = 0;
+                for (Path chunkFile : chunkFiles) {
+                    try (java.nio.channels.FileChannel inChannel = java.nio.channels.FileChannel.open(chunkFile, java.nio.file.StandardOpenOption.READ)) {
+                        long size = inChannel.size();
+                        long transferred = inChannel.transferTo(0, size, outChannel);
+                        while (transferred < size) {
+                            transferred += inChannel.transferTo(transferred, size - transferred, outChannel);
+                        }
+                    }
+                }
+            }
+
+            log.info("Merged {} chunks into file {} for uploadId {}", chunkFiles.size(), mergedFilePath, uploadId);
+
+            // Clean up chunks folder and its contents
+            for (Path chunkFile : chunkFiles) {
+                Files.deleteIfExists(chunkFile);
+            }
+            Files.deleteIfExists(chunkDir);
+
+            return Paths.get("pdf", savedFileName).toString();
+        } catch (IOException e) {
+            log.error("Failed to merge chunks for uploadId {}", uploadId, e);
+            throw new RuntimeException("Failed to merge PDF chunks", e);
+        }
+    }
+
+
     public Resource loadPdfFileAsResource(UUID orderId) {
         Order order = orderRepo.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found"));
