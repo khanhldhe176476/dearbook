@@ -96,6 +96,48 @@ function formatMoney(value?: number) {
     return value.toLocaleString("vi-VN") + "đ";
 }
 
+async function downloadOrderPdf(pdfFileData: string, fileName: string) {
+    try {
+        // pdfFileData đã được backend mapToAdminOrderResponse chuyển thành URL download
+        // Ví dụ: "/api/orders/<uuid>/pdf/download"
+        const url = pdfFileData.startsWith('http')
+            ? pdfFileData
+            : `${API_BASE_URL}${pdfFileData}`;
+
+        // Phải dùng fetch với Authorization header vì /api/orders/** yêu cầu authenticated
+        // (click <a> tag thông thường không gửi kèm JWT token)
+        const res = await fetch(url, {
+            headers: {
+                Authorization: `Bearer ${getToken()}`,
+            },
+        });
+
+        if (!res.ok) {
+            throw new Error(`Server trả về ${res.status}`);
+        }
+
+        const blob = await res.blob();
+        const objectUrl = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = objectUrl;
+        link.download = fileName || 'design.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(objectUrl);
+    } catch (err: any) {
+        console.error('[Admin] Tải PDF thất bại:', err);
+        alert(
+            'Không thể tải file PDF thiết kế.\n\n' +
+            (err.message ? 'Lỗi: ' + err.message + '\n\n' : '') +
+            'Nguyên nhân có thể:\n' +
+            '• File không còn tồn tại trên máy chủ\n' +
+            '• Phiên đăng nhập admin hết hạn (thử đăng xuất & đăng nhập lại)\n' +
+            '• Kết nối mạng bị gián đoạn'
+        );
+    }
+}
+
 function StatusBadge({ status }: { status: string }) {
     return (
         <span
@@ -843,22 +885,15 @@ export default function AdminArea() {
                                                         {selectedOrder.pdfFileName}
                                                     </p>
                                                     <p className="text-xs text-green-700 font-medium">
-                                                        ✓ Đã tải lên · {((selectedOrder.pdfFileData?.length || 0) / 1024).toFixed(0)} KB
+                                                        ✓ Đã tải lên
                                                     </p>
                                                 </div>
                                             </div>
                                             <button
-                                                onClick={() => {
-                                                    const downloadUrl = selectedOrder.pdfFileData?.startsWith('http') 
-                                                        ? selectedOrder.pdfFileData 
-                                                        : `${API_BASE_URL}${selectedOrder.pdfFileData}`;
-                                                    const link = document.createElement('a');
-                                                    link.href = downloadUrl;
-                                                    link.download = selectedOrder.pdfFileName || 'design.pdf';
-                                                    document.body.appendChild(link);
-                                                    link.click();
-                                                    document.body.removeChild(link);
-                                                }}
+                                                onClick={() => downloadOrderPdf(
+                                                    selectedOrder.pdfFileData!,
+                                                    selectedOrder.pdfFileName || 'design.pdf'
+                                                )}
                                                 className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-xl font-semibold text-sm hover:bg-stone-800 transition-colors flex-shrink-0"
                                             >
                                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
