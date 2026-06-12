@@ -67,6 +67,14 @@ public class OrderController {
         return ResponseEntity.ok("PDF uploaded successfully");
     }
 
+    @PostMapping("/upload-pdf")
+    public ResponseEntity<Map<String, String>> uploadPdfTemp(
+            Authentication authentication,
+            @RequestParam("file") MultipartFile file) {
+        String relativePath = orderService.savePdfFileTemp(file);
+        return ResponseEntity.ok(Map.of("filePath", relativePath, "fileName", file.getOriginalFilename()));
+    }
+
     @GetMapping("/{id}/pdf/download")
     public ResponseEntity<Resource> downloadPdf(@PathVariable UUID id) {
         try {

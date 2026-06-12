@@ -129,6 +129,47 @@ export const orderApi = {
       formData.append('file', file);
       xhr.send(formData);
     });
+  },
+
+  uploadPdfTempWithProgress: async (
+    userId: string, 
+    file: File, 
+    onProgress: (percent: number) => void
+  ): Promise<{ filePath: string; fileName: string }> => {
+    const token = await ensureBackendToken(userId);
+    const url = `${API_BASE_URL}/api/orders/upload-pdf`;
+    
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', url, true);
+      xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+      
+      xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+          const percent = Math.round((event.loaded / event.total) * 100);
+          onProgress(percent);
+        }
+      };
+      
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try {
+            const data = JSON.parse(xhr.responseText);
+            resolve(data);
+          } catch (e) {
+            reject(new Error('Invalid response JSON from server'));
+          }
+        } else {
+          reject(new Error(`Upload failed with status ${xhr.status}: ${xhr.responseText}`));
+        }
+      };
+      
+      xhr.onerror = () => reject(new Error('Network error occurred during upload.'));
+      
+      const formData = new FormData();
+      formData.append('file', file);
+      xhr.send(formData);
+    });
   }
 };
 

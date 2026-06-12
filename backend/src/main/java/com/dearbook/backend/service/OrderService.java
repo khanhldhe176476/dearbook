@@ -402,6 +402,27 @@ public class OrderService {
         }
     }
 
+    public String savePdfFileTemp(MultipartFile file) {
+        try {
+            Path uploadPath = Paths.get(uploadDir, "pdf");
+            Files.createDirectories(uploadPath);
+
+            String originalFilename = file.getOriginalFilename();
+            String fileExtension = "";
+            if (originalFilename != null && originalFilename.contains(".")) {
+                fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            }
+            String savedFileName = UUID.randomUUID().toString() + "_" + System.currentTimeMillis() + fileExtension;
+            Path filePath = uploadPath.resolve(savedFileName);
+
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+            return Paths.get("pdf", savedFileName).toString();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to store temporary PDF file", e);
+        }
+    }
+
     public Resource loadPdfFileAsResource(UUID orderId) {
         Order order = orderRepo.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found"));

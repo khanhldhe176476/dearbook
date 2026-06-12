@@ -106,6 +106,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
   const pdfInputRef = useRef<HTMLInputElement>(null);
   const [pdfUploadStatus, setPdfUploadStatus] = useState<'idle' | 'uploading' | 'success' | 'error'>('idle');
   const [pdfUploadProgress, setPdfUploadProgress] = useState<number>(0);
+  const [uploadedPdfPath, setUploadedPdfPath] = useState<string | null>(null);
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -212,8 +213,8 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
     setStep('payment');
   };
 
-  // PDF upload handler with size validation
-  const handlePdfFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // PDF upload handler with size validation and immediate background upload
+  const handlePdfFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -225,7 +226,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
       return;
     }
 
-    // Validate file size (max 500MB)
+    // Validate file size (max 1GB)
     if (file.size > MAX_PDF_SIZE) {
       toast.error(`File quá lớn (${(file.size / 1024 / 1024).toFixed(1)}MB). Vui lòng chọn file PDF dưới 1GB.`);
       if (pdfInputRef.current) pdfInputRef.current.value = '';
@@ -233,15 +234,47 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
     }
 
     setPdfFile(file);
-    toast.success(`Đã tải lên: ${file.name} (${(file.size / 1024 / 1024).toFixed(1)}MB)`);
+    setPdfUploadStatus('uploading');
+    setPdfUploadProgress(0);
+    setUploadedPdfPath(null);
+
+    try {
+      console.log('[OrderFlow] Bắt đầu tải file PDF lên máy chủ...');
+      const res = await orderApi.uploadPdfTempWithProgress(userId, file, (percent) => {
+        setPdfUploadProgress(percent);
+      });
+      console.log('[OrderFlow] Tải file PDF thành công:', res);
+      setUploadedPdfPath(res.filePath);
+      setPdfUploadStatus('success');
+      toast.success(`Tải file PDF thành công!`);
+    } catch (err: any) {
+      console.error('[OrderFlow] Tải file PDF thất bại:', err);
+      setPdfUploadStatus('error');
+      toast.error('⚠️ Không thể tải file PDF lên. Bạn có thể thử chọn lại file hoặc đặt hàng trước và gửi lại sau qua email.');
+    }
   };
 
   const handleRemovePdf = () => {
     setPdfFile(null);
+    setPdfUploadStatus('idle');
+    setPdfUploadProgress(0);
+    setUploadedPdfPath(null);
     if (pdfInputRef.current) pdfInputRef.current.value = '';
   };
 
   const handlePaymentSubmit = async () => {
+    if (pdfFile && pdfUploadStatus === 'uploading') {
+      toast.warning('⏳ Vui lòng chờ file thiết kế PDF tải lên hoàn tất trước khi xác nhận đơn hàng.', { duration: 5000 });
+      return;
+    }
+
+    if (pdfFile && pdfUploadStatus === 'error') {
+      const confirmProceed = window.confirm(
+        '⚠️ File thiết kế PDF chưa được tải lên thành công. Bạn có chắc chắn muốn tiếp tục đặt hàng và gửi lại file qua email sau?'
+      );
+      if (!confirmProceed) return;
+    }
+
     try {
       setLoading(true);
       console.log('[OrderFlow] 1️⃣ Bắt đầu gửi đơn hàng...');
@@ -280,7 +313,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
         paymentMethod: paymentMethod.toUpperCase(),
         designPages: designPages,
         pdfFileName: pdfFileName,
-        pdfFileData: null, // Không gửi binary data để tránh payload quá lớn
+        pdfFileData: uploadedPdfPath, // Sử dụng đường dẫn file đã upload thành công
       };
       console.log('[OrderFlow] 4️⃣ OrderData prepared, designPages:', designPages.length);
 
@@ -297,38 +330,11 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
       const response = await orderApi.placeOrder(userId, orderData);
       console.log('[OrderFlow] 7️⃣✅ API thành công:', response);
 
-      // Đặt trạng thái TRƯỚC khi chuyển trang để tránh race condition với React batching
-      const savedOrderId = response.id;
-
-      if (pdfFile) {
-        // Set uploading TRƯỚC khi chuyển sang confirmation
-        setPdfUploadStatus('uploading');
-        setPdfUploadProgress(0);
-      }
-
       // Chuyển sang confirmation
-      setOrderId(savedOrderId);
+      setOrderId(response.id);
       setStep('confirmation');
       setLoading(false);
       toast.success('🎉 Đặt hàng thành công!');
-
-      // Bắt đầu upload PDF sau một tick để đảm bảo UI confirmation đã render xong
-      if (pdfFile) {
-        const fileToUpload = pdfFile;
-        setTimeout(async () => {
-          try {
-            await orderApi.uploadPdfWithProgress(savedOrderId, userId, fileToUpload, (percent) => {
-              setPdfUploadProgress(percent);
-            });
-            console.log('[OrderFlow] 8️⃣✅ Tải file PDF thành công');
-            setPdfUploadStatus('success');
-          } catch (pdfErr) {
-            console.error('[OrderFlow] 8️⃣❌ Tải file PDF thất bại:', pdfErr);
-            setPdfUploadStatus('error');
-            toast.error('⚠️ Không thể tải file PDF lên. Bạn có thể gửi lại sau qua email.', { duration: 8000 });
-          }
-        }, 300);
-      }
     } catch (err: any) {
       console.error('[OrderFlow] ❌ Đặt hàng thất bại:', err);
 
@@ -625,27 +631,114 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                   />
 
                   {pdfFile ? (
-                    /* Uploaded file display */
-                    <div className="flex items-center justify-between p-4 rounded-xl border-2 border-green-200 bg-green-50/50">
-                      <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0">
-                          <FileText className="w-5 h-5 text-red-500" />
-                        </div>
-                        <div className="min-w-0">
-                          <p className="text-sm font-bold text-[#000000] truncate">{pdfFile.name}</p>
-                          <p className="text-xs text-green-700 font-medium">
-                            ✓ Đã sẵn sàng · {(pdfFile.size / 1024 / 1024).toFixed(1)} MB
+                    /* Display based on upload status */
+                    <div className="space-y-3">
+                      {pdfUploadStatus === 'uploading' && (
+                        <div className="p-4 rounded-xl border-2 border-blue-200 bg-blue-50/30 space-y-3">
+                          <div className="flex items-center justify-between min-w-0">
+                            <div className="flex items-center gap-3 min-w-0">
+                              <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+                                <Loader2 className="w-5 h-5 text-blue-500 animate-spin" />
+                              </div>
+                              <div className="min-w-0">
+                                <p className="text-sm font-bold text-[#000000] truncate">{pdfFile.name}</p>
+                                <p className="text-xs text-blue-700 font-semibold">
+                                  Đang tải lên... {pdfUploadProgress}% ({(pdfFile.size / 1024 / 1024).toFixed(1)} MB)
+                                </p>
+                              </div>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={handleRemovePdf}
+                              className="p-2 rounded-lg hover:bg-blue-100 transition-colors flex-shrink-0"
+                              title="Hủy tải lên"
+                            >
+                              <X className="w-4 h-4 text-blue-500" />
+                            </button>
+                          </div>
+                          
+                          {/* Progress bar */}
+                          <div className="w-full bg-blue-100 rounded-full h-2.5 overflow-hidden">
+                            <div 
+                              className="bg-blue-600 h-2.5 rounded-full transition-all duration-300 relative" 
+                              style={{ width: `${pdfUploadProgress}%` }}
+                            >
+                              <div className="absolute top-0 left-0 right-0 bottom-0 bg-white/20 animate-[shimmer_1s_infinite]"></div>
+                            </div>
+                          </div>
+                          <p className="text-[10px] text-blue-500 italic">
+                            Vui lòng giữ tab này mở trong khi quá trình tải file đang diễn ra.
                           </p>
                         </div>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={handleRemovePdf}
-                        className="p-2 rounded-lg hover:bg-red-100 transition-colors flex-shrink-0"
-                        title="Gỡ file"
-                      >
-                        <X className="w-4 h-4 text-red-500" />
-                      </button>
+                      )}
+
+                      {pdfUploadStatus === 'success' && (
+                        <div className="flex items-center justify-between p-4 rounded-xl border-2 border-green-200 bg-green-50/50">
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0">
+                              <CheckCircle className="w-5 h-5 text-green-600" />
+                            </div>
+                            <div className="min-w-0">
+                              <p className="text-sm font-bold text-[#000000] truncate">{pdfFile.name}</p>
+                              <p className="text-xs text-green-700 font-bold">
+                                ✓ Đã tải lên máy chủ thành công · {(pdfFile.size / 1024 / 1024).toFixed(1)} MB
+                              </p>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={handleRemovePdf}
+                            className="p-2 rounded-lg hover:bg-green-100 transition-colors flex-shrink-0"
+                            title="Gỡ file"
+                          >
+                            <X className="w-4 h-4 text-green-600" />
+                          </button>
+                        </div>
+                      )}
+
+                      {pdfUploadStatus === 'error' && (
+                        <div className="p-4 rounded-xl border-2 border-red-200 bg-red-50/50 space-y-3">
+                          <div className="flex items-center justify-between min-w-0">
+                            <div className="flex items-center gap-3 min-w-0">
+                              <div className="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0">
+                                <AlertTriangle className="w-5 h-5 text-red-500" />
+                              </div>
+                              <div className="min-w-0">
+                                <p className="text-sm font-bold text-[#000000] truncate">{pdfFile.name}</p>
+                                <p className="text-xs text-red-700 font-bold">
+                                  Lỗi tải file lên máy chủ
+                                </p>
+                              </div>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={handleRemovePdf}
+                              className="p-2 rounded-lg hover:bg-red-100 transition-colors flex-shrink-0"
+                              title="Gỡ file"
+                            >
+                              <X className="w-4 h-4 text-red-500" />
+                            </button>
+                          </div>
+                          <div className="flex gap-2">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const input = pdfInputRef.current;
+                                if (input) {
+                                  input.value = '';
+                                  input.click();
+                                }
+                              }}
+                              className="px-3 py-1.5 bg-red-600 text-white rounded-lg text-xs font-bold hover:bg-red-700 transition-colors"
+                            >
+                              Thử chọn lại file
+                            </button>
+                            <p className="text-[10px] text-red-500 flex-1 leading-snug">
+                              Bạn có thể thử chọn lại file, hoặc tiếp tục đặt hàng và gửi file qua email sau nếu lỗi mạng vẫn tiếp diễn.
+                            </p>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ) : (
                     /* Upload prompt */
