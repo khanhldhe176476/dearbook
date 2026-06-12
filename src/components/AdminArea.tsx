@@ -188,6 +188,12 @@ export default function AdminArea() {
     const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState("ALL");
 
+    // Pagination state
+    const [currentPage, setCurrentPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const [totalElements, setTotalElements] = useState(0);
+    const PAGE_SIZE = 20;
+
     const isLoggedIn = Boolean(tokenState);
 
     async function adminFetch(path: string, options: RequestInit = {}) {
@@ -253,12 +259,17 @@ export default function AdminArea() {
         }
     }
 
-    async function loadOrders() {
+    async function loadOrders(page?: number) {
         setLoadingOrders(true);
         try {
-            const data = await adminFetch("/orders");
+            const p = page ?? currentPage;
+            const data = await adminFetch(`/orders?page=${p}&size=${PAGE_SIZE}`);
+            // Handle paginated response: { orders, page, size, totalElements, totalPages }
             const list = Array.isArray(data) ? data : data.orders || data.content || [];
             setOrders(list);
+            setCurrentPage(data.page ?? 0);
+            setTotalPages(data.totalPages ?? 0);
+            setTotalElements(data.totalElements ?? list.length);
             setLastRefresh(new Date());
         } catch (err) {
             console.error(err);
@@ -311,14 +322,8 @@ export default function AdminArea() {
         }
     }, [isLoggedIn]);
 
-    // Auto-polling: refresh orders every 15 seconds to catch new submissions
-    useEffect(() => {
-        if (!isLoggedIn) return;
-        const interval = setInterval(() => {
-            loadOrders();
-        }, 15_000);
-        return () => clearInterval(interval);
-    }, [isLoggedIn]);
+    // Auto-polling disabled — orders are only refreshed manually via the "Làm mới" button.
+    // To re-enable, uncomment the setInterval block below.
 
     const stats = useMemo(() => {
         return {
@@ -434,22 +439,16 @@ export default function AdminArea() {
                     </div>
 
                     <div className="flex items-center gap-4">
-                        {/* Refresh indicator */}
-                        <div className="hidden sm:flex items-center gap-2 text-xs text-stone-400">
-                            <span className="relative flex h-2 w-2">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                        {/* Last refresh timestamp (manual only) */}
+                        {lastRefresh && (
+                            <span className="hidden sm:inline text-xs text-stone-400">
+                                Cập nhật lúc {lastRefresh.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                             </span>
-                            <span>
-                                {lastRefresh
-                                    ? `Cập nhật lúc ${lastRefresh.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`
-                                    : 'Đang tải...'}
-                            </span>
-                        </div>
+                        )}
 
                         {/* Manual refresh button */}
                         <button
-                            onClick={loadOrders}
+                            onClick={() => loadOrders()}
                             disabled={loadingOrders}
                             className="flex items-center gap-2 rounded-xl border border-stone-300 px-3 py-1.5 text-sm font-semibold text-stone-700 hover:bg-stone-100 disabled:opacity-50 transition-all"
                             title="Tải lại danh sách đơn hàng"
@@ -528,6 +527,7 @@ export default function AdminArea() {
                             Chưa có đơn hàng phù hợp.
                         </div>
                     ) : (
+                        <>
                         <div className="overflow-x-auto">
                             <table className="w-full min-w-[900px] border-collapse text-left">
                                 <thead>
@@ -583,6 +583,58 @@ export default function AdminArea() {
                                 </tbody>
                             </table>
                         </div>
+
+                        {/* Pagination controls */}
+                        {totalPages > 1 && (
+                            <div className="flex items-center justify-between pt-4 border-t border-stone-100 mt-4">
+                                <p className="text-sm text-stone-500">
+                                    Hiển thị {orders.length} / {totalElements} đơn hàng
+                                </p>
+                                <div className="flex items-center gap-1">
+                                    <button
+                                        onClick={() => { const p = Math.max(0, currentPage - 1); setCurrentPage(p); loadOrders(p); }}
+                                        disabled={currentPage === 0}
+                                        className="rounded-lg border border-stone-300 px-3 py-1.5 text-sm font-semibold text-stone-700 hover:bg-stone-100 disabled:opacity-40 disabled:cursor-not-allowed"
+                                    >
+                                        ← Trước
+                                    </button>
+                                    {Array.from({ length: Math.min(totalPages, 7) }, (_, i) => {
+                                        // Show pages around current page
+                                        let pageNum: number;
+                                        if (totalPages <= 7) {
+                                            pageNum = i;
+                                        } else if (currentPage < 4) {
+                                            pageNum = i;
+                                        } else if (currentPage > totalPages - 5) {
+                                            pageNum = totalPages - 7 + i;
+                                        } else {
+                                            pageNum = currentPage - 3 + i;
+                                        }
+                                        return (
+                                            <button
+                                                key={pageNum}
+                                                onClick={() => { setCurrentPage(pageNum); loadOrders(pageNum); }}
+                                                className={`w-9 h-9 rounded-lg text-sm font-semibold transition-colors ${
+                                                    pageNum === currentPage
+                                                        ? 'bg-black text-white'
+                                                        : 'text-stone-700 hover:bg-stone-100'
+                                                }`}
+                                            >
+                                                {pageNum + 1}
+                                            </button>
+                                        );
+                                    })}
+                                    <button
+                                        onClick={() => { const p = Math.min(totalPages - 1, currentPage + 1); setCurrentPage(p); loadOrders(p); }}
+                                        disabled={currentPage >= totalPages - 1}
+                                        className="rounded-lg border border-stone-300 px-3 py-1.5 text-sm font-semibold text-stone-700 hover:bg-stone-100 disabled:opacity-40 disabled:cursor-not-allowed"
+                                    >
+                                        Sau →
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                        </>
                     )}
                 </section>
 

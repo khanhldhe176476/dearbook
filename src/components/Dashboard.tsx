@@ -31,14 +31,17 @@ export function Dashboard({ user, onLogout, onCreateBook, onEditBook }: Dashboar
   const [savedBooks,     setSavedBooks]     = useState<Book[]>([]);
   const [showCreateModal,setShowCreateModal]= useState(false);
 
+  const userId = user.id || '00000000-0000-0000-0000-000000000000';
+  const STORAGE_KEY = `bookify_books_${userId}`;
+
   useEffect(() => {
-    const books = JSON.parse(localStorage.getItem('bookify_books') || '[]');
+    const books = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
     setSavedBooks(books);
   }, []);
 
   const handleDeleteBook = (bookId: string) => {
     const updated = savedBooks.filter(b => b.id !== bookId);
-    localStorage.setItem('bookify_books', JSON.stringify(updated));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
     setSavedBooks(updated);
   };
 

@@ -87,14 +87,14 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
   const loadBooks = async () => {
     setLoading(true);
     try {
-      // Primary: đọc từ IndexedDB
+      // Primary: đọc từ IndexedDB (filtered by userId)
       let booksSource: BookData[] = [];
       if (isIndexedDBAvailable()) {
-        booksSource = await getAllBooks();
+        booksSource = await getAllBooks(userId);
       }
       // Fallback: localStorage nếu IndexedDB trống hoặc không khả dụng
       if (booksSource.length === 0) {
-        booksSource = getBooksSync();
+        booksSource = getBooksSync(userId);
       }
 
       // Đồng bộ với backend API (non-blocking)
@@ -125,7 +125,7 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
       console.error('Failed to load books:', err);
       setError('Không thể tải sách. Hiển thị từ bộ nhớ cục bộ.');
       // Last resort: localStorage
-      setBooks(getBooksSync());
+      setBooks(getBooksSync(userId));
     } finally { setLoading(false); }
   };
 
@@ -158,7 +158,7 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
   const handleDeleteConfirm = async () => {
     // Xóa khỏi IndexedDB
     try {
-      await deleteBook(deleteDialog.bookId);
+      await deleteBook(deleteDialog.bookId, userId);
     } catch (err) {
       console.error('Failed to delete book from IndexedDB:', err);
     }
