@@ -297,27 +297,37 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
       const response = await orderApi.placeOrder(userId, orderData);
       console.log('[OrderFlow] 7️⃣✅ API thành công:', response);
 
-      // Chuyển sang confirmation NGAY LẬP TỨC để người dùng không nghĩ là bị treo
-      setOrderId(response.id);
+      // Đặt trạng thái TRƯỚC khi chuyển trang để tránh race condition với React batching
+      const savedOrderId = response.id;
+
+      if (pdfFile) {
+        // Set uploading TRƯỚC khi chuyển sang confirmation
+        setPdfUploadStatus('uploading');
+        setPdfUploadProgress(0);
+      }
+
+      // Chuyển sang confirmation
+      setOrderId(savedOrderId);
       setStep('confirmation');
       setLoading(false);
       toast.success('🎉 Đặt hàng thành công!');
 
-      // Bắt đầu upload PDF ngầm nếu có (kèm progress bar ở màn hình Hoàn tất)
+      // Bắt đầu upload PDF sau một tick để đảm bảo UI confirmation đã render xong
       if (pdfFile) {
-        setPdfUploadStatus('uploading');
-        setPdfUploadProgress(0);
-        try {
-          await orderApi.uploadPdfWithProgress(response.id, userId, pdfFile, (percent) => {
-            setPdfUploadProgress(percent);
-          });
-          console.log('[OrderFlow] 8️⃣✅ Tải file PDF thành công');
-          setPdfUploadStatus('success');
-        } catch (pdfErr) {
-          console.error('[OrderFlow] 8️⃣❌ Tải file PDF thất bại:', pdfErr);
-          setPdfUploadStatus('error');
-          toast.error('⚠️ Không thể tải file PDF lên. Bạn có thể gửi lại sau qua email.', { duration: 8000 });
-        }
+        const fileToUpload = pdfFile;
+        setTimeout(async () => {
+          try {
+            await orderApi.uploadPdfWithProgress(savedOrderId, userId, fileToUpload, (percent) => {
+              setPdfUploadProgress(percent);
+            });
+            console.log('[OrderFlow] 8️⃣✅ Tải file PDF thành công');
+            setPdfUploadStatus('success');
+          } catch (pdfErr) {
+            console.error('[OrderFlow] 8️⃣❌ Tải file PDF thất bại:', pdfErr);
+            setPdfUploadStatus('error');
+            toast.error('⚠️ Không thể tải file PDF lên. Bạn có thể gửi lại sau qua email.', { duration: 8000 });
+          }
+        }, 300);
       }
     } catch (err: any) {
       console.error('[OrderFlow] ❌ Đặt hàng thất bại:', err);
