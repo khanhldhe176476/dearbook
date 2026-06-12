@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -100,6 +101,20 @@ public class AdminController {
                 return ResponseEntity.status(404).body(Map.of("message", message));
             }
             return ResponseEntity.badRequest().body(Map.of("message", message));
+        }
+    }
+
+    @DeleteMapping("/orders/bulk")
+    public ResponseEntity<?> deleteOrdersBulk(@RequestBody Map<String, List<UUID>> body) {
+        List<UUID> ids = body.get("ids");
+        if (ids == null || ids.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "No ids provided"));
+        }
+        try {
+            orderService.deleteOrdersBulk(ids);
+            return ResponseEntity.ok(Map.of("message", "Orders deleted successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
     }
 }

@@ -184,6 +184,7 @@ export default function AdminArea() {
     const [loadingOrders, setLoadingOrders] = useState(false);
     const [detailLoading, setDetailLoading] = useState(false);
     const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
+    const [selectedOrderIds, setSelectedOrderIds] = useState<string[]>([]);
 
     const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState("ALL");
@@ -324,6 +325,26 @@ export default function AdminArea() {
         } catch (err) {
             console.error(err);
             alert("Không thể xóa đơn hàng: " + err);
+        }
+    }
+
+    async function deleteSelectedOrders() {
+        if (!window.confirm(`Bạn có chắc chắn muốn xóa ${selectedOrderIds.length} đơn hàng đã chọn? Hành động này không thể hoàn tác.`)) {
+            return;
+        }
+        try {
+            await adminFetch(`/orders/bulk`, {
+                method: "DELETE",
+                body: JSON.stringify({ ids: selectedOrderIds }),
+            });
+            setOrders((prev) => prev.filter((item) => !selectedOrderIds.includes(item.id)));
+            if (selectedOrder?.id && selectedOrderIds.includes(selectedOrder.id)) {
+                setSelectedOrder(null);
+            }
+            setSelectedOrderIds([]); // clear selection
+        } catch (err) {
+            console.error(err);
+            alert("Không thể xóa các đơn hàng đã chọn: " + err);
         }
     }
 
@@ -513,7 +534,17 @@ export default function AdminArea() {
 
                 <section className="mt-8 rounded-3xl bg-white p-6 shadow-sm">
                     <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                        <h2 className="text-xl font-bold text-stone-900">Danh sách đơn hàng</h2>
+                        <div className="flex items-center gap-4">
+                            <h2 className="text-xl font-bold text-stone-900">Danh sách đơn hàng</h2>
+                            {selectedOrderIds.length > 0 && (
+                                <button 
+                                    onClick={deleteSelectedOrders}
+                                    className="rounded-lg bg-red-100 px-3 py-1.5 text-sm font-semibold text-red-700 hover:bg-red-200"
+                                >
+                                    Xóa {selectedOrderIds.length} mục đã chọn
+                                </button>
+                            )}
+                        </div>
 
                         <div className="flex flex-col gap-3 md:flex-row">
                             <input
@@ -550,6 +581,20 @@ export default function AdminArea() {
                             <table className="w-full min-w-[900px] border-collapse text-left">
                                 <thead>
                                     <tr className="border-b text-sm text-stone-500">
+                                        <th className="py-3 pr-4 pl-2">
+                                            <input 
+                                                type="checkbox" 
+                                                className="w-4 h-4 rounded text-black focus:ring-black border-stone-300"
+                                                checked={filteredOrders.length > 0 && selectedOrderIds.length === filteredOrders.length}
+                                                onChange={(e) => {
+                                                    if (e.target.checked) {
+                                                        setSelectedOrderIds(filteredOrders.map(o => o.id));
+                                                    } else {
+                                                        setSelectedOrderIds([]);
+                                                    }
+                                                }}
+                                            />
+                                        </th>
                                         <th className="py-3 pr-4">Mã đơn</th>
                                         <th className="py-3 pr-4">Khách hàng</th>
                                         <th className="py-3 pr-4">Liên hệ</th>
@@ -565,6 +610,20 @@ export default function AdminArea() {
                                 <tbody>
                                     {filteredOrders.map((order) => (
                                         <tr key={order.id} className="border-b text-sm">
+                                            <td className="py-4 pr-4 pl-2">
+                                                <input 
+                                                    type="checkbox" 
+                                                    className="w-4 h-4 rounded text-black focus:ring-black border-stone-300"
+                                                    checked={selectedOrderIds.includes(order.id)}
+                                                    onChange={(e) => {
+                                                        if (e.target.checked) {
+                                                            setSelectedOrderIds(prev => [...prev, order.id]);
+                                                        } else {
+                                                            setSelectedOrderIds(prev => prev.filter(id => id !== order.id));
+                                                        }
+                                                    }}
+                                                />
+                                            </td>
                                             <td className="max-w-[120px] truncate py-4 pr-4 font-mono">
                                                 {order.id}
                                             </td>

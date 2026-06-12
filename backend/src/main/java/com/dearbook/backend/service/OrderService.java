@@ -301,6 +301,18 @@ public class OrderService {
         log.info("Order {}: deleted successfully", id);
     }
 
+    @Transactional
+    public void deleteOrdersBulk(List<UUID> ids) {
+        for (UUID id : ids) {
+            try {
+                deleteOrder(id);
+            } catch (Exception e) {
+                log.error("Failed to delete order {}: {}", id, e.getMessage());
+            }
+        }
+        log.info("Bulk deleted {} orders", ids.size());
+    }
+
     private AdminOrderResponse mapToAdminOrderResponse(Order o) {
         var shipping = shippingRepo.findByOrderId(o.getId()).orElse(null);
         var book = o.getUserBook();
