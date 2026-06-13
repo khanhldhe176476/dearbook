@@ -842,6 +842,21 @@
               "id": "auto-template-gia-dinh-binh-yen-nho-page-37",
               "imageUrl": "/gia-dinh/binh-yen-nho/aatbio_com_image_export_Jun_8_2026%20(36).png",
               "label": "Trang 37"
+            },
+            {
+              "id": "auto-template-gia-dinh-binh-yen-nho-page-38",
+              "imageUrl": "/gia-dinh/binh-yen-nho/aatbio_com_image_export_Jun_8_2026%20(37).png",
+              "label": "Trang 38"
+            },
+            {
+              "id": "auto-template-gia-dinh-binh-yen-nho-page-39",
+              "imageUrl": "/gia-dinh/binh-yen-nho/aatbio_com_image_export_Jun_8_2026%20(38).png",
+              "label": "Trang 39"
+            },
+            {
+              "id": "auto-template-gia-dinh-binh-yen-nho-page-40",
+              "imageUrl": "/gia-dinh/binh-yen-nho/aatbio_com_image_export_Jun_8_2026%20(39).png",
+              "label": "Trang 40"
             }
           ],
           "thumbnail": "/gia-dinh/binh-yen-nho/aa.png"
@@ -1224,6 +1239,46 @@
               "id": "auto-template-tinh-yeu-happy-anniversary-page-32",
               "imageUrl": "/tinh-yeu/happy-anniversary/aatbio_com_image_export_Jun_8_2026%20(31).png",
               "label": "Trang 32"
+            },
+            {
+              "id": "auto-template-tinh-yeu-happy-anniversary-page-33",
+              "imageUrl": "/tinh-yeu/happy-anniversary/aatbio_com_image_export_Jun_8_2026%20(32).png",
+              "label": "Trang 33"
+            },
+            {
+              "id": "auto-template-tinh-yeu-happy-anniversary-page-34",
+              "imageUrl": "/tinh-yeu/happy-anniversary/aatbio_com_image_export_Jun_8_2026%20(33).png",
+              "label": "Trang 34"
+            },
+            {
+              "id": "auto-template-tinh-yeu-happy-anniversary-page-35",
+              "imageUrl": "/tinh-yeu/happy-anniversary/aatbio_com_image_export_Jun_8_2026%20(34).png",
+              "label": "Trang 35"
+            },
+            {
+              "id": "auto-template-tinh-yeu-happy-anniversary-page-36",
+              "imageUrl": "/tinh-yeu/happy-anniversary/aatbio_com_image_export_Jun_8_2026%20(35).png",
+              "label": "Trang 36"
+            },
+            {
+              "id": "auto-template-tinh-yeu-happy-anniversary-page-37",
+              "imageUrl": "/tinh-yeu/happy-anniversary/aatbio_com_image_export_Jun_8_2026%20(36).png",
+              "label": "Trang 37"
+            },
+            {
+              "id": "auto-template-tinh-yeu-happy-anniversary-page-38",
+              "imageUrl": "/tinh-yeu/happy-anniversary/aatbio_com_image_export_Jun_8_2026%20(37).png",
+              "label": "Trang 38"
+            },
+            {
+              "id": "auto-template-tinh-yeu-happy-anniversary-page-39",
+              "imageUrl": "/tinh-yeu/happy-anniversary/aatbio_com_image_export_Jun_8_2026%20(38).png",
+              "label": "Trang 39"
+            },
+            {
+              "id": "auto-template-tinh-yeu-happy-anniversary-page-40",
+              "imageUrl": "/tinh-yeu/happy-anniversary/aatbio_com_image_export_Jun_8_2026%20(39).png",
+              "label": "Trang 40"
             }
           ],
           "thumbnail": "/tinh-yeu/happy-anniversary/aa.png"
