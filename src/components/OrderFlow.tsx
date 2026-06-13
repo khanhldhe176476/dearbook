@@ -1039,7 +1039,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     </p>
                     <div className="w-64 mx-auto border-2 border-neutral-100 rounded-xl overflow-hidden shadow-sm p-1 bg-white">
                       <img
-                        src="/vietcombank_qr.png"
+                        src="/NgọcQR.jpg"
                         alt="Payment QR Code"
                         className="w-full h-auto object-contain"
                       />
