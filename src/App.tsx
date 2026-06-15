@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useVisitorTracker } from './hooks/useVisitorTracker';
 import { HomePage } from './components/HomePage';
 import { LoginScreen } from './components/LoginScreen';
 import { MyBooksLibraryPortfolio } from './components/MyBooksLibraryPortfolio';
@@ -68,6 +69,8 @@ export interface PageData {
 export type AppScreen = 'home' | 'login' | 'library' | 'builder' | 'order';
 
 function App() {
+  useVisitorTracker();
+
   if (window.location.pathname === '/admin') {
     return <AdminArea />;
   }

@@ -237,6 +237,13 @@ export default function AdminArea() {
     const [totalElements, setTotalElements] = useState(0);
     const PAGE_SIZE = 20;
 
+    // Visit stats
+    const [visitStats, setVisitStats] = useState<{
+        total: number;
+        today: number;
+        last7Days: { day: string; count: number }[];
+    } | null>(null);
+
     const isLoggedIn = Boolean(tokenState);
 
     async function adminFetch(path: string, options: RequestInit = {}) {
@@ -400,8 +407,25 @@ export default function AdminArea() {
     useEffect(() => {
         if (isLoggedIn) {
             loadOrders();
+            loadVisitStats();
         }
     }, [isLoggedIn]);
+
+    async function loadVisitStats() {
+        try {
+            const data = await adminFetch("/stats/visits");
+            setVisitStats({
+                total: data.total ?? 0,
+                today: data.today ?? 0,
+                last7Days: (data.last7Days ?? []).map((d: { day: string; count: number }) => ({
+                    day: d.day,
+                    count: Number(d.count),
+                })),
+            });
+        } catch (err) {
+            console.error("Could not load visit stats:", err);
+        }
+    }
 
     // Auto-polling disabled — orders are only refreshed manually via the "Làm mới" button.
     // To re-enable, uncomment the setInterval block below.
@@ -551,7 +575,7 @@ export default function AdminArea() {
             </header>
 
             <main className="mx-auto max-w-7xl px-6 py-8">
-                <section className="grid gap-4 md:grid-cols-5">
+                <section className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7">
                     <div className="rounded-2xl bg-white p-5 shadow-sm">
                         <p className="text-sm text-stone-500">Tổng đơn</p>
                         <p className="mt-2 text-3xl font-bold">{stats.total}</p>
@@ -572,7 +596,55 @@ export default function AdminArea() {
                         <p className="text-sm text-stone-500">Đã hủy</p>
                         <p className="mt-2 text-3xl font-bold">{stats.cancelled}</p>
                     </div>
+                    {/* Visitor stats cards */}
+                    <div className="rounded-2xl bg-gradient-to-br from-indigo-50 to-blue-50 border border-indigo-100 p-5 shadow-sm">
+                        <div className="flex items-center gap-2 mb-1">
+                            <span className="text-lg">👁</span>
+                            <p className="text-sm font-medium text-indigo-700">Lượt xem</p>
+                        </div>
+                        <p className="mt-1 text-3xl font-bold text-indigo-900">
+                            {visitStats != null ? visitStats.total.toLocaleString('vi-VN') : '—'}
+                        </p>
+                        <p className="mt-1 text-xs text-indigo-500">Tổng tất cả thời gian</p>
+                    </div>
+                    <div className="rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100 p-5 shadow-sm">
+                        <div className="flex items-center gap-2 mb-1">
+                            <span className="text-lg">📅</span>
+                            <p className="text-sm font-medium text-emerald-700">Hôm nay</p>
+                        </div>
+                        <p className="mt-1 text-3xl font-bold text-emerald-900">
+                            {visitStats != null ? visitStats.today.toLocaleString('vi-VN') : '—'}
+                        </p>
+                        <p className="mt-1 text-xs text-emerald-500">Lượt truy cập hôm nay</p>
+                    </div>
                 </section>
+
+                {/* 7-day visit chart */}
+                {visitStats && visitStats.last7Days.length > 0 && (
+                    <section className="mt-4 rounded-2xl bg-white p-5 shadow-sm">
+                        <h2 className="mb-4 text-sm font-semibold text-stone-700">📊 Lượt truy cập 7 ngày gần nhất</h2>
+                        <div className="flex items-end gap-2 h-24">
+                            {(() => {
+                                const maxCount = Math.max(...visitStats.last7Days.map(d => d.count), 1);
+                                return visitStats.last7Days.map((d, i) => (
+                                    <div key={i} className="flex flex-1 flex-col items-center gap-1">
+                                        <span className="text-[10px] text-stone-500 font-medium">
+                                            {d.count > 0 ? d.count : ''}
+                                        </span>
+                                        <div
+                                            className="w-full rounded-t-md bg-indigo-400 transition-all"
+                                            style={{
+                                                height: `${Math.max((d.count / maxCount) * 72, d.count > 0 ? 4 : 1)}px`,
+                                                opacity: d.count > 0 ? 1 : 0.2,
+                                            }}
+                                        />
+                                        <span className="text-[10px] text-stone-400">{d.day}</span>
+                                    </div>
+                                ));
+                            })()}
+                        </div>
+                    </section>
+                )}
 
                 <section className="mt-8 rounded-3xl bg-white p-6 shadow-sm">
                     <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
