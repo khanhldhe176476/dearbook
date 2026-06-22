@@ -787,16 +787,20 @@ function PricingDialog({ isOpen, onClose }: PricingDialogProps) {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-[#3B2925] text-white">
-                  <th className="p-4 font-bold text-xs uppercase tracking-wider w-[18%]">Tiêu chí</th>
-                  <th className="p-4 font-bold text-center text-xs uppercase tracking-wider w-[27%] border-l border-white/10">Photobook Bìa Mềm<br/><span className="text-[10px] text-amber-200 lowercase italic">(softcover)</span></th>
-                  <th className="p-4 font-bold text-center text-xs uppercase tracking-wider w-[27%] border-l border-white/10">Photobook Bìa Cứng<br/><span className="text-[10px] text-amber-200 lowercase italic">(hardcover)</span></th>
-                  <th className="p-4 font-bold text-center text-xs uppercase tracking-wider w-[28%] border-l border-white/10">Bìa Cứng Mở Phẳng<br/><span className="text-[10px] text-amber-200 lowercase italic">(lay-flat hardcover)</span></th>
+                  <th className="p-4 font-bold text-xs uppercase tracking-wider w-[16%]">Tiêu chí</th>
+                  <th className="p-4 font-bold text-center text-xs uppercase tracking-wider w-[21%] border-l border-white/10">Đóng gáy Lò Xo<br/><span className="text-[10px] text-amber-200 lowercase italic">(spiral binding)</span></th>
+                  <th className="p-4 font-bold text-center text-xs uppercase tracking-wider w-[21%] border-l border-white/10">Photobook Bìa Mềm<br/><span className="text-[10px] text-amber-200 lowercase italic">(softcover)</span></th>
+                  <th className="p-4 font-bold text-center text-xs uppercase tracking-wider w-[21%] border-l border-white/10">Photobook Bìa Cứng<br/><span className="text-[10px] text-amber-200 lowercase italic">(hardcover)</span></th>
+                  <th className="p-4 font-bold text-center text-xs uppercase tracking-wider w-[21%] border-l border-white/10">Bìa Cứng Mở Phẳng<br/><span className="text-[10px] text-amber-200 lowercase italic">(lay-flat hardcover)</span></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#e6e1da]">
                 {/* Size */}
                 <tr className="hover:bg-[#F7F3EB]/30 transition-colors">
                   <td className="p-4 font-semibold text-gray-800 bg-gray-50/50">Kích thước</td>
+                  <td className="p-4 text-center border-l border-[#e6e1da]">
+                    20 x 20 cm
+                  </td>
                   <td className="p-4 text-center border-l border-[#e6e1da]">
                     A4 (21 x 30 cm)<br/>20 x 20 cm
                   </td>
@@ -812,6 +816,9 @@ function PricingDialog({ isOpen, onClose }: PricingDialogProps) {
                 <tr className="hover:bg-[#F7F3EB]/30 transition-colors">
                   <td className="p-4 font-semibold text-gray-800 bg-gray-50/50">Số trang</td>
                   <td className="p-4 text-center border-l border-[#e6e1da]">
+                    18 trang = 9 tờ<br/><span className="text-xs text-gray-500">(bao gồm bìa)</span>
+                  </td>
+                  <td className="p-4 text-center border-l border-[#e6e1da]">
                     40 trang = 20 tờ<br/><span className="text-xs text-gray-500">(bao gồm bìa)</span>
                   </td>
                   <td className="p-4 text-center border-l border-[#e6e1da]">
@@ -825,6 +832,9 @@ function PricingDialog({ isOpen, onClose }: PricingDialogProps) {
                 {/* Material */}
                 <tr className="hover:bg-[#F7F3EB]/30 transition-colors">
                   <td className="p-4 font-semibold text-gray-800 bg-gray-50/50">Chất liệu giấy</td>
+                  <td className="p-4 border-l border-[#e6e1da] text-xs">
+                    Giấy C250
+                  </td>
                   <td className="p-4 border-l border-[#e6e1da] text-xs space-y-1">
                     <p>• Bìa: Giấy C300</p>
                     <p>• Trang ruột: Giấy C150</p>
@@ -842,6 +852,9 @@ function PricingDialog({ isOpen, onClose }: PricingDialogProps) {
                 <tr className="bg-amber-50/30 hover:bg-amber-50/50 transition-colors">
                   <td className="p-4 font-semibold text-gray-800 bg-amber-50/20">Giá bán</td>
                   <td className="p-4 text-center border-l border-[#e6e1da] font-bold text-[#B9423A] text-base">
+                    180.000đ
+                  </td>
+                  <td className="p-4 text-center border-l border-[#e6e1da] font-bold text-[#B9423A] text-base">
                     245.000đ
                   </td>
                   <td className="p-4 text-center border-l border-[#e6e1da] font-bold text-[#B9423A] text-base">
@@ -855,7 +868,7 @@ function PricingDialog({ isOpen, onClose }: PricingDialogProps) {
                 {/* Box contents */}
                 <tr>
                   <td className="p-4 font-semibold text-gray-800 bg-gray-50/50">Bên trong hộp gồm</td>
-                  <td colSpan={3} className="p-4 border-l border-[#e6e1da] bg-gray-50/20">
+                  <td colSpan={4} className="p-4 border-l border-[#e6e1da] bg-gray-50/20">
                     <div className="flex flex-col sm:flex-row sm:gap-8 gap-2 text-xs text-gray-600">
                       <p><strong>• Sản phẩm chính:</strong> Photobook</p>
                       <p><strong>• Quà tặng kèm:</strong> + 1 thiệp cảm ơn</p>
@@ -869,8 +882,30 @@ function PricingDialog({ isOpen, onClose }: PricingDialogProps) {
 
           {/* Mobile Card List View */}
           <div className="block md:hidden space-y-4">
+
+            {/* Card 1: Spiral Binding */}
+            <div className="border border-[#e6e1da] rounded-2xl overflow-hidden shadow-sm bg-white">
+              <div className="bg-[#3B2925] px-4 py-3 flex justify-between items-center text-white">
+                <span className="font-bold text-xs uppercase tracking-wide">Đóng gáy Lò Xo (Spiral)</span>
+                <span className="font-bold text-[#FFD166]">180.000đ</span>
+              </div>
+              <div className="p-4 space-y-2 text-xs">
+                <div className="flex justify-between border-b pb-1.5 border-gray-100">
+                  <span className="text-gray-400">Kích thước</span>
+                  <span className="font-medium text-gray-700">20 x 20 cm</span>
+                </div>
+                <div className="flex justify-between border-b pb-1.5 border-gray-100">
+                  <span className="text-gray-400">Số trang</span>
+                  <span className="font-medium text-gray-700">18 trang = 9 tờ (gồm bìa)</span>
+                </div>
+                <div className="flex justify-between items-start">
+                  <span className="text-gray-400 flex-shrink-0">Giấy in</span>
+                  <span className="font-medium text-gray-700 text-right">Giấy C250</span>
+                </div>
+              </div>
+            </div>
             
-            {/* Card 1: Softcover */}
+            {/* Card 2: Softcover */}
             <div className="border border-[#e6e1da] rounded-2xl overflow-hidden shadow-sm bg-white">
               <div className="bg-[#3B2925] px-4 py-3 flex justify-between items-center text-white">
                 <span className="font-bold text-xs uppercase tracking-wide">Bìa Mềm (Softcover)</span>
@@ -892,7 +927,7 @@ function PricingDialog({ isOpen, onClose }: PricingDialogProps) {
               </div>
             </div>
 
-            {/* Card 2: Hardcover */}
+            {/* Card 3: Hardcover */}
             <div className="border border-[#e6e1da] rounded-2xl overflow-hidden shadow-sm bg-white">
               <div className="bg-[#3B2925] px-4 py-3 flex justify-between items-center text-white">
                 <span className="font-bold text-xs uppercase tracking-wide">Bìa Cứng (Hardcover)</span>
@@ -914,7 +949,7 @@ function PricingDialog({ isOpen, onClose }: PricingDialogProps) {
               </div>
             </div>
 
-            {/* Card 3: Lay-flat */}
+            {/* Card 4: Lay-flat */}
             <div className="border border-[#e6e1da] rounded-2xl overflow-hidden shadow-sm bg-white">
               <div className="bg-[#3B2925] px-4 py-3 flex justify-between items-center text-white">
                 <span className="font-bold text-xs uppercase tracking-wide text-amber-200">Mở Phẳng (Lay-flat)</span>

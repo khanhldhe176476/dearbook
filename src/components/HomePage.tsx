@@ -874,11 +874,12 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
           </div>
 
           {/* Categories Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
             {[
-              { id: 1, title: 'PTB bìa mềm', description: 'Nhẹ nhàng, mỏng nhẹ, tinh tế. Dành cho các album ảnh thường ngày.', price: '245K', color: '#FFF', img: loveImg, secondImg: hanoiImg },
-              { id: 2, title: 'PTB bìa cứng', description: 'Bìa cứng cáp, bền bỉ, sang trọng. Phù hợp làm quà lưu niệm lâu dài.', price: '375K', color: '#F4E5E6', img: hanoiImg, secondImg: familyImg },
-              { id: 3, title: 'PTB bìa bồi liền mở phẳng', description: 'Trải rộng 180 độ không gáy, in sắc nét. Trải nghiệm xem ảnh trọn vẹn.', price: '399K', color: '#F0E5E7', img: familyImg, secondImg: loveImg },
+              { id: 1, title: 'PTB đóng gáy lò xo', description: 'Tiện lợi, dễ lật mở 360 độ. Thích hợp cho sổ tay ảnh cá nhân, lưu bút học sinh.', price: '180K', color: '#FFF', img: loveImg, secondImg: familyImg },
+              { id: 2, title: 'PTB bìa mềm', description: 'Nhẹ nhàng, mỏng nhẹ, tinh tế. Dành cho các album ảnh thường ngày.', price: '245K', color: '#FFF', img: loveImg, secondImg: hanoiImg },
+              { id: 3, title: 'PTB bìa cứng', description: 'Bìa cứng cáp, bền bỉ, sang trọng. Phù hợp làm quà lưu niệm lâu dài.', price: '375K', color: '#F4E5E6', img: hanoiImg, secondImg: familyImg },
+              { id: 4, title: 'PTB bìa bồi liền mở phẳng', description: 'Trải rộng 180 độ không gáy, in sắc nét. Trải nghiệm xem ảnh trọn vẹn.', price: '399K', color: '#F0E5E7', img: familyImg, secondImg: loveImg },
             ].map((category) => (
               <div key={category.id}
                 className="tier-card rounded-2xl overflow-hidden cursor-pointer group flex flex-col justify-between"
@@ -906,12 +907,15 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
                       </div>
                       {/* Right page */}
                       <AutoFlipRightPage
-                        bgColor={category.id === 3 ? '#68252C' : '#FFF'}
+                        bgColor={category.id === 4 ? '#68252C' : '#FFF'}
                         pages={
                           category.id === 1 ? [
+                            <div className="p-4 h-full bg-white"><p className="font-handwriting text-2xl text-amber-600 mb-2">Spiral Book</p><img src={familyImg} className="w-full h-24 object-cover rounded shadow" alt="" /></div>,
+                            <div className="p-4 h-full bg-white"><p className="font-handwriting text-2xl text-amber-700 mb-2">Memories</p><img src={hanoiImg} className="w-full h-24 object-cover rounded shadow" alt="" /></div>,
+                          ] : category.id === 2 ? [
                             <div className="p-4 h-full bg-white"><p className="font-handwriting text-3xl text-pink-500 mb-2">Begin again</p><img src={hanoiImg} className="w-full h-24 object-cover rounded shadow" alt="" /></div>,
                             <div className="p-4 h-full bg-white"><p className="font-handwriting text-2xl text-rose-500 mb-2">My story</p><img src={loveImg} className="w-full h-24 object-cover rounded shadow" alt="" /></div>,
-                          ] : category.id === 2 ? [
+                          ] : category.id === 3 ? [
                             <div className="grid grid-cols-2 gap-2 p-3 h-full bg-white"><img src={hanoiImg} className="w-full h-20 object-cover rounded" alt="" /><img src={familyImg} className="w-full h-20 object-cover rounded" alt="" /><img src={loveImg} className="w-full h-20 object-cover rounded" alt="" /><div className="w-full h-20 bg-gray-100 rounded" /></div>,
                             <div className="p-4 h-full bg-white flex items-center justify-center"><img src={familyImg} className="w-28 h-28 rounded-full object-cover shadow-lg border-4 border-gray-100" alt="" /></div>,
                           ] : [
@@ -925,11 +929,13 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
                 </div>
 
                 {/* Info */}
-                <div className="p-5 pt-0 text-center">
-                  <h4 className="font-serif text-2xl text-[#3B2925] mb-2 group-hover:text-[#B9423A] transition-colors duration-300 font-bold">
-                    {category.title}
-                  </h4>
-                  <p className="text-[#6B4B43] text-sm mb-4 leading-relaxed">{category.description}</p>
+                <div className="p-5 pt-0 text-center flex-1 flex flex-col justify-between">
+                  <div>
+                    <h4 className="font-serif text-2xl text-[#3B2925] mb-2 group-hover:text-[#B9423A] transition-colors duration-300 font-bold">
+                      {category.title}
+                    </h4>
+                    <p className="text-[#6B4B43] text-sm mb-4 leading-relaxed">{category.description}</p>
+                  </div>
                   <button onClick={(e) => { e.stopPropagation(); onGetStarted(); }}
                     className="w-full py-2.5 rounded-xl border border-[#B9423A] text-[#B9423A] bg-white hover:bg-[#B9423A] hover:text-white font-semibold transition duration-300">
                     Chọn loại này
