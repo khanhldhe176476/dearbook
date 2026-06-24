@@ -898,8 +898,8 @@
         },
         {
           "id": "auto-template-gia-dinh-gia-dinh-la-so-1",
-          "name": "Gia đình là số 1",
-          "description": "Sách ảnh Gia đình là số 1 với thiết kế tuyệt đẹp",
+          "name": "gia-dinh-la-so-1",
+          "description": "Sách ảnh gia-dinh-la-so-1 với thiết kế tuyệt đẹp",
           "pages": [
             {
               "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-1",

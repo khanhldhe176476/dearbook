@@ -102,6 +102,14 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
   const [loading, setLoading] = useState(false);
   const [orderId, setOrderId] = useState<string | null>(null);
 
+  // ── Coupon / Mã giảm giá ──
+  const [couponCode, setCouponCode] = useState('');
+  const [couponDiscount, setCouponDiscount] = useState(0);
+  const [couponError, setCouponError] = useState('');
+  const [couponSuccess, setCouponSuccess] = useState('');
+  const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
+  const [appliedCouponCode, setAppliedCouponCode] = useState<string | null>(null);
+
   // Phone validation
   const [phoneError, setPhoneError] = useState('');
   const validatePhone = (phone: string): boolean => {
@@ -154,7 +162,8 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
   const pagePrice = additionalPages * currentProduct.extraPageCost;
   const shippingFee = 0;
   const totalOriginal = basePrice + pagePrice + shippingFee;
-  const totalPrice = paymentMethod === 'deposit' ? totalOriginal * 0.5 : totalOriginal;
+  const totalBeforeDiscount = paymentMethod === 'deposit' ? totalOriginal * 0.5 : totalOriginal;
+  const totalPrice = Math.max(0, totalBeforeDiscount - couponDiscount);
 
   // Check if selected page count meets the current product's minimum
   const isBelowMinimum = selectedPageCount < currentProduct.pagesLimit;
@@ -168,6 +177,46 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
     if (!sizeSupported) {
       setSelectedSize(prod.sizes[0].value);
     }
+  };
+
+  const handleApplyCoupon = async () => {
+    const code = couponCode.trim();
+    if (!code) {
+      setCouponError('Vui lòng nhập mã giảm giá.');
+      return;
+    }
+
+    setIsValidatingCoupon(true);
+    setCouponError('');
+    setCouponSuccess('');
+
+    try {
+      const result = await orderApi.validateCoupon(code, totalBeforeDiscount);
+      if (result.valid) {
+        setCouponDiscount(result.discountAmount || 0);
+        setAppliedCouponCode(result.code || code.toUpperCase());
+        setCouponSuccess(result.message || `Đã áp dụng mã ${code.toUpperCase()}`);
+        toast.success(result.message || `Đã áp dụng mã giảm giá!`);
+      } else {
+        setCouponDiscount(0);
+        setAppliedCouponCode(null);
+        setCouponError(result.message || 'Mã giảm giá không hợp lệ.');
+      }
+    } catch (err: any) {
+      setCouponDiscount(0);
+      setAppliedCouponCode(null);
+      setCouponError('Không thể kiểm tra mã giảm giá. Vui lòng thử lại.');
+    } finally {
+      setIsValidatingCoupon(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setCouponCode('');
+    setCouponDiscount(0);
+    setAppliedCouponCode(null);
+    setCouponError('');
+    setCouponSuccess('');
   };
 
   const handlePagesSubmit = (pageIds: string[]) => {
@@ -333,6 +382,8 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
         designPages: designPages,
         pdfFileName: pdfFileName,
         pdfFileData: uploadedPdfPath, // Sử dụng đường dẫn file đã upload thành công
+        couponCode: appliedCouponCode,
+        discountAmount: couponDiscount,
       };
       console.log('[OrderFlow] 4️⃣ OrderData prepared, designPages:', designPages.length);
 
@@ -910,6 +961,73 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                         style={{ border: '1.5px solid #DDD8D0', color: '#000000', background: '#FAFAF8' }}
                       />
                     </div>
+
+                    {/* ── Mã giảm giá ── */}
+                    <div className="sm:col-span-2">
+                      <label className="block text-xs font-medium mb-1.5" style={{ color: '#7A6F66' }}>Mã giảm giá (tùy chọn)</label>
+                      {appliedCouponCode ? (
+                        <div className="flex items-center gap-2 p-3 rounded-xl border-2 border-green-200 bg-green-50">
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-bold text-green-700 truncate">
+                              ✓ {appliedCouponCode}
+                            </p>
+                            <p className="text-xs text-green-600">
+                              Giảm {couponDiscount.toLocaleString('vi-VN')} ₫
+                            </p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={handleRemoveCoupon}
+                            className="px-3 py-1.5 rounded-lg text-xs font-bold bg-green-100 text-green-700 hover:bg-green-200 transition-colors flex-shrink-0"
+                          >
+                            Gỡ
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={couponCode}
+                            onChange={e => {
+                              setCouponCode(e.target.value.toUpperCase());
+                              setCouponError('');
+                              setCouponSuccess('');
+                            }}
+                            onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleApplyCoupon(); } }}
+                            placeholder="VD: GIAM20K, GIAM15..."
+                            className="flex-1 px-4 py-3 rounded-xl outline-none text-sm transition-all font-mono tracking-wider"
+                            style={{
+                              border: couponError ? '2px solid #f87171' : '1.5px solid #DDD8D0',
+                              color: '#000000',
+                              background: '#FAFAF8',
+                            }}
+                            onFocus={e => (e.target as HTMLElement).style.borderColor = couponError ? '#ef4444' : '#7A6F66'}
+                            onBlur={e => (e.target as HTMLElement).style.borderColor = couponError ? '#f87171' : '#DDD8D0'}
+                          />
+                          <button
+                            type="button"
+                            onClick={handleApplyCoupon}
+                            disabled={isValidatingCoupon || !couponCode.trim()}
+                            className="px-4 py-3 rounded-xl font-bold text-sm transition-all flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                            style={{ background: '#000000', color: '#EDE9E3' }}
+                            onMouseEnter={e => !isValidatingCoupon && ((e.currentTarget as HTMLElement).style.background = '#1a1a1a')}
+                            onMouseLeave={e => !isValidatingCoupon && ((e.currentTarget as HTMLElement).style.background = '#000000')}
+                          >
+                            {isValidatingCoupon ? '...' : 'Áp dụng'}
+                          </button>
+                        </div>
+                      )}
+                      {couponError && (
+                        <p className="text-xs mt-1 flex items-center gap-1" style={{ color: '#ef4444' }}>
+                          <AlertTriangle className="w-3 h-3" /> {couponError}
+                        </p>
+                      )}
+                      {couponSuccess && (
+                        <p className="text-xs mt-1 flex items-center gap-1" style={{ color: '#10b981' }}>
+                          <CheckCircle className="w-3 h-3" /> {couponSuccess}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -1100,6 +1218,9 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                       <p>• Kích thước: <span className="font-semibold text-[#000000]">{selectedSize}</span></p>
                       <p>• Số trang: <span className="font-semibold text-[#000000]">{selectedPageCount} trang</span></p>
                       <p>• Hình thức thanh toán: <span className="font-bold text-orange-600">{paymentMethod === 'deposit' ? 'Đặt cọc trước 50%' : 'Thanh toán trước 100%'}</span></p>
+                      {couponDiscount > 0 && (
+                        <p>• Mã giảm giá: <span className="font-bold text-green-600">{appliedCouponCode} (-{couponDiscount.toLocaleString('vi-VN')} ₫)</span></p>
+                      )}
                       <p>• Người nhận: <span className="font-semibold text-[#000000]">{shippingInfo.fullName}</span></p>
                       <p>• SĐT: <span className="font-semibold text-[#000000]">{shippingInfo.phone}</span></p>
                       <p>• Email: <span className="font-semibold text-[#000000]">{shippingInfo.email}</span></p>
@@ -1174,6 +1295,12 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     <div className="flex justify-between text-xs text-[#7A6F66] mb-1.5 animate-in fade-in duration-300">
                       <span>Đã bớt 50% đặt cọc:</span>
                       <span className="font-semibold text-rose-500">-( {(totalOriginal * 0.5).toLocaleString('vi-VN')} ₫ )</span>
+                    </div>
+                  )}
+                  {couponDiscount > 0 && (
+                    <div className="flex justify-between text-xs text-[#7A6F66] mb-1.5 animate-in fade-in duration-300">
+                      <span>Mã giảm giá {appliedCouponCode}:</span>
+                      <span className="font-semibold text-green-600">-{couponDiscount.toLocaleString('vi-VN')} ₫</span>
                     </div>
                   )}
                   <div className="flex justify-between font-bold">
