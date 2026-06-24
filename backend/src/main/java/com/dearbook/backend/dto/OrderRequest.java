@@ -18,5 +18,7 @@ public record OrderRequest(
     String paymentMethod,
     Object designPages,
     String pdfFileName,
-    String pdfFileData
+    String pdfFileData,
+    String couponCode,
+    java.math.BigDecimal discountAmount
 ) {}

@@ -3,6 +3,7 @@ package com.dearbook.backend.controller;
 import com.dearbook.backend.dto.OrderRequest;
 import com.dearbook.backend.dto.OrderResponse;
 import com.dearbook.backend.security.UserPrincipal;
+import com.dearbook.backend.service.CouponService;
 import com.dearbook.backend.service.OrderService;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -12,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -20,9 +22,11 @@ import java.util.UUID;
 @RequestMapping("/api/orders")
 public class OrderController {
     private final OrderService orderService;
+    private final CouponService couponService;
 
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, CouponService couponService) {
         this.orderService = orderService;
+        this.couponService = couponService;
     }
 
     /**
@@ -35,6 +39,20 @@ public class OrderController {
             return null;
         }
         return principal.getId();
+    }
+
+    @PostMapping("/validate-coupon")
+    public ResponseEntity<?> validateCoupon(@RequestBody Map<String, Object> payload) {
+        String code = (String) payload.get("code");
+        Object totalObj = payload.get("orderTotal");
+        BigDecimal orderTotal;
+        try {
+            orderTotal = new BigDecimal(String.valueOf(totalObj));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("valid", false, "message", "orderTotal không hợp lệ"));
+        }
+        Map<String, Object> result = couponService.validate(code, orderTotal);
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping

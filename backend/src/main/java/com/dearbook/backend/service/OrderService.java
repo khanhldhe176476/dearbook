@@ -63,7 +63,7 @@ public class OrderService {
     );
 
     private static final Set<String> VALID_PAYMENT_METHODS = Set.of(
-        "FULL", "DEPOSIT"
+        "FULL"
     );
 
     /** Vietnamese phone number: starts with 0, exactly 10 digits */
@@ -77,6 +77,7 @@ public class OrderService {
     private final ProfileRepository profileRepo;
     private final UserBookPageRepository userBookPageRepo;
     private final PricingService pricingService;
+    private final CouponService couponService;
     private final ObjectMapper objectMapper;
 
     @Value("${app.upload.dir:uploads}")
@@ -90,6 +91,7 @@ public class OrderService {
             ProfileRepository profileRepo,
             UserBookPageRepository userBookPageRepo,
             PricingService pricingService,
+            CouponService couponService,
             ObjectMapper objectMapper
     ) {
         this.orderRepo = orderRepo;
@@ -99,6 +101,7 @@ public class OrderService {
         this.profileRepo = profileRepo;
         this.userBookPageRepo = userBookPageRepo;
         this.pricingService = pricingService;
+        this.couponService = couponService;
         this.objectMapper = objectMapper;
     }
 
@@ -120,7 +123,7 @@ public class OrderService {
             throw new IllegalArgumentException("city is required");
         }
         if (req.paymentMethod() == null || !VALID_PAYMENT_METHODS.contains(req.paymentMethod().toUpperCase())) {
-            throw new IllegalArgumentException("paymentMethod must be FULL or DEPOSIT, got: " + req.paymentMethod());
+            throw new IllegalArgumentException("paymentMethod must be FULL, got: " + req.paymentMethod());
         }
 
         String productType = req.productType() != null ? req.productType().toLowerCase() : "hardcover";
@@ -160,7 +163,6 @@ public class OrderService {
 
         // Use PricingService to calculate the total consistently with the frontend
         // Formula: basePrice(productType, size) + extraPages * extraPageCost + shippingFee
-        // With 50% discount if payment method is DEPOSIT
         BigDecimal totalAmount = pricingService.calculateTotal(
                 req.productType(),
                 req.productSize(),
@@ -169,6 +171,27 @@ public class OrderService {
         );
         // Multiply by quantity for multiple copies
         totalAmount = totalAmount.multiply(BigDecimal.valueOf(quantity));
+
+        // ── Áp dụng mã giảm giá (nếu có) ──
+        BigDecimal discountAmount = BigDecimal.ZERO;
+        String appliedCouponCode = null;
+
+        if (req.couponCode() != null && !req.couponCode().isBlank()) {
+            Map<String, Object> couponResult = couponService.validate(
+                    req.couponCode().trim().toUpperCase(),
+                    totalAmount
+            );
+            if (Boolean.TRUE.equals(couponResult.get("valid"))) {
+                discountAmount = (BigDecimal) couponResult.get("discountAmount");
+                appliedCouponCode = (String) couponResult.get("code");
+                totalAmount = totalAmount.subtract(discountAmount).max(BigDecimal.ZERO);
+                log.info("Coupon {} applied: discount={}, finalTotal={}",
+                        appliedCouponCode, discountAmount, totalAmount);
+            } else {
+                // Mã không hợp lệ — vẫn cho đặt hàng nhưng không áp dụng giảm giá
+                log.warn("Coupon {} rejected: {}", req.couponCode(), couponResult.get("message"));
+            }
+        }
 
         Order order = new Order();
         order.setUser(user);
@@ -184,6 +207,8 @@ public class OrderService {
         order.setPdfFileName(req.pdfFileName());
         order.setPdfFileData(req.pdfFileData());
         order.setTotalAmount(totalAmount);
+        order.setCouponCode(appliedCouponCode);
+        order.setDiscountAmount(discountAmount);
         order.setStatus("PENDING");
 
         if (req.designPages() != null) {
@@ -211,6 +236,16 @@ public class OrderService {
         payment.setPaymentMethod(req.paymentMethod());
         payment.setStatus("PENDING");
         paymentRepo.save(payment);
+
+        // ── Đánh dấu mã giảm giá đã dùng (sau khi order đã lưu thành công) ──
+        if (appliedCouponCode != null) {
+            boolean incremented = couponService.apply(appliedCouponCode);
+            if (incremented) {
+                log.info("Coupon {} usage count incremented for order {}", appliedCouponCode, savedOrder.getId());
+            } else {
+                log.warn("Failed to increment usage count for coupon {} (order {})", appliedCouponCode, savedOrder.getId());
+            }
+        }
 
         return new OrderResponse(
                 savedOrder.getId(),

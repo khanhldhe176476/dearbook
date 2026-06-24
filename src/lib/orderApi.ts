@@ -80,12 +80,34 @@ async function authHeaders(userId: string): Promise<Record<string, string>> {
   return { Authorization: `Bearer ${token}` };
 }
 
+export interface CouponValidationResult {
+  valid: boolean;
+  code?: string;
+  discountType?: string;
+  discountAmount?: number;
+  finalTotal?: number;
+  message?: string;
+}
+
 export const orderApi = {
   getMyOrders: async (userId: string) =>
     apiGet<OrderResponse[]>('/api/orders/my', { headers: await authHeaders(userId) }),
 
   placeOrder: async (userId: string, data: OrderRequest) =>
     apiPost<OrderResponse>('/api/orders', data, { headers: await authHeaders(userId) }),
+
+  validateCoupon: async (code: string, orderTotal: number): Promise<CouponValidationResult> => {
+    const res = await fetch(`${API_BASE_URL}/api/orders/validate-coupon`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code, orderTotal }),
+    });
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`Validate coupon failed: ${res.status} ${text}`);
+    }
+    return res.json();
+  },
 
   uploadPdf: async (orderId: string, userId: string, file: File) => {
     const formData = new FormData();

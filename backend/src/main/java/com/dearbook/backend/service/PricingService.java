@@ -22,7 +22,6 @@ public class PricingService {
     // Keep backend in sync to avoid price mismatch between what user sees and what is stored in DB.
     // To re-enable shipping fee, update BOTH this constant AND OrderFlow.tsx shippingFee simultaneously.
     private static final BigDecimal SHIPPING_FEE = BigDecimal.valueOf(0);
-    private static final BigDecimal DEPOSIT_RATE = BigDecimal.valueOf(0.5);
 
     /**
      * Calculate the base price for a given product type and size.
@@ -75,14 +74,13 @@ public class PricingService {
      *   basePrice = productType + size → price
      *   extraPages = max(0, customPages - pagesLimit)
      *   extraPrice = extraPages × extraPageCost
-     *   totalOriginal = basePrice + extraPrice + shippingFee
-     *   total = paymentMethod == 'deposit' ? totalOriginal × 0.5 : totalOriginal
+     *   total = basePrice + extraPrice + shippingFee
      * </pre>
      *
      * @param productType   one of: softcover, hardcover, layflat
      * @param productSize   one of: A4, 20x20 (currently only layflat requires 20x20)
      * @param customPages   number of pages the user wants to print
-     * @param paymentMethod FULL or DEPOSIT (case-insensitive)
+     * @param paymentMethod payment method (ignored, kept for backward compatibility with OrderService)
      * @return the calculated total amount
      */
     public BigDecimal calculateTotal(String productType, String productSize, int customPages, String paymentMethod) {
@@ -93,25 +91,9 @@ public class PricingService {
         int additionalPages = Math.max(0, customPages - pagesLimit);
         BigDecimal extraPrice = extraPageCost.multiply(BigDecimal.valueOf(additionalPages));
 
-        BigDecimal totalOriginal = basePrice.add(extraPrice).add(SHIPPING_FEE);
+        BigDecimal total = basePrice.add(extraPrice).add(SHIPPING_FEE);
 
-        if (isDeposit(paymentMethod)) {
-            return totalOriginal.multiply(DEPOSIT_RATE).setScale(0, RoundingMode.HALF_UP);
-        }
-
-        return totalOriginal.setScale(0, RoundingMode.HALF_UP);
-    }
-
-    /**
-     * Calculate the full (non-deposit) total — used for storing the actual order value
-     * even when the user only pays a deposit.
-     */
-    public BigDecimal calculateFullTotal(String productType, String productSize, int customPages) {
-        return calculateTotal(productType, productSize, customPages, "FULL");
-    }
-
-    private boolean isDeposit(String paymentMethod) {
-        return paymentMethod != null && paymentMethod.trim().equalsIgnoreCase("DEPOSIT");
+        return total.setScale(0, RoundingMode.HALF_UP);
     }
 
     private String normalizeProductType(String productType) {
