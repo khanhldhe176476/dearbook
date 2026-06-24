@@ -28,6 +28,7 @@ public class PricingService {
      */
     public BigDecimal getBasePrice(String productType, String productSize) {
         return switch (normalizeProductType(productType)) {
+            case "spiral"    -> BigDecimal.valueOf(180_000);
             case "softcover" -> BigDecimal.valueOf(245_000);
             case "hardcover" -> BigDecimal.valueOf(375_000);
             case "layflat"   -> BigDecimal.valueOf(399_000);
@@ -40,6 +41,7 @@ public class PricingService {
      */
     public int getPagesLimit(String productType) {
         return switch (normalizeProductType(productType)) {
+            case "spiral"                 -> 18;
             case "softcover", "hardcover" -> 40;
             case "layflat"                -> 14;
             default                       -> 40;
@@ -51,6 +53,7 @@ public class PricingService {
      */
     public BigDecimal getExtraPageCost(String productType) {
         return switch (normalizeProductType(productType)) {
+            case "spiral"                 -> BigDecimal.valueOf(5_000);
             case "softcover", "hardcover" -> BigDecimal.valueOf(6_000);
             case "layflat"                -> BigDecimal.valueOf(15_000);
             default                       -> BigDecimal.valueOf(6_000);
@@ -62,6 +65,7 @@ public class PricingService {
      */
     public BigDecimal getExtraSheetCost(String productType) {
         return switch (normalizeProductType(productType)) {
+            case "spiral"                 -> BigDecimal.valueOf(10_000);
             case "softcover", "hardcover" -> BigDecimal.valueOf(12_000);
             case "layflat"                -> BigDecimal.valueOf(30_000);
             default                       -> BigDecimal.valueOf(12_000);

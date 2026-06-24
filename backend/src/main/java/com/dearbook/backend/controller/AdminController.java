@@ -3,6 +3,8 @@ package com.dearbook.backend.controller;
 import com.dearbook.backend.dto.AdminOrderResponse;
 import com.dearbook.backend.security.JwtProvider;
 import com.dearbook.backend.service.OrderService;
+import com.dearbook.backend.service.PageViewService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ public class AdminController {
 
     private final OrderService orderService;
     private final JwtProvider jwtProvider;
+    private final PageViewService pageViewService;
 
     @Value("${app.admin.username:admin}")
     private String adminUsername;
@@ -25,9 +28,10 @@ public class AdminController {
     @Value("${app.admin.password:Mh123#@!}")
     private String adminPassword;
 
-    public AdminController(OrderService orderService, JwtProvider jwtProvider) {
+    public AdminController(OrderService orderService, JwtProvider jwtProvider, PageViewService pageViewService) {
         this.orderService = orderService;
         this.jwtProvider = jwtProvider;
+        this.pageViewService = pageViewService;
     }
 
     @PostMapping("/login")
@@ -116,5 +120,44 @@ public class AdminController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
+    }
+
+    // -------------------------------------------------------------------------
+    // Visitor / Page-view tracking
+    // -------------------------------------------------------------------------
+
+    /**
+     * Public endpoint — frontend gọi để ghi nhận mỗi lượt truy cập.
+     * Không yêu cầu xác thực (được khai báo permitAll trong SecurityConfig).
+     */
+    @PostMapping("/pageview/record")
+    public ResponseEntity<?> recordPageView(
+            @RequestBody(required = false) Map<String, String> body,
+            HttpServletRequest request) {
+        String page = body != null ? body.getOrDefault("page", "/") : "/";
+        String userAgent = request.getHeader("User-Agent");
+
+        // Lấy IP thật khi đứng sau reverse proxy
+        String ip = request.getHeader("X-Forwarded-For");
+        if (ip == null || ip.isBlank()) {
+            ip = request.getRemoteAddr();
+        } else {
+            ip = ip.split(",")[0].trim();
+        }
+
+        pageViewService.recordView(page, ip, userAgent);
+        return ResponseEntity.ok(Map.of("recorded", true));
+    }
+
+    /**
+     * Admin-only endpoint — trả về thống kê lượt truy cập.
+     */
+    @GetMapping("/stats/visits")
+    public ResponseEntity<?> getVisitStats() {
+        return ResponseEntity.ok(Map.of(
+                "total",    pageViewService.getTotalCount(),
+                "today",    pageViewService.getTodayCount(),
+                "last7Days", pageViewService.getLast7Days()
+        ));
     }
 }

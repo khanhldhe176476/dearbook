@@ -24,6 +24,19 @@ const VIETNAM_PROVINCES = [
 
 const products = [
   {
+    id: 'spiral' as const,
+    name: 'Spiral Bound Photobook',
+    nameVi: 'Sách ảnh Gáy Lò Xo',
+    sizes: [
+      { label: '20x20cm', value: '20x20' as const, price: 180000 },
+    ],
+    pagesLimit: 18,
+    pagesLabel: '18 trang = 9 tờ (cả bìa)',
+    paperType: 'Giấy C250',
+    extraPageCost: 5000, // 5.000đ / trang = 10.000đ / tờ (Giấy C250)
+    extraSheetCost: 10000,
+  },
+  {
     id: 'softcover' as const,
     name: 'Softcover Photobook',
     nameVi: 'Sách ảnh Bìa Mềm',
@@ -131,7 +144,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
   // Use the actual logged in user id or fallback
   const userId = user.id || '00000000-0000-0000-0000-000000000000';
 
-  const [selectedProduct, setSelectedProduct] = useState<'softcover' | 'hardcover' | 'layflat'>('hardcover');
+  const [selectedProduct, setSelectedProduct] = useState<'softcover' | 'hardcover' | 'layflat' | 'spiral'>('hardcover');
   const [selectedSize, setSelectedSize] = useState<'A4' | '20x20'>('A4');
 
   // Page selection state - initialized from book pages (all selected by default)
@@ -157,7 +170,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
   // Find which products are compatible with the selected page count
   const compatibleProducts = products.filter(p => selectedPageCount >= p.pagesLimit);
 
-  const handleProductSelect = (productId: 'softcover' | 'hardcover' | 'layflat') => {
+  const handleProductSelect = (productId: 'softcover' | 'hardcover' | 'layflat' | 'spiral') => {
     setSelectedProduct(productId);
     const prod = products.find(p => p.id === productId)!;
     const sizeSupported = prod.sizes.some(s => s.value === selectedSize);
@@ -517,7 +530,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     </h2>
                   </div>
                   <p className="text-xs -mt-4 text-[#7A6F66]">
-                    Vui lòng chọn 1 trong 3 loại photobook cao cấp dưới đây:
+                    Vui lòng chọn 1 trong 4 loại photobook cao cấp dưới đây:
                   </p>
 
                   {/* Minimum page count warning for current product */}
@@ -540,7 +553,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     </div>
                   )}
 
-                  <div className="grid sm:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {products.map((prod) => {
                       const isSelected = selectedProduct === prod.id;
                       const isProdBelowMin = selectedPageCount < prod.pagesLimit;
@@ -659,7 +672,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                       {selectedPageCount > currentProduct.pagesLimit ? (
                         <p className="text-[#10b981] font-semibold">
                           • Bạn đang in thêm: {(selectedPageCount - currentProduct.pagesLimit)} trang ({Math.ceil((selectedPageCount - currentProduct.pagesLimit) / 2)} tờ). Phụ phí: +{pagePrice.toLocaleString('vi-VN')} ₫.
-                          {currentProduct.id !== 'layflat' ? ' (12.000 ₫/tờ C150)' : ' (30.000 ₫/tờ Lay-flat)'}
+                          {currentProduct.id === 'spiral' ? ' (10.000 ₫/tờ C250)' : currentProduct.id === 'layflat' ? ' (30.000 ₫/tờ Lay-flat)' : ' (12.000 ₫/tờ C150)'}
                         </p>
                       ) : (
                         <p>• Số trang trong giới hạn tiêu chuẩn, không phát sinh phụ phí.</p>
@@ -1157,7 +1170,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                     </p>
                     <div className="w-64 mx-auto border-2 border-neutral-100 rounded-xl overflow-hidden shadow-sm p-1 bg-white">
                       <img
-                        src="/vietcombank_qr.png"
+                        src="/NgọcQR.jpg"
                         alt="Payment QR Code"
                         className="w-full h-auto object-contain"
                       />

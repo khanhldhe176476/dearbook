@@ -151,9 +151,21 @@ export function Test3DButton() {
     <>
       <button
         onClick={() => setShow3D(true)}
-        className="fixed bottom-6 right-6 flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all font-bold z-40"
+        className="fixed bottom-6 right-6 flex items-center gap-2 px-6 py-3 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all font-bold z-40 border border-[#e6e1da]/60"
+        style={{
+          backgroundColor: '#ffffff',
+          color: '#3B2925',
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.color = '#B9423A';
+          e.currentTarget.style.borderColor = 'rgba(185, 66, 58, 0.3)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.color = '#3B2925';
+          e.currentTarget.style.borderColor = 'rgba(230, 225, 218, 0.6)';
+        }}
       >
-        <Box className="w-5 h-5" />
+        <Box className="w-5 h-5 text-current" />
         <span>Test 3D Book</span>
       </button>
 

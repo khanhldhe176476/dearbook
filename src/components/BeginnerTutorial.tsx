@@ -78,33 +78,49 @@ export function BeginnerTutorial({ currentStep }: BeginnerTutorialProps) {
   const Icon = currentTutorial.icon;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 max-w-sm animate-fade-in">
-      <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl shadow-xl border border-orange-200 overflow-hidden">
+    <div className="fixed bottom-6 right-6 z-[9999] max-w-sm animate-fade-in" style={{ zIndex: 9999 }}>
+      <div 
+        className="rounded-2xl shadow-xl overflow-hidden"
+        style={{
+          background: 'linear-gradient(135deg, #FFFBEB 0%, #FFF7ED 100%)',
+          border: '1px solid #FED7AA',
+          boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.08)',
+        }}
+      >
         {/* Header */}
-        <div className="bg-gradient-to-r from-rose-400 to-orange-400 px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2 text-white">
-            <Lightbulb className="w-5 h-5" />
+        <div 
+          className="px-4 py-3 flex items-center justify-between"
+          style={{
+            background: 'linear-gradient(90deg, #FB7185 0%, #FB923C 100%)',
+            color: '#ffffff',
+          }}
+        >
+          <div className="flex items-center gap-2" style={{ color: '#ffffff' }}>
+            <Lightbulb className="w-5 h-5" style={{ color: '#ffffff' }} />
             <span className="font-semibold">Mẹo hữu ích</span>
           </div>
           <button
             onClick={handleDismiss}
-            className="text-white/80 hover:text-white transition-colors"
+            className="transition-colors"
+            style={{ color: 'rgba(255, 255, 255, 0.8)', border: 'none', background: 'none', cursor: 'pointer' }}
+            onMouseEnter={(e) => e.currentTarget.style.color = '#ffffff'}
+            onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.8)'}
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-4 space-y-3">
-          <div className="flex items-center gap-2 text-gray-800">
-            <Icon className="w-5 h-5 text-rose-500" />
-            <h3 className="font-semibold">{currentTutorial.title}</h3>
+        <div className="p-4 space-y-3" style={{ background: '#FFFBEB' }}>
+          <div className="flex items-center gap-2 text-gray-800" style={{ color: '#1F2937' }}>
+            <Icon className="w-5 h-5 text-rose-500" style={{ color: '#F43F5E' }} />
+            <h3 className="font-semibold" style={{ color: '#1F2937', margin: 0 }}>{currentTutorial.title}</h3>
           </div>
 
-          <ul className="space-y-2">
+          <ul className="space-y-2" style={{ padding: 0, margin: 0, listStyle: 'none' }}>
             {currentTutorial.tips.map((tip, index) => (
-              <li key={index} className="flex items-start gap-2 text-sm text-gray-700">
-                <ChevronRight className="w-4 h-4 mt-0.5 text-rose-400 flex-shrink-0" />
+              <li key={index} className="flex items-start gap-2 text-sm text-gray-700" style={{ color: '#374151' }}>
+                <ChevronRight className="w-4 h-4 mt-0.5 text-rose-400 flex-shrink-0" style={{ color: '#FB7185' }} />
                 <span>{tip}</span>
               </li>
             ))}
@@ -112,10 +128,13 @@ export function BeginnerTutorial({ currentStep }: BeginnerTutorialProps) {
         </div>
 
         {/* Footer */}
-        <div className="px-4 py-2 bg-white/50 border-t border-orange-200">
+        <div className="px-4 py-2 border-t border-orange-200" style={{ background: 'rgba(255, 255, 255, 0.65)', borderTop: '1px solid #FED7AA' }}>
           <button
             onClick={handleDismiss}
-            className="text-xs text-gray-600 hover:text-gray-800 transition-colors"
+            className="text-xs transition-colors"
+            style={{ color: '#4B5563', border: 'none', background: 'none', cursor: 'pointer', padding: 0 }}
+            onMouseEnter={(e) => e.currentTarget.style.color = '#111827'}
+            onMouseLeave={(e) => e.currentTarget.style.color = '#4B5563'}
           >
             Không hiển thị lại
           </button>

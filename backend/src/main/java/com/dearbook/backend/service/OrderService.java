@@ -59,7 +59,7 @@ public class OrderService {
     );
 
     private static final Set<String> VALID_PRODUCT_TYPES = Set.of(
-        "softcover", "hardcover", "layflat"
+        "softcover", "hardcover", "layflat", "spiral"
     );
 
     private static final Set<String> VALID_PAYMENT_METHODS = Set.of(
