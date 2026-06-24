@@ -35,51 +35,51 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(AbstractHttpConfigurer::disable)
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .exceptionHandling(exceptions -> exceptions
-                .authenticationEntryPoint((request, response, authException) -> {
-                    // 401 — user is not authenticated (no valid token)
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                    response.setCharacterEncoding("UTF-8");
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(exceptions -> exceptions
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                            response.setCharacterEncoding("UTF-8");
 
-                    Map<String, Object> body = new LinkedHashMap<>();
-                    body.put("status", 401);
-                    body.put("error", "Unauthorized");
-                    body.put("message", "Yêu cầu cần xác thực. Vui lòng cung cấp token hợp lệ.");
-                    body.put("timestamp", Instant.now().toString());
+                            Map<String, Object> body = new LinkedHashMap<>();
+                            body.put("status", 401);
+                            body.put("error", "Unauthorized");
+                            body.put("message", "Yêu cầu cần xác thực. Vui lòng cung cấp token hợp lệ.");
+                            body.put("timestamp", Instant.now().toString());
 
-                    objectMapper.writeValue(response.getWriter(), body);
-                })
-                .accessDeniedHandler((request, response, accessDeniedException) -> {
-                    // 403 — user is authenticated but lacks required role
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                    response.setCharacterEncoding("UTF-8");
+                            objectMapper.writeValue(response.getWriter(), body);
+                        })
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                            response.setCharacterEncoding("UTF-8");
 
-                    Map<String, Object> body = new LinkedHashMap<>();
-                    body.put("status", 403);
-                    body.put("error", "Forbidden");
-                    body.put("message", "Bạn không có quyền truy cập tài nguyên này.");
-                    body.put("timestamp", Instant.now().toString());
+                            Map<String, Object> body = new LinkedHashMap<>();
+                            body.put("status", 403);
+                            body.put("error", "Forbidden");
+                            body.put("message", "Bạn không có quyền truy cập tài nguyên này.");
+                            body.put("timestamp", Instant.now().toString());
 
-                    objectMapper.writeValue(response.getWriter(), body);
-                })
-            )
-            .authorizeHttpRequests(auth -> auth
-long1
-                .requestMatchers("/api/v1/public/**", "/api/v1/auth/**", "/api/admin/login", "/actuator/health", "/error", "/api/orders/validate-coupon").permitAll
-                .requestMatchers("/api/v1/public/**", "/api/v1/auth/**", "/api/admin/login",
-                        "/api/admin/pageview/record", "/actuator/health", "/error").permitAll()
- main
-                .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
-                .requestMatchers("/api/orders/**").authenticated()
-                .requestMatchers("/api/v1/**").authenticated()
-                .anyRequest().permitAll()
-            )
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                            objectMapper.writeValue(response.getWriter(), body);
+                        }))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/api/v1/public/**",
+                                "/api/v1/auth/**",
+                                "/api/admin/login",
+                                "/api/admin/pageview/record",
+                                "/actuator/health",
+                                "/error",
+                                "/api/orders/validate-coupon")
+                        .permitAll()
+                        .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/api/orders/**").authenticated()
+                        .requestMatchers("/api/v1/**").authenticated()
+                        .anyRequest().permitAll())
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -87,10 +87,11 @@ long1
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*")); // In production, replace * with your frontend domain
+        configuration.setAllowedOrigins(List.of("*"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-User-Id"));
         configuration.setExposedHeaders(List.of("Authorization"));
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
