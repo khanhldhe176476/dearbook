@@ -63,15 +63,7 @@ public class CouponService {
             return Map.of("valid", false, "message", "Mã giảm giá đã hết lượt sử dụng.");
         }
 
-        // 6. Đơn hàng không đủ giá trị tối thiểu
-        BigDecimal minAmount = coupon.getMinOrderAmount() != null ? coupon.getMinOrderAmount() : BigDecimal.ZERO;
-        if (orderTotal.compareTo(minAmount) < 0) {
-            return Map.of("valid", false,
-                    "message", String.format("Đơn hàng tối thiểu %,.0f ₫ để áp dụng mã này.",
-                            minAmount));
-        }
-
-        // 7. Tính discount
+        // 6. Tính discount
         BigDecimal discountAmount = calculateDiscount(coupon, orderTotal);
 
         if (discountAmount.compareTo(BigDecimal.ZERO) <= 0) {
