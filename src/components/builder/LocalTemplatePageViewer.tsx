@@ -38,6 +38,8 @@ export function LocalTemplatePageViewer({
 }: LocalTemplatePageViewerProps) {
   const allTemplates = autoData.themes.flatMap(t => t.templates);
   const template = allTemplates.find(t => t.id === book.templateId);
+  // Lấy aspectRatio từ template data, fallback 3/4 nếu không có
+  const templateAspectRatio = (template as any)?.aspectRatio || '3/4';
   const [viewMode, setViewMode] = useState<'grid' | 'single'>('grid');
   const [currentIdx, setCurrentIdx] = useState(0);
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
@@ -178,7 +180,7 @@ export function LocalTemplatePageViewer({
               onClick={() => openLightbox(idx)}
               className="relative rounded-xl overflow-hidden group transition-all duration-200 hover:-translate-y-1"
               style={{
-                aspectRatio: '3/4',
+                aspectRatio: templateAspectRatio,
                 border: '2px solid #eeece9',
                 boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
               }}
@@ -215,7 +217,7 @@ export function LocalTemplatePageViewer({
             style={{
               width: '100%',
               maxWidth: 480,
-              aspectRatio: '3/4',
+              aspectRatio: templateAspectRatio,
               border: '2px solid #eeece9',
             }}
           >
@@ -300,7 +302,7 @@ export function LocalTemplatePageViewer({
             {/* Image */}
             <div
               className="w-full rounded-2xl overflow-hidden shadow-2xl relative"
-              style={{ aspectRatio: '3/4', background: '#111' }}
+              style={{ aspectRatio: templateAspectRatio, background: '#111' }}
             >
               <img
                 src={pages[lightboxIdx].imageUrl}

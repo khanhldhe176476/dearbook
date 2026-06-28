@@ -898,8 +898,9 @@
         },
         {
           "id": "auto-template-gia-dinh-gia-dinh-la-so-1",
-          "name": "gia-dinh-la-so-1",
-          "description": "Sách ảnh gia-dinh-la-so-1 với thiết kế tuyệt đẹp",
+          "name": "Gia đình là số 1 (20x20)",
+          "description": "Sách ảnh Gia đình là số 1 với thiết kế tuyệt đẹp",
+          "aspectRatio": "1/1",
           "pages": [
             {
               "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-1",
@@ -908,88 +909,198 @@
             },
             {
               "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-2",
-              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_22_2026%20(1).png",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (1).png",
               "label": "Trang 2"
             },
             {
               "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-3",
-              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_22_2026%20(2).png",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (2).png",
               "label": "Trang 3"
             },
             {
               "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-4",
-              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_22_2026%20(3).png",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (3).png",
               "label": "Trang 4"
             },
             {
               "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-5",
-              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_22_2026%20(4).png",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (4).png",
               "label": "Trang 5"
             },
             {
               "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-6",
-              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_22_2026%20(5).png",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (5).png",
               "label": "Trang 6"
             },
             {
               "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-7",
-              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_22_2026%20(6).png",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (6).png",
               "label": "Trang 7"
             },
             {
               "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-8",
-              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_22_2026%20(7).png",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (7).png",
               "label": "Trang 8"
             },
             {
               "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-9",
-              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_22_2026%20(8).png",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (8).png",
               "label": "Trang 9"
             },
             {
               "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-10",
-              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_22_2026%20(9).png",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (9).png",
               "label": "Trang 10"
             },
             {
               "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-11",
-              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_22_2026%20(10).png",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (10).png",
               "label": "Trang 11"
             },
             {
               "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-12",
-              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_22_2026%20(11).png",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (11).png",
               "label": "Trang 12"
             },
             {
               "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-13",
-              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_22_2026%20(12).png",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (12).png",
               "label": "Trang 13"
             },
             {
               "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-14",
-              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_22_2026%20(13).png",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (13).png",
               "label": "Trang 14"
             },
             {
               "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-15",
-              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_22_2026%20(14).png",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (14).png",
               "label": "Trang 15"
             },
             {
               "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-16",
-              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_22_2026%20(15).png",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (15).png",
               "label": "Trang 16"
             },
             {
               "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-17",
-              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_22_2026%20(16).png",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (16).png",
               "label": "Trang 17"
             },
             {
               "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-18",
-              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_22_2026%20(17).png",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (17).png",
               "label": "Trang 18"
+            },
+            {
+              "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-19",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (18).png",
+              "label": "Trang 19"
+            },
+            {
+              "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-20",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (19).png",
+              "label": "Trang 20"
+            },
+            {
+              "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-21",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (20).png",
+              "label": "Trang 21"
+            },
+            {
+              "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-22",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (21).png",
+              "label": "Trang 22"
+            },
+            {
+              "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-23",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (22).png",
+              "label": "Trang 23"
+            },
+            {
+              "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-24",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (23).png",
+              "label": "Trang 24"
+            },
+            {
+              "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-25",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (24).png",
+              "label": "Trang 25"
+            },
+            {
+              "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-26",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (25).png",
+              "label": "Trang 26"
+            },
+            {
+              "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-27",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (26).png",
+              "label": "Trang 27"
+            },
+            {
+              "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-28",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (27).png",
+              "label": "Trang 28"
+            },
+            {
+              "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-29",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (28).png",
+              "label": "Trang 29"
+            },
+            {
+              "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-30",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (29).png",
+              "label": "Trang 30"
+            },
+            {
+              "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-31",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (30).png",
+              "label": "Trang 31"
+            },
+            {
+              "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-32",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (31).png",
+              "label": "Trang 32"
+            },
+            {
+              "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-33",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (32).png",
+              "label": "Trang 33"
+            },
+            {
+              "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-34",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (33).png",
+              "label": "Trang 34"
+            },
+            {
+              "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-35",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (34).png",
+              "label": "Trang 35"
+            },
+            {
+              "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-36",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (35).png",
+              "label": "Trang 36"
+            },
+            {
+              "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-37",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (36).png",
+              "label": "Trang 37"
+            },
+            {
+              "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-38",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (37).png",
+              "label": "Trang 38"
+            },
+            {
+              "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-39",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (38).png",
+              "label": "Trang 39"
+            },
+            {
+              "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-40",
+              "imageUrl": "/gia-dinh/gia-dinh-la-so-1/aatbio_com_image_export_Jun_28_2026 (39).png",
+              "label": "Trang 40"
             }
           ],
           "thumbnail": "/gia-dinh/gia-dinh-la-so-1/aa.png"
