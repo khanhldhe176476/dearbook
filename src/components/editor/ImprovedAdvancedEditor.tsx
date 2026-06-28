@@ -32,6 +32,8 @@ interface ImprovedAdvancedEditorProps {
   onSave: () => void;
   onPreview?: () => void;
   onBack?: () => void;
+  pageWidth?: number;
+  pageHeight?: number;
 }
 
 export function ImprovedAdvancedEditor({
@@ -43,6 +45,8 @@ export function ImprovedAdvancedEditor({
   onSave,
   onPreview,
   onBack,
+  pageWidth,
+  pageHeight,
 }: ImprovedAdvancedEditorProps) {
   const currentPage = pages[currentPageIndex];
   const isMobile = useIsMobile();
@@ -104,8 +108,8 @@ export function ImprovedAdvancedEditor({
   } | null>(null);
 
   const canvasRef = useRef<HTMLDivElement>(null);
-  const PAGE_WIDTH = 400;
-  const PAGE_HEIGHT = 600;
+  const PAGE_WIDTH = pageWidth || 400;
+  const PAGE_HEIGHT = pageHeight || 600;
 
   // Sync elements when page changes
   useEffect(() => {

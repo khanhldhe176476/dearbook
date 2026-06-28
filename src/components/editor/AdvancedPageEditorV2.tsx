@@ -164,6 +164,8 @@ interface AdvancedPageEditorV2Props {
   onAddPage?: () => void;
   onDeletePage?: (index: number) => void;
   onDuplicatePage?: (index: number) => void;
+  pageWidth?: number;
+  pageHeight?: number;
 }
 
 export function AdvancedPageEditorV2({
@@ -179,6 +181,8 @@ export function AdvancedPageEditorV2({
   onAddPage,
   onDeletePage,
   onDuplicatePage,
+  pageWidth,
+  pageHeight,
 }: AdvancedPageEditorV2Props) {
   const currentPage = pages[currentPageIndex];
   const isMobile = useIsMobile();
@@ -305,8 +309,8 @@ export function AdvancedPageEditorV2({
   // ✅ Global rule: hidden file input for click-to-fill upload slots
   const slotFileInputRef = useRef<HTMLInputElement>(null);
   const pendingSlotIdRef = useRef<string | null>(null);
-  const PAGE_WIDTH = 400;
-  const PAGE_HEIGHT = 600;
+  const PAGE_WIDTH = pageWidth || 400;
+  const PAGE_HEIGHT = pageHeight || 600;
 
   // Called when user selects a file after clicking an upload slot
   const handleSlotFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
