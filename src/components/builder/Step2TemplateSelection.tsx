@@ -10,6 +10,7 @@ export interface LocalTemplate {
   description: string;
   thumbnail: string;
   badge?: string;
+  aspectRatio?: string;
   pages: {
     id: string;
     imageUrl: string;
@@ -82,7 +83,7 @@ function TemplatePreviewModal({
         {/* Page image */}
         <div
           className="relative w-full rounded-2xl overflow-hidden shadow-2xl"
-          style={{ background: '#1a1a1a', aspectRatio: '3/4' }}
+          style={{ background: '#1a1a1a', aspectRatio: template.aspectRatio || '3/4' }}
         >
           <img
             src={page.imageUrl}
@@ -319,7 +320,7 @@ export function Step2TemplateSelection({
               }}
             >
               {/* Preview Image (trang bìa) */}
-              <div className="relative overflow-hidden bg-[#faf8f5] flex-shrink-0" style={{ aspectRatio: '3/4' }}>
+              <div className="relative overflow-hidden bg-[#faf8f5] flex-shrink-0" style={{ aspectRatio: template.aspectRatio || '3/4' }}>
                 <img
                   src={template.thumbnail}
                   alt={template.name}

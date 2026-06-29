@@ -6,6 +6,7 @@ import { PageElement } from '../../types/editor';
 import { AdvancedPageEditor } from '../editor/AdvancedPageEditor';
 import { AdvancedPageEditorV2 } from '../editor/AdvancedPageEditorV2';
 import { templates } from '../../data/templates';
+import autoData from '../../data/autoTemplates.json';
 import { FlipBookReader } from '../FlipBookReader';
 
 interface Step4PageEditorAdvancedProps {
@@ -43,9 +44,17 @@ export function Step4PageEditorAdvanced({
   }, [pages]);
 
 
-  // Canvas dimensions (must match AdvancedPageEditorV2)
-  const PAGE_W = 400;
-  const PAGE_H = 600;
+  // Canvas dimensions — sync with template aspectRatio (must match AdvancedPageEditorV2)
+  const templateAspectRatio = useMemo(() => {
+    if (templateId.startsWith('auto-template-') || templateId.startsWith('local-template-')) {
+      const allTemplates = autoData.themes.flatMap(t => t.templates);
+      const tpl = allTemplates.find(t => t.id === templateId);
+      return (tpl as any)?.aspectRatio || '3/4';
+    }
+    return '3/4';
+  }, [templateId]);
+  const PAGE_W = templateAspectRatio === '1/1' ? 500 : 400;
+  const PAGE_H = templateAspectRatio === '1/1' ? 500 : 600;
 
   // Scale a value from template coordinate space (up to ~800) to canvas space (400)
   const scaleX = (v: number, elW: number) => {
@@ -436,6 +445,8 @@ export function Step4PageEditorAdvanced({
             onDeletePage={handleDeletePage}
             onDuplicatePage={handleDuplicatePage}
             onSaveOrder={onFinish}
+            pageWidth={PAGE_W}
+            pageHeight={PAGE_H}
           />
         </div>
         
