@@ -114,6 +114,42 @@ const styles = `
       transform: translateY(-14px) scale(1.08);
     }
   }
+  @keyframes brandAura {
+    0%, 100% {
+      opacity: 0.28;
+      transform: translateX(-3px) scale(0.96);
+    }
+    50% {
+      opacity: 0.72;
+      transform: translateX(5px) scale(1.04);
+    }
+  }
+  @keyframes logoSheen {
+    0%, 16% {
+      opacity: 0;
+      transform: translateX(-60px) skewX(-18deg);
+    }
+    32% {
+      opacity: 0.82;
+    }
+    54%, 100% {
+      opacity: 0;
+      transform: translateX(250px) skewX(-18deg);
+    }
+  }
+  @keyframes glintDrift {
+    0% {
+      opacity: 0;
+      transform: translate3d(0, 0, 0) rotate(0deg) scale(0.55);
+    }
+    18%, 72% {
+      opacity: var(--glint-opacity, 0.62);
+    }
+    100% {
+      opacity: 0;
+      transform: translate3d(var(--glint-drift-x, 22px), var(--glint-drift-y, -26px), 0) rotate(42deg) scale(1.12);
+    }
+  }
 
   .animate-float-slow { animation: floatSlow 6s ease-in-out infinite; }
   .animate-float-medium { animation: floatMedium 4s ease-in-out infinite; }
@@ -316,6 +352,56 @@ const styles = `
     -webkit-backdrop-filter: blur(14px);
     border-bottom: 1px solid rgba(59, 41, 37, 0.08);
   }
+  .brand-logo-frame {
+    position: relative;
+    width: clamp(188px, 13vw, 238px);
+    height: 58px;
+    flex: 0 0 auto;
+    overflow: hidden;
+    margin-left: -8px;
+    border-radius: 999px;
+    isolation: isolate;
+  }
+  .brand-logo-frame::before {
+    content: '';
+    position: absolute;
+    inset: 8px 18px 7px 8px;
+    border-radius: 999px;
+    background:
+      radial-gradient(ellipse at 28% 50%, rgba(185, 66, 58, 0.20), transparent 58%),
+      linear-gradient(90deg, rgba(255, 245, 238, 0), rgba(255, 236, 224, 0.74), rgba(255, 245, 238, 0));
+    filter: blur(10px);
+    animation: brandAura 5.4s ease-in-out infinite;
+    z-index: -1;
+  }
+  .brand-logo-frame::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 42px;
+    height: 38px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.78), transparent);
+    mix-blend-mode: screen;
+    animation: logoSheen 5.8s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .brand-logo-img {
+    position: absolute;
+    left: clamp(-34px, -1.7vw, -25px);
+    top: 50%;
+    width: clamp(224px, 16vw, 284px);
+    height: auto;
+    max-width: none;
+    transform: translateY(-50%);
+    filter: drop-shadow(0 7px 14px rgba(185, 66, 58, 0.18));
+    transition: transform 0.35s ease, filter 0.35s ease;
+  }
+  .brand-logo-frame:hover .brand-logo-img {
+    transform: translateY(-50%) scale(1.045);
+    filter: drop-shadow(0 9px 18px rgba(185, 66, 58, 0.28));
+  }
 
   /* ── Photo strip hover ── */
   .photo-strip {
@@ -466,13 +552,31 @@ const styles = `
 
   .ambient-sparkle {
     position: absolute;
-    width: 7px;
-    height: 7px;
+    width: 12px;
+    height: 12px;
     border-radius: 999px;
-    background: #E8B89B;
-    box-shadow: 0 0 18px rgba(232, 184, 155, 0.75);
+    background: transparent;
     animation: twinkleFloat var(--sparkle-duration, 4.5s) ease-in-out infinite;
     animation-delay: var(--sparkle-delay, 0s);
+  }
+  .ambient-sparkle::before,
+  .ambient-sparkle::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    border-radius: 999px;
+    background: rgba(185, 66, 58, 0.62);
+    box-shadow: 0 0 18px rgba(232, 184, 155, 0.72);
+    transform: translate(-50%, -50%);
+  }
+  .ambient-sparkle::before {
+    width: 100%;
+    height: 2px;
+  }
+  .ambient-sparkle::after {
+    width: 2px;
+    height: 100%;
   }
   .sparkle-1 { left: 18vw; top: 34vh; --sparkle-duration: 5.2s; --sparkle-delay: -1.2s; }
   .sparkle-2 { left: 79vw; top: 22vh; --sparkle-duration: 4.7s; --sparkle-delay: -2.8s; }
@@ -480,6 +584,42 @@ const styles = `
   .sparkle-4 { left: 9vw; top: 82vh; --sparkle-duration: 5.9s; --sparkle-delay: -0.8s; }
   .sparkle-5 { left: 33vw; top: 18vh; --sparkle-duration: 7.1s; --sparkle-delay: -4.1s; }
   .sparkle-6 { left: 91vw; top: 58vh; --sparkle-duration: 6.7s; --sparkle-delay: -2.2s; }
+
+  .ambient-glint {
+    position: absolute;
+    left: var(--glint-x, 50vw);
+    top: var(--glint-y, 50vh);
+    width: var(--glint-size, 18px);
+    height: var(--glint-size, 18px);
+    animation: glintDrift var(--glint-duration, 7s) ease-in-out infinite;
+    animation-delay: var(--glint-delay, 0s);
+    will-change: transform, opacity;
+  }
+  .ambient-glint::before,
+  .ambient-glint::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, transparent, rgba(255, 236, 210, 0.95), transparent);
+    box-shadow: 0 0 16px rgba(185, 66, 58, 0.32);
+    transform: translate(-50%, -50%);
+  }
+  .ambient-glint::before {
+    width: 100%;
+    height: 2px;
+  }
+  .ambient-glint::after {
+    width: 2px;
+    height: 100%;
+  }
+  .glint-1 { --glint-x: 15vw; --glint-y: 25vh; --glint-size: 18px; --glint-duration: 7.8s; --glint-delay: -1.6s; --glint-drift-x: 28px; --glint-drift-y: -18px; }
+  .glint-2 { --glint-x: 47vw; --glint-y: 15vh; --glint-size: 14px; --glint-duration: 8.6s; --glint-delay: -4.4s; --glint-drift-x: -22px; --glint-drift-y: 26px; --glint-opacity: 0.48; }
+  .glint-3 { --glint-x: 70vw; --glint-y: 34vh; --glint-size: 22px; --glint-duration: 6.9s; --glint-delay: -2.7s; --glint-drift-x: 18px; --glint-drift-y: -34px; }
+  .glint-4 { --glint-x: 88vw; --glint-y: 72vh; --glint-size: 16px; --glint-duration: 9.4s; --glint-delay: -6.2s; --glint-drift-x: -26px; --glint-drift-y: -22px; --glint-opacity: 0.42; }
+  .glint-5 { --glint-x: 28vw; --glint-y: 68vh; --glint-size: 12px; --glint-duration: 7.2s; --glint-delay: -5.2s; --glint-drift-x: 20px; --glint-drift-y: 20px; --glint-opacity: 0.5; }
+  .glint-6 { --glint-x: 61vw; --glint-y: 84vh; --glint-size: 19px; --glint-duration: 8.1s; --glint-delay: -3.1s; --glint-drift-x: -18px; --glint-drift-y: -30px; }
 
   @media (max-width: 640px) {
     .ambient-layer { opacity: 0.58; }
@@ -492,7 +632,10 @@ const styles = `
     .petal-6,
     .sparkle-5,
     .sparkle-6,
-    .sparkle-4 { display: none; }
+    .sparkle-4,
+    .glint-4,
+    .glint-5,
+    .glint-6 { display: none; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -733,6 +876,9 @@ const AmbientMotion = () => (
     {[1, 2, 3, 4, 5, 6].map((item) => (
       <span key={`sparkle-${item}`} className={`ambient-sparkle sparkle-${item}`} />
     ))}
+    {[1, 2, 3, 4, 5, 6].map((item) => (
+      <span key={`glint-${item}`} className={`ambient-glint glint-${item}`} />
+    ))}
   </div>
 );
 
@@ -774,9 +920,8 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
       {/* ── Navigation ── */}
       <nav className="glass sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 py-2">
-          <div 
-            className="flex items-center cursor-pointer" 
-            style={{ height: '56px', overflow: 'hidden' }}
+          <div
+            className="brand-logo-frame cursor-pointer"
             onClick={() => {
               setShowAbout(false);
               window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -785,8 +930,7 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
             <img
               src="/logo.png"
               alt="dearmemories"
-              className="object-contain block"
-              style={{ height: '74px' }}
+              className="brand-logo-img"
             />
           </div>
 
