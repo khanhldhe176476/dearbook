@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Check, HelpCircle, Book, Wallet, LogOut, Home } from 'lucide-react';
+import { ArrowLeft, Check, Book, Wallet, Home } from 'lucide-react';
 import { BookData, User } from '../App';
 import { Step1ThemeSelection } from './builder/Step1ThemeSelection';
 import { Step2TemplateSelection } from './builder/Step2TemplateSelection';
@@ -181,6 +181,11 @@ export function GuidedBookBuilder({
   };
 
   const currentTheme = bookData.theme ? themeData[bookData.theme] : null;
+  const showPreviewPanel =
+    currentStep === 3 &&
+    !!bookData.theme &&
+    !!bookData.templateId &&
+    !!bookData.pages;
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: '#faf8f5' }}>
@@ -502,10 +507,10 @@ export function GuidedBookBuilder({
         </div>
 
         {/* Right: 3D Preview (desktop only) */}
-        {currentStep === 4 && (
+        {showPreviewPanel && (
           <Book3DPreviewPanel
             book={bookData as BookData}
-            className="hidden xl:block w-96 border-l"
+            className="hidden 2xl:block w-96 border-l bg-white/60"
             style={{ borderColor: '#eeece9' }}
           />
         )}

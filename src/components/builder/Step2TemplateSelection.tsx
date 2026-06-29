@@ -309,13 +309,13 @@ export function Step2TemplateSelection({
           return (
             <div
               key={template.id}
-              className="relative rounded-3xl overflow-hidden transition-all duration-300 flex flex-col group"
+              className="relative rounded-xl overflow-hidden transition-all duration-300 flex flex-col group"
               style={{
                 background: '#ffffff',
-                border: isSelected ? '2.5px solid #111' : '1px solid #eeece9',
+                border: isSelected ? '2px solid #2D2421' : '1px solid rgba(45, 36, 33, 0.12)',
                 boxShadow: isSelected
-                  ? '0 12px 36px rgba(0,0,0,0.12)'
-                  : '0 2px 16px rgba(0,0,0,0.05)',
+                  ? '0 18px 42px rgba(45,36,33,0.13)'
+                  : '0 10px 28px rgba(45,36,33,0.06)',
                 transform: isSelected ? 'translateY(-2px)' : 'none',
               }}
             >
@@ -374,7 +374,7 @@ export function Step2TemplateSelection({
               {/* Info & Actions */}
               <div className="p-5 flex flex-col flex-1 gap-3 justify-between">
                 <div>
-                  <h3 className="text-base font-bold text-[#111] mb-1 leading-snug">{template.name}</h3>
+                  <h3 className="text-base font-bold text-[#2D2421] mb-1 leading-snug">{template.name}</h3>
                   <p className="text-xs leading-relaxed text-[#7a6f66]">{template.description}</p>
                 </div>
 
@@ -383,7 +383,7 @@ export function Step2TemplateSelection({
                   <button
                     onClick={() => setPreviewTemplate(template)}
                     className="flex-1 py-2 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all duration-200 hover:-translate-y-0.5 border"
-                    style={{ background: '#faf8f5', color: '#111', borderColor: '#eeece9' }}
+                    style={{ background: '#faf8f5', color: '#2D2421', borderColor: '#e6ded5' }}
                     onMouseEnter={e => { e.currentTarget.style.background = '#f0ede8'; }}
                     onMouseLeave={e => { e.currentTarget.style.background = '#faf8f5'; }}
                   >
@@ -394,12 +394,12 @@ export function Step2TemplateSelection({
                     onClick={() => handleSelectTemplate(template)}
                     className="flex-1 py-2 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all duration-200 hover:-translate-y-0.5"
                     style={{
-                      background: isSelected ? '#059669' : '#111111',
-                      color: '#f3e9d7',
+                      background: isSelected ? '#2F6F5F' : '#2D2421',
+                      color: '#fffdf9',
                       boxShadow: isSelected ? '0 4px 12px rgba(5,150,105,0.25)' : '0 4px 12px rgba(0,0,0,0.15)',
                     }}
-                    onMouseEnter={e => { e.currentTarget.style.background = isSelected ? '#047857' : '#000000'; }}
-                    onMouseLeave={e => { e.currentTarget.style.background = isSelected ? '#059669' : '#111111'; }}
+                    onMouseEnter={e => { e.currentTarget.style.background = isSelected ? '#285f52' : '#171211'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = isSelected ? '#2F6F5F' : '#2D2421'; }}
                   >
                     {isSelected ? (
                       <><Check className="w-3.5 h-3.5 text-emerald-300" strokeWidth={3} /> Đã chọn</>

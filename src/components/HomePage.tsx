@@ -31,11 +31,11 @@ const styles = `
   /* ── Keyframes ── */
   @keyframes floatSlow {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-12px); }
+    50% { transform: translateY(-5px); }
   }
   @keyframes floatMedium {
-    0%, 100% { transform: translateY(0) rotate(-2deg); }
-    50% { transform: translateY(-8px) rotate(1deg); }
+    0%, 100% { transform: translateY(0) rotate(-1deg); }
+    50% { transform: translateY(-4px) rotate(0.5deg); }
   }
   @keyframes shimmer {
     0% { background-position: -200% center; }
@@ -60,6 +60,59 @@ const styles = `
   @keyframes slideInRight {
     from { transform: translateX(40px); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
+  }
+  @keyframes butterflyTravel {
+    0% {
+      opacity: 0;
+      transform: translate3d(-14vw, 0, 0) rotate(var(--butterfly-start-rotate, -8deg)) scale(var(--butterfly-scale, 1));
+    }
+    9%, 86% { opacity: var(--butterfly-opacity, 0.7); }
+    24% {
+      transform: translate3d(22vw, var(--butterfly-curve-1, 7vh), 0) rotate(var(--butterfly-rotate-1, 10deg)) scale(var(--butterfly-scale, 1));
+    }
+    50% {
+      transform: translate3d(52vw, var(--butterfly-curve-2, -8vh), 0) rotate(var(--butterfly-rotate-2, -7deg)) scale(var(--butterfly-scale, 1));
+    }
+    76% {
+      transform: translate3d(82vw, var(--butterfly-curve-3, 5vh), 0) rotate(var(--butterfly-rotate-3, 8deg)) scale(var(--butterfly-scale, 1));
+    }
+    100% {
+      opacity: 0;
+      transform: translate3d(116vw, var(--butterfly-drift, -80px), 0) rotate(var(--butterfly-end-rotate, 14deg)) scale(var(--butterfly-scale, 1));
+    }
+  }
+  @keyframes butterflyBob {
+    0%, 100% { translate: 0 0; }
+    50% { translate: 0 -20px; }
+  }
+  @keyframes wingFlutterLeft {
+    0%, 100% { transform: rotate(-2deg) scaleX(1); }
+    50% { transform: rotate(-13deg) scaleX(0.48) skewY(2deg); }
+  }
+  @keyframes wingFlutterRight {
+    0%, 100% { transform: rotate(2deg) scaleX(1); }
+    50% { transform: rotate(13deg) scaleX(0.48) skewY(-2deg); }
+  }
+  @keyframes petalFall {
+    0% {
+      opacity: 0;
+      transform: translate3d(var(--petal-start-x, 10vw), -10vh, 0) rotate(0deg);
+    }
+    12%, 78% { opacity: var(--petal-opacity, 0.45); }
+    100% {
+      opacity: 0;
+      transform: translate3d(calc(var(--petal-start-x, 10vw) + var(--petal-drift, 16vw)), 112vh, 0) rotate(420deg);
+    }
+  }
+  @keyframes twinkleFloat {
+    0%, 100% {
+      opacity: 0.12;
+      transform: translateY(0) scale(0.82);
+    }
+    50% {
+      opacity: 0.58;
+      transform: translateY(-14px) scale(1.08);
+    }
   }
 
   .animate-float-slow { animation: floatSlow 6s ease-in-out infinite; }
@@ -86,8 +139,8 @@ const styles = `
     pointer-events: none;
   }
   .product-card:hover {
-    transform: translateY(-12px) scale(1.02);
-    box-shadow: 0 25px 60px -12px rgba(107, 75, 67, 0.15), 0 0 30px rgba(185, 66, 58, 0.15);
+    transform: translateY(-4px);
+    box-shadow: 0 18px 38px -22px rgba(59, 41, 37, 0.35);
   }
   .product-card:hover::before {
     opacity: 1;
@@ -98,8 +151,8 @@ const styles = `
     transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.6s ease;
   }
   .group:hover .img-zoom {
-    transform: scale(1.08);
-    filter: brightness(1.05);
+    transform: scale(1.03);
+    filter: brightness(1.02);
   }
 
   /* ── Badge pulse on hover ── */
@@ -107,7 +160,7 @@ const styles = `
     transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
   .price-badge:hover {
-    transform: scale(1.15) rotate(-3deg);
+    transform: scale(1.04);
   }
 
   /* ── Tier card ── */
@@ -126,8 +179,8 @@ const styles = `
     border-radius: 2px;
   }
   .tier-card:hover {
-    transform: translateY(-16px);
-    box-shadow: 0 30px 60px -15px rgba(107, 75, 67, 0.25), 0 0 40px rgba(185, 66, 58, 0.2);
+    transform: translateY(-4px);
+    box-shadow: 0 18px 44px -26px rgba(59, 41, 37, 0.4);
   }
   .tier-card:hover::after {
     width: 80%;
@@ -138,8 +191,8 @@ const styles = `
     transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
   .book-mockup:hover {
-    transform: translateY(-8px) rotate(-1deg);
-    box-shadow: 0 20px 40px -10px rgba(107, 75, 67, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 14px 28px -18px rgba(59, 41, 37, 0.32);
   }
 
   /* ── Blind box hover ── */
@@ -158,8 +211,8 @@ const styles = `
     z-index: -1;
   }
   .blind-box-card:hover {
-    transform: translateY(-10px) scale(1.03);
-    box-shadow: 0 25px 50px -12px rgba(107, 75, 67, 0.2);
+    transform: translateY(-4px);
+    box-shadow: 0 18px 42px -26px rgba(59, 41, 37, 0.38);
   }
   .blind-box-card:hover::after {
     opacity: 1;
@@ -170,7 +223,7 @@ const styles = `
     position: relative;
     width: 100%;
     max-width: 540px;
-    height: 380px;
+    height: 340px;
     margin: 0 auto;
     display: flex;
     align-items: center;
@@ -183,7 +236,7 @@ const styles = `
     transform-origin: bottom center;
   }
   .fanned-card:hover {
-    transform: translate(var(--card-x), -30px) rotate(0deg) scale(1.08) !important;
+    transform: translate(var(--card-x), -16px) rotate(0deg) scale(1.03) !important;
     z-index: 50 !important;
   }
   @media (max-width: 640px) {
@@ -240,7 +293,7 @@ const styles = `
   }
   .cta-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(185, 66, 58, 0.4);
+    box-shadow: 0 12px 24px rgba(150, 51, 46, 0.2);
   }
   .cta-btn:hover::before {
     width: 300px; height: 300px;
@@ -258,10 +311,10 @@ const styles = `
 
   /* ── Glassmorphism ── */
   .glass {
-    background: rgba(255, 248, 241, 0.9);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(230, 199, 184, 0.5);
+    background: rgba(255, 253, 249, 0.94);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(59, 41, 37, 0.08);
   }
 
   /* ── Photo strip hover ── */
@@ -269,8 +322,8 @@ const styles = `
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
   .photo-strip:hover {
-    transform: rotate(0deg) translateY(-8px) !important;
-    box-shadow: 0 20px 40px -10px rgba(107, 75, 67, 0.15);
+    transform: rotate(0deg) translateY(-4px) !important;
+    box-shadow: 0 16px 30px -18px rgba(59, 41, 37, 0.28);
   }
 
   /* ── Scroll reveal ── */
@@ -286,7 +339,7 @@ const styles = `
 
   /* ── Section divider ── */
   .section-divider {
-    background: linear-gradient(90deg, transparent, rgba(185, 66, 58, 0.3), transparent);
+    background: linear-gradient(90deg, transparent, rgba(59, 41, 37, 0.12), transparent);
     height: 1px;
   }
 
@@ -294,6 +347,156 @@ const styles = `
   .dot-pattern {
     background-image: radial-gradient(circle, rgba(185, 66, 58, 0.08) 1px, transparent 1px);
     background-size: 24px 24px;
+  }
+
+  .ambient-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 12;
+    pointer-events: none;
+    overflow: hidden;
+    contain: layout paint;
+  }
+  .ambient-layer::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 15% 24%, rgba(230, 199, 184, 0.18), transparent 26%),
+      radial-gradient(circle at 84% 68%, rgba(185, 66, 58, 0.10), transparent 24%);
+    opacity: 0.42;
+  }
+  .ambient-butterfly {
+    position: absolute;
+    top: var(--butterfly-y, 20vh);
+    left: 0;
+    width: 76px;
+    height: 58px;
+    animation: butterflyTravel var(--travel-duration, 24s) linear infinite;
+    animation-delay: var(--travel-delay, 0s);
+    filter: drop-shadow(0 10px 12px rgba(92, 47, 42, 0.18));
+    will-change: transform, opacity;
+  }
+  .ambient-butterfly-inner {
+    position: absolute;
+    inset: 0;
+    animation: butterflyBob var(--bob-duration, 3.8s) ease-in-out infinite;
+  }
+  .ambient-butterfly::before {
+    display: none;
+  }
+  .butterfly-svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .butterfly-wing {
+    transform-box: fill-box;
+    will-change: transform;
+  }
+  .butterfly-wing.left {
+    transform-origin: 92% 52%;
+    animation: wingFlutterLeft var(--wing-speed, 0.58s) ease-in-out infinite;
+  }
+  .butterfly-wing.right {
+    transform-origin: 8% 52%;
+    animation: wingFlutterRight var(--wing-speed, 0.58s) ease-in-out infinite;
+  }
+  .butterfly-body {
+    fill: rgba(67, 41, 36, 0.88);
+  }
+  .butterfly-antenna,
+  .butterfly-vein {
+    fill: none;
+    stroke: rgba(67, 41, 36, 0.56);
+    stroke-linecap: round;
+  }
+  .butterfly-vein {
+    stroke-width: 1.1;
+    opacity: 0.44;
+  }
+  .butterfly-antenna {
+    stroke-width: 1.5;
+    opacity: 0.7;
+  }
+  .butterfly-upper-wing {
+    fill: var(--wing-main, #E8B89B);
+  }
+  .butterfly-lower-wing {
+    fill: var(--wing-soft, #F8D8C5);
+  }
+  .butterfly-wing-edge {
+    fill: rgba(67, 41, 36, 0.16);
+  }
+  .butterfly-spot {
+    fill: var(--wing-spot, rgba(185, 66, 58, 0.62));
+    opacity: 0.72;
+  }
+  .butterfly-highlight {
+    fill: rgba(255, 255, 255, 0.46);
+  }
+  .butterfly-1 { --butterfly-y: 16vh; --travel-duration: 23s; --travel-delay: -4s; --butterfly-drift: 14vh; --butterfly-scale: 0.82; --butterfly-opacity: 0.62; --wing-main: #E9A98F; --wing-soft: #F8D7C6; --wing-spot: #B9423A; --wing-speed: 0.52s; }
+  .butterfly-2 { --butterfly-y: 36vh; --travel-duration: 30s; --travel-delay: -17s; --butterfly-drift: -18vh; --butterfly-scale: 0.62; --butterfly-opacity: 0.44; --wing-main: #E6C7B8; --wing-soft: #FFF0E6; --wing-spot: #7A4A42; --wing-speed: 0.64s; }
+  .butterfly-3 { --butterfly-y: 69vh; --travel-duration: 27s; --travel-delay: -8s; --butterfly-drift: -25vh; --butterfly-scale: 0.98; --butterfly-opacity: 0.54; --wing-main: #C67C73; --wing-soft: #F2BFAF; --wing-spot: #7A2E2A; --wing-speed: 0.48s; }
+  .butterfly-4 { --butterfly-y: 28vh; --travel-duration: 35s; --travel-delay: -24s; --butterfly-drift: 24vh; --butterfly-scale: 0.52; --butterfly-opacity: 0.34; --wing-main: #D8B2A2; --wing-soft: #F9E3D8; --wing-spot: #9A6848; --wing-speed: 0.72s; }
+  .butterfly-5 { --butterfly-y: 54vh; --travel-duration: 26s; --travel-delay: -2s; --butterfly-drift: 9vh; --butterfly-scale: 0.74; --butterfly-opacity: 0.46; --wing-main: #F0B6A4; --wing-soft: #FFE2D2; --wing-spot: #B65B50; --wing-speed: 0.56s; }
+  .butterfly-6 { --butterfly-y: 82vh; --travel-duration: 38s; --travel-delay: -31s; --butterfly-drift: -31vh; --butterfly-scale: 0.46; --butterfly-opacity: 0.3; --wing-main: #E3BFAF; --wing-soft: #FFF1E8; --wing-spot: #8C6E5D; --wing-speed: 0.78s; }
+  .butterfly-7 { --butterfly-y: 11vh; --travel-duration: 33s; --travel-delay: -22s; --butterfly-drift: 18vh; --butterfly-scale: 0.58; --butterfly-opacity: 0.36; --wing-main: #D69083; --wing-soft: #F7D0C2; --wing-spot: #7A4A42; --wing-speed: 0.68s; }
+  .butterfly-8 { --butterfly-y: 61vh; --travel-duration: 42s; --travel-delay: -13s; --butterfly-drift: -12vh; --butterfly-scale: 0.38; --butterfly-opacity: 0.28; --wing-main: #E8CFC3; --wing-soft: #FFF7F0; --wing-spot: #A9685D; --wing-speed: 0.84s; }
+
+  .ambient-petal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 12px;
+    height: 18px;
+    border-radius: 80% 20% 72% 28%;
+    background: linear-gradient(145deg, rgba(255, 244, 235, 0.78), rgba(230, 199, 184, 0.5));
+    box-shadow: 0 8px 14px rgba(92, 47, 42, 0.06);
+    animation: petalFall var(--petal-duration, 22s) linear infinite;
+    animation-delay: var(--petal-delay, 0s);
+    will-change: transform, opacity;
+  }
+  .petal-1 { --petal-start-x: 8vw; --petal-drift: 18vw; --petal-duration: 24s; --petal-delay: -5s; --petal-opacity: 0.38; }
+  .petal-2 { --petal-start-x: 38vw; --petal-drift: -12vw; --petal-duration: 29s; --petal-delay: -12s; --petal-opacity: 0.28; }
+  .petal-3 { --petal-start-x: 66vw; --petal-drift: 14vw; --petal-duration: 26s; --petal-delay: -18s; --petal-opacity: 0.34; }
+  .petal-4 { --petal-start-x: 88vw; --petal-drift: -22vw; --petal-duration: 34s; --petal-delay: -9s; --petal-opacity: 0.26; }
+  .petal-5 { --petal-start-x: 24vw; --petal-drift: 9vw; --petal-duration: 31s; --petal-delay: -23s; --petal-opacity: 0.22; }
+  .petal-6 { --petal-start-x: 74vw; --petal-drift: -9vw; --petal-duration: 28s; --petal-delay: -4s; --petal-opacity: 0.28; }
+
+  .ambient-sparkle {
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: #E8B89B;
+    box-shadow: 0 0 18px rgba(232, 184, 155, 0.75);
+    animation: twinkleFloat var(--sparkle-duration, 4.5s) ease-in-out infinite;
+    animation-delay: var(--sparkle-delay, 0s);
+  }
+  .sparkle-1 { left: 18vw; top: 34vh; --sparkle-duration: 5.2s; --sparkle-delay: -1.2s; }
+  .sparkle-2 { left: 79vw; top: 22vh; --sparkle-duration: 4.7s; --sparkle-delay: -2.8s; }
+  .sparkle-3 { left: 56vw; top: 78vh; --sparkle-duration: 6.4s; --sparkle-delay: -3.4s; }
+  .sparkle-4 { left: 9vw; top: 82vh; --sparkle-duration: 5.9s; --sparkle-delay: -0.8s; }
+  .sparkle-5 { left: 33vw; top: 18vh; --sparkle-duration: 7.1s; --sparkle-delay: -4.1s; }
+  .sparkle-6 { left: 91vw; top: 58vh; --sparkle-duration: 6.7s; --sparkle-delay: -2.2s; }
+
+  @media (max-width: 640px) {
+    .ambient-layer { opacity: 0.58; }
+    .butterfly-5,
+    .butterfly-6,
+    .butterfly-7,
+    .butterfly-8,
+    .petal-4,
+    .petal-5,
+    .petal-6,
+    .sparkle-5,
+    .sparkle-6,
+    .sparkle-4 { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ambient-layer { display: none; }
   }
 `;
 
@@ -393,15 +596,15 @@ const PriceTag = ({ price, size = 'md' }: { price: string; size?: 'sm' | 'md' | 
 };
 
 const BlindBagCard = ({ imgUrl, title, subtitle }: { imgUrl: string; title: string; subtitle: string }) => (
-  <div className="blind-box-card w-52 bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer group flex flex-col justify-between"
-    style={{ border: '1px solid #E6C7B8' }}>
+  <div className="blind-box-card w-52 bg-white rounded-xl shadow-md overflow-hidden cursor-pointer group flex flex-col justify-between"
+    style={{ border: '1px solid rgba(59, 41, 37, 0.12)' }}>
     <div>
       {/* Top stripe */}
-      <div className="h-2 bg-[#B9423A]" />
+      <div className="h-1.5 bg-[#B9423A]" />
 
       <div className="p-4 flex flex-col items-center">
-        <div className="w-full h-36 rounded-xl overflow-hidden mb-3 shadow-inner relative"
-          style={{ border: '4px solid #FFF8F1' }}>
+        <div className="w-full h-36 rounded-lg overflow-hidden mb-3 relative"
+          style={{ border: '3px solid #FFF8F1' }}>
           <img src={imgUrl} className="w-full h-full object-cover img-zoom" alt="" />
         </div>
 
@@ -414,7 +617,7 @@ const BlindBagCard = ({ imgUrl, title, subtitle }: { imgUrl: string; title: stri
     </div>
 
     {/* Bottom stripe */}
-    <div className="h-2 bg-[#B9423A]" />
+    <div className="h-1.5 bg-[#B9423A]" />
   </div>
 );
 
@@ -465,6 +668,74 @@ const AutoFlipRightPage = ({ pages, bgColor }: { pages: any[]; bgColor: string }
    Main HomePage
    ═══════════════════════════════════════════════════════════ */
 
+const ButterflySvg = () => (
+  <svg className="butterfly-svg" viewBox="0 0 96 72" aria-hidden="true" focusable="false">
+    <g className="butterfly-wing left">
+      <path
+        className="butterfly-upper-wing"
+        d="M46 35 C35 9 13 0 6 15 C-2 32 17 49 45 39 Z"
+      />
+      <path
+        className="butterfly-lower-wing"
+        d="M46 39 C31 39 14 50 20 63 C28 77 43 58 48 42 Z"
+      />
+      <path
+        className="butterfly-wing-edge"
+        d="M44 36 C29 17 13 8 8 18 C3 31 19 43 44 38 Z"
+      />
+      <ellipse className="butterfly-highlight" cx="24" cy="23" rx="8" ry="5" transform="rotate(24 24 23)" />
+      <ellipse className="butterfly-spot" cx="31" cy="43" rx="4" ry="3.2" transform="rotate(-18 31 43)" />
+      <ellipse className="butterfly-spot" cx="20" cy="34" rx="2.6" ry="2.1" />
+      <path className="butterfly-vein" d="M45 37 C34 30 24 23 12 17" />
+      <path className="butterfly-vein" d="M45 39 C34 39 27 47 22 59" />
+    </g>
+
+    <g className="butterfly-wing right">
+      <path
+        className="butterfly-upper-wing"
+        d="M50 35 C61 9 83 0 90 15 C98 32 79 49 51 39 Z"
+      />
+      <path
+        className="butterfly-lower-wing"
+        d="M50 39 C65 39 82 50 76 63 C68 77 53 58 48 42 Z"
+      />
+      <path
+        className="butterfly-wing-edge"
+        d="M52 36 C67 17 83 8 88 18 C93 31 77 43 52 38 Z"
+      />
+      <ellipse className="butterfly-highlight" cx="72" cy="23" rx="8" ry="5" transform="rotate(-24 72 23)" />
+      <ellipse className="butterfly-spot" cx="65" cy="43" rx="4" ry="3.2" transform="rotate(18 65 43)" />
+      <ellipse className="butterfly-spot" cx="76" cy="34" rx="2.6" ry="2.1" />
+      <path className="butterfly-vein" d="M51 37 C62 30 72 23 84 17" />
+      <path className="butterfly-vein" d="M51 39 C62 39 69 47 74 59" />
+    </g>
+
+    <path className="butterfly-antenna" d="M48 20 C42 11 36 9 31 11" />
+    <path className="butterfly-antenna" d="M48 20 C54 11 60 9 65 11" />
+    <ellipse className="butterfly-body" cx="48" cy="38" rx="4.2" ry="17" />
+    <circle className="butterfly-body" cx="48" cy="21" r="4" />
+    <path className="butterfly-highlight" d="M48 26 C50 33 50 43 48 52 C46 43 46 33 48 26 Z" />
+  </svg>
+);
+
+const AmbientMotion = () => (
+  <div className="ambient-layer" aria-hidden="true">
+    {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
+      <span key={`butterfly-${item}`} className={`ambient-butterfly butterfly-${item}`}>
+        <span className="ambient-butterfly-inner">
+          <ButterflySvg />
+        </span>
+      </span>
+    ))}
+    {[1, 2, 3, 4, 5, 6].map((item) => (
+      <span key={`petal-${item}`} className={`ambient-petal petal-${item}`} />
+    ))}
+    {[1, 2, 3, 4, 5, 6].map((item) => (
+      <span key={`sparkle-${item}`} className={`ambient-sparkle sparkle-${item}`} />
+    ))}
+  </div>
+);
+
 export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
   const [showAbout, setShowAbout] = useState(false);
 
@@ -496,15 +767,16 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
   };
 
   return (
-    <div className="min-h-screen overflow-x-hidden" style={{ background: '#FFF8F1', fontFamily: '"Lora", ui-serif, Georgia, serif' }}>
+    <div className="min-h-screen overflow-x-hidden" style={{ background: '#FFFDF9', fontFamily: '"Lora", ui-serif, Georgia, serif' }}>
       <style>{styles}</style>
+      <AmbientMotion />
 
       {/* ── Navigation ── */}
-      <nav className="glass sticky top-0 z-50 shadow-sm">
-        <div className="max-w-7xl mx-auto flex items-center justify-between px-8 py-3">
+      <nav className="glass sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 py-2">
           <div 
             className="flex items-center cursor-pointer" 
-            style={{ height: '68px', overflow: 'visible' }}
+            style={{ height: '56px', overflow: 'hidden' }}
             onClick={() => {
               setShowAbout(false);
               window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -514,11 +786,11 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
               src="/logo.png"
               alt="dearmemories"
               className="object-contain block"
-              style={{ height: '160px', margin: '-46px 0' }}
+              style={{ height: '74px' }}
             />
           </div>
 
-          <div className="hidden md:flex items-center gap-8 text-[#6B4B43] text-sm font-semibold">
+          <div className="hidden md:flex items-center gap-7 text-[#6B4B43] text-sm font-semibold">
             <button
               onClick={() => {
                 setShowAbout(true);
@@ -572,6 +844,14 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
               </div>
             )}
           </div>
+
+          <button
+            onClick={onGetStarted}
+            className="md:hidden cta-btn px-4 py-2 rounded-full text-white text-sm font-semibold"
+            style={{ background: '#B9423A', boxShadow: '0 8px 18px rgba(150, 51, 46, 0.16)' }}
+          >
+            Bắt đầu
+          </button>
         </div>
       </nav>
 
@@ -582,11 +862,6 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
             background: 'linear-gradient(160deg, #FFF8F1 0%, #F7E2D4 40%, #FFF8F1 100%)',
           }}
         >
-          {/* Decorative circles */}
-          <div className="absolute top-[-100px] right-[-80px] w-[300px] h-[300px] rounded-full opacity-10 pointer-events-none"
-            style={{ background: 'radial-gradient(circle, #E6C7B8, transparent 70%)' }} />
-          <div className="absolute bottom-[-60px] left-[-60px] w-[250px] h-[250px] rounded-full opacity-8 pointer-events-none"
-            style={{ background: 'radial-gradient(circle, #B9423A, transparent 70%)' }} />
           <div className="absolute inset-0 dot-pattern opacity-40 pointer-events-none" />
 
           <div className="max-w-5xl w-full flex flex-col md:flex-row items-center gap-12 relative z-10">
@@ -630,7 +905,7 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
             </div>
 
             {/* Right: Premium Glassmorphism content card */}
-            <div className="flex-1 bg-white/70 backdrop-blur-md p-8 md:p-10 rounded-3xl shadow-xl border border-[#E6C7B8]/40">
+            <div className="flex-1 bg-white/80 backdrop-blur-md p-8 md:p-10 rounded-xl shadow-md border border-[#E6C7B8]/40">
               <div className="text-center md:text-left mb-6">
                 <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#B9423A] block mb-2">Giới thiệu</span>
 
@@ -678,19 +953,12 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
             ══════════════════════════════════════════════════════ */}
         <section id="ptb-box" className="relative w-full min-h-[620px] overflow-hidden flex items-center scroll-mt-24"
         style={{
-          background: 'linear-gradient(160deg, #FFF8F1 0%, #F7E2D4 40%, #FFF8F1 100%)',
+          background: 'linear-gradient(160deg, #FFFDF9 0%, #F8EFE6 52%, #FFFDF9 100%)',
         }}>
-        {/* Decorative circles */}
-        <div className="absolute top-[-100px] right-[-80px] w-[400px] h-[400px] rounded-full opacity-10"
-          style={{ background: 'radial-gradient(circle, #E6C7B8, transparent 70%)' }} />
-        <div className="absolute bottom-[-60px] left-[-60px] w-[300px] h-[300px] rounded-full opacity-8"
-          style={{ background: 'radial-gradient(circle, #B9423A, transparent 70%)' }} />
+        <div className="absolute inset-0 dot-pattern opacity-25 pointer-events-none" />
 
-        {/* Dot pattern overlay */}
-        <div className="absolute inset-0 dot-pattern opacity-50 pointer-events-none" />
-
-        <div className="max-w-7xl mx-auto w-full px-8 py-16 relative z-10">
-          <div className="flex flex-col lg:flex-row items-center gap-12">
+        <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-12 lg:py-14 relative z-10">
+          <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-12">
 
             {/* Left content */}
             <div className="flex-1 animate-slide-left" style={{ animationDelay: '0.2s' }}>
@@ -702,29 +970,27 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
 
               <h1 className="leading-[0.95] mb-6 inline-flex flex-col items-center">
                 <span
-                  className="block"
+                  className="block text-4xl sm:text-5xl lg:text-6xl"
                   style={{
-                    fontFamily: '"Cooper BT", "Cooper Black", "Cooper", Georgia, serif',
-                    fontSize: 'clamp(2.2rem, 5.5vw, 4.2rem)',
-                    fontWeight: '900',
-                    lineHeight: 1.1,
+                    fontFamily: '"Fraunces", "Lora", Georgia, serif',
+                    fontWeight: '800',
+                    lineHeight: 1.05,
                     color: '#3B2925',
-                    letterSpacing: '0.01em',
+                    letterSpacing: '0',
                     whiteSpace: 'nowrap',
                   }}
                 >
                   Photobook Box
                 </span>
                 <span
-                  className="block mt-2"
+                  className="block mt-3 text-xl sm:text-2xl"
                   style={{
-                    fontFamily: '"Fraunces", "Cooper Black", "Cooper BT", Georgia, serif',
-                    fontSize: 'clamp(1.15rem, 2.6vw, 1.7rem)',
+                    fontFamily: '"Lora", Georgia, serif',
                     lineHeight: 1.35,
                     color: '#7A4A42',
                     fontWeight: '400',
                     fontStyle: 'italic',
-                    letterSpacing: '0.01em',
+                    letterSpacing: '0',
                     textAlign: 'center',
                   }}
                 >
@@ -754,10 +1020,10 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
               </div>
 
               <button onClick={onGetStarted}
-                className="cta-btn px-8 py-3.5 rounded-full text-white font-semibold text-lg relative z-10 hover:opacity-90 animate-pulse-glow"
+                className="cta-btn px-8 py-3.5 rounded-full text-white font-semibold text-lg relative z-10 hover:opacity-95"
                 style={{
-                  background: 'linear-gradient(135deg, #B9423A, #96332E)',
-                  boxShadow: '0 8px 30px rgba(185, 66, 58, 0.4)',
+                  background: '#B9423A',
+                  boxShadow: '0 10px 22px rgba(150, 51, 46, 0.18)',
                 }}>
                 Tạo sách ngay →
               </button>
@@ -859,16 +1125,16 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
       {/* ══════════════════════════════════════════════════════
           SECTION 2 — Danh mục loại PTB
           ══════════════════════════════════════════════════════ */}
-      <section id="categories" className="w-full py-24 relative overflow-hidden scroll-mt-24" style={{ background: '#FFFDF9' }}>
+      <section id="categories" className="w-full py-20 relative overflow-hidden scroll-mt-24" style={{ background: '#FFFDF9' }}>
         <div className="absolute inset-0 pointer-events-none opacity-5 dot-pattern" />
 
-        <div className="max-w-7xl mx-auto px-8 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Section title */}
-          <div className="reveal text-center mb-16">
+          <div className="reveal text-center mb-12">
             <p className="text-[#B9423A] text-sm tracking-[0.3em] uppercase mb-3 font-semibold">Bộ sưu tập sách</p>
             <h2
-              className="text-[#3B2925] mb-3"
-              style={{ fontFamily: '"Lora", serif', fontSize: 'clamp(2.5rem, 5vw, 3.75rem)', fontWeight: '700', letterSpacing: '-0.01em' }}
+              className="text-[#3B2925] mb-3 text-4xl lg:text-5xl"
+              style={{ fontFamily: '"Lora", serif', fontWeight: '700', letterSpacing: '0' }}
             >Danh mục loại PTB</h2>
             <p className="text-[#6B4B43] text-lg">Nhiều lựa chọn phù hợp với nhu cầu và ngân sách của bạn</p>
           </div>
@@ -882,12 +1148,12 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
               { id: 4, title: 'PTB bìa bồi liền mở phẳng', description: 'Trải rộng 180 độ không gáy, in sắc nét. Trải nghiệm xem ảnh trọn vẹn.', price: '399K', color: '#F0E5E7', img: familyImg, secondImg: loveImg },
             ].map((category) => (
               <div key={category.id}
-                className="tier-card rounded-2xl overflow-hidden cursor-pointer group flex flex-col justify-between"
+                className="tier-card rounded-xl overflow-hidden cursor-pointer group flex flex-col justify-between"
                 onClick={onGetStarted}
                 style={{
-                  background: '#FFF8F1',
-                  border: '1px solid #E6C7B8',
-                  boxShadow: '0 10px 30px rgba(107, 75, 67, 0.05)',
+                  background: '#ffffff',
+                  border: '1px solid rgba(59, 41, 37, 0.12)',
+                  boxShadow: '0 10px 28px rgba(59, 41, 37, 0.06)',
                 }}>
                 <div>
                   {/* Price tag */}
@@ -898,8 +1164,8 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
 
                   {/* Book preview */}
                   <div className="px-5 mb-4">
-                    <div className="book-mockup flex rounded-lg overflow-hidden shadow-md"
-                      style={{ border: '1px solid #E6C7B8' }}>
+                    <div className="book-mockup flex rounded-lg overflow-hidden"
+                      style={{ border: '1px solid rgba(59, 41, 37, 0.12)', boxShadow: '0 10px 24px rgba(59, 41, 37, 0.08)' }}>
                       {/* Left page */}
                       <div className="w-1/2 h-44 overflow-hidden relative" style={{ backgroundColor: category.color }}>
                         <img src={category.img} className="w-full h-full object-cover img-zoom" alt="" />
@@ -953,22 +1219,22 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
       {/* ══════════════════════════════════════════════════════
           SECTION 3 — Chủ đề
           ══════════════════════════════════════════════════════ */}
-      <section id="themes" className="w-full py-24 relative overflow-hidden scroll-mt-24" style={{ background: '#F7E2D4' }}>
+      <section id="themes" className="w-full py-20 relative overflow-hidden scroll-mt-24" style={{ background: '#F8EFE6' }}>
         <div className="absolute inset-0 pointer-events-none opacity-5 dot-pattern" />
 
-        <div className="max-w-7xl mx-auto px-8 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Section title */}
-          <div className="reveal text-center mb-16">
+          <div className="reveal text-center mb-12">
             <p className="text-[#B9423A] text-sm tracking-[0.3em] uppercase mb-3 font-semibold">Chủ đề thiết kế</p>
             <h2
-              className="text-[#3B2925] mb-3"
-              style={{ fontFamily: '"Lora", serif', fontSize: 'clamp(2.5rem, 5vw, 3.75rem)', fontWeight: '700', letterSpacing: '-0.01em' }}
+              className="text-[#3B2925] mb-3 text-4xl lg:text-5xl"
+              style={{ fontFamily: '"Lora", serif', fontWeight: '700', letterSpacing: '0' }}
             >Chủ đề</h2>
             <p className="text-[#6B4B43] text-lg">Mỗi chủ đề đều mang một câu chuyện và xúc cảm trọn vẹn riêng biệt</p>
           </div>
 
           {/* Themes Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               { id: 'love', title: 'Tình yêu', emoji: '💕', description: 'Hâm nóng tình cảm với câu chuyện lãng mạn.', color: 'from-pink-400 to-rose-500', image: loveImg },
               { id: 'friends', title: 'Bạn bè', emoji: '🎉', description: 'Lưu giữ kỷ niệm thanh xuân, bạn bè thân thương.', color: 'from-cyan-400 to-blue-400', image: hanoiImg },
@@ -978,18 +1244,18 @@ export function HomePage({ user, onGetStarted, onLogout }: HomePageProps) {
               { id: 'birthday', title: 'Sinh nhật', emoji: '🎂', description: 'Món quà bất ngờ dành riêng cho ngày tuổi mới.', color: 'from-amber-400 to-orange-500', image: loveImg },
             ].map((theme) => (
               <div key={theme.id}
-                className="blind-box-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer group flex flex-col justify-between"
+                className="blind-box-card bg-white rounded-xl shadow-md overflow-hidden cursor-pointer group flex flex-col justify-between"
                 onClick={onGetStarted}
                 style={{
-                  border: '1px solid #E6C7B8',
+                  border: '1px solid rgba(59, 41, 37, 0.12)',
                   transition: 'all 0.4s ease',
                 }}>
                 <div>
                   {/* Top stripe */}
-                  <div className="h-2 bg-[#B9423A]" />
+                  <div className="h-1.5 bg-[#B9423A]" />
 
                   <div className="p-6">
-                    <div className="w-full h-44 rounded-xl overflow-hidden mb-4 shadow-inner relative">
+                    <div className="w-full h-44 rounded-lg overflow-hidden mb-4 relative">
                       <img src={theme.image} className="w-full h-full object-cover img-zoom" alt={theme.title} />
                       <div className="absolute inset-0 bg-gradient-to-t from-[#3B2925]/60 to-transparent flex items-end p-4">
                         <span className="text-4xl filter drop-shadow-md">{theme.emoji}</span>

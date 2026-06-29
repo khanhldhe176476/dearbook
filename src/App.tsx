@@ -439,8 +439,10 @@ function App() {
     setCurrentScreen('library');
   };
 
+  const shouldShowFooter = currentScreen === 'home' || currentScreen === 'login' || currentScreen === 'library';
+
   return (
-    <div className="min-h-screen flex flex-col justify-between" style={{ background: '#FAFAF8' }}>
+    <div className="min-h-screen flex flex-col" style={{ background: '#FAFAF8' }}>
       <div className="flex-grow flex flex-col">
         <Toaster position="top-right" richColors />
 
@@ -489,7 +491,7 @@ function App() {
           />
         )}
       </div>
-      <Footer />
+      {shouldShowFooter && <Footer />}
     </div>
   );
 }
