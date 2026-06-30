@@ -681,6 +681,84 @@
             }
           ],
           "thumbnail": "/ca-nhan/dust-soul/aa.png"
+        },
+        {
+          "id": "auto-template-ca-nhan-tot-nghiep-ca-nhan",
+          "name": "Tốt nghiệp cá nhân",
+          "description": "Sách ảnh Tốt nghiệp cá nhân với thiết kế tuyệt đẹp",
+          "pages": [
+            {
+              "id": "auto-template-ca-nhan-tot-nghiep-ca-nhan-page-1",
+              "imageUrl": "/ca-nhan/tot-nghiep-ca-nhan/aa.png",
+              "label": "Trang 1"
+            },
+            {
+              "id": "auto-template-ca-nhan-tot-nghiep-ca-nhan-page-2",
+              "imageUrl": "/ca-nhan/tot-nghiep-ca-nhan/aatbio_com_image_export_Jul_1_2026%20(1).png",
+              "label": "Trang 2"
+            },
+            {
+              "id": "auto-template-ca-nhan-tot-nghiep-ca-nhan-page-3",
+              "imageUrl": "/ca-nhan/tot-nghiep-ca-nhan/aatbio_com_image_export_Jul_1_2026%20(2).png",
+              "label": "Trang 3"
+            },
+            {
+              "id": "auto-template-ca-nhan-tot-nghiep-ca-nhan-page-4",
+              "imageUrl": "/ca-nhan/tot-nghiep-ca-nhan/aatbio_com_image_export_Jul_1_2026%20(3).png",
+              "label": "Trang 4"
+            },
+            {
+              "id": "auto-template-ca-nhan-tot-nghiep-ca-nhan-page-5",
+              "imageUrl": "/ca-nhan/tot-nghiep-ca-nhan/aatbio_com_image_export_Jul_1_2026%20(4).png",
+              "label": "Trang 5"
+            },
+            {
+              "id": "auto-template-ca-nhan-tot-nghiep-ca-nhan-page-6",
+              "imageUrl": "/ca-nhan/tot-nghiep-ca-nhan/aatbio_com_image_export_Jul_1_2026%20(5).png",
+              "label": "Trang 6"
+            },
+            {
+              "id": "auto-template-ca-nhan-tot-nghiep-ca-nhan-page-7",
+              "imageUrl": "/ca-nhan/tot-nghiep-ca-nhan/aatbio_com_image_export_Jul_1_2026%20(6).png",
+              "label": "Trang 7"
+            },
+            {
+              "id": "auto-template-ca-nhan-tot-nghiep-ca-nhan-page-8",
+              "imageUrl": "/ca-nhan/tot-nghiep-ca-nhan/aatbio_com_image_export_Jul_1_2026%20(7).png",
+              "label": "Trang 8"
+            },
+            {
+              "id": "auto-template-ca-nhan-tot-nghiep-ca-nhan-page-9",
+              "imageUrl": "/ca-nhan/tot-nghiep-ca-nhan/aatbio_com_image_export_Jul_1_2026%20(8).png",
+              "label": "Trang 9"
+            },
+            {
+              "id": "auto-template-ca-nhan-tot-nghiep-ca-nhan-page-10",
+              "imageUrl": "/ca-nhan/tot-nghiep-ca-nhan/aatbio_com_image_export_Jul_1_2026%20(9).png",
+              "label": "Trang 10"
+            },
+            {
+              "id": "auto-template-ca-nhan-tot-nghiep-ca-nhan-page-11",
+              "imageUrl": "/ca-nhan/tot-nghiep-ca-nhan/aatbio_com_image_export_Jul_1_2026%20(10).png",
+              "label": "Trang 11"
+            },
+            {
+              "id": "auto-template-ca-nhan-tot-nghiep-ca-nhan-page-12",
+              "imageUrl": "/ca-nhan/tot-nghiep-ca-nhan/aatbio_com_image_export_Jul_1_2026%20(11).png",
+              "label": "Trang 12"
+            },
+            {
+              "id": "auto-template-ca-nhan-tot-nghiep-ca-nhan-page-13",
+              "imageUrl": "/ca-nhan/tot-nghiep-ca-nhan/aatbio_com_image_export_Jul_1_2026%20(12).png",
+              "label": "Trang 13"
+            },
+            {
+              "id": "auto-template-ca-nhan-tot-nghiep-ca-nhan-page-14",
+              "imageUrl": "/ca-nhan/tot-nghiep-ca-nhan/aatbio_com_image_export_Jul_1_2026%20(13).png",
+              "label": "Trang 14"
+            }
+          ],
+          "thumbnail": "/ca-nhan/tot-nghiep-ca-nhan/aa.png"
         }
       ]
     },
@@ -898,7 +976,7 @@
         },
         {
           "id": "auto-template-gia-dinh-gia-dinh-la-so-1",
-          "name": "Gia đình là số 1",
+          "name": "gia-dinh-la-so-1",
           "description": "Sách ảnh gia-dinh-la-so-1 với thiết kế tuyệt đẹp",
           "pages": [
             {
@@ -1106,9 +1184,8 @@
         },
         {
           "id": "auto-template-gia-dinh-gia-dinh-la-so-1-20x20",
-          "name": "Gia đình là số 1 (20x20)",
+          "name": "gia-dinh-la-so-1 (20x20)",
           "description": "Sách ảnh gia-dinh-la-so-1 (20x20) với thiết kế tuyệt đẹp",
-          "aspectRatio": "1/1",
           "pages": [
             {
               "id": "auto-template-gia-dinh-gia-dinh-la-so-1-20x20-page-1",

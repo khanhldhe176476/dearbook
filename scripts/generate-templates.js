@@ -22,7 +22,8 @@ const TEMPLATE_DISPLAY_NAMES = {
   'dust-soul': 'Dust & Soul',
   'firrst-love': 'Firrst love',
   'happy-anniversary': 'Happy Anniversary',
-  'binh-yen-nho': 'Gia đình nhỏ'
+  'binh-yen-nho': 'Gia đình nhỏ',
+  'tot-nghiep-ca-nhan': 'Tốt nghiệp cá nhân'
 };
 
 // Hàm chuyển tên thành id (ví dụ: Bạn Bè -> ban-be)
