@@ -686,6 +686,7 @@
           "id": "auto-template-ca-nhan-tot-nghiep-ca-nhan",
           "name": "Tốt nghiệp cá nhân",
           "description": "Sách ảnh Tốt nghiệp cá nhân với thiết kế tuyệt đẹp",
+          "aspectRatio": "1/1",
           "pages": [
             {
               "id": "auto-template-ca-nhan-tot-nghiep-ca-nhan-page-1",
@@ -976,8 +977,8 @@
         },
         {
           "id": "auto-template-gia-dinh-gia-dinh-la-so-1",
-          "name": "gia-dinh-la-so-1",
-          "description": "Sách ảnh gia-dinh-la-so-1 với thiết kế tuyệt đẹp",
+          "name": "Gia đình là số 1",
+          "description": "Sách ảnh Gia đình là số 1 với thiết kế tuyệt đẹp",
           "pages": [
             {
               "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-1",
@@ -1184,8 +1185,9 @@
         },
         {
           "id": "auto-template-gia-dinh-gia-dinh-la-so-1-20x20",
-          "name": "gia-dinh-la-so-1 (20x20)",
-          "description": "Sách ảnh gia-dinh-la-so-1 (20x20) với thiết kế tuyệt đẹp",
+          "name": "Gia đình là số 1 (20x20)",
+          "description": "Sách ảnh Gia đình là số 1 (20x20) với thiết kế tuyệt đẹp",
+          "aspectRatio": "1/1",
           "pages": [
             {
               "id": "auto-template-gia-dinh-gia-dinh-la-so-1-20x20-page-1",
