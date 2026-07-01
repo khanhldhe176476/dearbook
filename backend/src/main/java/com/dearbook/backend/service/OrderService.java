@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 
@@ -24,10 +25,14 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -415,7 +420,7 @@ public class OrderService {
                 .orElseThrow(() -> new IllegalArgumentException("Order not found"));
 
         try {
-            Path uploadPath = Paths.get(uploadDir, "pdf");
+            Path uploadPath = getUploadRoot().resolve("pdf");
             Files.createDirectories(uploadPath);
 
             String originalFilename = file.getOriginalFilename();
@@ -439,7 +444,7 @@ public class OrderService {
 
     public String savePdfFileTemp(MultipartFile file) {
         try {
-            Path uploadPath = Paths.get(uploadDir, "pdf");
+            Path uploadPath = getUploadRoot().resolve("pdf");
             Files.createDirectories(uploadPath);
 
             String originalFilename = file.getOriginalFilename();
@@ -461,7 +466,7 @@ public class OrderService {
     public void savePdfChunk(String uploadId, int chunkIndex, MultipartFile file) {
         try {
             // Target directory: uploads/pdf/chunks/<uploadId>/
-            Path chunkDir = Paths.get(uploadDir, "pdf", "chunks", uploadId);
+            Path chunkDir = getUploadRoot().resolve("pdf").resolve("chunks").resolve(uploadId);
             Files.createDirectories(chunkDir);
 
             Path chunkPath = chunkDir.resolve("chunk_" + chunkIndex);
@@ -475,7 +480,7 @@ public class OrderService {
 
     public String mergePdfChunks(String uploadId, String originalFilename) {
         try {
-            Path chunkDir = Paths.get(uploadDir, "pdf", "chunks", uploadId);
+            Path chunkDir = getUploadRoot().resolve("pdf").resolve("chunks").resolve(uploadId);
             if (!Files.exists(chunkDir) || !Files.isDirectory(chunkDir)) {
                 throw new IllegalArgumentException("No chunks found for upload ID: " + uploadId);
             }
@@ -498,7 +503,7 @@ public class OrderService {
             }
 
             // Create target file name in uploads/pdf
-            Path uploadPath = Paths.get(uploadDir, "pdf");
+            Path uploadPath = getUploadRoot().resolve("pdf");
             Files.createDirectories(uploadPath);
 
             String fileExtension = "";
@@ -550,18 +555,22 @@ public class OrderService {
         }
 
         try {
-            // Resolve relative path against configured upload directory
-            Path filePath = Paths.get(uploadDir).resolve(filePathString).normalize();
-            // Security: ensure resolved path is still under uploadDir
-            if (!filePath.toAbsolutePath().startsWith(Paths.get(uploadDir).toAbsolutePath())) {
-                throw new IllegalArgumentException("Invalid file path (path traversal)");
+            Resource inlinePdf = tryLoadInlinePdf(filePathString);
+            if (inlinePdf != null) {
+                return inlinePdf;
             }
-            Resource resource = new UrlResource(filePath.toUri());
-            if (resource.exists() && resource.isReadable()) {
-                return resource;
-            } else {
-                throw new IllegalArgumentException("File not found or not readable");
+
+            List<Path> candidates = resolvePdfFileCandidates(filePathString);
+            for (Path filePath : candidates) {
+                Resource resource = new UrlResource(filePath.toUri());
+                if (resource.exists() && resource.isReadable()) {
+                    return resource;
+                }
             }
+
+            log.warn("PDF file missing or unreadable for order {}. storedPath={}, checkedPaths={}",
+                    orderId, filePathString, candidates);
+            throw new IllegalArgumentException("File not found or not readable");
         } catch (MalformedURLException e) {
             throw new IllegalArgumentException("Invalid file path", e);
         }
@@ -571,5 +580,98 @@ public class OrderService {
         Order order = orderRepo.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found"));
         return order.getPdfFileName();
+    }
+
+    private Path getUploadRoot() {
+        return Paths.get(uploadDir).toAbsolutePath().normalize();
+    }
+
+    private List<Path> getAllowedUploadRoots() {
+        LinkedHashSet<Path> roots = new LinkedHashSet<>();
+        Path configuredRoot = getUploadRoot();
+        Path workingDir = Paths.get("").toAbsolutePath().normalize();
+
+        roots.add(configuredRoot);
+        roots.add(workingDir.resolve("uploads").normalize());
+        roots.add(workingDir.resolve("backend").resolve("uploads").normalize());
+
+        Path parent = workingDir.getParent();
+        if (parent != null) {
+            roots.add(parent.resolve("uploads").normalize());
+            roots.add(parent.resolve("backend").resolve("uploads").normalize());
+        }
+
+        return new ArrayList<>(roots);
+    }
+
+    private List<Path> resolvePdfFileCandidates(String storedPath) {
+        String normalizedPath = storedPath.trim().replace('\\', '/');
+        while (normalizedPath.startsWith("/")) {
+            normalizedPath = normalizedPath.substring(1);
+        }
+
+        Path rawPath = Paths.get(normalizedPath);
+        List<Path> uploadRoots = getAllowedUploadRoots();
+        LinkedHashSet<Path> candidates = new LinkedHashSet<>();
+
+        if (rawPath.isAbsolute()) {
+            Path absolutePath = rawPath.toAbsolutePath().normalize();
+            if (isInsideAnyUploadRoot(absolutePath, uploadRoots)) {
+                candidates.add(absolutePath);
+            } else {
+                log.warn("Blocked PDF download because absolute path is outside upload roots. requested={}, roots={}",
+                        absolutePath, uploadRoots);
+            }
+            return new ArrayList<>(candidates);
+        }
+
+        List<String> relativeVariants = new ArrayList<>();
+        relativeVariants.add(normalizedPath);
+
+        if (normalizedPath.startsWith("uploads/")) {
+            relativeVariants.add(normalizedPath.substring("uploads/".length()));
+        } else {
+            relativeVariants.add("uploads/" + normalizedPath);
+        }
+
+        if (!normalizedPath.startsWith("pdf/")) {
+            relativeVariants.add("pdf/" + Paths.get(normalizedPath).getFileName().toString());
+        }
+
+        for (Path root : uploadRoots) {
+            for (String variant : relativeVariants) {
+                Path candidate = root.resolve(variant).normalize();
+                if (candidate.startsWith(root)) {
+                    candidates.add(candidate);
+                } else {
+                    log.warn("Blocked PDF download because path escapes upload root. root={}, requested={}",
+                            root, variant);
+                }
+            }
+        }
+
+        return new ArrayList<>(candidates);
+    }
+
+    private boolean isInsideAnyUploadRoot(Path path, List<Path> uploadRoots) {
+        return uploadRoots.stream().anyMatch(path::startsWith);
+    }
+
+    private Resource tryLoadInlinePdf(String pdfFileData) {
+        String value = pdfFileData.trim();
+        String base64Data = null;
+
+        if (value.startsWith("data:application/pdf;base64,")) {
+            base64Data = value.substring("data:application/pdf;base64,".length());
+        } else if (value.startsWith("JVBERi0")) {
+            base64Data = value;
+        }
+
+        if (base64Data == null) {
+            return null;
+        }
+
+        byte[] bytes = Base64.getDecoder().decode(base64Data.getBytes(StandardCharsets.UTF_8));
+        return new ByteArrayResource(bytes);
     }
 }
