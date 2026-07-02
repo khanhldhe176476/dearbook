@@ -84,6 +84,7 @@ public class OrderService {
     private final PricingService pricingService;
     private final CouponService couponService;
     private final ObjectMapper objectMapper;
+    private final SupabaseStorageService supabaseStorageService;
 
     @Value("${app.upload.dir:uploads}")
     private String uploadDir;
@@ -97,7 +98,8 @@ public class OrderService {
             UserBookPageRepository userBookPageRepo,
             PricingService pricingService,
             CouponService couponService,
-            ObjectMapper objectMapper
+            ObjectMapper objectMapper,
+            SupabaseStorageService supabaseStorageService
     ) {
         this.orderRepo = orderRepo;
         this.shippingRepo = shippingRepo;
@@ -108,6 +110,7 @@ public class OrderService {
         this.pricingService = pricingService;
         this.couponService = couponService;
         this.objectMapper = objectMapper;
+        this.supabaseStorageService = supabaseStorageService;
     }
 
     /**
@@ -444,8 +447,7 @@ public class OrderService {
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
             order.setPdfFileName(originalFilename);
-            // Store relative path for portability (uploadDir/pdf/filename)
-            order.setPdfFileData(Paths.get("pdf", savedFileName).toString());
+            order.setPdfFileData(storePdfAndReturnReference(filePath, originalFilename, Paths.get("pdf", savedFileName).toString()));
             orderRepo.save(order);
         } catch (IOException e) {
             throw new RuntimeException("Failed to store PDF file", e);
@@ -467,7 +469,7 @@ public class OrderService {
 
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-            return Paths.get("pdf", savedFileName).toString();
+            return storePdfAndReturnReference(filePath, originalFilename, Paths.get("pdf", savedFileName).toString());
         } catch (IOException e) {
             throw new RuntimeException("Failed to store temporary PDF file", e);
         }
@@ -547,7 +549,7 @@ public class OrderService {
             }
             Files.deleteIfExists(chunkDir);
 
-            return Paths.get("pdf", savedFileName).toString();
+            return storePdfAndReturnReference(mergedFilePath, originalFilename, Paths.get("pdf", savedFileName).toString());
         } catch (IOException e) {
             log.error("Failed to merge chunks for uploadId {}", uploadId, e);
             throw new RuntimeException("Failed to merge PDF chunks", e);
@@ -702,6 +704,20 @@ public class OrderService {
 
     private boolean isInsideAnyUploadRoot(Path path, List<Path> uploadRoots) {
         return uploadRoots.stream().anyMatch(path::startsWith);
+    }
+
+    private String storePdfAndReturnReference(Path filePath, String originalFilename, String localReference) {
+        if (!supabaseStorageService.isConfigured()) {
+            return localReference;
+        }
+
+        String publicUrl = supabaseStorageService.uploadPdf(filePath, originalFilename);
+        try {
+            Files.deleteIfExists(filePath);
+        } catch (IOException e) {
+            log.warn("Uploaded PDF to Supabase but could not delete local temp file {}: {}", filePath, e.getMessage());
+        }
+        return publicUrl;
     }
 
     private boolean isRemoteUrl(String value) {
