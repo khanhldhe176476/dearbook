@@ -5,4 +5,4 @@ for /f "usebackq tokens=*" %%a in (".env") do (
     set %%a
 )
 echo Starting Spring Boot backend...
-.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=dev"
+.\mvnw.cmd clean spring-boot:run "-Dspring-boot.run.profiles=dev"
