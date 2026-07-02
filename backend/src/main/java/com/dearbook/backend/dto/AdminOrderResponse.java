@@ -27,6 +27,7 @@ public record AdminOrderResponse(
     // PDF file data
     String pdfFileName,
     String pdfFileData,
+    Boolean pdfFileAvailable,
     // Order state
     BigDecimal totalAmount,
     String paymentMethod,

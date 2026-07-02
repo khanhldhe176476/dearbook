@@ -38,6 +38,9 @@ public class AdminController {
     public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
         String username = credentials.get("username");
         String password = credentials.get("password");
+        if (username != null) {
+            username = username.trim();
+        }
 
         if (adminUsername.equals(username) && adminPassword.equals(password)) {
             String token = jwtProvider.generateToken("admin");

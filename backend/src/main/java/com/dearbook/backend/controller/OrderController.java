@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -21,6 +23,8 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {
+    private static final Logger log = LoggerFactory.getLogger(OrderController.class);
+
     private final OrderService orderService;
     private final CouponService couponService;
 
@@ -128,7 +132,7 @@ public class OrderController {
     }
 
     @GetMapping("/{id}/pdf/download")
-    public ResponseEntity<Resource> downloadPdf(@PathVariable UUID id) {
+    public ResponseEntity<?> downloadPdf(@PathVariable UUID id) {
         try {
             Resource resource = orderService.loadPdfFileAsResource(id);
             String filename = orderService.getPdfFileName(id);
@@ -144,7 +148,11 @@ public class OrderController {
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"; filename*=UTF-8''" + encodedFilename)
                     .body(resource);
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            log.warn("PDF download failed for order {}: {}", id, e.getMessage());
+            return ResponseEntity.status(404).body(Map.of(
+                    "message", "PDF file not found on server",
+                    "orderId", id.toString()
+            ));
         }
     }
 }

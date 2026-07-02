@@ -5,4 +5,9 @@ dist/
 .env.local
 backend/data/
 backend/uploads/
-*.mv.db
+*.mv.db
+backend/*.log
+backend/*.err.log
+fileorder/
+fileorder-compressed/
+scratch/

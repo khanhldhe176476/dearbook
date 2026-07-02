@@ -373,6 +373,15 @@ public class OrderService {
                     .toList();
         }
 
+        String storedPdfData = o.getPdfFileData();
+        boolean hasPdfMetadata = storedPdfData != null && !storedPdfData.isBlank();
+        boolean isRemotePdf = hasPdfMetadata && isRemoteUrl(storedPdfData);
+        boolean pdfFileAvailable = hasPdfMetadata && (isRemotePdf || isPdfFileAvailable(storedPdfData));
+        String pdfDownloadData = null;
+        if (hasPdfMetadata) {
+            pdfDownloadData = isRemotePdf ? storedPdfData : "/api/orders/" + o.getId() + "/pdf/download";
+        }
+
         return new AdminOrderResponse(
                 o.getId(),
                 o.getCustomerName() != null ? o.getCustomerName() : (shipping != null ? shipping.getRecipientName() : ""),
@@ -393,7 +402,8 @@ public class OrderService {
                 book != null ? book.getTitle() : "",
                 pages,
                 o.getPdfFileName(),
-                o.getPdfFileData() != null && !o.getPdfFileData().isBlank() ? "/api/orders/" + o.getId() + "/pdf/download" : null,
+                pdfDownloadData,
+                pdfFileAvailable,
                 o.getTotalAmount(),
                 paymentMethod,
                 o.getStatus(),
@@ -554,6 +564,17 @@ public class OrderService {
             throw new IllegalArgumentException("No PDF file uploaded for this order");
         }
 
+        if (isRemoteUrl(filePathString)) {
+            try {
+                UrlResource resource = new UrlResource(filePathString);
+                if (resource.exists() && resource.isReadable()) {
+                    return resource;
+                }
+            } catch (MalformedURLException e) {
+                throw new IllegalArgumentException("Invalid remote PDF URL", e);
+            }
+        }
+
         try {
             Resource inlinePdf = tryLoadInlinePdf(filePathString);
             if (inlinePdf != null) {
@@ -580,6 +601,32 @@ public class OrderService {
         Order order = orderRepo.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found"));
         return order.getPdfFileName();
+    }
+
+    private boolean isPdfFileAvailable(String filePathString) {
+        if (filePathString == null || filePathString.isBlank()) {
+            return false;
+        }
+
+        if (isRemoteUrl(filePathString)) {
+            return true;
+        }
+
+        try {
+            if (tryLoadInlinePdf(filePathString) != null) {
+                return true;
+            }
+
+            for (Path filePath : resolvePdfFileCandidates(filePathString)) {
+                if (Files.isRegularFile(filePath) && Files.isReadable(filePath)) {
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            log.warn("Could not check PDF availability for storedPath={}: {}", filePathString, e.getMessage());
+        }
+
+        return false;
     }
 
     private Path getUploadRoot() {
@@ -655,6 +702,15 @@ public class OrderService {
 
     private boolean isInsideAnyUploadRoot(Path path, List<Path> uploadRoots) {
         return uploadRoots.stream().anyMatch(path::startsWith);
+    }
+
+    private boolean isRemoteUrl(String value) {
+        if (value == null) {
+            return false;
+        }
+
+        String normalized = value.trim().toLowerCase();
+        return normalized.startsWith("https://") || normalized.startsWith("http://");
     }
 
     private Resource tryLoadInlinePdf(String pdfFileData) {

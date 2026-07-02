@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+﻿import React, { useEffect, useMemo, useState } from "react";
 import { API_BASE_URL } from "../lib/api";
 
 type OrderStatus = "PENDING" | "CONFIRMED" | "PRINTING" | "COMPLETED" | "CANCELLED";
@@ -50,9 +50,10 @@ type AdminOrder = {
     designPages?: PageData[];
     pdfFileName?: string;
     pdfFileData?: string;
+    pdfFileAvailable?: boolean;
 };
 
-const API_BASE = "/api/admin";
+const API_BASE = `${API_BASE_URL.replace(/\/$/, "")}/api/admin`;
 
 const statusLabels: Record<string, string> = {
     PENDING: "Chờ xử lý",
@@ -113,7 +114,22 @@ async function downloadOrderPdf(pdfFileData: string, fileName: string) {
         });
 
         if (!res.ok) {
-            throw new Error(`Server trả về ${res.status}`);
+            let message = `Server tra ve ${res.status}`;
+            try {
+                const body = await res.text();
+                if (body) {
+                    const contentType = res.headers.get('content-type') || '';
+                    if (contentType.includes('application/json')) {
+                        const data = JSON.parse(body);
+                        message += data.message ? `: ${data.message}` : `: ${body}`;
+                    } else {
+                        message += `: ${body}`;
+                    }
+                }
+            } catch {
+                // Keep the HTTP status as the fallback message.
+            }
+            throw new Error(message);
         }
 
         const blob = await res.blob();
@@ -135,6 +151,24 @@ async function downloadOrderPdf(pdfFileData: string, fileName: string) {
             '• Phiên đăng nhập admin hết hạn (thử đăng xuất & đăng nhập lại)\n' +
             '• Kết nối mạng bị gián đoạn'
         );
+    }
+}
+
+async function uploadOrderPdf(orderId: string, file: File) {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await fetch(`${API_BASE_URL}/api/orders/${orderId}/pdf`, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${getToken()}`,
+        },
+        body: formData,
+    });
+
+    if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || `Server tra ve ${res.status}`);
     }
 }
 
@@ -225,6 +259,7 @@ export default function AdminArea() {
     const [selectedOrder, setSelectedOrder] = useState<AdminOrder | null>(null);
     const [loadingOrders, setLoadingOrders] = useState(false);
     const [detailLoading, setDetailLoading] = useState(false);
+    const [uploadingPdf, setUploadingPdf] = useState(false);
     const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
     const [selectedOrderIds, setSelectedOrderIds] = useState<string[]>([]);
 
@@ -282,13 +317,28 @@ export default function AdminArea() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    username,
+                    username: username.trim(),
                     password,
                 }),
             });
 
             if (!res.ok) {
-                throw new Error("Sai tài khoản hoặc mật khẩu quản trị viên");
+                let message = "Sai tài khoản hoặc mật khẩu quản trị viên";
+                try {
+                    const body = await res.text();
+                    if (body) {
+                        const contentType = res.headers.get("content-type") || "";
+                        if (contentType.includes("application/json")) {
+                            const data = JSON.parse(body);
+                            message = data.message || message;
+                        } else {
+                            message = body;
+                        }
+                    }
+                } catch {
+                    // Keep the generic login message.
+                }
+                throw new Error(message);
             }
 
             const data = await res.json();
@@ -303,7 +353,7 @@ export default function AdminArea() {
             setPassword("");
         } catch (err) {
             console.error(err);
-            setLoginError("Sai tài khoản hoặc mật khẩu quản trị viên");
+            setLoginError(err instanceof Error ? err.message : "Sai tài khoản hoặc mật khẩu quản trị viên");
         } finally {
             setLoadingLogin(false);
         }
@@ -356,6 +406,31 @@ export default function AdminArea() {
         } catch (err) {
             console.error(err);
             alert("Không thể cập nhật trạng thái đơn hàng");
+        }
+    }
+
+    async function handleReplacePdf(file?: File | null) {
+        if (!selectedOrder || !file) return;
+
+        if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
+            alert("Vui lòng chọn file PDF hợp lệ.");
+            return;
+        }
+
+        setUploadingPdf(true);
+        try {
+            await uploadOrderPdf(selectedOrder.id, file);
+            const updated = await adminFetch(`/orders/${selectedOrder.id}`);
+            setSelectedOrder(updated);
+            setOrders((prev) =>
+                prev.map((item) => (item.id === selectedOrder.id ? { ...item, ...updated } : item))
+            );
+            alert("Đã tải lại file PDF cho đơn hàng này.");
+        } catch (err) {
+            console.error(err);
+            alert("Không thể tải lại file PDF: " + (err instanceof Error ? err.message : String(err)));
+        } finally {
+            setUploadingPdf(false);
         }
     }
 
@@ -947,7 +1022,11 @@ export default function AdminArea() {
                                         📄 File PDF thiết kế
                                     </h3>
                                     {selectedOrder.pdfFileName && selectedOrder.pdfFileData ? (
-                                        <div className="flex items-center justify-between p-4 rounded-xl bg-green-50 border border-green-200">
+                                        <div className={`flex items-center justify-between gap-4 p-4 rounded-xl border ${
+                                            selectedOrder.pdfFileAvailable === false
+                                                ? "bg-red-50 border-red-200"
+                                                : "bg-green-50 border-green-200"
+                                        }`}>
                                             <div className="flex items-center gap-3 min-w-0">
                                                 <div className="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0">
                                                     <span className="text-red-500 text-lg font-bold">PDF</span>
@@ -956,27 +1035,71 @@ export default function AdminArea() {
                                                     <p className="text-sm font-bold text-stone-900 truncate">
                                                         {selectedOrder.pdfFileName}
                                                     </p>
-                                                    <p className="text-xs text-green-700 font-medium">
-                                                        ✓ Đã tải lên
+                                                    <p className={`text-xs font-medium ${
+                                                        selectedOrder.pdfFileAvailable === false ? "text-red-700" : "text-green-700"
+                                                    }`}>
+                                                        {selectedOrder.pdfFileAvailable === false
+                                                            ? "File không còn trên máy chủ - vui lòng tải lại PDF"
+                                                            : "Đã tải lên và sẵn sàng tải xuống"}
                                                     </p>
                                                 </div>
                                             </div>
-                                            <button
-                                                onClick={() => downloadOrderPdf(
-                                                    selectedOrder.pdfFileData!,
-                                                    selectedOrder.pdfFileName || 'design.pdf'
+                                            <div className="flex flex-wrap justify-end gap-2 flex-shrink-0">
+                                                {selectedOrder.pdfFileAvailable !== false && (
+                                                    <button
+                                                        onClick={() => downloadOrderPdf(
+                                                            selectedOrder.pdfFileData!,
+                                                            selectedOrder.pdfFileName || 'design.pdf'
+                                                        )}
+                                                        className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-xl font-semibold text-sm hover:bg-stone-800 transition-colors"
+                                                    >
+                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                        </svg>
+                                                        Tải xuống
+                                                    </button>
                                                 )}
-                                                className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-xl font-semibold text-sm hover:bg-stone-800 transition-colors flex-shrink-0"
-                                            >
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                                </svg>
-                                                Tải xuống
-                                            </button>
+                                                <label className={`cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold transition-colors ${
+                                                    uploadingPdf
+                                                        ? "bg-stone-200 text-stone-500"
+                                                        : "bg-white border border-stone-300 text-stone-800 hover:bg-stone-100"
+                                                }`}>
+                                                    {uploadingPdf ? "Đang tải..." : "Tải lại PDF"}
+                                                    <input
+                                                        type="file"
+                                                        accept=".pdf,application/pdf"
+                                                        className="hidden"
+                                                        disabled={uploadingPdf}
+                                                        onChange={(e) => {
+                                                            const file = e.target.files?.[0];
+                                                            e.currentTarget.value = "";
+                                                            handleReplacePdf(file);
+                                                        }}
+                                                    />
+                                                </label>
+                                            </div>
                                         </div>
                                     ) : (
                                         <div className="rounded-xl border border-dashed p-6 text-center text-stone-500">
-                                            <p className="text-sm">Khách hàng chưa tải lên file PDF thiết kế.</p>
+                                            <p className="text-sm mb-3">Khách hàng chưa tải lên file PDF thiết kế.</p>
+                                            <label className={`inline-flex cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold transition-colors ${
+                                                uploadingPdf
+                                                    ? "bg-stone-200 text-stone-500"
+                                                    : "bg-black text-white hover:bg-stone-800"
+                                            }`}>
+                                                {uploadingPdf ? "Đang tải..." : "Tải PDF cho đơn này"}
+                                                <input
+                                                    type="file"
+                                                    accept=".pdf,application/pdf"
+                                                    className="hidden"
+                                                    disabled={uploadingPdf}
+                                                    onChange={(e) => {
+                                                        const file = e.target.files?.[0];
+                                                        e.currentTarget.value = "";
+                                                        handleReplacePdf(file);
+                                                    }}
+                                                />
+                                            </label>
                                         </div>
                                     )}
                                 </div>
