@@ -378,11 +378,10 @@ public class OrderService {
 
         String storedPdfData = o.getPdfFileData();
         boolean hasPdfMetadata = storedPdfData != null && !storedPdfData.isBlank();
-        boolean isRemotePdf = hasPdfMetadata && isRemoteUrl(storedPdfData);
-        boolean pdfFileAvailable = hasPdfMetadata && (isRemotePdf || isPdfFileAvailable(storedPdfData));
+        boolean pdfFileAvailable = hasPdfMetadata && isPdfFileAvailable(storedPdfData);
         String pdfDownloadData = null;
         if (hasPdfMetadata) {
-            pdfDownloadData = isRemotePdf ? storedPdfData : "/api/orders/" + o.getId() + "/pdf/download";
+            pdfDownloadData = "/api/orders/" + o.getId() + "/pdf/download";
         }
 
         return new AdminOrderResponse(
@@ -567,6 +566,10 @@ public class OrderService {
         }
 
         if (isRemoteUrl(filePathString)) {
+            if (supabaseStorageService.canHandle(filePathString)) {
+                return supabaseStorageService.downloadPdfAsResource(filePathString);
+            }
+
             try {
                 UrlResource resource = new UrlResource(filePathString);
                 if (resource.exists() && resource.isReadable()) {
@@ -611,7 +614,16 @@ public class OrderService {
         }
 
         if (isRemoteUrl(filePathString)) {
-            return true;
+            if (supabaseStorageService.canHandle(filePathString)) {
+                return supabaseStorageService.isPdfAvailable(filePathString);
+            }
+
+            try {
+                UrlResource resource = new UrlResource(filePathString);
+                return resource.exists() && resource.isReadable();
+            } catch (MalformedURLException e) {
+                return false;
+            }
         }
 
         try {

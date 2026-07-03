@@ -99,22 +99,7 @@ function formatMoney(value?: number) {
 
 async function downloadOrderPdf(pdfFileData: string, fileName: string) {
     try {
-        // pdfFileData đã được backend mapToAdminOrderResponse chuyển thành URL download
-        // Ví dụ: "/api/orders/<uuid>/pdf/download"
-        const isRemoteUrl = pdfFileData.startsWith('http');
-        const url = isRemoteUrl ? pdfFileData : `${API_BASE_URL}${pdfFileData}`;
-
-        if (isRemoteUrl) {
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = fileName || 'design.pdf';
-            link.target = '_blank';
-            link.rel = 'noopener noreferrer';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            return;
-        }
+        const url = pdfFileData.startsWith('http') ? pdfFileData : `${API_BASE_URL}${pdfFileData}`;
 
         // Phải dùng fetch với Authorization header vì /api/orders/** yêu cầu authenticated
         // (click <a> tag thông thường không gửi kèm JWT token)
@@ -1059,7 +1044,7 @@ export default function AdminArea() {
                                                 {selectedOrder.pdfFileAvailable !== false && (
                                                     <button
                                                         onClick={() => downloadOrderPdf(
-                                                            selectedOrder.pdfFileData!,
+                                                            `/api/orders/${selectedOrder.id}/pdf/download`,
                                                             selectedOrder.pdfFileName || 'design.pdf'
                                                         )}
                                                         className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-xl font-semibold text-sm hover:bg-stone-800 transition-colors"

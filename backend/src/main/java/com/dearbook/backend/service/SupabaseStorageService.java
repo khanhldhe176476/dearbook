@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
@@ -17,6 +18,9 @@ import java.text.Normalizer;
 import java.time.Instant;
 import java.util.Locale;
 import java.util.UUID;
+
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 
 @Service
 public class SupabaseStorageService {
@@ -82,6 +86,96 @@ public class SupabaseStorageService {
             Thread.currentThread().interrupt();
             throw new RuntimeException("Supabase upload was interrupted", e);
         }
+    }
+
+    public boolean canHandle(String storedUrl) {
+        if (!isConfigured() || !hasText(storedUrl)) {
+            return false;
+        }
+
+        String normalizedUrl = storedUrl.trim();
+        String objectBase = normalizeBaseUrl(supabaseUrl) + "/storage/v1/object/";
+        return normalizedUrl.startsWith(objectBase);
+    }
+
+    public Resource downloadPdfAsResource(String storedUrl) {
+        if (!canHandle(storedUrl)) {
+            throw new IllegalArgumentException("URL is not a configured Supabase Storage object");
+        }
+
+        URI downloadUri = buildAuthenticatedObjectUri(storedUrl);
+        HttpRequest request = baseStorageRequest(downloadUri)
+                .GET()
+                .build();
+
+        try {
+            HttpResponse<InputStream> response = httpClient.send(request, HttpResponse.BodyHandlers.ofInputStream());
+            if (response.statusCode() < 200 || response.statusCode() >= 300) {
+                closeQuietly(response.body());
+                throw new IllegalArgumentException("Supabase file not readable: HTTP " + response.statusCode());
+            }
+
+            return new InputStreamResource(response.body());
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to download PDF from Supabase Storage", e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Supabase download was interrupted", e);
+        }
+    }
+
+    public boolean isPdfAvailable(String storedUrl) {
+        if (!canHandle(storedUrl)) {
+            return false;
+        }
+
+        URI downloadUri = buildAuthenticatedObjectUri(storedUrl);
+        HttpRequest headRequest = baseStorageRequest(downloadUri)
+                .method("HEAD", HttpRequest.BodyPublishers.noBody())
+                .build();
+
+        try {
+            HttpResponse<Void> headResponse = httpClient.send(headRequest, HttpResponse.BodyHandlers.discarding());
+            if (headResponse.statusCode() >= 200 && headResponse.statusCode() < 300) {
+                return true;
+            }
+            if (headResponse.statusCode() != 405) {
+                return false;
+            }
+
+            HttpRequest rangeRequest = baseStorageRequest(downloadUri)
+                    .header("Range", "bytes=0-0")
+                    .GET()
+                    .build();
+            HttpResponse<InputStream> rangeResponse = httpClient.send(rangeRequest, HttpResponse.BodyHandlers.ofInputStream());
+            closeQuietly(rangeResponse.body());
+            return rangeResponse.statusCode() >= 200 && rangeResponse.statusCode() < 300;
+        } catch (IOException e) {
+            log.warn("Could not verify Supabase PDF availability: {}", e.getMessage());
+            return false;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return false;
+        }
+    }
+
+    private HttpRequest.Builder baseStorageRequest(URI uri) {
+        return HttpRequest.newBuilder(uri)
+                .header("Authorization", "Bearer " + serviceRoleKey.trim())
+                .header("apikey", serviceRoleKey.trim())
+                .header("Accept", "application/pdf");
+    }
+
+    private URI buildAuthenticatedObjectUri(String storedUrl) {
+        String normalizedUrl = storedUrl.trim();
+        String objectPublicPrefix = normalizeBaseUrl(supabaseUrl) + "/storage/v1/object/public/";
+        String objectPrefix = normalizeBaseUrl(supabaseUrl) + "/storage/v1/object/";
+
+        if (normalizedUrl.startsWith(objectPublicPrefix)) {
+            return URI.create(objectPrefix + normalizedUrl.substring(objectPublicPrefix.length()));
+        }
+
+        return URI.create(normalizedUrl);
     }
 
     private String buildPublicUrl(String objectKey) {
@@ -165,5 +259,17 @@ public class SupabaseStorageService {
 
     private boolean hasText(String value) {
         return value != null && !value.isBlank();
+    }
+
+    private void closeQuietly(InputStream inputStream) {
+        if (inputStream == null) {
+            return;
+        }
+
+        try {
+            inputStream.close();
+        } catch (IOException ignored) {
+            // Nothing useful to do here.
+        }
     }
 }

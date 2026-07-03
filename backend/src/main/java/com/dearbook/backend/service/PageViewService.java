@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,9 @@ import java.util.LinkedHashMap;
 
 @Service
 public class PageViewService {
+
+    private static final ZoneId VN_ZONE = ZoneId.of("Asia/Ho_Chi_Minh");
+    private static final DateTimeFormatter DAY_FORMATTER = DateTimeFormatter.ofPattern("dd/MM");
 
     private final PageViewRepository pageViewRepository;
 
@@ -46,10 +50,9 @@ public class PageViewService {
      * Số lượt truy cập hôm nay (theo giờ Việt Nam).
      */
     public long getTodayCount() {
-        ZoneId vn = ZoneId.of("Asia/Ho_Chi_Minh");
-        OffsetDateTime startOfDay = OffsetDateTime.now(vn)
+        OffsetDateTime startOfDay = OffsetDateTime.now(VN_ZONE)
                 .toLocalDate()
-                .atStartOfDay(vn)
+                .atStartOfDay(VN_ZONE)
                 .toOffsetDateTime();
         OffsetDateTime endOfDay = startOfDay.plusDays(1);
         return pageViewRepository.countByVisitedAtBetween(startOfDay, endOfDay);
@@ -60,19 +63,35 @@ public class PageViewService {
      * Trả về list { day: "DD/MM", count: N }
      */
     public List<Map<String, Object>> getLast7Days() {
-        ZoneId vn = ZoneId.of("Asia/Ho_Chi_Minh");
-        OffsetDateTime since = OffsetDateTime.now(vn).minusDays(6)
+        OffsetDateTime since = OffsetDateTime.now(VN_ZONE).minusDays(6)
                 .toLocalDate()
-                .atStartOfDay(vn)
+                .atStartOfDay(VN_ZONE)
                 .toOffsetDateTime();
 
-        List<Object[]> raw = pageViewRepository.countByDaySince(since);
+        Map<String, Long> countsByDay = new LinkedHashMap<>();
+        for (int i = 0; i < 7; i++) {
+            String day = since.plusDays(i).format(DAY_FORMATTER);
+            countsByDay.put(day, 0L);
+        }
+
+        List<PageView> views = pageViewRepository.findByVisitedAtGreaterThanEqualOrderByVisitedAtAsc(since);
+        for (PageView view : views) {
+            if (view.getVisitedAt() == null) {
+                continue;
+            }
+
+            String day = view.getVisitedAt()
+                    .atZoneSameInstant(VN_ZONE)
+                    .format(DAY_FORMATTER);
+            countsByDay.computeIfPresent(day, (key, count) -> count + 1);
+        }
+
         List<Map<String, Object>> result = new ArrayList<>();
 
-        for (Object[] row : raw) {
+        for (Map.Entry<String, Long> row : countsByDay.entrySet()) {
             Map<String, Object> entry = new LinkedHashMap<>();
-            entry.put("day", row[0] != null ? row[0].toString() : "");
-            entry.put("count", row[1] != null ? ((Number) row[1]).longValue() : 0L);
+            entry.put("day", row.getKey());
+            entry.put("count", row.getValue());
             result.add(entry);
         }
         return result;
