@@ -33,7 +33,8 @@ public class CouponDataSeeder implements CommandLineRunner {
         List<Coupon> toSeed = List.of(
             createCoupon("GIAM20K", "FIXED", 20000, 0, null, 100),
             createCoupon("GIAM15", "PERCENT", 15, 0, 50_000, 100),
-            createCoupon("GIAM20", "PERCENT", 20, 0, 80_000, 50)
+            createCoupon("GIAM20", "PERCENT", 20, 0, 80_000, 50),
+            createCoupon("GIAM10", "PERCENT", 10, 0, null, 200)
         );
 
         int seeded = 0;
