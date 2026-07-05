@@ -515,6 +515,214 @@
       "name": "Cá nhân",
       "templates": [
         {
+          "id": "auto-template-ca-nhan-beo",
+          "name": "Bèo",
+          "description": "Sách ảnh bèo với thiết kế tuyệt đẹp",
+          "aspectRatio": "1/1",
+          "pages": [
+            {
+              "id": "auto-template-ca-nhan-beo-page-1",
+              "imageUrl": "/ca-nhan/beo/aa.png",
+              "label": "Trang 1"
+            },
+            {
+              "id": "auto-template-ca-nhan-beo-page-2",
+              "imageUrl": "/ca-nhan/beo/aatbio_com_image_export_Jul_5_2026%20(1).png",
+              "label": "Trang 2"
+            },
+            {
+              "id": "auto-template-ca-nhan-beo-page-3",
+              "imageUrl": "/ca-nhan/beo/aatbio_com_image_export_Jul_5_2026%20(2).png",
+              "label": "Trang 3"
+            },
+            {
+              "id": "auto-template-ca-nhan-beo-page-4",
+              "imageUrl": "/ca-nhan/beo/aatbio_com_image_export_Jul_5_2026%20(3).png",
+              "label": "Trang 4"
+            },
+            {
+              "id": "auto-template-ca-nhan-beo-page-5",
+              "imageUrl": "/ca-nhan/beo/aatbio_com_image_export_Jul_5_2026%20(4).png",
+              "label": "Trang 5"
+            },
+            {
+              "id": "auto-template-ca-nhan-beo-page-6",
+              "imageUrl": "/ca-nhan/beo/aatbio_com_image_export_Jul_5_2026%20(5).png",
+              "label": "Trang 6"
+            },
+            {
+              "id": "auto-template-ca-nhan-beo-page-7",
+              "imageUrl": "/ca-nhan/beo/aatbio_com_image_export_Jul_5_2026%20(6).png",
+              "label": "Trang 7"
+            },
+            {
+              "id": "auto-template-ca-nhan-beo-page-8",
+              "imageUrl": "/ca-nhan/beo/aatbio_com_image_export_Jul_5_2026%20(7).png",
+              "label": "Trang 8"
+            },
+            {
+              "id": "auto-template-ca-nhan-beo-page-9",
+              "imageUrl": "/ca-nhan/beo/aatbio_com_image_export_Jul_5_2026%20(8).png",
+              "label": "Trang 9"
+            },
+            {
+              "id": "auto-template-ca-nhan-beo-page-10",
+              "imageUrl": "/ca-nhan/beo/aatbio_com_image_export_Jul_5_2026%20(9).png",
+              "label": "Trang 10"
+            },
+            {
+              "id": "auto-template-ca-nhan-beo-page-11",
+              "imageUrl": "/ca-nhan/beo/aatbio_com_image_export_Jul_5_2026%20(10).png",
+              "label": "Trang 11"
+            },
+            {
+              "id": "auto-template-ca-nhan-beo-page-12",
+              "imageUrl": "/ca-nhan/beo/aatbio_com_image_export_Jul_5_2026%20(11).png",
+              "label": "Trang 12"
+            },
+            {
+              "id": "auto-template-ca-nhan-beo-page-13",
+              "imageUrl": "/ca-nhan/beo/aatbio_com_image_export_Jul_5_2026%20(12).png",
+              "label": "Trang 13"
+            },
+            {
+              "id": "auto-template-ca-nhan-beo-page-14",
+              "imageUrl": "/ca-nhan/beo/aatbio_com_image_export_Jul_5_2026%20(13).png",
+              "label": "Trang 14"
+            },
+            {
+              "id": "auto-template-ca-nhan-beo-page-15",
+              "imageUrl": "/ca-nhan/beo/aatbio_com_image_export_Jul_5_2026%20(14).png",
+              "label": "Trang 15"
+            },
+            {
+              "id": "auto-template-ca-nhan-beo-page-16",
+              "imageUrl": "/ca-nhan/beo/aatbio_com_image_export_Jul_5_2026%20(15).png",
+              "label": "Trang 16"
+            },
+            {
+              "id": "auto-template-ca-nhan-beo-page-17",
+              "imageUrl": "/ca-nhan/beo/aatbio_com_image_export_Jul_5_2026%20(16).png",
+              "label": "Trang 17"
+            },
+            {
+              "id": "auto-template-ca-nhan-beo-page-18",
+              "imageUrl": "/ca-nhan/beo/aatbio_com_image_export_Jul_5_2026%20(17).png",
+              "label": "Trang 18"
+            }
+          ],
+          "thumbnail": "/ca-nhan/beo/aa.png"
+        },
+        {
+          "id": "auto-template-ca-nhan-dieu",
+          "name": "Điệu",
+          "description": "Sách ảnh Điệu với thiết kế tuyệt đẹp",
+          "aspectRatio": "1/1",
+          "pages": [
+            {
+              "id": "auto-template-ca-nhan-dieu-page-1",
+              "imageUrl": "/ca-nhan/dieu/aa.png",
+              "label": "Trang 1"
+            },
+            {
+              "id": "auto-template-ca-nhan-dieu-page-2",
+              "imageUrl": "/ca-nhan/dieu/aatbio_com_image_export_Jul_5_2026%20(1).png",
+              "label": "Trang 2"
+            },
+            {
+              "id": "auto-template-ca-nhan-dieu-page-3",
+              "imageUrl": "/ca-nhan/dieu/aatbio_com_image_export_Jul_5_2026%20(2).png",
+              "label": "Trang 3"
+            },
+            {
+              "id": "auto-template-ca-nhan-dieu-page-4",
+              "imageUrl": "/ca-nhan/dieu/aatbio_com_image_export_Jul_5_2026%20(3).png",
+              "label": "Trang 4"
+            },
+            {
+              "id": "auto-template-ca-nhan-dieu-page-5",
+              "imageUrl": "/ca-nhan/dieu/aatbio_com_image_export_Jul_5_2026%20(4).png",
+              "label": "Trang 5"
+            },
+            {
+              "id": "auto-template-ca-nhan-dieu-page-6",
+              "imageUrl": "/ca-nhan/dieu/aatbio_com_image_export_Jul_5_2026%20(5).png",
+              "label": "Trang 6"
+            },
+            {
+              "id": "auto-template-ca-nhan-dieu-page-7",
+              "imageUrl": "/ca-nhan/dieu/aatbio_com_image_export_Jul_5_2026%20(6).png",
+              "label": "Trang 7"
+            },
+            {
+              "id": "auto-template-ca-nhan-dieu-page-8",
+              "imageUrl": "/ca-nhan/dieu/aatbio_com_image_export_Jul_5_2026%20(7).png",
+              "label": "Trang 8"
+            },
+            {
+              "id": "auto-template-ca-nhan-dieu-page-9",
+              "imageUrl": "/ca-nhan/dieu/aatbio_com_image_export_Jul_5_2026%20(8).png",
+              "label": "Trang 9"
+            },
+            {
+              "id": "auto-template-ca-nhan-dieu-page-10",
+              "imageUrl": "/ca-nhan/dieu/aatbio_com_image_export_Jul_5_2026%20(9).png",
+              "label": "Trang 10"
+            },
+            {
+              "id": "auto-template-ca-nhan-dieu-page-11",
+              "imageUrl": "/ca-nhan/dieu/aatbio_com_image_export_Jul_5_2026%20(10).png",
+              "label": "Trang 11"
+            },
+            {
+              "id": "auto-template-ca-nhan-dieu-page-12",
+              "imageUrl": "/ca-nhan/dieu/aatbio_com_image_export_Jul_5_2026%20(11).png",
+              "label": "Trang 12"
+            },
+            {
+              "id": "auto-template-ca-nhan-dieu-page-13",
+              "imageUrl": "/ca-nhan/dieu/aatbio_com_image_export_Jul_5_2026%20(12).png",
+              "label": "Trang 13"
+            },
+            {
+              "id": "auto-template-ca-nhan-dieu-page-14",
+              "imageUrl": "/ca-nhan/dieu/aatbio_com_image_export_Jul_5_2026%20(13).png",
+              "label": "Trang 14"
+            },
+            {
+              "id": "auto-template-ca-nhan-dieu-page-15",
+              "imageUrl": "/ca-nhan/dieu/aatbio_com_image_export_Jul_5_2026%20(14).png",
+              "label": "Trang 15"
+            },
+            {
+              "id": "auto-template-ca-nhan-dieu-page-16",
+              "imageUrl": "/ca-nhan/dieu/aatbio_com_image_export_Jul_5_2026%20(15).png",
+              "label": "Trang 16"
+            },
+            {
+              "id": "auto-template-ca-nhan-dieu-page-17",
+              "imageUrl": "/ca-nhan/dieu/aatbio_com_image_export_Jul_5_2026%20(16).png",
+              "label": "Trang 17"
+            },
+            {
+              "id": "auto-template-ca-nhan-dieu-page-18",
+              "imageUrl": "/ca-nhan/dieu/aatbio_com_image_export_Jul_5_2026%20(17).png",
+              "label": "Trang 18"
+            },
+            {
+              "id": "auto-template-ca-nhan-dieu-page-19",
+              "imageUrl": "/ca-nhan/dieu/aatbio_com_image_export_Jul_5_2026%20(18).png",
+              "label": "Trang 19"
+            },
+            {
+              "id": "auto-template-ca-nhan-dieu-page-20",
+              "imageUrl": "/ca-nhan/dieu/aatbio_com_image_export_Jul_5_2026%20(19).png",
+              "label": "Trang 20"
+            }
+          ],
+          "thumbnail": "/ca-nhan/dieu/aa.png"
+        },
+        {
           "id": "auto-template-ca-nhan-dust-soul",
           "name": "Dust & Soul",
           "description": "Sách ảnh Dust & Soul với thiết kế tuyệt đẹp",
@@ -686,6 +894,7 @@
           "id": "auto-template-ca-nhan-tot-nghiep-ca-nhan",
           "name": "Tốt nghiệp cá nhân",
           "description": "Sách ảnh Tốt nghiệp cá nhân với thiết kế tuyệt đẹp",
+          "aspectRatio": "1/1",
           "pages": [
             {
               "id": "auto-template-ca-nhan-tot-nghiep-ca-nhan-page-1",
@@ -976,7 +1185,7 @@
         },
         {
           "id": "auto-template-gia-dinh-gia-dinh-la-so-1",
-          "name": "gia-dinh-la-so-1",
+          "name": "Gia đình là số 1",
           "description": "Sách ảnh gia-dinh-la-so-1 với thiết kế tuyệt đẹp",
           "pages": [
             {
@@ -1184,8 +1393,9 @@
         },
         {
           "id": "auto-template-gia-dinh-gia-dinh-la-so-1-20x20",
-          "name": "gia-dinh-la-so-1 (20x20)",
-          "description": "Sách ảnh gia-dinh-la-so-1 (20x20) với thiết kế tuyệt đẹp",
+          "name": "Gia đình là số 1 (20x20)",
+          "description": "Sách ảnh Gia đình là số 1 (20x20) với thiết kế tuyệt đẹp",
+          "aspectRatio": "1/1",
           "pages": [
             {
               "id": "auto-template-gia-dinh-gia-dinh-la-so-1-20x20-page-1",
@@ -1283,13 +1493,118 @@
       ]
     },
     {
+      "id": "sinh-nhat",
+      "name": "Sinh nhật",
+      "templates": [
+        {
+          "id": "auto-template-sinh-nhat-happy-birthday",
+          "name": "Happy birthday",
+          "description": "Sách ảnh happy-birthday với thiết kế tuyệt đẹp",
+          "aspectRatio": "1/1",
+          "pages": [
+            {
+              "id": "auto-template-sinh-nhat-happy-birthday-page-1",
+              "imageUrl": "/sinh-nhat/happy-birthday/aa.png",
+              "label": "Trang 1"
+            },
+            {
+              "id": "auto-template-sinh-nhat-happy-birthday-page-2",
+              "imageUrl": "/sinh-nhat/happy-birthday/aatbio_com_image_export_Jul_5_2026%20(1).png",
+              "label": "Trang 2"
+            },
+            {
+              "id": "auto-template-sinh-nhat-happy-birthday-page-3",
+              "imageUrl": "/sinh-nhat/happy-birthday/aatbio_com_image_export_Jul_5_2026%20(2).png",
+              "label": "Trang 3"
+            },
+            {
+              "id": "auto-template-sinh-nhat-happy-birthday-page-4",
+              "imageUrl": "/sinh-nhat/happy-birthday/aatbio_com_image_export_Jul_5_2026%20(3).png",
+              "label": "Trang 4"
+            },
+            {
+              "id": "auto-template-sinh-nhat-happy-birthday-page-5",
+              "imageUrl": "/sinh-nhat/happy-birthday/aatbio_com_image_export_Jul_5_2026%20(4).png",
+              "label": "Trang 5"
+            },
+            {
+              "id": "auto-template-sinh-nhat-happy-birthday-page-6",
+              "imageUrl": "/sinh-nhat/happy-birthday/aatbio_com_image_export_Jul_5_2026%20(5).png",
+              "label": "Trang 6"
+            },
+            {
+              "id": "auto-template-sinh-nhat-happy-birthday-page-7",
+              "imageUrl": "/sinh-nhat/happy-birthday/aatbio_com_image_export_Jul_5_2026%20(6).png",
+              "label": "Trang 7"
+            },
+            {
+              "id": "auto-template-sinh-nhat-happy-birthday-page-8",
+              "imageUrl": "/sinh-nhat/happy-birthday/aatbio_com_image_export_Jul_5_2026%20(7).png",
+              "label": "Trang 8"
+            },
+            {
+              "id": "auto-template-sinh-nhat-happy-birthday-page-9",
+              "imageUrl": "/sinh-nhat/happy-birthday/aatbio_com_image_export_Jul_5_2026%20(8).png",
+              "label": "Trang 9"
+            },
+            {
+              "id": "auto-template-sinh-nhat-happy-birthday-page-10",
+              "imageUrl": "/sinh-nhat/happy-birthday/aatbio_com_image_export_Jul_5_2026%20(9).png",
+              "label": "Trang 10"
+            },
+            {
+              "id": "auto-template-sinh-nhat-happy-birthday-page-11",
+              "imageUrl": "/sinh-nhat/happy-birthday/aatbio_com_image_export_Jul_5_2026%20(10).png",
+              "label": "Trang 11"
+            },
+            {
+              "id": "auto-template-sinh-nhat-happy-birthday-page-12",
+              "imageUrl": "/sinh-nhat/happy-birthday/aatbio_com_image_export_Jul_5_2026%20(11).png",
+              "label": "Trang 12"
+            },
+            {
+              "id": "auto-template-sinh-nhat-happy-birthday-page-13",
+              "imageUrl": "/sinh-nhat/happy-birthday/aatbio_com_image_export_Jul_5_2026%20(12).png",
+              "label": "Trang 13"
+            },
+            {
+              "id": "auto-template-sinh-nhat-happy-birthday-page-14",
+              "imageUrl": "/sinh-nhat/happy-birthday/aatbio_com_image_export_Jul_5_2026%20(13).png",
+              "label": "Trang 14"
+            },
+            {
+              "id": "auto-template-sinh-nhat-happy-birthday-page-15",
+              "imageUrl": "/sinh-nhat/happy-birthday/aatbio_com_image_export_Jul_5_2026%20(14).png",
+              "label": "Trang 15"
+            },
+            {
+              "id": "auto-template-sinh-nhat-happy-birthday-page-16",
+              "imageUrl": "/sinh-nhat/happy-birthday/aatbio_com_image_export_Jul_5_2026%20(15).png",
+              "label": "Trang 16"
+            },
+            {
+              "id": "auto-template-sinh-nhat-happy-birthday-page-17",
+              "imageUrl": "/sinh-nhat/happy-birthday/aatbio_com_image_export_Jul_5_2026%20(16).png",
+              "label": "Trang 17"
+            },
+            {
+              "id": "auto-template-sinh-nhat-happy-birthday-page-18",
+              "imageUrl": "/sinh-nhat/happy-birthday/aatbio_com_image_export_Jul_5_2026%20(17).png",
+              "label": "Trang 18"
+            }
+          ],
+          "thumbnail": "/sinh-nhat/happy-birthday/aa.png"
+        }
+      ]
+    },
+    {
       "id": "tinh-yeu",
       "name": "Tình Yêu",
       "templates": [
         {
           "id": "auto-template-tinh-yeu-firrst-love",
-          "name": "Firrst love",
-          "description": "Sách ảnh Firrst love với thiết kế tuyệt đẹp",
+          "name": "First love",
+          "description": "Sách ảnh First love với thiết kế tuyệt đẹp",
           "pages": [
             {
               "id": "auto-template-tinh-yeu-firrst-love-page-1",
@@ -1701,6 +2016,105 @@
             }
           ],
           "thumbnail": "/tinh-yeu/happy-anniversary/aa.png"
+        },
+        {
+          "id": "auto-template-tinh-yeu-love-story",
+          "name": "Love story",
+          "description": "Sách ảnh Love story với thiết kế tuyệt đẹp",
+          "aspectRatio": "1/1",
+          "pages": [
+            {
+              "id": "auto-template-tinh-yeu-love-story-page-1",
+              "imageUrl": "/tinh-yeu/love-story/aa.png",
+              "label": "Trang 1"
+            },
+            {
+              "id": "auto-template-tinh-yeu-love-story-page-2",
+              "imageUrl": "/tinh-yeu/love-story/aatbio_com_image_export_Jul_5_2026%20(1).png",
+              "label": "Trang 2"
+            },
+            {
+              "id": "auto-template-tinh-yeu-love-story-page-3",
+              "imageUrl": "/tinh-yeu/love-story/aatbio_com_image_export_Jul_5_2026%20(2).png",
+              "label": "Trang 3"
+            },
+            {
+              "id": "auto-template-tinh-yeu-love-story-page-4",
+              "imageUrl": "/tinh-yeu/love-story/aatbio_com_image_export_Jul_5_2026%20(3).png",
+              "label": "Trang 4"
+            },
+            {
+              "id": "auto-template-tinh-yeu-love-story-page-5",
+              "imageUrl": "/tinh-yeu/love-story/aatbio_com_image_export_Jul_5_2026%20(4).png",
+              "label": "Trang 5"
+            },
+            {
+              "id": "auto-template-tinh-yeu-love-story-page-6",
+              "imageUrl": "/tinh-yeu/love-story/aatbio_com_image_export_Jul_5_2026%20(5).png",
+              "label": "Trang 6"
+            },
+            {
+              "id": "auto-template-tinh-yeu-love-story-page-7",
+              "imageUrl": "/tinh-yeu/love-story/aatbio_com_image_export_Jul_5_2026%20(6).png",
+              "label": "Trang 7"
+            },
+            {
+              "id": "auto-template-tinh-yeu-love-story-page-8",
+              "imageUrl": "/tinh-yeu/love-story/aatbio_com_image_export_Jul_5_2026%20(7).png",
+              "label": "Trang 8"
+            },
+            {
+              "id": "auto-template-tinh-yeu-love-story-page-9",
+              "imageUrl": "/tinh-yeu/love-story/aatbio_com_image_export_Jul_5_2026%20(8).png",
+              "label": "Trang 9"
+            },
+            {
+              "id": "auto-template-tinh-yeu-love-story-page-10",
+              "imageUrl": "/tinh-yeu/love-story/aatbio_com_image_export_Jul_5_2026%20(9).png",
+              "label": "Trang 10"
+            },
+            {
+              "id": "auto-template-tinh-yeu-love-story-page-11",
+              "imageUrl": "/tinh-yeu/love-story/aatbio_com_image_export_Jul_5_2026%20(10).png",
+              "label": "Trang 11"
+            },
+            {
+              "id": "auto-template-tinh-yeu-love-story-page-12",
+              "imageUrl": "/tinh-yeu/love-story/aatbio_com_image_export_Jul_5_2026%20(11).png",
+              "label": "Trang 12"
+            },
+            {
+              "id": "auto-template-tinh-yeu-love-story-page-13",
+              "imageUrl": "/tinh-yeu/love-story/aatbio_com_image_export_Jul_5_2026%20(12).png",
+              "label": "Trang 13"
+            },
+            {
+              "id": "auto-template-tinh-yeu-love-story-page-14",
+              "imageUrl": "/tinh-yeu/love-story/aatbio_com_image_export_Jul_5_2026%20(13).png",
+              "label": "Trang 14"
+            },
+            {
+              "id": "auto-template-tinh-yeu-love-story-page-15",
+              "imageUrl": "/tinh-yeu/love-story/aatbio_com_image_export_Jul_5_2026%20(14).png",
+              "label": "Trang 15"
+            },
+            {
+              "id": "auto-template-tinh-yeu-love-story-page-16",
+              "imageUrl": "/tinh-yeu/love-story/aatbio_com_image_export_Jul_5_2026%20(15).png",
+              "label": "Trang 16"
+            },
+            {
+              "id": "auto-template-tinh-yeu-love-story-page-17",
+              "imageUrl": "/tinh-yeu/love-story/aatbio_com_image_export_Jul_5_2026%20(16).png",
+              "label": "Trang 17"
+            },
+            {
+              "id": "auto-template-tinh-yeu-love-story-page-18",
+              "imageUrl": "/tinh-yeu/love-story/aatbio_com_image_export_Jul_5_2026%20(17).png",
+              "label": "Trang 18"
+            }
+          ],
+          "thumbnail": "/tinh-yeu/love-story/aa.png"
         }
       ]
     }

@@ -2859,6 +2859,226 @@ export const templates: Template[] = [
     ]
   },
   
+  // ========== NEW: LOVE STORY TEMPLATE ==========
+  {
+    id: 'love-9',
+    name: 'Love Story',
+    theme: 'love',
+    badge: 'new',
+    thumbnail: '/tinh-yeu/love-story/aa.png',
+    cover: createMagazineCover(
+      'love',
+      'Our Love Story',
+      '💕 Câu chuyện của chúng ta',
+      'https://images.unsplash.com/photo-1768468104279-726353bcad08?w=800&h=1200&fit=crop',
+      'https://images.unsplash.com/photo-1767986012138-d02276728368?w=300&h=300&fit=crop'
+    ),
+    pages: [
+      {
+        id: 'page-1',
+        backgroundColor: '#fff1f2',
+        backgroundImage: '/tinh-yeu/love-story/aa.png',
+        elements: [
+          {
+            id: '1',
+            type: 'text',
+            content: 'Chuyện tình của chúng ta',
+            x: 50,
+            y: 80,
+            width: 700,
+            height: 90,
+            fontSize: 52,
+            fontFamily: 'Dancing Script',
+            color: '#ffffff',
+            fontWeight: 'bold',
+            textAlign: 'center',
+            textShadow: '2px 2px 4px rgba(0,0,0,0.6)'
+          },
+          {
+            id: '2',
+            type: 'text',
+            content: 'Mỗi câu chuyện tình yêu đều đẹp theo cách riêng của nó. Đây là câu chuyện của chúng ta - nơi những kỷ niệm được lưu giữ mãi mãi.',
+            x: 80,
+            y: 480,
+            width: 640,
+            height: 160,
+            fontSize: 22,
+            fontFamily: 'Poppins',
+            color: '#ffffff',
+            fontWeight: '500',
+            textAlign: 'center',
+            textShadow: '1px 1px 3px rgba(0,0,0,0.8)'
+          }
+        ]
+      }
+    ]
+  },
+
+  // ========== NEW: HAPPY BIRTHDAY TEMPLATE ==========
+  {
+    id: 'birthday-1',
+    name: 'Happy Birthday',
+    theme: 'birthday',
+    badge: 'new',
+    thumbnail: '/sinh-nhat/happy-birthday/aa.png',
+    cover: createMagazineCover(
+      'birthday',
+      'Happy Birthday!',
+      '🎂 Chúc mừng sinh nhật',
+      'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=800&h=1200&fit=crop',
+      'https://images.unsplash.com/photo-1577080415932-2e5a0fbec8e2?w=300&h=300&fit=crop'
+    ),
+    pages: [
+      {
+        id: 'page-1',
+        backgroundColor: '#fdf2f8',
+        backgroundImage: '/sinh-nhat/happy-birthday/aa.png',
+        elements: [
+          {
+            id: '1',
+            type: 'text',
+            content: 'Chúc mừng sinh nhật!',
+            x: 50,
+            y: 80,
+            width: 700,
+            height: 90,
+            fontSize: 52,
+            fontFamily: 'Dancing Script',
+            color: '#ffffff',
+            fontWeight: 'bold',
+            textAlign: 'center',
+            textShadow: '2px 2px 4px rgba(0,0,0,0.6)'
+          },
+          {
+            id: '2',
+            type: 'text',
+            content: 'Chúc bạn một sinh nhật tràn đầy niềm vui, hạnh phúc và những điều tuyệt vời nhất. Tuổi mới - những điều mới!',
+            x: 80,
+            y: 480,
+            width: 640,
+            height: 160,
+            fontSize: 22,
+            fontFamily: 'Poppins',
+            color: '#ffffff',
+            fontWeight: '500',
+            textAlign: 'center',
+            textShadow: '1px 1px 3px rgba(0,0,0,0.8)'
+          }
+        ]
+      }
+    ]
+  },
+
+  // ========== NEW: DIEU TEMPLATE ==========
+  {
+    id: 'personal-dieu',
+    name: 'Diệu',
+    theme: 'birthday',
+    badge: 'new',
+    thumbnail: '/ca-nhan/dieu/aa.png',
+    cover: createMagazineCover(
+      'birthday',
+      'Diệu',
+      '✨ Khoảnh khắc đáng nhớ',
+      'https://images.unsplash.com/photo-1517404215738-15263e9f9178?w=800&h=1200&fit=crop',
+      'https://images.unsplash.com/photo-1577080415932-2e5a0fbec8e2?w=300&h=300&fit=crop'
+    ),
+    pages: [
+      {
+        id: 'page-1',
+        backgroundColor: '#faf5ff',
+        backgroundImage: '/ca-nhan/dieu/aa.png',
+        elements: [
+          {
+            id: '1',
+            type: 'text',
+            content: 'Diệu',
+            x: 50,
+            y: 80,
+            width: 700,
+            height: 90,
+            fontSize: 56,
+            fontFamily: 'Dancing Script',
+            color: '#ffffff',
+            fontWeight: 'bold',
+            textAlign: 'center',
+            textShadow: '2px 2px 4px rgba(0,0,0,0.6)'
+          },
+          {
+            id: '2',
+            type: 'text',
+            content: 'Lưu giữ những khoảnh khắc đẹp nhất, những kỷ niệm đáng nhớ trong cuộc sống.',
+            x: 80,
+            y: 480,
+            width: 640,
+            height: 160,
+            fontSize: 22,
+            fontFamily: 'Poppins',
+            color: '#ffffff',
+            fontWeight: '500',
+            textAlign: 'center',
+            textShadow: '1px 1px 3px rgba(0,0,0,0.8)'
+          }
+        ]
+      }
+    ]
+  },
+
+  // ========== NEW: BEO TEMPLATE ==========
+  {
+    id: 'personal-beo',
+    name: 'Béo',
+    theme: 'birthday',
+    badge: 'new',
+    thumbnail: '/ca-nhan/beo/aa.png',
+    cover: createMagazineCover(
+      'birthday',
+      'Béo',
+      '🌟 Những điều ngọt ngào',
+      'https://images.unsplash.com/photo-1517404215738-15263e9f9178?w=800&h=1200&fit=crop',
+      'https://images.unsplash.com/photo-1577080415932-2e5a0fbec8e2?w=300&h=300&fit=crop'
+    ),
+    pages: [
+      {
+        id: 'page-1',
+        backgroundColor: '#fff7ed',
+        backgroundImage: '/ca-nhan/beo/aa.png',
+        elements: [
+          {
+            id: '1',
+            type: 'text',
+            content: 'Béo',
+            x: 50,
+            y: 80,
+            width: 700,
+            height: 90,
+            fontSize: 56,
+            fontFamily: 'Dancing Script',
+            color: '#ffffff',
+            fontWeight: 'bold',
+            textAlign: 'center',
+            textShadow: '2px 2px 4px rgba(0,0,0,0.6)'
+          },
+          {
+            id: '2',
+            type: 'text',
+            content: 'Những kỷ niệm ngọt ngào và đáng yêu nhất được lưu giữ trong từng trang sách.',
+            x: 80,
+            y: 480,
+            width: 640,
+            height: 160,
+            fontSize: 22,
+            fontFamily: 'Poppins',
+            color: '#ffffff',
+            fontWeight: '500',
+            textAlign: 'center',
+            textShadow: '1px 1px 3px rgba(0,0,0,0.8)'
+          }
+        ]
+      }
+    ]
+  },
+
   // Add new romantic love template with 10 pages
   romanticLoveTemplate,
 

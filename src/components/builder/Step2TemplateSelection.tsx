@@ -234,7 +234,7 @@ export function Step2TemplateSelection({
 
   // Combine local templates with Supabase templates
   // Translate theme slug if needed (e.g. love -> tinh-yeu)
-  const mappedThemeId = theme === 'love' ? 'tinh-yeu' : (theme === 'friendship' ? 'ban-be' : (theme === 'family' ? 'gia-dinh' : theme));
+  const mappedThemeId = theme === 'love' ? 'tinh-yeu' : (theme === 'friendship' ? 'ban-be' : (theme === 'family' ? 'gia-dinh' : (theme === 'birthday' ? 'sinh-nhat' : theme)));
   const localTemplates = autoData.themes.find(t => t.id === mappedThemeId)?.templates || [];
   
   const templates = [...supabaseTemplates, ...localTemplates];
