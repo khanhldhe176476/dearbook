@@ -517,7 +517,7 @@
         {
           "id": "auto-template-ca-nhan-beo",
           "name": "Bèo",
-          "description": "Sách ảnh bèo với thiết kế tuyệt đẹp",
+          "description": "Sách ảnh Bèo với thiết kế tuyệt đẹp",
           "aspectRatio": "1/1",
           "pages": [
             {
@@ -1186,7 +1186,7 @@
         {
           "id": "auto-template-gia-dinh-gia-dinh-la-so-1",
           "name": "Gia đình là số 1",
-          "description": "Sách ảnh gia-dinh-la-so-1 với thiết kế tuyệt đẹp",
+          "description": "Sách ảnh Gia đình là số 1 với thiết kế tuyệt đẹp",
           "pages": [
             {
               "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-1",
@@ -1393,7 +1393,7 @@
         },
         {
           "id": "auto-template-gia-dinh-gia-dinh-la-so-1-20x20",
-          "name": "Gia đình là số 1 (20x20)",
+          "name": "Gia đình là số1 (20x20)",
           "description": "Sách ảnh Gia đình là số 1 (20x20) với thiết kế tuyệt đẹp",
           "aspectRatio": "1/1",
           "pages": [
@@ -1499,7 +1499,7 @@
         {
           "id": "auto-template-sinh-nhat-happy-birthday",
           "name": "Happy birthday",
-          "description": "Sách ảnh happy-birthday với thiết kế tuyệt đẹp",
+          "description": "Sách ảnh Happy birthday với thiết kế tuyệt đẹp",
           "aspectRatio": "1/1",
           "pages": [
             {
