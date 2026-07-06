@@ -1393,7 +1393,7 @@
         },
         {
           "id": "auto-template-gia-dinh-gia-dinh-la-so-1-20x20",
-          "name": "Gia đình là số1 (20x20)",
+          "name": "Gia đình là số 1",
           "description": "Sách ảnh Gia đình là số 1 (20x20) với thiết kế tuyệt đẹp",
           "aspectRatio": "1/1",
           "pages": [
@@ -1498,8 +1498,8 @@
       "templates": [
         {
           "id": "auto-template-sinh-nhat-happy-birthday",
-          "name": "Happy birthday",
-          "description": "Sách ảnh Happy birthday với thiết kế tuyệt đẹp",
+          "name": "Happy Birthday",
+          "description": "Sách ảnh Happy Birthday với thiết kế tuyệt đẹp",
           "aspectRatio": "1/1",
           "pages": [
             {
