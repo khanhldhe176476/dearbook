@@ -75,6 +75,7 @@ function generate() {
           id: templateId,
           name: templateDisplayName,
           description: `Sách ảnh ${templateDisplayName} với thiết kế tuyệt đẹp`,
+          aspectRatio: "1/1",
           pages: []
         };
 
