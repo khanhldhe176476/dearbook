@@ -12,7 +12,8 @@ const THEME_DISPLAY_NAMES = {
   'ban-be': 'Bạn Bè',
   'ca-nhan': 'Cá nhân',
   'tinh-yeu': 'Tình Yêu',
-  'gia-dinh': 'Gia Đình'
+  'gia-dinh': 'Gia Đình',
+  'sinh-nhat': 'Sinh Nhật'
 };
 
 const TEMPLATE_DISPLAY_NAMES = {
@@ -20,23 +21,41 @@ const TEMPLATE_DISPLAY_NAMES = {
   'vintage-style': 'Vintage Style',
   'xanh-la-khong-xa-lanh': 'Xanh lá không xa lánh',
   'dust-soul': 'Dust & Soul',
-  'firrst-love': 'Firrst love',
+  'firrst-love': 'First Love',
   'happy-anniversary': 'Happy Anniversary',
   'binh-yen-nho': 'Gia đình nhỏ',
-  'tot-nghiep-ca-nhan': 'Tốt nghiệp cá nhân'
+  'tot-nghiep-ca-nhan': 'Tốt nghiệp cá nhân',
+
+  // Các template mới
+  'beo': 'Bèo',
+  'dieu': 'Điệu',
+  'gia-dinh-la-so-1': 'Gia đình là số 1',
+  'gia-dinh-la-so-1-20x20': 'Gia đình là số 1 (20x20)',
+  'love-story': 'Love Story',
+  'happy-birthday': 'Happy Birthday'
 };
 
-// Hàm chuyển tên thành id (ví dụ: Bạn Bè -> ban-be)
+// Các template có định dạng vuông 1:1
+const SQUARE_TEMPLATE_SLUGS = [
+  'beo',
+  'dieu',
+  'gia-dinh-la-so-1-20x20',
+  'love-story',
+  'happy-birthday',
+  'tot-nghiep-ca-nhan'
+];
+
+// Hàm chuyển tên thành id, ví dụ: Bạn Bè -> ban-be
 const slugify = (text) => {
   return text.toString().toLowerCase()
-    .normalize('NFD') 
-    .replace(/[\u0300-\u036f]/g, '') 
-    .replace(/\s+/g, '-') 
-    .replace(/[^\w\-]+/g, '') 
-    .replace(/\-\-+/g, '-') 
-    .replace(/^-+/, '') 
-    .replace(/-+$/, ''); 
-}
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/[^\w\-]+/g, '')
+    .replace(/\-\-+/g, '-')
+    .replace(/^-+/, '')
+    .replace(/-+$/, '');
+};
 
 function generate() {
   const data = { themes: [] };
@@ -66,7 +85,7 @@ function generate() {
         const templateFolder = templateItem.name;
         const templateSlug = slugify(templateFolder);
         const templateDisplayName = TEMPLATE_DISPLAY_NAMES[templateSlug] || templateFolder;
-        
+
         // Bắt đầu bằng auto-template- để Step3 biết đây là Simple Editor
         const templateId = `auto-template-${themeSlug}-${templateSlug}`;
         const templatePath = path.join(themePath, templateFolder);
@@ -75,22 +94,27 @@ function generate() {
           id: templateId,
           name: templateDisplayName,
           description: `Sách ảnh ${templateDisplayName} với thiết kế tuyệt đẹp`,
-          aspectRatio: "1/1",
           pages: []
         };
 
+        // Chỉ các template trong danh sách này mới là vuông
+        if (SQUARE_TEMPLATE_SLUGS.includes(templateSlug)) {
+          templateObj.aspectRatio = '1/1';
+        }
+
         const pageItems = fs.readdirSync(templatePath, { withFileTypes: true });
-        
+
         // Lọc ra các file ảnh
         const images = pageItems
           .filter(item => item.isFile() && /\.(png|jpe?g|webp)$/i.test(item.name))
           .map(item => item.name);
 
-        // Natural sort: sắp xếp thông minh số đếm (2 đứng trước 10)
+        // Natural sort: sắp xếp thông minh số đếm, ví dụ 2 đứng trước 10
         images.sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
 
         images.forEach((imgName, index) => {
           const rawUrl = `/${themeFolder}/${templateFolder}/${imgName}`;
+
           templateObj.pages.push({
             id: `${templateId}-page-${index + 1}`,
             imageUrl: encodeURI(rawUrl),
@@ -111,7 +135,13 @@ function generate() {
     }
 
     fs.writeFileSync(OUTPUT_FILE, JSON.stringify(data, null, 2));
-    console.log(`[AutoTemplates] Quét thành công: Đã tìm thấy ${data.themes.length} chủ đề và ${data.themes.reduce((sum, t) => sum + t.templates.length, 0)} mẫu thiết kế.`);
+
+    console.log(
+      `[AutoTemplates] Quét thành công: Đã tìm thấy ${data.themes.length} chủ đề và ${data.themes.reduce(
+        (sum, t) => sum + t.templates.length,
+        0
+      )} mẫu thiết kế.`
+    );
   } catch (err) {
     console.error('[AutoTemplates] Lỗi khi tạo template:', err);
   }

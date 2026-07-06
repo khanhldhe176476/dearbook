@@ -8,7 +8,6 @@
           "id": "auto-template-ban-be-tinh-nghich",
           "name": "Tinh nghịch",
           "description": "Sách ảnh Tinh nghịch với thiết kế tuyệt đẹp",
-          "aspectRatio": "1/1",
           "pages": [
             {
               "id": "auto-template-ban-be-tinh-nghich-page-1",
@@ -217,7 +216,6 @@
           "id": "auto-template-ban-be-vintage-style",
           "name": "Vintage Style",
           "description": "Sách ảnh Vintage Style với thiết kế tuyệt đẹp",
-          "aspectRatio": "1/1",
           "pages": [
             {
               "id": "auto-template-ban-be-vintage-style-page-1",
@@ -306,7 +304,6 @@
           "id": "auto-template-ban-be-xanh-la-khong-xa-lanh",
           "name": "Xanh lá không xa lánh",
           "description": "Sách ảnh Xanh lá không xa lánh với thiết kế tuyệt đẹp",
-          "aspectRatio": "1/1",
           "pages": [
             {
               "id": "auto-template-ban-be-xanh-la-khong-xa-lanh-page-1",
@@ -519,9 +516,8 @@
       "templates": [
         {
           "id": "auto-template-ca-nhan-beo",
-          "name": "beo",
-          "description": "Sách ảnh beo với thiết kế tuyệt đẹp",
-          "aspectRatio": "1/1",
+          "name": "Bèo",
+          "description": "Sách ảnh Bèo với thiết kế tuyệt đẹp",
           "pages": [
             {
               "id": "auto-template-ca-nhan-beo-page-1",
@@ -614,13 +610,13 @@
               "label": "Trang 18"
             }
           ],
+          "aspectRatio": "1/1",
           "thumbnail": "/ca-nhan/beo/aa.png"
         },
         {
           "id": "auto-template-ca-nhan-dieu",
-          "name": "dieu",
-          "description": "Sách ảnh dieu với thiết kế tuyệt đẹp",
-          "aspectRatio": "1/1",
+          "name": "Điệu",
+          "description": "Sách ảnh Điệu với thiết kế tuyệt đẹp",
           "pages": [
             {
               "id": "auto-template-ca-nhan-dieu-page-1",
@@ -723,13 +719,13 @@
               "label": "Trang 20"
             }
           ],
+          "aspectRatio": "1/1",
           "thumbnail": "/ca-nhan/dieu/aa.png"
         },
         {
           "id": "auto-template-ca-nhan-dust-soul",
           "name": "Dust & Soul",
           "description": "Sách ảnh Dust & Soul với thiết kế tuyệt đẹp",
-          "aspectRatio": "1/1",
           "pages": [
             {
               "id": "auto-template-ca-nhan-dust-soul-page-1",
@@ -898,7 +894,6 @@
           "id": "auto-template-ca-nhan-tot-nghiep-ca-nhan",
           "name": "Tốt nghiệp cá nhân",
           "description": "Sách ảnh Tốt nghiệp cá nhân với thiết kế tuyệt đẹp",
-          "aspectRatio": "1/1",
           "pages": [
             {
               "id": "auto-template-ca-nhan-tot-nghiep-ca-nhan-page-1",
@@ -971,6 +966,7 @@
               "label": "Trang 14"
             }
           ],
+          "aspectRatio": "1/1",
           "thumbnail": "/ca-nhan/tot-nghiep-ca-nhan/aa.png"
         }
       ]
@@ -983,7 +979,6 @@
           "id": "auto-template-gia-dinh-binh-yen-nho",
           "name": "Gia đình nhỏ",
           "description": "Sách ảnh Gia đình nhỏ với thiết kế tuyệt đẹp",
-          "aspectRatio": "1/1",
           "pages": [
             {
               "id": "auto-template-gia-dinh-binh-yen-nho-page-1",
@@ -1190,9 +1185,8 @@
         },
         {
           "id": "auto-template-gia-dinh-gia-dinh-la-so-1",
-          "name": "gia-dinh-la-so-1",
-          "description": "Sách ảnh gia-dinh-la-so-1 với thiết kế tuyệt đẹp",
-          "aspectRatio": "1/1",
+          "name": "Gia đình là số 1",
+          "description": "Sách ảnh Gia đình là số 1 với thiết kế tuyệt đẹp",
           "pages": [
             {
               "id": "auto-template-gia-dinh-gia-dinh-la-so-1-page-1",
@@ -1399,9 +1393,8 @@
         },
         {
           "id": "auto-template-gia-dinh-gia-dinh-la-so-1-20x20",
-          "name": "gia-dinh-la-so-1 (20x20)",
-          "description": "Sách ảnh gia-dinh-la-so-1 (20x20) với thiết kế tuyệt đẹp",
-          "aspectRatio": "1/1",
+          "name": "Gia đình là số 1 (20x20)",
+          "description": "Sách ảnh Gia đình là số 1 (20x20) với thiết kế tuyệt đẹp",
           "pages": [
             {
               "id": "auto-template-gia-dinh-gia-dinh-la-so-1-20x20-page-1",
@@ -1494,19 +1487,19 @@
               "label": "Trang 18"
             }
           ],
+          "aspectRatio": "1/1",
           "thumbnail": "/gia-dinh/gia-dinh-la-so-1%20(20x20)/aa.png"
         }
       ]
     },
     {
       "id": "sinh-nhat",
-      "name": "sinh-nhat",
+      "name": "Sinh Nhật",
       "templates": [
         {
           "id": "auto-template-sinh-nhat-happy-birthday",
-          "name": "happy-birthday",
-          "description": "Sách ảnh happy-birthday với thiết kế tuyệt đẹp",
-          "aspectRatio": "1/1",
+          "name": "Happy Birthday",
+          "description": "Sách ảnh Happy Birthday với thiết kế tuyệt đẹp",
           "pages": [
             {
               "id": "auto-template-sinh-nhat-happy-birthday-page-1",
@@ -1599,6 +1592,7 @@
               "label": "Trang 18"
             }
           ],
+          "aspectRatio": "1/1",
           "thumbnail": "/sinh-nhat/happy-birthday/aa.png"
         }
       ]
@@ -1609,9 +1603,8 @@
       "templates": [
         {
           "id": "auto-template-tinh-yeu-firrst-love",
-          "name": "Firrst love",
-          "description": "Sách ảnh Firrst love với thiết kế tuyệt đẹp",
-          "aspectRatio": "1/1",
+          "name": "First Love",
+          "description": "Sách ảnh First Love với thiết kế tuyệt đẹp",
           "pages": [
             {
               "id": "auto-template-tinh-yeu-firrst-love-page-1",
@@ -1820,7 +1813,6 @@
           "id": "auto-template-tinh-yeu-happy-anniversary",
           "name": "Happy Anniversary",
           "description": "Sách ảnh Happy Anniversary với thiết kế tuyệt đẹp",
-          "aspectRatio": "1/1",
           "pages": [
             {
               "id": "auto-template-tinh-yeu-happy-anniversary-page-1",
@@ -2027,9 +2019,8 @@
         },
         {
           "id": "auto-template-tinh-yeu-love-story",
-          "name": "love-story",
-          "description": "Sách ảnh love-story với thiết kế tuyệt đẹp",
-          "aspectRatio": "1/1",
+          "name": "Love Story",
+          "description": "Sách ảnh Love Story với thiết kế tuyệt đẹp",
           "pages": [
             {
               "id": "auto-template-tinh-yeu-love-story-page-1",
@@ -2122,6 +2113,7 @@
               "label": "Trang 18"
             }
           ],
+          "aspectRatio": "1/1",
           "thumbnail": "/tinh-yeu/love-story/aa.png"
         }
       ]
