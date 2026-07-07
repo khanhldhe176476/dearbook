@@ -5,6 +5,7 @@ import { LoginScreen } from './components/LoginScreen';
 import { MyBooksLibraryPortfolio } from './components/MyBooksLibraryPortfolio';
 import { GuidedBookBuilder } from './components/GuidedBookBuilder';
 import { OrderFlow } from './components/OrderFlow';
+import { UserProfilePage } from './components/UserProfilePage';
 import AdminArea from './components/AdminArea';
 import { Footer } from './components/Footer';
 import { EditorPage as BookPage } from './types/editor';
@@ -73,7 +74,7 @@ export interface PageData {
   images: { [key: string]: string };
 }
 
-export type AppScreen = 'home' | 'login' | 'library' | 'builder' | 'order';
+export type AppScreen = 'home' | 'login' | 'library' | 'builder' | 'order' | 'profile';
 
 async function embedStoredImagesForServer<T>(value: T): Promise<T> {
   if (typeof value === 'string') {
@@ -284,37 +285,37 @@ function App() {
     const bookToSave = { ...book, updatedAt: book.updatedAt || new Date().toISOString() };
 
     const saveTask = async () => {
-    try {
-      if (isIndexedDBAvailable()) {
-        await saveBook(bookToSave, uid);
-      } else {
-        // Fallback localStorage nếu IDB không khả dụng
-        const books = JSON.parse(localStorage.getItem(storageKey) || '[]');
-        const existingIndex = books.findIndex((b: BookData) => b.id === bookToSave.id);
-        const updatedBook = bookToSave;
-        if (existingIndex >= 0) {
-          books[existingIndex] = updatedBook;
-        } else {
-          books.push(updatedBook);
-        }
-        localStorage.setItem(storageKey, JSON.stringify(books));
-      }
-    } catch (err) {
-      console.error('safeSaveBook failed:', err);
-      // Fallback cuối cùng: localStorage
       try {
-        const books = JSON.parse(localStorage.getItem(storageKey) || '[]');
-        const existingIndex = books.findIndex((b: BookData) => b.id === bookToSave.id);
-        const updatedBook = bookToSave;
-        if (existingIndex >= 0) {
-          books[existingIndex] = updatedBook;
+        if (isIndexedDBAvailable()) {
+          await saveBook(bookToSave, uid);
         } else {
-          books.push(updatedBook);
+          // Fallback localStorage nếu IDB không khả dụng
+          const books = JSON.parse(localStorage.getItem(storageKey) || '[]');
+          const existingIndex = books.findIndex((b: BookData) => b.id === bookToSave.id);
+          const updatedBook = bookToSave;
+          if (existingIndex >= 0) {
+            books[existingIndex] = updatedBook;
+          } else {
+            books.push(updatedBook);
+          }
+          localStorage.setItem(storageKey, JSON.stringify(books));
         }
-        localStorage.setItem(storageKey, JSON.stringify(books));
-      } catch {
-        console.error('Hoàn toàn không thể lưu sách');
-      }
+      } catch (err) {
+        console.error('safeSaveBook failed:', err);
+        // Fallback cuối cùng: localStorage
+        try {
+          const books = JSON.parse(localStorage.getItem(storageKey) || '[]');
+          const existingIndex = books.findIndex((b: BookData) => b.id === bookToSave.id);
+          const updatedBook = bookToSave;
+          if (existingIndex >= 0) {
+            books[existingIndex] = updatedBook;
+          } else {
+            books.push(updatedBook);
+          }
+          localStorage.setItem(storageKey, JSON.stringify(books));
+        } catch {
+          console.error('Hoàn toàn không thể lưu sách');
+        }
       }
 
       try {
@@ -554,6 +555,7 @@ function App() {
             onEditBook={handleEditBook}
             onUpdateProfile={handleUpdateProfile}
             onBackToHome={() => setCurrentScreen('home')}
+            onNavigateToProfile={() => setCurrentScreen('profile')}
           />
         )}
 
@@ -575,6 +577,15 @@ function App() {
             book={currentBook}
             onBack={() => setCurrentScreen('builder')}
             onComplete={handleOrderComplete}
+          />
+        )}
+
+        {currentScreen === 'profile' && user && (
+          <UserProfilePage
+            user={user}
+            onBackToLibrary={() => setCurrentScreen('library')}
+            onUpdateProfile={handleUpdateProfile}
+            onEditBook={handleEditBook}
           />
         )}
       </div>
