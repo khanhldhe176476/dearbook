@@ -9,7 +9,7 @@ interface GoogleUserProfileProps {
 export function GoogleUserProfile({ user, onLogout }: GoogleUserProfileProps) {
   const googleUserStr = localStorage.getItem('google_user');
   const googleUser = googleUserStr ? JSON.parse(googleUserStr) : null;
-  const hasGooglePicture = googleUser && googleUser.picture;
+  const profilePicture = user.picture || googleUser?.picture;
 
   return (
     <div className="flex items-center gap-2">
@@ -24,9 +24,9 @@ export function GoogleUserProfile({ user, onLogout }: GoogleUserProfileProps) {
         }}
       >
         {/* Avatar */}
-        {hasGooglePicture ? (
+        {profilePicture ? (
           <img
-            src={googleUser.picture}
+            src={profilePicture}
             alt={user.name}
             className="w-8 h-8 rounded-full flex-shrink-0"
             style={{ border: '1.5px solid #e8e4de', objectFit: 'cover' }}

@@ -33,6 +33,7 @@ export function useAutoSave<T>({
   const saveTimeoutRef = useRef<ReturnType<typeof setInterval>>();
   const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
   const isSavingRef = useRef(false);
+  const pendingSaveRef = useRef(false);
 
   // Update data ref when data changes
   useEffect(() => {
@@ -40,7 +41,10 @@ export function useAutoSave<T>({
   }, [data]);
 
   const performSave = useCallback(async () => {
-    if (isSavingRef.current) return;
+    if (isSavingRef.current) {
+      pendingSaveRef.current = true;
+      return;
+    }
 
     const currentData = dataRef.current;
     const currentDataString = JSON.stringify(currentData);
@@ -77,6 +81,12 @@ export function useAutoSave<T>({
     } finally {
       isSavingRef.current = false;
       setIsSaving(false);
+      if (pendingSaveRef.current) {
+        pendingSaveRef.current = false;
+        setTimeout(() => {
+          void performSave();
+        }, 0);
+      }
     }
   }, [onSave]);
 

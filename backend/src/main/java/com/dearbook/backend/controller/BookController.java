@@ -17,6 +17,10 @@ public class BookController {
     public List<UserBookResponse> getMy(@RequestHeader("X-User-Id") UUID userId) {
         return service.getMyBooks(userId);
     }
+    @PutMapping("/client/{clientBookId}")
+    public UserBookResponse saveSnapshot(@RequestHeader("X-User-Id") UUID userId, @PathVariable String clientBookId, @RequestBody UserBookSnapshotRequest req) {
+        return service.saveSnapshot(userId, clientBookId, req);
+    }
     @PutMapping("/{bookId}/pages/{pageId}")
     public void updatePage(@PathVariable UUID bookId, @PathVariable UUID pageId, @RequestBody UserBookPageRequest req) {
         service.updatePage(bookId, pageId, req);

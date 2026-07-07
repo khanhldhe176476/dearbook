@@ -97,22 +97,44 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
         booksSource = getBooksSync(userId);
       }
 
-      // Đồng bộ với backend API (non-blocking)
+      // Đồng bộ với backend API để mở lại sách ở trình duyệt khác.
       try {
         const apiBooks = await bookApi.getMyBooks(userId);
         const mergedBooks = [...booksSource];
         for (const apiBook of apiBooks) {
-          if (!mergedBooks.find(m => m.id === apiBook.id)) {
-            mergedBooks.push({
-              id: apiBook.id,
+          let serverBook: BookData | null = null;
+          if (apiBook.bookData) {
+            try {
+              serverBook = JSON.parse(apiBook.bookData) as BookData;
+            } catch (err) {
+              console.warn('Invalid server book snapshot:', apiBook.id, err);
+            }
+          }
+
+          if (!serverBook) {
+            serverBook = {
+              id: apiBook.clientBookId || apiBook.id,
               title: apiBook.title,
-              status: apiBook.status.toLowerCase() as any,
+              status: (apiBook.status || 'draft').toLowerCase() as any,
               updatedAt: apiBook.updatedAt,
-              createdAt: apiBook.updatedAt,
+              createdAt: apiBook.createdAt || apiBook.updatedAt,
               theme: 'love' as any,
-              templateId: apiBook.templateId,
+              templateId: apiBook.templateId || '',
               pages: [],
-            });
+            };
+          }
+
+          const existingIndex = mergedBooks.findIndex(m => m.id === serverBook!.id);
+          if (existingIndex < 0) {
+            mergedBooks.push(serverBook);
+            await saveBook(serverBook, userId);
+          } else {
+            const localTime = new Date(mergedBooks[existingIndex].updatedAt || 0).getTime();
+            const serverTime = new Date(serverBook.updatedAt || apiBook.updatedAt || 0).getTime();
+            if (serverTime > localTime) {
+              mergedBooks[existingIndex] = serverBook;
+              await saveBook(serverBook, userId);
+            }
           }
         }
         setBooks(mergedBooks);

@@ -2,7 +2,7 @@ FROM node:18-alpine AS build
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
+RUN npm ci --no-audit --no-fund --cache /tmp/.npm
 
 COPY . .
 # .env file should be present so Vite can inject env vars during build

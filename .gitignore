@@ -1,4 +1,5 @@
 node_modules/
+.tools/
 build/
 dist/
 .env
@@ -8,6 +9,7 @@ backend/uploads/
 *.mv.db
 backend/*.log
 backend/*.err.log
+dev-server.log
 fileorder/
 fileorder-compressed/
 scratch/

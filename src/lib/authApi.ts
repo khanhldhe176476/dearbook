@@ -7,121 +7,188 @@ export interface AuthUser {
   avatarUrl?: string;
 }
 
-/** Đăng ký tài khoản mới bằng email/password */
+function normalizeAuthUser(user: AuthUser): AuthUser {
+  const email = user.email.trim();
+  const fullName = user.fullName?.trim() || email.split('@')[0] || email;
+
+  return {
+    id: user.id,
+    email,
+    fullName,
+    avatarUrl: user.avatarUrl || undefined,
+  };
+}
+
+export async function updateUserProfile(user: AuthUser): Promise<AuthUser> {
+  const normalizedUser = normalizeAuthUser(user);
+
+  if (!supabase) {
+    return normalizedUser;
+  }
+
+  try {
+    const { data } = await supabase.auth.getUser();
+    if (data.user?.id === normalizedUser.id) {
+      const { error } = await supabase.auth.updateUser({
+        data: {
+          full_name: normalizedUser.fullName,
+          avatar_url: normalizedUser.avatarUrl || null,
+        },
+      });
+
+      if (error) {
+        console.warn('Could not update Supabase auth profile metadata:', error.message);
+      }
+    }
+  } catch (err) {
+    console.warn('Could not update Supabase auth profile metadata:', err);
+  }
+
+  let syncedUser = normalizedUser;
+
+  try {
+    const { data: profile, error } = await supabase
+      .from('profiles')
+      .upsert(
+        {
+          id: normalizedUser.id,
+          email: normalizedUser.email,
+          full_name: normalizedUser.fullName,
+          avatar_url: normalizedUser.avatarUrl || null,
+        },
+        { onConflict: 'id' }
+      )
+      .select('id,email,full_name,avatar_url')
+      .single();
+
+    if (error) {
+      console.warn('Could not update Supabase profile row:', error.message);
+    } else if (profile) {
+      syncedUser = {
+        id: profile.id,
+        email: profile.email || normalizedUser.email,
+        fullName: profile.full_name || normalizedUser.fullName,
+        avatarUrl: profile.avatar_url || undefined,
+      };
+    }
+  } catch (err) {
+    console.warn('Could not update Supabase profile row:', err);
+  }
+
+  return syncedUser;
+}
+
 export async function signUpWithEmail(
   email: string,
   password: string,
   fullName: string
 ): Promise<AuthUser> {
+  const normalizedEmail = email.trim();
+  const normalizedFullName = fullName.trim() || normalizedEmail.split('@')[0];
+
   if (!supabase) {
-    console.warn('⚠️ Supabase client not initialized. Falling back to Demo Mode.');
+    console.warn('Supabase client is not initialized. Falling back to demo mode.');
     return {
       id: 'demo-user-id',
-      email,
-      fullName,
+      email: normalizedEmail,
+      fullName: normalizedFullName,
       avatarUrl: undefined,
     };
   }
-  // 1. Tạo tài khoản trong Supabase Auth
+
   const { data: authData, error: authError } = await supabase.auth.signUp({
-    email,
+    email: normalizedEmail,
     password,
     options: {
-      data: { full_name: fullName }, // metadata lưu trong auth.users
+      data: { full_name: normalizedFullName },
     },
   });
 
   if (authError) {
-    console.error('❌ signUp error:', authError);
+    console.error('signUp error:', authError);
     let msg = authError.message;
     if (msg.includes('already registered')) msg = 'Email này đã được đăng ký. Vui lòng đăng nhập.';
     if (msg.includes('Password should be at least 6 characters')) msg = 'Mật khẩu phải có ít nhất 6 ký tự.';
     throw new Error(msg);
   }
 
-  // ✅ FIX: Supabase silent duplicate — khi email đã tồn tại, Supabase không báo lỗi
-  // mà trả về user giả với identities = [] (mảng rỗng). Phải kiểm tra thủ công.
   const user = authData.user;
-  if (!user) throw new Error('Không lấy được user ID sau khi đăng ký');
+  if (!user) throw new Error('Không lấy được user ID sau khi đăng ký.');
 
   if (user.identities && user.identities.length === 0) {
-    // Email đã tồn tại trong hệ thống — Supabase giả vờ thành công nhưng không tạo tài khoản mới
-    console.warn('⚠️ signUp silent duplicate detected: email already registered:', email);
+    console.warn('signUp silent duplicate detected: email already registered:', normalizedEmail);
     throw new Error('Email này đã được đăng ký. Vui lòng đăng nhập hoặc dùng email khác.');
   }
 
-  console.log('✅ Supabase Auth signUp OK, userId:', user.id);
+  console.log('Supabase Auth signUp OK, userId:', user.id);
 
   return {
     id: user.id,
-    email,
-    fullName,
+    email: normalizedEmail,
+    fullName: normalizedFullName,
     avatarUrl: undefined,
   };
 }
 
-/** Xác minh mã OTP sau khi đăng ký */
 export async function verifySignupOTP(
   email: string,
   token: string,
   fullName: string
 ): Promise<AuthUser> {
+  const normalizedEmail = email.trim();
+  const normalizedFullName = fullName.trim() || normalizedEmail.split('@')[0];
+
   if (!supabase) {
-    console.warn('⚠️ Supabase client not initialized. Falling back to Demo Mode.');
+    console.warn('Supabase client is not initialized. Falling back to demo mode.');
     return {
       id: 'demo-user-id',
-      email,
-      fullName,
+      email: normalizedEmail,
+      fullName: normalizedFullName,
       avatarUrl: undefined,
     };
   }
-  // 1. Đảm bảo OTP không có khoảng trắng và đúng định dạng
+
   const cleanOtp = token.trim();
   if (!/^\d{6,10}$/.test(cleanOtp)) {
     throw new Error('Mã OTP không hợp lệ, vui lòng nhập từ 6 đến 10 chữ số.');
   }
 
-
-
-  // 2. Xác thực OTP với Supabase
   let verifyResult = await supabase.auth.verifyOtp({
-    email,
+    email: normalizedEmail,
     token: cleanOtp,
     type: 'signup',
   });
 
-  // Fallback 1: Nếu signup bị lỗi, thử lại bằng type: 'email' (Numeric OTP chuẩn)
   if (verifyResult.error) {
-    console.warn('⚠️ verifyOtp with type: signup failed, trying fallback type: email...', verifyResult.error.message);
+    console.warn('verifyOtp with type signup failed, trying fallback type email:', verifyResult.error.message);
     const fallbackResult = await supabase.auth.verifyOtp({
-      email,
+      email: normalizedEmail,
       token: cleanOtp,
       type: 'email',
     });
     if (!fallbackResult.error) {
       verifyResult = fallbackResult;
-      console.log('✅ Fallback with type: email succeeded!');
+      console.log('Fallback with type email succeeded.');
     }
   }
 
-  // Fallback 2: Nếu vẫn bị lỗi, thử lại bằng type: 'magiclink'
   if (verifyResult.error) {
-    console.warn('⚠️ verifyOtp with type: email failed, trying fallback type: magiclink...', verifyResult.error.message);
-    const fallbackResult2 = await supabase.auth.verifyOtp({
-      email,
+    console.warn('verifyOtp with type email failed, trying fallback type magiclink:', verifyResult.error.message);
+    const fallbackResult = await supabase.auth.verifyOtp({
+      email: normalizedEmail,
       token: cleanOtp,
       type: 'magiclink',
     });
-    if (!fallbackResult2.error) {
-      verifyResult = fallbackResult2;
-      console.log('✅ Fallback with type: magiclink succeeded!');
+    if (!fallbackResult.error) {
+      verifyResult = fallbackResult;
+      console.log('Fallback with type magiclink succeeded.');
     }
   }
 
   const { data, error } = verifyResult;
 
   if (error) {
-    console.error('❌ verifyOtp error after fallbacks:', error);
+    console.error('verifyOtp error after fallbacks:', error);
     let msg = error.message;
     if (msg.includes('Token has expired') || msg.includes('expired')) msg = 'Mã OTP đã hết hạn. Vui lòng bấm gửi lại.';
     if (msg.includes('Invalid token') || msg.includes('invalid')) msg = 'Mã OTP không chính xác hoặc đã hết hạn. Vui lòng nhập lại.';
@@ -129,58 +196,41 @@ export async function verifySignupOTP(
   }
 
   const user = data.user;
-  if (!user) throw new Error('Không lấy được thông tin user sau khi xác thực OTP');
+  if (!user) throw new Error('Không lấy được thông tin user sau khi xác thực OTP.');
 
-  console.log('✅ OTP Verification OK, user:', user.email);
+  console.log('OTP verification OK, user:', user.email);
 
-  // 3. Insert vào bảng profiles sau khi tài khoản được xác minh
-  const { data: profile, error: profileError } = await supabase
-    .from('profiles')
-    .upsert(
-      {
-        id: user.id,
-        email,
-        full_name: fullName,
-        avatar_url: null,
-      },
-      { onConflict: 'id' }
-    )
-    .select()
-    .single();
-
-  if (profileError) {
-    console.warn('⚠️ Could not insert profile on OTP verify:', profileError.message);
-  }
-
-  return {
+  return updateUserProfile({
     id: user.id,
-    email: user.email || email,
-    fullName: profile?.full_name || fullName,
-    avatarUrl: profile?.avatar_url || undefined,
-  };
+    email: user.email || normalizedEmail,
+    fullName: normalizedFullName,
+    avatarUrl: undefined,
+  });
 }
 
-/** Đăng nhập bằng email/password */
 export async function signInWithEmail(
   email: string,
   password: string
 ): Promise<AuthUser> {
+  const normalizedEmail = email.trim();
+
   if (!supabase) {
-    console.warn('⚠️ Supabase client not initialized. Falling back to Demo Mode.');
+    console.warn('Supabase client is not initialized. Falling back to demo mode.');
     return {
       id: 'demo-user-id',
-      email: email,
-      fullName: email.split('@')[0],
+      email: normalizedEmail,
+      fullName: normalizedEmail.split('@')[0],
       avatarUrl: undefined,
     };
   }
+
   const { data, error } = await supabase.auth.signInWithPassword({
-    email,
+    email: normalizedEmail,
     password,
   });
 
   if (error) {
-    console.error('❌ signIn error:', error);
+    console.error('signIn error:', error);
     let msg = error.message;
     if (msg.includes('Invalid login credentials')) msg = 'Email hoặc mật khẩu không chính xác.';
     if (msg.includes('Email not confirmed')) msg = 'Vui lòng xác nhận email trước khi đăng nhập.';
@@ -188,11 +238,10 @@ export async function signInWithEmail(
   }
 
   const user = data.user;
-  if (!user) throw new Error('Không lấy được thông tin user');
+  if (!user) throw new Error('Không lấy được thông tin user.');
 
-  console.log('✅ Supabase Auth signIn OK:', user.email);
+  console.log('Supabase Auth signIn OK:', user.email);
 
-  // Lấy profile từ bảng profiles
   const { data: profile } = await supabase
     .from('profiles')
     .select('full_name, avatar_url')
@@ -201,15 +250,15 @@ export async function signInWithEmail(
 
   return {
     id: user.id,
-    email: user.email || email,
-    fullName: profile?.full_name || user.user_metadata?.full_name || email.split('@')[0],
+    email: user.email || normalizedEmail,
+    fullName: profile?.full_name || user.user_metadata?.full_name || normalizedEmail.split('@')[0],
     avatarUrl: profile?.avatar_url || undefined,
   };
 }
 
-/** Lấy session hiện tại nếu có */
 export async function getCurrentSession(): Promise<AuthUser | null> {
   if (!supabase) return null;
+
   const { data: { session } } = await supabase.auth.getSession();
   if (!session?.user) return null;
 
@@ -228,7 +277,6 @@ export async function getCurrentSession(): Promise<AuthUser | null> {
   };
 }
 
-/** Đăng xuất */
 export async function signOut(): Promise<void> {
   if (!supabase) return;
   await supabase.auth.signOut();

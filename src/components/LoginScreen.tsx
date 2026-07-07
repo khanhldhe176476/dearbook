@@ -1,15 +1,17 @@
 import { useState } from 'react';
-import { Mail, Lock, User, Sparkles, ShieldCheck, ArrowLeft, Loader2 } from 'lucide-react';
+import { Mail, Lock, User, Sparkles, ShieldCheck, ArrowLeft, Loader2, Camera, Image } from 'lucide-react';
+import type { AuthUser } from '../lib/authApi';
 
 interface LoginScreenProps {
   onLogin: (email: string, password: string, isSignup: boolean, name?: string) => Promise<{ needsOtp?: boolean } | void>;
-  onVerifyOtp: (email: string, token: string, name?: string) => Promise<void>;
+  onVerifyOtp: (email: string, token: string, name?: string) => Promise<AuthUser>;
+  onCompleteProfile: (profile: AuthUser) => Promise<void>;
   onBack?: () => void;
 }
 
 type GhostState = 'idle' | 'typing-email' | 'typing-password' | 'typing-name' | 'loading' | 'success' | 'error';
 
-export function LoginScreen({ onLogin, onVerifyOtp, onBack }: LoginScreenProps) {
+export function LoginScreen({ onLogin, onVerifyOtp, onCompleteProfile, onBack }: LoginScreenProps) {
   const [isSignup, setIsSignup] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -18,9 +20,13 @@ export function LoginScreen({ onLogin, onVerifyOtp, onBack }: LoginScreenProps) 
   const [showOtpScreen, setShowOtpScreen] = useState(false);
   const [otpCode, setOtpCode] = useState('');
   const [otpLoading, setOtpLoading] = useState(false);
+  const [verifiedUser, setVerifiedUser] = useState<AuthUser | null>(null);
+  const [profileName, setProfileName] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState('');
+  const [profileLoading, setProfileLoading] = useState(false);
 
   // Interaction States
-  const [focusState, setFocusState] = useState<'idle' | 'email' | 'password' | 'name' | 'otp'>('idle');
+  const [focusState, setFocusState] = useState<'idle' | 'email' | 'password' | 'name' | 'otp' | 'profile'>('idle');
   const [statusState, setStatusState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
   // Sync Focus & Status states to determine Ghost state
@@ -31,6 +37,8 @@ export function LoginScreen({ onLogin, onVerifyOtp, onBack }: LoginScreenProps) 
     ghostState = 'loading';
   } else if (statusState === 'error') {
     ghostState = 'error';
+  } else if (verifiedUser) {
+    ghostState = 'typing-name';
   } else if (showOtpScreen) {
     ghostState = 'typing-email'; // Keep curious eyes for OTP
   } else if (focusState === 'password') {
@@ -75,8 +83,12 @@ export function LoginScreen({ onLogin, onVerifyOtp, onBack }: LoginScreenProps) 
       try {
         setOtpLoading(true);
         setStatusState('loading');
-        await onVerifyOtp(email, otpCode, name);
-        setStatusState('success');
+        const authUser = await onVerifyOtp(email, otpCode, name);
+        setVerifiedUser(authUser);
+        setProfileName(authUser.fullName || name || email.split('@')[0]);
+        setAvatarUrl(authUser.avatarUrl || '');
+        setShowOtpScreen(false);
+        setStatusState('idle');
       } catch (err) {
         console.error('OTP error:', err);
         setStatusState('error');
@@ -84,6 +96,47 @@ export function LoginScreen({ onLogin, onVerifyOtp, onBack }: LoginScreenProps) 
       } finally {
         setOtpLoading(false);
       }
+    }
+  };
+
+  const handleAvatarFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setStatusState('error');
+      setTimeout(() => setStatusState('idle'), 2500);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        setAvatarUrl(reader.result);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleProfileSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!verifiedUser) return;
+
+    try {
+      setProfileLoading(true);
+      setStatusState('loading');
+      await onCompleteProfile({
+        ...verifiedUser,
+        fullName: profileName.trim() || verifiedUser.fullName || verifiedUser.email.split('@')[0],
+        avatarUrl: avatarUrl.trim() || undefined,
+      });
+      setStatusState('success');
+    } catch (err) {
+      console.error('Complete profile error:', err);
+      setStatusState('error');
+      setTimeout(() => setStatusState('idle'), 2500);
+    } finally {
+      setProfileLoading(false);
     }
   };
 
@@ -112,6 +165,9 @@ export function LoginScreen({ onLogin, onVerifyOtp, onBack }: LoginScreenProps) 
     }
     if (statusState === 'error') {
       return "Wrong Password! 😢";
+    }
+    if (verifiedUser) {
+      return "Complete your profile!";
     }
     if (showOtpScreen) {
       return "Enter your OTP code! 🔑";
@@ -396,6 +452,58 @@ export function LoginScreen({ onLogin, onVerifyOtp, onBack }: LoginScreenProps) 
         .spooky-input:focus {
           border-color: #6366f1;
           box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+
+        .profile-avatar-wrap {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.875rem;
+          margin-bottom: 1.25rem;
+        }
+
+        .profile-avatar {
+          width: 6.25rem;
+          height: 6.25rem;
+          border-radius: 999px;
+          border: 2px solid #e2e8f0;
+          background: #f8fafc;
+          overflow: hidden;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #64748b;
+          font-size: 2rem;
+          font-weight: 800;
+          box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+        }
+
+        .profile-avatar img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+
+        .profile-upload-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          padding: 0.625rem 0.875rem;
+          border-radius: 12px;
+          border: 1.5px solid #e2e8f0;
+          background: #ffffff;
+          color: #475569;
+          font-size: 0.75rem;
+          font-weight: 800;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        .profile-upload-btn:hover {
+          border-color: #6366f1;
+          color: #4f46e5;
         }
 
         .spooky-options {
@@ -857,7 +965,87 @@ export function LoginScreen({ onLogin, onVerifyOtp, onBack }: LoginScreenProps) 
           {/* ── Right Half: Clean Input Form Panel (Explicitly Rounded Right) ── */}
           <div className="spooky-right">
             
-            {!showOtpScreen ? (
+            {verifiedUser ? (
+              <div>
+                <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
+                  <h2 className="spooky-form-title" style={{ textAlign: 'center' }}>Complete Profile</h2>
+                  <p className="spooky-form-subtitle" style={{ textAlign: 'center' }}>
+                    Add your avatar and display name for your book library.
+                  </p>
+                </div>
+
+                <form onSubmit={handleProfileSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <div className="profile-avatar-wrap">
+                    <div className="profile-avatar">
+                      {avatarUrl ? (
+                        <img src={avatarUrl} alt={profileName || verifiedUser.email} />
+                      ) : (
+                        <span>{(profileName || verifiedUser.email).charAt(0).toUpperCase()}</span>
+                      )}
+                    </div>
+                    <label className="profile-upload-btn">
+                      <Camera className="w-4 h-4" />
+                      Upload avatar
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleAvatarFileChange}
+                        style={{ display: 'none' }}
+                      />
+                    </label>
+                  </div>
+
+                  <div className="spooky-form-group">
+                    <label className="spooky-label">Display Name</label>
+                    <div className="spooky-input-wrapper">
+                      <span className="spooky-input-icon">
+                        <User className="w-4 h-4" />
+                      </span>
+                      <input
+                        type="text"
+                        value={profileName}
+                        onChange={e => setProfileName(e.target.value)}
+                        className="spooky-input"
+                        placeholder="Your display name"
+                        required
+                        onFocus={() => setFocusState('profile')}
+                        onBlur={() => setFocusState('idle')}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="spooky-form-group">
+                    <label className="spooky-label">Avatar URL</label>
+                    <div className="spooky-input-wrapper">
+                      <span className="spooky-input-icon">
+                        <Image className="w-4 h-4" />
+                      </span>
+                      <input
+                        type="url"
+                        value={avatarUrl.startsWith('data:') ? '' : avatarUrl}
+                        onChange={e => setAvatarUrl(e.target.value)}
+                        className="spooky-input"
+                        placeholder="https://example.com/avatar.jpg"
+                        onFocus={() => setFocusState('profile')}
+                        onBlur={() => setFocusState('idle')}
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={profileLoading}
+                    className="spooky-btn-primary"
+                  >
+                    {profileLoading ? (
+                      <><Loader2 className="w-4 h-4 animate-spin" /><span>Saving profile...</span></>
+                    ) : (
+                      'Finish Profile'
+                    )}
+                  </button>
+                </form>
+              </div>
+            ) : !showOtpScreen ? (
               <>
                 {/* Header Title */}
                 <div>

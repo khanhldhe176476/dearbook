@@ -9,7 +9,6 @@ import AdminArea from './components/AdminArea';
 import { Footer } from './components/Footer';
 import { EditorPage as BookPage } from './types/editor';
 import { bookApi } from './lib/bookApi';
-import { supabase } from './lib/supabase';
 import { toast } from 'sonner@2.0.3';
 import {
   signUpWithEmail,
@@ -17,6 +16,8 @@ import {
   signInWithEmail,
   signOut as supabaseSignOut,
   getCurrentSession,
+  updateUserProfile,
+  type AuthUser,
 } from './lib/authApi';
 import { Toaster } from './components/ui/sonner';
 import {
@@ -27,7 +28,7 @@ import {
   markMigrationDone,
   isIndexedDBAvailable,
 } from './utils/bookStorage';
-import { dbMigrateFromLocalStorage } from './utils/dbStorage';
+import { dbGetImage, dbMigrateFromLocalStorage } from './utils/dbStorage';
 
 export interface User {
   id?: string;
@@ -68,6 +69,31 @@ export interface PageData {
 
 export type AppScreen = 'home' | 'login' | 'library' | 'builder' | 'order';
 
+async function embedStoredImagesForServer<T>(value: T): Promise<T> {
+  if (typeof value === 'string') {
+    if (value.startsWith('dearbook_image_')) {
+      return ((await dbGetImage(value)) || value) as T;
+    }
+    return value;
+  }
+
+  if (Array.isArray(value)) {
+    return Promise.all(value.map(item => embedStoredImagesForServer(item))) as T;
+  }
+
+  if (value && typeof value === 'object') {
+    const entries = await Promise.all(
+      Object.entries(value as Record<string, unknown>).map(async ([key, item]) => [
+        key,
+        await embedStoredImagesForServer(item),
+      ])
+    );
+    return Object.fromEntries(entries) as T;
+  }
+
+  return value;
+}
+
 function App() {
   useVisitorTracker();
 
@@ -82,7 +108,7 @@ function App() {
   // Refs để track currentBook và user trong beforeunload và navigation guards
   const currentBookRef = useRef<BookData | null>(null);
   const userRef = useRef<User | null>(null);
-  const isSavingRef = useRef(false);
+  const saveChainRef = useRef<Promise<void>>(Promise.resolve());
 
   // Đồng bộ currentBook và user vào ref
   useEffect(() => {
@@ -106,30 +132,21 @@ function App() {
     });
   }, [user?.id]);
 
-  const syncProfileToSupabase = async (authUser: {
+  const syncUserProfile = async (authUser: {
     id: string;
     email: string;
     fullName?: string;
     avatarUrl?: string;
   }) => {
     try {
-      const { error } = await supabase.from('profiles').upsert(
-        {
-          id: authUser.id,
-          email: authUser.email,
-          full_name: authUser.fullName || authUser.email,
-          avatar_url: authUser.avatarUrl || null,
-        },
-        {
-          onConflict: 'id',
-        }
-      );
+      await updateUserProfile({
+        id: authUser.id,
+        email: authUser.email,
+        fullName: authUser.fullName || authUser.email,
+        avatarUrl: authUser.avatarUrl,
+      });
 
-      if (error) {
-        console.warn('⚠️ Gửi profile lên Supabase thất bại:', error);
-      } else {
-        console.log('✅ Gửi profile lên Supabase thành công:', authUser.email);
-      }
+      console.log('Profile synced successfully:', authUser.email);
     } catch (err) {
       console.warn('⚠️ Lỗi khi đồng bộ profile lên Supabase:', err);
     }
@@ -148,7 +165,7 @@ function App() {
             picture: activeUser.avatarUrl,
           };
 
-          await syncProfileToSupabase(activeUser);
+          await syncUserProfile(activeUser);
 
           setUser(userData);
           localStorage.setItem('dearbook_user', JSON.stringify(userData));
@@ -206,7 +223,7 @@ function App() {
 
   // beforeunload: backup đồng bộ vào localStorage (per-user) khi đóng tab
   useEffect(() => {
-    const handleBeforeUnload = (_e: BeforeUnloadEvent) => {
+    const backupCurrentBookToLocal = () => {
       const book = currentBookRef.current;
       const uid = userRef.current?.id || '00000000-0000-0000-0000-000000000000';
       if (book && book.id) {
@@ -226,26 +243,37 @@ function App() {
       }
     };
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        backupCurrentBookToLocal();
+      }
+    };
+
+    window.addEventListener('beforeunload', backupCurrentBookToLocal);
+    window.addEventListener('pagehide', backupCurrentBookToLocal);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      window.removeEventListener('beforeunload', backupCurrentBookToLocal);
+      window.removeEventListener('pagehide', backupCurrentBookToLocal);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, []);
 
   // Safe save helper — lưu sách vào IndexedDB, fallback localStorage (per-user)
   const safeSaveBook = useCallback(async (book: BookData): Promise<void> => {
-    if (isSavingRef.current) return;
-    isSavingRef.current = true;
-
     const uid = user?.id || '00000000-0000-0000-0000-000000000000';
     const storageKey = 'dearbook_books_' + uid;
+    const bookToSave = { ...book, updatedAt: book.updatedAt || new Date().toISOString() };
 
+    const saveTask = async () => {
     try {
       if (isIndexedDBAvailable()) {
-        await saveBook(book, uid);
+        await saveBook(bookToSave, uid);
       } else {
         // Fallback localStorage nếu IDB không khả dụng
         const books = JSON.parse(localStorage.getItem(storageKey) || '[]');
-        const existingIndex = books.findIndex((b: BookData) => b.id === book.id);
-        const updatedBook = { ...book, updatedAt: new Date().toISOString() };
+        const existingIndex = books.findIndex((b: BookData) => b.id === bookToSave.id);
+        const updatedBook = bookToSave;
         if (existingIndex >= 0) {
           books[existingIndex] = updatedBook;
         } else {
@@ -258,8 +286,8 @@ function App() {
       // Fallback cuối cùng: localStorage
       try {
         const books = JSON.parse(localStorage.getItem(storageKey) || '[]');
-        const existingIndex = books.findIndex((b: BookData) => b.id === book.id);
-        const updatedBook = { ...book, updatedAt: new Date().toISOString() };
+        const existingIndex = books.findIndex((b: BookData) => b.id === bookToSave.id);
+        const updatedBook = bookToSave;
         if (existingIndex >= 0) {
           books[existingIndex] = updatedBook;
         } else {
@@ -269,9 +297,19 @@ function App() {
       } catch {
         console.error('Hoàn toàn không thể lưu sách');
       }
-    } finally {
-      isSavingRef.current = false;
-    }
+      }
+
+      try {
+        const serverBook = await embedStoredImagesForServer(bookToSave);
+        await bookApi.saveSnapshot(uid, serverBook);
+      } catch (err) {
+        console.warn('Backend book snapshot sync failed (local save is kept):', err);
+      }
+
+    };
+
+    saveChainRef.current = saveChainRef.current.catch(() => undefined).then(saveTask);
+    return saveChainRef.current;
   }, [user]);
 
   const handleLogin = async (
@@ -297,7 +335,7 @@ function App() {
         picture: authUser.avatarUrl,
       };
 
-      await syncProfileToSupabase(authUser);
+      await syncUserProfile(authUser);
 
       setTimeout(() => {
         setUser(userData);
@@ -311,7 +349,7 @@ function App() {
     }
   };
 
-  const handleVerifyOtp = async (email: string, token: string, name?: string) => {
+  const handleVerifyOtp = async (email: string, token: string, name?: string): Promise<AuthUser> => {
     try {
       const authUser = await verifySignupOTP(
         email,
@@ -319,23 +357,33 @@ function App() {
         name || email.split('@')[0]
       );
 
-      toast.success('Xác thực tài khoản thành công!');
+      toast.success('Xác thực tài khoản thành công! Hoàn tất hồ sơ để bắt đầu.');
+      return authUser;
+    } catch (err: any) {
+      console.error('OTP verify error:', err);
+      toast.error(err.message || 'Mã xác thực không hợp lệ hoặc đã hết hạn.');
+      throw err;
+    }
+  };
+
+  const handleCompleteSignupProfile = async (profile: AuthUser) => {
+    try {
+      const updatedProfile = await updateUserProfile(profile);
+      toast.success('Hồ sơ đã được cập nhật!');
 
       const userData = {
-        id: authUser.id,
-        email: authUser.email,
-        name: authUser.fullName,
-        picture: authUser.avatarUrl,
+        id: updatedProfile.id,
+        email: updatedProfile.email,
+        name: updatedProfile.fullName,
+        picture: updatedProfile.avatarUrl,
       };
-
-      await syncProfileToSupabase(authUser);
 
       setUser(userData);
       localStorage.setItem('dearbook_user', JSON.stringify(userData));
       setCurrentScreen('home');
     } catch (err: any) {
-      console.error('OTP verify error:', err);
-      toast.error(err.message || 'Mã xác thực không hợp lệ hoặc đã hết hạn.');
+      console.error('Complete profile error:', err);
+      toast.error(err.message || 'Không thể cập nhật hồ sơ. Vui lòng thử lại.');
       throw err;
     }
   };
@@ -376,6 +424,7 @@ function App() {
   };
 
   const handleEditBook = (book: BookData) => {
+    currentBookRef.current = book;
     setCurrentBook(book);
     setCurrentScreen('builder');
   };
@@ -385,27 +434,9 @@ function App() {
       ...book,
       updatedAt: new Date().toISOString(),
     };
+    currentBookRef.current = updatedBook;
     setCurrentBook(updatedBook);
     await safeSaveBook(updatedBook);
-
-    // Đồng bộ lên backend (non-blocking)
-    const userId = user?.id || '00000000-0000-0000-0000-000000000000';
-    try {
-      if (book.templateId) {
-        const storageKey = 'dearbook_books_' + userId;
-        const books = JSON.parse(localStorage.getItem(storageKey) || '[]');
-        const existingIndex = books.findIndex((b: BookData) => b.id === book.id);
-        if (existingIndex < 0) {
-          // Sách mới — tạo trên backend
-          await bookApi.createBook(userId, {
-            templateId: book.templateId,
-            title: book.title || 'Sách mới',
-          });
-        }
-      }
-    } catch (err) {
-      console.error('Backend sync failed (non-critical):', err);
-    }
   };
 
   const handleBackToLibrary = async () => {
@@ -457,7 +488,12 @@ function App() {
         )}
 
         {currentScreen === 'login' && (
-          <LoginScreen onLogin={handleLogin} onVerifyOtp={handleVerifyOtp} onBack={() => setCurrentScreen('home')} />
+          <LoginScreen
+            onLogin={handleLogin}
+            onVerifyOtp={handleVerifyOtp}
+            onCompleteProfile={handleCompleteSignupProfile}
+            onBack={() => setCurrentScreen('home')}
+          />
         )}
 
         {currentScreen === 'library' && user && (

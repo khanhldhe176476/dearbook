@@ -43,11 +43,21 @@ create table if not exists user_books (
     id uuid primary key default gen_random_uuid(),
     user_id uuid references profiles(id),
     template_id uuid references book_templates(id),
+    client_book_id text,
+    client_template_id text,
     title text,
     status text default 'DRAFT',
+    book_data text,
     created_at timestamptz default now(),
     updated_at timestamptz default now()
 );
+
+alter table user_books add column if not exists client_book_id text;
+alter table user_books add column if not exists client_template_id text;
+alter table user_books add column if not exists book_data text;
+create unique index if not exists idx_user_books_user_client_book_id
+  on user_books(user_id, client_book_id)
+  where client_book_id is not null;
 
 create table if not exists user_book_pages (
     id uuid primary key default gen_random_uuid(),

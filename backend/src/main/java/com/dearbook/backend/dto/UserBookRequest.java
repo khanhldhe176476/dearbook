@@ -1,3 +1,2 @@
 package com.dearbook.backend.dto;
-import java.util.UUID;
-public record UserBookRequest(UUID templateId, String title) {}
+public record UserBookRequest(String clientBookId, String templateId, String title) {}
