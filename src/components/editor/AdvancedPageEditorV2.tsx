@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { PageElement, TextElement, ImageElement, ShapeElement, StickerElement, IconElement, FrameElement } from '../../types/editor';
+import { PageElement, TextElement, ImageElement, ShapeElement, StickerElement, IconElement, FrameElement, AlignmentGuide, SpacingIndicator } from '../../types/editor';
 import { AssetLibrary } from './AssetLibrary';
 import { LayerPanel } from './LayerPanel';
 import { EditorToolbar } from './EditorToolbar';
 import { ImageUploader } from './ImageUploader';
+import { AlignmentGuideOverlay } from './AlignmentGuideOverlay';
+import { getElementBounds, getAllSnapTargets, computeSnap, getPageThreshold } from '../../utils/alignmentGuides';
 
 const FONT_FAMILIES = [
   { value: 'Poppins', label: 'Poppins' },
@@ -265,7 +267,8 @@ export function AdvancedPageEditorV2({
   const [showCoverGuide, setShowCoverGuide] = useState(false);
   const [editingTextId, setEditingTextId] = useState<string | null>(null);
   const [draggedElement, setDraggedElement] = useState<{
-    id: string;
+    ids: string[];
+    startPositions: { id: string; x: number; y: number }[];
     offsetX: number;
     offsetY: number;
   } | null>(null);
@@ -288,6 +291,10 @@ export function AdvancedPageEditorV2({
   } | null>(null);
   // Track which upload slot is being hovered during external drag (from library)
   const [dragOverSlotId, setDragOverSlotId] = useState<string | null>(null);
+  // Smart guides state
+  const [activeGuides, setActiveGuides] = useState<AlignmentGuide[]>([]);
+  const [activeSpacingIndicators, setActiveSpacingIndicators] = useState<SpacingIndicator[]>([]);
+  const [snappingEnabled, setSnappingEnabled] = useState(true);
 
   // Check if current page is cover
   const isCoverPage = currentPageIndex === 0 || currentPage?.id === 'cover';
@@ -541,22 +548,33 @@ export function AdvancedPageEditorV2({
   const handleAlign = (type: 'left' | 'center' | 'right' | 'top' | 'middle' | 'bottom') => {
     if (selectedIds.length === 0) return;
 
+    // Compute the bounding box of all selected elements
+    const selectedElements = elements.filter(el => selectedIds.includes(el.id));
+    const bounds = selectedElements.map(el => getElementBounds(el));
+    const groupLeft = Math.min(...bounds.map(b => b.left));
+    const groupRight = Math.max(...bounds.map(b => b.right));
+    const groupTop = Math.min(...bounds.map(b => b.top));
+    const groupBottom = Math.max(...bounds.map(b => b.bottom));
+    const groupCenterX = (groupLeft + groupRight) / 2;
+    const groupCenterY = (groupTop + groupBottom) / 2;
+
     const newElements = elements.map((el) => {
       if (!selectedIds.includes(el.id)) return el;
 
       switch (type) {
+        // Align to selection group, not page
         case 'left':
-          return { ...el, x: 20 };
+          return { ...el, x: groupLeft };
         case 'center':
-          return { ...el, x: (PAGE_WIDTH - el.width) / 2 };
+          return { ...el, x: groupCenterX - el.width / 2 };
         case 'right':
-          return { ...el, x: PAGE_WIDTH - el.width - 20 };
+          return { ...el, x: groupRight - el.width };
         case 'top':
-          return { ...el, y: 20 };
+          return { ...el, y: groupTop };
         case 'middle':
-          return { ...el, y: (PAGE_HEIGHT - el.height) / 2 };
+          return { ...el, y: groupCenterY - el.height / 2 };
         case 'bottom':
-          return { ...el, y: PAGE_HEIGHT - el.height - 20 };
+          return { ...el, y: groupBottom - el.height };
         default:
           return el;
       }
@@ -564,6 +582,59 @@ export function AdvancedPageEditorV2({
 
     setEditorState(prev => ({ ...prev, elements: newElements }));
     toast.success('Đã căn chỉnh phần tử');
+  };
+
+  // Distribute selected elements evenly
+  const handleDistribute = (direction: 'horizontal' | 'vertical') => {
+    if (selectedIds.length < 3) {
+      toast.info('Chọn ít nhất 3 phần tử để phân bố đều');
+      return;
+    }
+
+    const selectedElements = elements
+      .filter(el => selectedIds.includes(el.id))
+      .sort((a, b) =>
+        direction === 'horizontal'
+          ? a.x - b.x
+          : a.y - b.y
+      );
+
+    const newElements = [...elements];
+
+    if (direction === 'horizontal') {
+      const totalWidth = selectedElements.reduce((sum, el) => sum + el.width, 0);
+      const firstX = selectedElements[0].x;
+      const lastRight = selectedElements[selectedElements.length - 1].x + selectedElements[selectedElements.length - 1].width;
+      const totalSpace = lastRight - firstX - totalWidth;
+      const gap = totalSpace / (selectedElements.length - 1);
+
+      let currentX = selectedElements[0].x;
+      for (const sel of selectedElements) {
+        const idx = newElements.findIndex(e => e.id === sel.id);
+        if (idx !== -1) {
+          newElements[idx] = { ...newElements[idx], x: Math.round(currentX) };
+          currentX += sel.width + gap;
+        }
+      }
+    } else {
+      const totalHeight = selectedElements.reduce((sum, el) => sum + el.height, 0);
+      const firstY = selectedElements[0].y;
+      const lastBottom = selectedElements[selectedElements.length - 1].y + selectedElements[selectedElements.length - 1].height;
+      const totalSpace = lastBottom - firstY - totalHeight;
+      const gap = totalSpace / (selectedElements.length - 1);
+
+      let currentY = selectedElements[0].y;
+      for (const sel of selectedElements) {
+        const idx = newElements.findIndex(e => e.id === sel.id);
+        if (idx !== -1) {
+          newElements[idx] = { ...newElements[idx], y: Math.round(currentY) };
+          currentY += sel.height + gap;
+        }
+      }
+    }
+
+    setEditorState(prev => ({ ...prev, elements: newElements as PageElement[] }));
+    toast.success('Đã phân bố đều các phần tử');
   };
 
   const handleReorderElement = (id: string, direction: 'up' | 'down') => {
@@ -676,12 +747,52 @@ export function AdvancedPageEditorV2({
         const canvas = canvasRef.current;
         if (!canvas) return;
         const rect = canvas.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
-        // Không giới hạn vị trí — cho phép kéo ra ngoài trang
-        handleUpdateElement(draggedElement.id, {
-          x: (mouseX - draggedElement.offsetX) / zoom,
-          y: (mouseY - draggedElement.offsetY) / zoom,
+        const mouseX = (e.clientX - rect.left) / zoom;
+        const mouseY = (e.clientY - rect.top) / zoom;
+
+        // Vị trí mới của element chính (theo offset ban đầu)
+        const rawX = mouseX - draggedElement.offsetX / zoom;
+        const rawY = mouseY - draggedElement.offsetY / zoom;
+
+        // Lấy element chính để tính snap
+        const primaryId = draggedElement.ids[0];
+        const primaryEl = elements.find(el => el.id === primaryId);
+        if (!primaryEl) return;
+
+        let finalX = rawX;
+        let finalY = rawY;
+
+        if (snappingEnabled) {
+          const draggingBounds = {
+            left: rawX,
+            right: rawX + primaryEl.width,
+            top: rawY,
+            bottom: rawY + primaryEl.height,
+            centerX: rawX + primaryEl.width / 2,
+            centerY: rawY + primaryEl.height / 2,
+          };
+
+          const targets = getAllSnapTargets(elements, draggedElement.ids, PAGE_WIDTH, PAGE_HEIGHT);
+          const threshold = getPageThreshold(zoom);
+          const result = computeSnap(draggingBounds, targets, threshold, elements, draggedElement.ids);
+
+          finalX = result.snappedX;
+          finalY = result.snappedY;
+          setActiveGuides(result.guides);
+          setActiveSpacingIndicators(result.spacingIndicators);
+        } else {
+          setActiveGuides([]);
+          setActiveSpacingIndicators([]);
+        }
+
+        // Tính delta từ vị trí ban đầu của element chính
+        const primaryStart = draggedElement.startPositions.find(p => p.id === primaryId);
+        const deltaX = finalX - (primaryStart?.x ?? primaryEl.x);
+        const deltaY = finalY - (primaryStart?.y ?? primaryEl.y);
+
+        // Áp dụng delta cho TẤT CẢ selected elements
+        draggedElement.startPositions.forEach(({ id, x, y }) => {
+          handleUpdateElement(id, { x: x + deltaX, y: y + deltaY });
         });
       }
     };
@@ -690,6 +801,8 @@ export function AdvancedPageEditorV2({
       setDraggedElement(null);
       setResizingElement(null);
       setRotatingElement(null);
+      setActiveGuides([]);
+      setActiveSpacingIndicators([]);
     };
 
     window.addEventListener('mousemove', handleGlobalMouseMove);
@@ -698,7 +811,7 @@ export function AdvancedPageEditorV2({
       window.removeEventListener('mousemove', handleGlobalMouseMove);
       window.removeEventListener('mouseup', handleGlobalMouseUp);
     };
-  }, [draggedElement, resizingElement, rotatingElement, elements, zoom, handleUpdateElement]);
+  }, [draggedElement, resizingElement, rotatingElement, elements, zoom, handleUpdateElement, snappingEnabled, PAGE_WIDTH, PAGE_HEIGHT]);
 
   const handleMouseDown = (e: React.MouseEvent, elementId: string) => {
     if (e.button !== 0) return;
@@ -713,7 +826,23 @@ export function AdvancedPageEditorV2({
     const offsetX = e.clientX - rect.left - element.x * zoom;
     const offsetY = e.clientY - rect.top - element.y * zoom;
 
-    setDraggedElement({ id: elementId, offsetX, offsetY });
+    // Determine which elements to drag
+    let dragIds: string[];
+    let startPositions: { id: string; x: number; y: number }[];
+
+    if (selectedIds.includes(elementId) && selectedIds.length > 1) {
+      // Drag all selected elements together
+      dragIds = [...selectedIds];
+      startPositions = elements
+        .filter((el) => selectedIds.includes(el.id))
+        .map((el) => ({ id: el.id, x: el.x, y: el.y }));
+    } else {
+      // Single element drag
+      dragIds = [elementId];
+      startPositions = [{ id: elementId, x: element.x, y: element.y }];
+    }
+
+    setDraggedElement({ ids: dragIds, startPositions, offsetX, offsetY });
 
     if (!selectedIds.includes(elementId)) {
       handleSelectElement(elementId, e.shiftKey);
@@ -1235,6 +1364,10 @@ export function AdvancedPageEditorV2({
             showLayerPanel={showLayerPanel}
             saveStatus={saveStatus as any}
             lastSavedAt={lastSavedAt || undefined}
+            snappingEnabled={snappingEnabled}
+            onToggleSnapping={() => setSnappingEnabled(!snappingEnabled)}
+            onDistributeHorizontal={() => handleDistribute('horizontal')}
+            onDistributeVertical={() => handleDistribute('vertical')}
             onBack={onBack}
             onUndo={undo}
             onRedo={redo}
@@ -1301,6 +1434,15 @@ export function AdvancedPageEditorV2({
                 }}
               />
             )}
+
+            {/* Smart Guides Overlay */}
+            <AlignmentGuideOverlay
+              guides={activeGuides}
+              spacingIndicators={activeSpacingIndicators}
+              zoom={zoom}
+              pageWidth={PAGE_WIDTH}
+              pageHeight={PAGE_HEIGHT}
+            />
 
             {/* Elements */}
             {elements && elements.length > 0 && elements

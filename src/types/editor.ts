@@ -134,3 +134,49 @@ export type EditorAction =
   | { type: 'SET_ZOOM'; zoom: number }
   | { type: 'TOGGLE_GRID' }
   | { type: 'CHANGE_PAGE'; index: number };
+
+// ── Smart Guides & Alignment Lines ──
+
+export interface BoundingBox {
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
+  centerX: number;
+  centerY: number;
+}
+
+export interface SnapTarget {
+  value: number;
+  type: 'left' | 'center' | 'right' | 'top' | 'middle' | 'bottom';
+  source: 'element' | 'page';
+  elementId?: string;
+}
+
+export interface AlignmentGuide {
+  orientation: 'vertical' | 'horizontal';
+  position: number;       // page coordinates
+  start: number;          // shorter dimension start
+  end: number;            // shorter dimension end
+  type: 'edge' | 'center' | 'page-center' | 'page-edge' | 'spacing';
+  label?: string;         // e.g. "20px" for spacing
+}
+
+export interface SpacingIndicator {
+  direction: 'horizontal' | 'vertical';
+  positions: number[];    // element edge positions in sorted order
+  gap: number;            // equal gap size in page coords
+  start: number;          // first element start
+  end: number;            // last element end
+  midY?: number;          // vertical center for horizontal indicators
+  midX?: number;          // horizontal center for vertical indicators
+}
+
+export interface SnapResult {
+  snappedX: number;
+  snappedY: number;
+  guides: AlignmentGuide[];
+  spacingIndicators: SpacingIndicator[];
+}
+
+export const SNAP_THRESHOLD_SCREEN_PX = 6; // 6px on screen — feels right

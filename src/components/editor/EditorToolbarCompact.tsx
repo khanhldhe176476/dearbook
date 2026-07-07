@@ -1,10 +1,10 @@
-import { 
-  ChevronLeft, 
-  Undo2, 
-  Redo2, 
-  ZoomIn, 
-  ZoomOut, 
-  Eye, 
+import {
+  ChevronLeft,
+  Undo2,
+  Redo2,
+  ZoomIn,
+  ZoomOut,
+  Eye,
   Download,
   Grid3x3,
   Type,
@@ -19,7 +19,10 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   Send,
-  FileText
+  FileText,
+  Magnet,
+  ArrowLeftRight,
+  ArrowUpDown,
 } from 'lucide-react';
 
 interface EditorToolbarCompactProps {
@@ -50,6 +53,10 @@ interface EditorToolbarCompactProps {
   onAddShape?: () => void;
   onAddSticker?: () => void;
   onSelectCover?: () => void;
+  snappingEnabled?: boolean;
+  onToggleSnapping?: () => void;
+  onDistributeHorizontal?: () => void;
+  onDistributeVertical?: () => void;
 }
 
 export function EditorToolbarCompact({
@@ -80,6 +87,10 @@ export function EditorToolbarCompact({
   onAddShape,
   onAddSticker,
   onSelectCover,
+  snappingEnabled,
+  onToggleSnapping,
+  onDistributeHorizontal,
+  onDistributeVertical,
 }: EditorToolbarCompactProps) {
   
   const saveStatusInfo = {
@@ -198,7 +209,42 @@ export function EditorToolbarCompact({
               >
                 <Grid3x3 className="w-4 h-4" />
               </button>
+              {onToggleSnapping !== undefined && (
+                <button
+                  onClick={onToggleSnapping}
+                  className={`p-1.5 rounded transition-colors ${
+                    snappingEnabled ? 'bg-blue-100 text-blue-600' : 'hover:bg-white text-gray-400'
+                  }`}
+                  title={snappingEnabled ? 'Tắt căn chỉnh thông minh' : 'Bật căn chỉnh thông minh'}
+                >
+                  <Magnet className="w-4 h-4" />
+                </button>
+              )}
             </div>
+
+            {/* Distribute Tools */}
+            {(onDistributeHorizontal || onDistributeVertical) && (
+              <div className="flex items-center gap-0.5 bg-gray-50 rounded-lg p-1">
+                {onDistributeHorizontal && (
+                  <button
+                    onClick={onDistributeHorizontal}
+                    className="p-1.5 hover:bg-white rounded transition-colors text-gray-700"
+                    title="Phân bố đều ngang"
+                  >
+                    <ArrowLeftRight className="w-4 h-4" />
+                  </button>
+                )}
+                {onDistributeVertical && (
+                  <button
+                    onClick={onDistributeVertical}
+                    className="p-1.5 hover:bg-white rounded transition-colors text-gray-700"
+                    title="Phân bố đều dọc"
+                  >
+                    <ArrowUpDown className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+            )}
 
             {/* Quick Add Tools (optional) */}
             {(onAddText || onAddImage || onAddShape || onAddSticker || onSelectCover) && (
