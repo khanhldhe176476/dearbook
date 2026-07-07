@@ -71,7 +71,6 @@ public class AuthService {
                         userProfile.getWard(),
                         userProfile.getDistrict(),
                         userProfile.getCity(),
-                        userProfile.getPostalCode(),
                         userProfile.getShippingNote()
                 );
 

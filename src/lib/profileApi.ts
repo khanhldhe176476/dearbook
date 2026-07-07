@@ -10,7 +10,6 @@ export interface Profile {
   ward?: string;
   district?: string;
   city?: string;
-  postalCode?: string;
   shippingNote?: string;
 }
 

@@ -44,7 +44,6 @@ public class UserService {
                 profile.getWard(),
                 profile.getDistrict(),
                 profile.getCity(),
-                profile.getPostalCode(),
                 profile.getShippingNote()
         );
     }

@@ -14,7 +14,6 @@ public class Profile {
     private String ward;
     private String district;
     private String city;
-    @Column(name = "postal_code") private String postalCode;
     @Column(name = "shipping_note") private String shippingNote;
     @Column(name = "created_at", insertable = false, updatable = false) private OffsetDateTime createdAt;
     @Column(name = "updated_at", insertable = false, updatable = false) private OffsetDateTime updatedAt;
@@ -28,7 +27,6 @@ public class Profile {
     public String getWard() { return ward; } public void setWard(String ward) { this.ward = ward; }
     public String getDistrict() { return district; } public void setDistrict(String district) { this.district = district; }
     public String getCity() { return city; } public void setCity(String city) { this.city = city; }
-    public String getPostalCode() { return postalCode; } public void setPostalCode(String postalCode) { this.postalCode = postalCode; }
     public String getShippingNote() { return shippingNote; } public void setShippingNote(String shippingNote) { this.shippingNote = shippingNote; }
     public OffsetDateTime getCreatedAt() { return createdAt; } public void setCreatedAt(OffsetDateTime createdAt) { this.createdAt = createdAt; }
     public OffsetDateTime getUpdatedAt() { return updatedAt; } public void setUpdatedAt(OffsetDateTime updatedAt) { this.updatedAt = updatedAt; }

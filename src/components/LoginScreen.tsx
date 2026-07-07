@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Mail, Lock, User, Sparkles, ShieldCheck, ArrowLeft, Loader2, Camera, Image, Phone, MapPin, Building2, Home, StickyNote } from 'lucide-react';
+import { Mail, Lock, User, Sparkles, ShieldCheck, ArrowLeft, Loader2, Camera, Phone, MapPin, Building2, Home } from 'lucide-react';
 import type { AuthUser } from '../lib/authApi';
+import { VIETNAM_PROVINCES } from '../data/vietnamProvinces';
 
 interface LoginScreenProps {
   onLogin: (email: string, password: string, isSignup: boolean, name?: string) => Promise<{ needsOtp?: boolean } | void>;
@@ -28,7 +29,6 @@ export function LoginScreen({ onLogin, onVerifyOtp, onCompleteProfile, onBack }:
   const [ward, setWard] = useState('');
   const [district, setDistrict] = useState('');
   const [city, setCity] = useState('');
-  const [postalCode, setPostalCode] = useState('');
   const [shippingNote, setShippingNote] = useState('');
   const [profileLoading, setProfileLoading] = useState(false);
 
@@ -99,7 +99,6 @@ export function LoginScreen({ onLogin, onVerifyOtp, onCompleteProfile, onBack }:
         setWard(authUser.ward || '');
         setDistrict(authUser.district || '');
         setCity(authUser.city || '');
-        setPostalCode(authUser.postalCode || '');
         setShippingNote(authUser.shippingNote || '');
         setShowOtpScreen(false);
         setStatusState('idle');
@@ -148,7 +147,6 @@ export function LoginScreen({ onLogin, onVerifyOtp, onCompleteProfile, onBack }:
         ward: ward.trim() || undefined,
         district: district.trim() || undefined,
         city: city.trim() || undefined,
-        postalCode: postalCode.trim() || undefined,
         shippingNote: shippingNote.trim() || undefined,
       });
       setStatusState('success');
@@ -1032,9 +1030,9 @@ export function LoginScreen({ onLogin, onVerifyOtp, onCompleteProfile, onBack }:
             {verifiedUser ? (
               <div>
                 <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
-                  <h2 className="spooky-form-title" style={{ textAlign: 'center' }}>Complete Profile</h2>
+                  <h2 className="spooky-form-title" style={{ textAlign: 'center' }}>Hoàn tất hồ sơ</h2>
                   <p className="spooky-form-subtitle" style={{ textAlign: 'center' }}>
-                    Add your avatar and display name for your book library.
+                    Thêm thông tin liên hệ và địa chỉ để đặt sách nhanh hơn.
                   </p>
                 </div>
 
@@ -1049,7 +1047,7 @@ export function LoginScreen({ onLogin, onVerifyOtp, onCompleteProfile, onBack }:
                     </div>
                     <label className="profile-upload-btn">
                       <Camera className="w-4 h-4" />
-                      Upload avatar
+                      Tải ảnh đại diện
                       <input
                         type="file"
                         accept="image/*"
@@ -1060,7 +1058,7 @@ export function LoginScreen({ onLogin, onVerifyOtp, onCompleteProfile, onBack }:
                   </div>
 
                   <div className="spooky-form-group">
-                    <label className="spooky-label">Display Name</label>
+                    <label className="spooky-label">Tên hiển thị</label>
                     <div className="spooky-input-wrapper">
                       <span className="spooky-input-icon">
                         <User className="w-4 h-4" />
@@ -1070,7 +1068,7 @@ export function LoginScreen({ onLogin, onVerifyOtp, onCompleteProfile, onBack }:
                         value={profileName}
                         onChange={e => setProfileName(e.target.value)}
                         className="spooky-input"
-                        placeholder="Your display name"
+                        placeholder="Tên của bạn"
                         required
                         onFocus={() => setFocusState('profile')}
                         onBlur={() => setFocusState('idle')}
@@ -1080,7 +1078,7 @@ export function LoginScreen({ onLogin, onVerifyOtp, onCompleteProfile, onBack }:
 
                   <div className="profile-grid">
                     <div className="spooky-form-group">
-                      <label className="spooky-label">Phone Number</label>
+                      <label className="spooky-label">Số điện thoại</label>
                       <div className="spooky-input-wrapper">
                         <span className="spooky-input-icon">
                           <Phone className="w-4 h-4" />
@@ -1099,26 +1097,29 @@ export function LoginScreen({ onLogin, onVerifyOtp, onCompleteProfile, onBack }:
                     </div>
 
                     <div className="spooky-form-group">
-                      <label className="spooky-label">City / Province</label>
+                      <label className="spooky-label">Tỉnh / Thành phố</label>
                       <div className="spooky-input-wrapper">
                         <span className="spooky-input-icon">
                           <Building2 className="w-4 h-4" />
                         </span>
-                        <input
-                          type="text"
+                        <select
                           value={city}
                           onChange={e => setCity(e.target.value)}
                           className="spooky-input"
-                          placeholder="TP. Hồ Chí Minh"
                           required
                           onFocus={() => setFocusState('profile')}
                           onBlur={() => setFocusState('idle')}
-                        />
+                        >
+                          <option value="">Chọn tỉnh / thành phố</option>
+                          {VIETNAM_PROVINCES.map(province => (
+                            <option key={province} value={province}>{province}</option>
+                          ))}
+                        </select>
                       </div>
                     </div>
 
                     <div className="spooky-form-group">
-                      <label className="spooky-label">District</label>
+                      <label className="spooky-label">Quận / Huyện</label>
                       <div className="spooky-input-wrapper">
                         <span className="spooky-input-icon">
                           <MapPin className="w-4 h-4" />
@@ -1128,7 +1129,7 @@ export function LoginScreen({ onLogin, onVerifyOtp, onCompleteProfile, onBack }:
                           value={district}
                           onChange={e => setDistrict(e.target.value)}
                           className="spooky-input"
-                          placeholder="Quận 1"
+                        placeholder="Quận 1"
                           onFocus={() => setFocusState('profile')}
                           onBlur={() => setFocusState('idle')}
                         />
@@ -1136,7 +1137,7 @@ export function LoginScreen({ onLogin, onVerifyOtp, onCompleteProfile, onBack }:
                     </div>
 
                     <div className="spooky-form-group">
-                      <label className="spooky-label">Ward</label>
+                      <label className="spooky-label">Phường / Xã</label>
                       <div className="spooky-input-wrapper">
                         <span className="spooky-input-icon">
                           <Home className="w-4 h-4" />
@@ -1146,7 +1147,7 @@ export function LoginScreen({ onLogin, onVerifyOtp, onCompleteProfile, onBack }:
                           value={ward}
                           onChange={e => setWard(e.target.value)}
                           className="spooky-input"
-                          placeholder="Phường Bến Nghé"
+                        placeholder="Phường Bến Nghé"
                           onFocus={() => setFocusState('profile')}
                           onBlur={() => setFocusState('idle')}
                         />
@@ -1155,7 +1156,7 @@ export function LoginScreen({ onLogin, onVerifyOtp, onCompleteProfile, onBack }:
                   </div>
 
                   <div className="spooky-form-group">
-                    <label className="spooky-label">Shipping Address</label>
+                    <label className="spooky-label">Địa chỉ nhận hàng</label>
                     <div className="spooky-input-wrapper">
                       <span className="spooky-input-icon">
                         <MapPin className="w-4 h-4" />
@@ -1173,46 +1174,8 @@ export function LoginScreen({ onLogin, onVerifyOtp, onCompleteProfile, onBack }:
                     </div>
                   </div>
 
-                  <div className="profile-grid">
-                    <div className="spooky-form-group">
-                      <label className="spooky-label">Postal Code</label>
-                      <div className="spooky-input-wrapper">
-                        <span className="spooky-input-icon">
-                          <Mail className="w-4 h-4" />
-                        </span>
-                        <input
-                          type="text"
-                          value={postalCode}
-                          onChange={e => setPostalCode(e.target.value)}
-                          className="spooky-input"
-                          placeholder="700000"
-                          onFocus={() => setFocusState('profile')}
-                          onBlur={() => setFocusState('idle')}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="spooky-form-group">
-                      <label className="spooky-label">Avatar URL</label>
-                      <div className="spooky-input-wrapper">
-                        <span className="spooky-input-icon">
-                          <Image className="w-4 h-4" />
-                        </span>
-                        <input
-                          type="url"
-                          value={avatarUrl.startsWith('data:') ? '' : avatarUrl}
-                          onChange={e => setAvatarUrl(e.target.value)}
-                          className="spooky-input"
-                          placeholder="https://example.com/avatar.jpg"
-                          onFocus={() => setFocusState('profile')}
-                          onBlur={() => setFocusState('idle')}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
                   <div className="spooky-form-group">
-                    <label className="spooky-label">Delivery Note</label>
+                    <label className="spooky-label">Ghi chú giao hàng</label>
                     <div className="spooky-input-wrapper">
                       <textarea
                         value={shippingNote}
@@ -1231,9 +1194,9 @@ export function LoginScreen({ onLogin, onVerifyOtp, onCompleteProfile, onBack }:
                     className="spooky-btn-primary"
                   >
                     {profileLoading ? (
-                      <><Loader2 className="w-4 h-4 animate-spin" /><span>Saving profile...</span></>
+                      <><Loader2 className="w-4 h-4 animate-spin" /><span>Đang lưu hồ sơ...</span></>
                     ) : (
-                      'Finish Profile'
+                      'Hoàn tất hồ sơ'
                     )}
                   </button>
                 </form>

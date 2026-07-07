@@ -12,18 +12,17 @@ public class ProfileDto {
     private String ward;
     private String district;
     private String city;
-    private String postalCode;
     private String shippingNote;
 
     public ProfileDto() {}
 
     public ProfileDto(UUID id, String email, String fullName, String avatarUrl) {
-        this(id, email, fullName, avatarUrl, null, null, null, null, null, null, null);
+        this(id, email, fullName, avatarUrl, null, null, null, null, null, null);
     }
 
     public ProfileDto(UUID id, String email, String fullName, String avatarUrl,
                       String phone, String address, String ward, String district,
-                      String city, String postalCode, String shippingNote) {
+                      String city, String shippingNote) {
         this.id = id;
         this.email = email;
         this.fullName = fullName;
@@ -33,7 +32,6 @@ public class ProfileDto {
         this.ward = ward;
         this.district = district;
         this.city = city;
-        this.postalCode = postalCode;
         this.shippingNote = shippingNote;
     }
 
@@ -55,8 +53,6 @@ public class ProfileDto {
     public void setDistrict(String district) { this.district = district; }
     public String getCity() { return city; }
     public void setCity(String city) { this.city = city; }
-    public String getPostalCode() { return postalCode; }
-    public void setPostalCode(String postalCode) { this.postalCode = postalCode; }
     public String getShippingNote() { return shippingNote; }
     public void setShippingNote(String shippingNote) { this.shippingNote = shippingNote; }
 }

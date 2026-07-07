@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Camera, Loader2, MapPin, Phone, Save, UserRound, X } from 'lucide-react';
 import type { AuthUser } from '../lib/authApi';
 import { toast } from 'sonner@2.0.3';
+import { VIETNAM_PROVINCES } from '../data/vietnamProvinces';
 
 interface GoogleUserProfileProps {
   user: User;
@@ -22,7 +23,6 @@ export function GoogleUserProfile({ user, onLogout, onUpdateProfile }: GoogleUse
     ward: user.ward || '',
     district: user.district || '',
     city: user.city || '',
-    postalCode: user.postalCode || '',
     shippingNote: user.shippingNote || '',
   });
   const googleUserStr = localStorage.getItem('google_user');
@@ -70,7 +70,6 @@ export function GoogleUserProfile({ user, onLogout, onUpdateProfile }: GoogleUse
         ward: form.ward.trim() || undefined,
         district: form.district.trim() || undefined,
         city: form.city.trim() || undefined,
-        postalCode: form.postalCode.trim() || undefined,
         shippingNote: form.shippingNote.trim() || undefined,
       });
       toast.success('Đã cập nhật hồ sơ.');
@@ -199,19 +198,16 @@ export function GoogleUserProfile({ user, onLogout, onUpdateProfile }: GoogleUse
                 </label>
                 <label className="block">
                   <span className="mb-1 block text-sm font-bold text-stone-700">Tỉnh / Thành phố</span>
-                  <input className="w-full rounded-xl border border-stone-300 px-3 py-2.5 outline-none focus:border-stone-950" value={form.city} onChange={e => updateField('city', e.target.value)} required />
-                </label>
-                <label className="block">
-                  <span className="mb-1 block text-sm font-bold text-stone-700">Mã bưu chính</span>
-                  <input className="w-full rounded-xl border border-stone-300 px-3 py-2.5 outline-none focus:border-stone-950" value={form.postalCode} onChange={e => updateField('postalCode', e.target.value)} />
+                  <select className="w-full rounded-xl border border-stone-300 px-3 py-2.5 outline-none focus:border-stone-950" value={form.city} onChange={e => updateField('city', e.target.value)} required>
+                    <option value="">Chọn tỉnh / thành phố</option>
+                    {VIETNAM_PROVINCES.map(province => (
+                      <option key={province} value={province}>{province}</option>
+                    ))}
+                  </select>
                 </label>
                 <label className="block sm:col-span-2">
                   <span className="mb-1 block text-sm font-bold text-stone-700">Ghi chú giao hàng</span>
                   <textarea className="min-h-20 w-full rounded-xl border border-stone-300 px-3 py-2.5 outline-none focus:border-stone-950" value={form.shippingNote} onChange={e => updateField('shippingNote', e.target.value)} placeholder="Gọi trước khi giao, giao giờ hành chính..." />
-                </label>
-                <label className="block sm:col-span-2">
-                  <span className="mb-1 block text-sm font-bold text-stone-700">Avatar URL</span>
-                  <input className="w-full rounded-xl border border-stone-300 px-3 py-2.5 outline-none focus:border-stone-950" value={form.avatarUrl.startsWith('data:') ? '' : form.avatarUrl} onChange={e => updateField('avatarUrl', e.target.value)} placeholder="https://example.com/avatar.jpg" />
                 </label>
               </div>
 

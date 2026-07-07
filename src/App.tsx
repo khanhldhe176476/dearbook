@@ -40,7 +40,6 @@ export interface User {
   ward?: string;
   district?: string;
   city?: string;
-  postalCode?: string;
   shippingNote?: string;
 }
 
@@ -156,7 +155,6 @@ function App() {
         ward: authUser.ward,
         district: authUser.district,
         city: authUser.city,
-        postalCode: authUser.postalCode,
         shippingNote: authUser.shippingNote,
       });
 
@@ -182,7 +180,6 @@ function App() {
             ward: activeUser.ward,
             district: activeUser.district,
             city: activeUser.city,
-            postalCode: activeUser.postalCode,
             shippingNote: activeUser.shippingNote,
           };
 
@@ -359,7 +356,6 @@ function App() {
         ward: authUser.ward,
         district: authUser.district,
         city: authUser.city,
-        postalCode: authUser.postalCode,
         shippingNote: authUser.shippingNote,
       };
 
@@ -409,7 +405,6 @@ function App() {
         ward: updatedProfile.ward,
         district: updatedProfile.district,
         city: updatedProfile.city,
-        postalCode: updatedProfile.postalCode,
         shippingNote: updatedProfile.shippingNote,
       };
 
@@ -435,7 +430,6 @@ function App() {
       ward: updatedProfile.ward,
       district: updatedProfile.district,
       city: updatedProfile.city,
-      postalCode: updatedProfile.postalCode,
       shippingNote: updatedProfile.shippingNote,
     };
 

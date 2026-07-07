@@ -10,7 +10,6 @@ export interface AuthUser {
   ward?: string;
   district?: string;
   city?: string;
-  postalCode?: string;
   shippingNote?: string;
 }
 
@@ -28,7 +27,6 @@ function normalizeAuthUser(user: AuthUser): AuthUser {
     ward: user.ward?.trim() || undefined,
     district: user.district?.trim() || undefined,
     city: user.city?.trim() || undefined,
-    postalCode: user.postalCode?.trim() || undefined,
     shippingNote: user.shippingNote?.trim() || undefined,
   };
 }
@@ -44,7 +42,6 @@ function mapProfileRow(profile: any, fallback: AuthUser): AuthUser {
     ward: profile.ward || fallback.ward,
     district: profile.district || fallback.district,
     city: profile.city || fallback.city,
-    postalCode: profile.postal_code || fallback.postalCode,
     shippingNote: profile.shipping_note || fallback.shippingNote,
   };
 }
@@ -68,7 +65,6 @@ export async function updateUserProfile(user: AuthUser): Promise<AuthUser> {
           ward: normalizedUser.ward || null,
           district: normalizedUser.district || null,
           city: normalizedUser.city || null,
-          postal_code: normalizedUser.postalCode || null,
           shipping_note: normalizedUser.shippingNote || null,
         },
       });
@@ -94,14 +90,13 @@ export async function updateUserProfile(user: AuthUser): Promise<AuthUser> {
       ward: normalizedUser.ward || null,
       district: normalizedUser.district || null,
       city: normalizedUser.city || null,
-      postal_code: normalizedUser.postalCode || null,
       shipping_note: normalizedUser.shippingNote || null,
     };
 
     const { data: profile, error } = await supabase
       .from('profiles')
       .upsert(profilePayload, { onConflict: 'id' })
-      .select('id,email,full_name,avatar_url,phone,address,ward,district,city,postal_code,shipping_note')
+      .select('id,email,full_name,avatar_url,phone,address,ward,district,city,shipping_note')
       .single();
 
     if (error) {
@@ -307,7 +302,7 @@ export async function signInWithEmail(
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('full_name,avatar_url,phone,address,ward,district,city,postal_code,shipping_note')
+    .select('full_name,avatar_url,phone,address,ward,district,city,shipping_note')
     .eq('id', user.id)
     .single();
   const metadata = user.user_metadata || {};
@@ -322,7 +317,6 @@ export async function signInWithEmail(
     ward: profile?.ward || metadata.ward || undefined,
     district: profile?.district || metadata.district || undefined,
     city: profile?.city || metadata.city || undefined,
-    postalCode: profile?.postal_code || metadata.postal_code || undefined,
     shippingNote: profile?.shipping_note || metadata.shipping_note || undefined,
   };
 }
@@ -336,7 +330,7 @@ export async function getCurrentSession(): Promise<AuthUser | null> {
   const user = session.user;
   const { data: profile } = await supabase
     .from('profiles')
-    .select('full_name,avatar_url,phone,address,ward,district,city,postal_code,shipping_note')
+    .select('full_name,avatar_url,phone,address,ward,district,city,shipping_note')
     .eq('id', user.id)
     .single();
   const metadata = user.user_metadata || {};
@@ -351,7 +345,6 @@ export async function getCurrentSession(): Promise<AuthUser | null> {
     ward: profile?.ward || metadata.ward || undefined,
     district: profile?.district || metadata.district || undefined,
     city: profile?.city || metadata.city || undefined,
-    postalCode: profile?.postal_code || metadata.postal_code || undefined,
     shippingNote: profile?.shipping_note || metadata.shipping_note || undefined,
   };
 }

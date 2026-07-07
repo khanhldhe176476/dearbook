@@ -4,6 +4,7 @@ import { BookData, User as UserData } from '../App';
 import { orderApi } from '../lib/orderApi';
 import { PageSelectionStep } from './PageSelectionStep';
 import { toast } from 'sonner@2.0.3';
+import { VIETNAM_PROVINCES as CURRENT_VIETNAM_PROVINCES } from '../data/vietnamProvinces';
 
 const MAX_PDF_SIZE = 1024 * 1024 * 1024; // 1GB
 
@@ -920,7 +921,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
                         style={{ border: '1.5px solid #DDD8D0', color: '#000000', background: '#FAFAF8' }}
                       >
                         <option value="">Chọn tỉnh/thành phố</option>
-                        {VIETNAM_PROVINCES.map(province => (
+                        {CURRENT_VIETNAM_PROVINCES.map(province => (
                           <option key={province} value={province}>{province}</option>
                         ))}
                       </select>
