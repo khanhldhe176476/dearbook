@@ -38,7 +38,14 @@ public class UserService {
                 profile.getId(),
                 profile.getEmail(),
                 profile.getFullName(),
-                profile.getAvatarUrl()
+                profile.getAvatarUrl(),
+                profile.getPhone(),
+                profile.getAddress(),
+                profile.getWard(),
+                profile.getDistrict(),
+                profile.getCity(),
+                profile.getPostalCode(),
+                profile.getShippingNote()
         );
     }
 }

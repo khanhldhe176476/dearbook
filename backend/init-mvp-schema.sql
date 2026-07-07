@@ -5,9 +5,24 @@ create table if not exists profiles (
     email text unique,
     full_name text,
     avatar_url text,
+    phone text,
+    address text,
+    ward text,
+    district text,
+    city text,
+    postal_code text,
+    shipping_note text,
     created_at timestamptz default now(),
     updated_at timestamptz default now()
 );
+
+alter table profiles add column if not exists phone text;
+alter table profiles add column if not exists address text;
+alter table profiles add column if not exists ward text;
+alter table profiles add column if not exists district text;
+alter table profiles add column if not exists city text;
+alter table profiles add column if not exists postal_code text;
+alter table profiles add column if not exists shipping_note text;
 
 create table if not exists book_categories (
     id uuid primary key default gen_random_uuid(),

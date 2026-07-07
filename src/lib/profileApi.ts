@@ -5,6 +5,13 @@ export interface Profile {
   email: string;
   fullName: string;
   avatarUrl?: string;
+  phone?: string;
+  address?: string;
+  ward?: string;
+  district?: string;
+  city?: string;
+  postalCode?: string;
+  shippingNote?: string;
 }
 
 export const profileApi = {

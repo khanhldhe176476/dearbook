@@ -31,6 +31,14 @@ ON public.template_pages FOR SELECT TO public USING (true);
 -- =====================================================
 
 -- 4. profiles
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS phone text;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS address text;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS ward text;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS district text;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS city text;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS postal_code text;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS shipping_note text;
+
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Users can read own profile" ON public.profiles;
 CREATE POLICY "Users can read own profile"

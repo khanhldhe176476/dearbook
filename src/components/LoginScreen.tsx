@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Mail, Lock, User, Sparkles, ShieldCheck, ArrowLeft, Loader2, Camera, Image } from 'lucide-react';
+import { Mail, Lock, User, Sparkles, ShieldCheck, ArrowLeft, Loader2, Camera, Image, Phone, MapPin, Building2, Home, StickyNote } from 'lucide-react';
 import type { AuthUser } from '../lib/authApi';
 
 interface LoginScreenProps {
@@ -23,6 +23,13 @@ export function LoginScreen({ onLogin, onVerifyOtp, onCompleteProfile, onBack }:
   const [verifiedUser, setVerifiedUser] = useState<AuthUser | null>(null);
   const [profileName, setProfileName] = useState('');
   const [avatarUrl, setAvatarUrl] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
+  const [ward, setWard] = useState('');
+  const [district, setDistrict] = useState('');
+  const [city, setCity] = useState('');
+  const [postalCode, setPostalCode] = useState('');
+  const [shippingNote, setShippingNote] = useState('');
   const [profileLoading, setProfileLoading] = useState(false);
 
   // Interaction States
@@ -87,6 +94,13 @@ export function LoginScreen({ onLogin, onVerifyOtp, onCompleteProfile, onBack }:
         setVerifiedUser(authUser);
         setProfileName(authUser.fullName || name || email.split('@')[0]);
         setAvatarUrl(authUser.avatarUrl || '');
+        setPhone(authUser.phone || '');
+        setAddress(authUser.address || '');
+        setWard(authUser.ward || '');
+        setDistrict(authUser.district || '');
+        setCity(authUser.city || '');
+        setPostalCode(authUser.postalCode || '');
+        setShippingNote(authUser.shippingNote || '');
         setShowOtpScreen(false);
         setStatusState('idle');
       } catch (err) {
@@ -129,6 +143,13 @@ export function LoginScreen({ onLogin, onVerifyOtp, onCompleteProfile, onBack }:
         ...verifiedUser,
         fullName: profileName.trim() || verifiedUser.fullName || verifiedUser.email.split('@')[0],
         avatarUrl: avatarUrl.trim() || undefined,
+        phone: phone.trim() || undefined,
+        address: address.trim() || undefined,
+        ward: ward.trim() || undefined,
+        district: district.trim() || undefined,
+        city: city.trim() || undefined,
+        postalCode: postalCode.trim() || undefined,
+        shippingNote: shippingNote.trim() || undefined,
       });
       setStatusState('success');
     } catch (err) {
@@ -343,6 +364,12 @@ export function LoginScreen({ onLogin, onVerifyOtp, onCompleteProfile, onBack }:
           background-color: #ffffff !important;
           box-sizing: border-box;
           border-radius: 0 24px 24px 0;
+          max-height: calc(100vh - 9rem);
+          overflow-y: auto;
+        }
+
+        .spooky-right.profile-mode {
+          justify-content: flex-start;
         }
 
         /* Speech bubble */
@@ -504,6 +531,43 @@ export function LoginScreen({ onLogin, onVerifyOtp, onCompleteProfile, onBack }:
         .profile-upload-btn:hover {
           border-color: #6366f1;
           color: #4f46e5;
+        }
+
+        .profile-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 0.875rem;
+        }
+
+        .profile-grid .spooky-form-group {
+          margin-bottom: 0.5rem;
+        }
+
+        .spooky-textarea {
+          width: 100%;
+          min-height: 5rem;
+          resize: vertical;
+          padding: 0.75rem 1rem;
+          border-radius: 12px;
+          border: 1.5px solid #e2e8f0;
+          background-color: #ffffff !important;
+          color: #0f172a !important;
+          font-size: 0.875rem;
+          outline: none;
+          transition: all 0.2s ease-in-out;
+          box-sizing: border-box;
+          font-family: inherit;
+        }
+
+        .spooky-textarea:focus {
+          border-color: #6366f1;
+          box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+
+        @media (max-width: 640px) {
+          .profile-grid {
+            grid-template-columns: 1fr;
+          }
         }
 
         .spooky-options {
@@ -963,7 +1027,7 @@ export function LoginScreen({ onLogin, onVerifyOtp, onCompleteProfile, onBack }:
           </div>
 
           {/* ── Right Half: Clean Input Form Panel (Explicitly Rounded Right) ── */}
-          <div className="spooky-right">
+          <div className={`spooky-right ${verifiedUser ? 'profile-mode' : ''}`}>
             
             {verifiedUser ? (
               <div>
@@ -1014,18 +1078,147 @@ export function LoginScreen({ onLogin, onVerifyOtp, onCompleteProfile, onBack }:
                     </div>
                   </div>
 
+                  <div className="profile-grid">
+                    <div className="spooky-form-group">
+                      <label className="spooky-label">Phone Number</label>
+                      <div className="spooky-input-wrapper">
+                        <span className="spooky-input-icon">
+                          <Phone className="w-4 h-4" />
+                        </span>
+                        <input
+                          type="tel"
+                          value={phone}
+                          onChange={e => setPhone(e.target.value.replace(/[^\d+()\-\s]/g, ''))}
+                          className="spooky-input"
+                          placeholder="0987654321"
+                          required
+                          onFocus={() => setFocusState('profile')}
+                          onBlur={() => setFocusState('idle')}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="spooky-form-group">
+                      <label className="spooky-label">City / Province</label>
+                      <div className="spooky-input-wrapper">
+                        <span className="spooky-input-icon">
+                          <Building2 className="w-4 h-4" />
+                        </span>
+                        <input
+                          type="text"
+                          value={city}
+                          onChange={e => setCity(e.target.value)}
+                          className="spooky-input"
+                          placeholder="TP. Hồ Chí Minh"
+                          required
+                          onFocus={() => setFocusState('profile')}
+                          onBlur={() => setFocusState('idle')}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="spooky-form-group">
+                      <label className="spooky-label">District</label>
+                      <div className="spooky-input-wrapper">
+                        <span className="spooky-input-icon">
+                          <MapPin className="w-4 h-4" />
+                        </span>
+                        <input
+                          type="text"
+                          value={district}
+                          onChange={e => setDistrict(e.target.value)}
+                          className="spooky-input"
+                          placeholder="Quận 1"
+                          onFocus={() => setFocusState('profile')}
+                          onBlur={() => setFocusState('idle')}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="spooky-form-group">
+                      <label className="spooky-label">Ward</label>
+                      <div className="spooky-input-wrapper">
+                        <span className="spooky-input-icon">
+                          <Home className="w-4 h-4" />
+                        </span>
+                        <input
+                          type="text"
+                          value={ward}
+                          onChange={e => setWard(e.target.value)}
+                          className="spooky-input"
+                          placeholder="Phường Bến Nghé"
+                          onFocus={() => setFocusState('profile')}
+                          onBlur={() => setFocusState('idle')}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="spooky-form-group">
-                    <label className="spooky-label">Avatar URL</label>
+                    <label className="spooky-label">Shipping Address</label>
                     <div className="spooky-input-wrapper">
                       <span className="spooky-input-icon">
-                        <Image className="w-4 h-4" />
+                        <MapPin className="w-4 h-4" />
                       </span>
                       <input
-                        type="url"
-                        value={avatarUrl.startsWith('data:') ? '' : avatarUrl}
-                        onChange={e => setAvatarUrl(e.target.value)}
+                        type="text"
+                        value={address}
+                        onChange={e => setAddress(e.target.value)}
                         className="spooky-input"
-                        placeholder="https://example.com/avatar.jpg"
+                        placeholder="Số nhà, tên đường, tòa nhà..."
+                        required
+                        onFocus={() => setFocusState('profile')}
+                        onBlur={() => setFocusState('idle')}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="profile-grid">
+                    <div className="spooky-form-group">
+                      <label className="spooky-label">Postal Code</label>
+                      <div className="spooky-input-wrapper">
+                        <span className="spooky-input-icon">
+                          <Mail className="w-4 h-4" />
+                        </span>
+                        <input
+                          type="text"
+                          value={postalCode}
+                          onChange={e => setPostalCode(e.target.value)}
+                          className="spooky-input"
+                          placeholder="700000"
+                          onFocus={() => setFocusState('profile')}
+                          onBlur={() => setFocusState('idle')}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="spooky-form-group">
+                      <label className="spooky-label">Avatar URL</label>
+                      <div className="spooky-input-wrapper">
+                        <span className="spooky-input-icon">
+                          <Image className="w-4 h-4" />
+                        </span>
+                        <input
+                          type="url"
+                          value={avatarUrl.startsWith('data:') ? '' : avatarUrl}
+                          onChange={e => setAvatarUrl(e.target.value)}
+                          className="spooky-input"
+                          placeholder="https://example.com/avatar.jpg"
+                          onFocus={() => setFocusState('profile')}
+                          onBlur={() => setFocusState('idle')}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="spooky-form-group">
+                    <label className="spooky-label">Delivery Note</label>
+                    <div className="spooky-input-wrapper">
+                      <textarea
+                        value={shippingNote}
+                        onChange={e => setShippingNote(e.target.value)}
+                        className="spooky-textarea"
+                        placeholder="Ví dụ: gọi trước khi giao, giao giờ hành chính..."
                         onFocus={() => setFocusState('profile')}
                         onBlur={() => setFocusState('idle')}
                       />

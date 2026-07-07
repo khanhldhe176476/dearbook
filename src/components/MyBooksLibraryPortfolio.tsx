@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { BookData, User } from '../App';
 import { GoogleUserProfile } from './GoogleUserProfile';
+import type { AuthUser } from '../lib/authApi';
 import { Test3DButton } from './Test3DButton';
 import { FlipBookReader } from './FlipBookReader';
 import { DeleteConfirmDialog } from './DeleteConfirmDialog';
@@ -25,6 +26,7 @@ interface MyBooksLibraryPortfolioProps {
   onLogout: () => void;
   onCreateNew: () => void;
   onEditBook: (book: BookData) => void;
+  onUpdateProfile?: (profile: AuthUser) => Promise<AuthUser>;
   onBackToHome?: () => void;
 }
 
@@ -52,7 +54,7 @@ const LOCAL_TEMPLATES = [
 type ViewMode = 'grid' | 'masonry' | 'list';
 type SortBy = 'recent' | 'oldest' | 'name' | 'theme';
 
-export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBook, onBackToHome }: MyBooksLibraryPortfolioProps) {
+export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBook, onUpdateProfile, onBackToHome }: MyBooksLibraryPortfolioProps) {
   const { templates: supabaseTemplates, loading: templatesLoading, error: templatesError } = useBookTemplates();
   const displayTemplates = supabaseTemplates.filter(tpl => 
     tpl.id !== 'a1b2c3d4-0000-0000-0000-000000000001' &&
@@ -562,7 +564,7 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
 
             {/* User pill */}
             <div className="flex items-center gap-2">
-              <GoogleUserProfile user={user} onLogout={onLogout} />
+              <GoogleUserProfile user={user} onLogout={onLogout} onUpdateProfile={onUpdateProfile} />
             </div>
           </div>
         </div>

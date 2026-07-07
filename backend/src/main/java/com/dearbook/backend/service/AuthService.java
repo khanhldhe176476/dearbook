@@ -65,7 +65,14 @@ public class AuthService {
                         userProfile.getId(),
                         userProfile.getEmail(),
                         userProfile.getFullName(),
-                        userProfile.getAvatarUrl()
+                        userProfile.getAvatarUrl(),
+                        userProfile.getPhone(),
+                        userProfile.getAddress(),
+                        userProfile.getWard(),
+                        userProfile.getDistrict(),
+                        userProfile.getCity(),
+                        userProfile.getPostalCode(),
+                        userProfile.getShippingNote()
                 );
 
                 return new AuthResponse(token, profileDto);

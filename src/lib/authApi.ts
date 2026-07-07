@@ -5,6 +5,13 @@ export interface AuthUser {
   email: string;
   fullName: string;
   avatarUrl?: string;
+  phone?: string;
+  address?: string;
+  ward?: string;
+  district?: string;
+  city?: string;
+  postalCode?: string;
+  shippingNote?: string;
 }
 
 function normalizeAuthUser(user: AuthUser): AuthUser {
@@ -16,6 +23,29 @@ function normalizeAuthUser(user: AuthUser): AuthUser {
     email,
     fullName,
     avatarUrl: user.avatarUrl || undefined,
+    phone: user.phone?.trim() || undefined,
+    address: user.address?.trim() || undefined,
+    ward: user.ward?.trim() || undefined,
+    district: user.district?.trim() || undefined,
+    city: user.city?.trim() || undefined,
+    postalCode: user.postalCode?.trim() || undefined,
+    shippingNote: user.shippingNote?.trim() || undefined,
+  };
+}
+
+function mapProfileRow(profile: any, fallback: AuthUser): AuthUser {
+  return {
+    id: profile.id,
+    email: profile.email || fallback.email,
+    fullName: profile.full_name || fallback.fullName,
+    avatarUrl: profile.avatar_url || undefined,
+    phone: profile.phone || fallback.phone,
+    address: profile.address || fallback.address,
+    ward: profile.ward || fallback.ward,
+    district: profile.district || fallback.district,
+    city: profile.city || fallback.city,
+    postalCode: profile.postal_code || fallback.postalCode,
+    shippingNote: profile.shipping_note || fallback.shippingNote,
   };
 }
 
@@ -33,6 +63,13 @@ export async function updateUserProfile(user: AuthUser): Promise<AuthUser> {
         data: {
           full_name: normalizedUser.fullName,
           avatar_url: normalizedUser.avatarUrl || null,
+          phone: normalizedUser.phone || null,
+          address: normalizedUser.address || null,
+          ward: normalizedUser.ward || null,
+          district: normalizedUser.district || null,
+          city: normalizedUser.city || null,
+          postal_code: normalizedUser.postalCode || null,
+          shipping_note: normalizedUser.shippingNote || null,
         },
       });
 
@@ -47,29 +84,55 @@ export async function updateUserProfile(user: AuthUser): Promise<AuthUser> {
   let syncedUser = normalizedUser;
 
   try {
+    const profilePayload = {
+      id: normalizedUser.id,
+      email: normalizedUser.email,
+      full_name: normalizedUser.fullName,
+      avatar_url: normalizedUser.avatarUrl || null,
+      phone: normalizedUser.phone || null,
+      address: normalizedUser.address || null,
+      ward: normalizedUser.ward || null,
+      district: normalizedUser.district || null,
+      city: normalizedUser.city || null,
+      postal_code: normalizedUser.postalCode || null,
+      shipping_note: normalizedUser.shippingNote || null,
+    };
+
     const { data: profile, error } = await supabase
       .from('profiles')
-      .upsert(
-        {
-          id: normalizedUser.id,
-          email: normalizedUser.email,
-          full_name: normalizedUser.fullName,
-          avatar_url: normalizedUser.avatarUrl || null,
-        },
-        { onConflict: 'id' }
-      )
-      .select('id,email,full_name,avatar_url')
+      .upsert(profilePayload, { onConflict: 'id' })
+      .select('id,email,full_name,avatar_url,phone,address,ward,district,city,postal_code,shipping_note')
       .single();
 
     if (error) {
       console.warn('Could not update Supabase profile row:', error.message);
+      const { data: basicProfile, error: basicError } = await supabase
+        .from('profiles')
+        .upsert(
+          {
+            id: normalizedUser.id,
+            email: normalizedUser.email,
+            full_name: normalizedUser.fullName,
+            avatar_url: normalizedUser.avatarUrl || null,
+          },
+          { onConflict: 'id' }
+        )
+        .select('id,email,full_name,avatar_url')
+        .single();
+
+      if (basicError) {
+        console.warn('Could not update basic Supabase profile row:', basicError.message);
+      } else if (basicProfile) {
+        syncedUser = {
+          ...normalizedUser,
+          id: basicProfile.id,
+          email: basicProfile.email || normalizedUser.email,
+          fullName: basicProfile.full_name || normalizedUser.fullName,
+          avatarUrl: basicProfile.avatar_url || undefined,
+        };
+      }
     } else if (profile) {
-      syncedUser = {
-        id: profile.id,
-        email: profile.email || normalizedUser.email,
-        fullName: profile.full_name || normalizedUser.fullName,
-        avatarUrl: profile.avatar_url || undefined,
-      };
+      syncedUser = mapProfileRow(profile, normalizedUser);
     }
   } catch (err) {
     console.warn('Could not update Supabase profile row:', err);
@@ -244,15 +307,23 @@ export async function signInWithEmail(
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('full_name, avatar_url')
+    .select('full_name,avatar_url,phone,address,ward,district,city,postal_code,shipping_note')
     .eq('id', user.id)
     .single();
+  const metadata = user.user_metadata || {};
 
   return {
     id: user.id,
     email: user.email || normalizedEmail,
-    fullName: profile?.full_name || user.user_metadata?.full_name || normalizedEmail.split('@')[0],
-    avatarUrl: profile?.avatar_url || undefined,
+    fullName: profile?.full_name || metadata.full_name || normalizedEmail.split('@')[0],
+    avatarUrl: profile?.avatar_url || metadata.avatar_url || undefined,
+    phone: profile?.phone || metadata.phone || undefined,
+    address: profile?.address || metadata.address || undefined,
+    ward: profile?.ward || metadata.ward || undefined,
+    district: profile?.district || metadata.district || undefined,
+    city: profile?.city || metadata.city || undefined,
+    postalCode: profile?.postal_code || metadata.postal_code || undefined,
+    shippingNote: profile?.shipping_note || metadata.shipping_note || undefined,
   };
 }
 
@@ -265,15 +336,23 @@ export async function getCurrentSession(): Promise<AuthUser | null> {
   const user = session.user;
   const { data: profile } = await supabase
     .from('profiles')
-    .select('full_name, avatar_url')
+    .select('full_name,avatar_url,phone,address,ward,district,city,postal_code,shipping_note')
     .eq('id', user.id)
     .single();
+  const metadata = user.user_metadata || {};
 
   return {
     id: user.id,
     email: user.email || '',
-    fullName: profile?.full_name || user.user_metadata?.full_name || user.email?.split('@')[0] || '',
-    avatarUrl: profile?.avatar_url || undefined,
+    fullName: profile?.full_name || metadata.full_name || user.email?.split('@')[0] || '',
+    avatarUrl: profile?.avatar_url || metadata.avatar_url || undefined,
+    phone: profile?.phone || metadata.phone || undefined,
+    address: profile?.address || metadata.address || undefined,
+    ward: profile?.ward || metadata.ward || undefined,
+    district: profile?.district || metadata.district || undefined,
+    city: profile?.city || metadata.city || undefined,
+    postalCode: profile?.postal_code || metadata.postal_code || undefined,
+    shippingNote: profile?.shipping_note || metadata.shipping_note || undefined,
   };
 }
 

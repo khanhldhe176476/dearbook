@@ -35,6 +35,13 @@ export interface User {
   email: string;
   name: string;
   picture?: string;
+  phone?: string;
+  address?: string;
+  ward?: string;
+  district?: string;
+  city?: string;
+  postalCode?: string;
+  shippingNote?: string;
 }
 
 export interface BookData {
@@ -144,6 +151,13 @@ function App() {
         email: authUser.email,
         fullName: authUser.fullName || authUser.email,
         avatarUrl: authUser.avatarUrl,
+        phone: authUser.phone,
+        address: authUser.address,
+        ward: authUser.ward,
+        district: authUser.district,
+        city: authUser.city,
+        postalCode: authUser.postalCode,
+        shippingNote: authUser.shippingNote,
       });
 
       console.log('Profile synced successfully:', authUser.email);
@@ -163,6 +177,13 @@ function App() {
             email: activeUser.email,
             name: activeUser.fullName,
             picture: activeUser.avatarUrl,
+            phone: activeUser.phone,
+            address: activeUser.address,
+            ward: activeUser.ward,
+            district: activeUser.district,
+            city: activeUser.city,
+            postalCode: activeUser.postalCode,
+            shippingNote: activeUser.shippingNote,
           };
 
           await syncUserProfile(activeUser);
@@ -333,6 +354,13 @@ function App() {
         email: authUser.email,
         name: authUser.fullName,
         picture: authUser.avatarUrl,
+        phone: authUser.phone,
+        address: authUser.address,
+        ward: authUser.ward,
+        district: authUser.district,
+        city: authUser.city,
+        postalCode: authUser.postalCode,
+        shippingNote: authUser.shippingNote,
       };
 
       await syncUserProfile(authUser);
@@ -376,6 +404,13 @@ function App() {
         email: updatedProfile.email,
         name: updatedProfile.fullName,
         picture: updatedProfile.avatarUrl,
+        phone: updatedProfile.phone,
+        address: updatedProfile.address,
+        ward: updatedProfile.ward,
+        district: updatedProfile.district,
+        city: updatedProfile.city,
+        postalCode: updatedProfile.postalCode,
+        shippingNote: updatedProfile.shippingNote,
       };
 
       setUser(userData);
@@ -386,6 +421,27 @@ function App() {
       toast.error(err.message || 'Không thể cập nhật hồ sơ. Vui lòng thử lại.');
       throw err;
     }
+  };
+
+  const handleUpdateProfile = async (profile: AuthUser) => {
+    const updatedProfile = await updateUserProfile(profile);
+    const userData = {
+      id: updatedProfile.id,
+      email: updatedProfile.email,
+      name: updatedProfile.fullName,
+      picture: updatedProfile.avatarUrl,
+      phone: updatedProfile.phone,
+      address: updatedProfile.address,
+      ward: updatedProfile.ward,
+      district: updatedProfile.district,
+      city: updatedProfile.city,
+      postalCode: updatedProfile.postalCode,
+      shippingNote: updatedProfile.shippingNote,
+    };
+
+    setUser(userData);
+    localStorage.setItem('dearbook_user', JSON.stringify(userData));
+    return updatedProfile;
   };
 
   const handleLogout = async () => {
@@ -502,6 +558,7 @@ function App() {
             onLogout={handleLogout}
             onCreateNew={handleCreateNewBook}
             onEditBook={handleEditBook}
+            onUpdateProfile={handleUpdateProfile}
             onBackToHome={() => setCurrentScreen('home')}
           />
         )}

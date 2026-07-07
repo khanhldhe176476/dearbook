@@ -91,12 +91,12 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
   const [step, setStep] = useState<'pages' | 'shipping' | 'payment' | 'confirmation'>('pages');
   const [shippingInfo, setShippingInfo] = useState({
     fullName: user.name,
-    phone: '',
+    phone: user.phone || '',
     email: user.email,
-    address: '',
-    city: '',
-    district: '',
-    notes: '',
+    address: [user.address, user.ward].filter(Boolean).join(', '),
+    city: user.city || '',
+    district: user.district || '',
+    notes: user.shippingNote || '',
   });
   const [paymentMethod, setPaymentMethod] = useState<'full' | 'deposit'>('full');
   const [loading, setLoading] = useState(false);
