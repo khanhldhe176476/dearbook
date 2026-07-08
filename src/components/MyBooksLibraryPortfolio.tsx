@@ -28,6 +28,7 @@ interface MyBooksLibraryPortfolioProps {
   onEditBook: (book: BookData) => void;
   onUpdateProfile?: (profile: AuthUser) => Promise<AuthUser>;
   onBackToHome?: () => void;
+  onNavigateToProfile?: () => void;
 }
 
 const LOCAL_TEMPLATES = [
@@ -54,9 +55,9 @@ const LOCAL_TEMPLATES = [
 type ViewMode = 'grid' | 'masonry' | 'list';
 type SortBy = 'recent' | 'oldest' | 'name' | 'theme';
 
-export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBook, onUpdateProfile, onBackToHome }: MyBooksLibraryPortfolioProps) {
+export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBook, onUpdateProfile, onBackToHome, onNavigateToProfile }: MyBooksLibraryPortfolioProps) {
   const { templates: supabaseTemplates, loading: templatesLoading, error: templatesError } = useBookTemplates();
-  const displayTemplates = supabaseTemplates.filter(tpl => 
+  const displayTemplates = supabaseTemplates.filter(tpl =>
     tpl.id !== 'a1b2c3d4-0000-0000-0000-000000000001' &&
     tpl.id !== 'a1b2c3d4-0000-0000-0000-000000000002' &&
     tpl.id !== 'a1b2c3d4-0000-0000-0000-000000000003' &&
@@ -203,21 +204,21 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
     switch (sortBy) {
       case 'recent': return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
       case 'oldest': return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-      case 'name':   return (a.title || '').localeCompare(b.title || '');
-      case 'theme':  return a.theme.localeCompare(b.theme);
+      case 'name': return (a.title || '').localeCompare(b.title || '');
+      case 'theme': return a.theme.localeCompare(b.theme);
       default: return 0;
     }
   });
 
   const themeData = {
-    love:       { name: 'Tình yêu', emoji: '💕', grad: 'from-rose-400 to-pink-500',     badge: 'bg-rose-50 text-rose-600 border-rose-100'   },
-    romantic:   { name: 'Tình yêu', emoji: '💕', grad: 'from-rose-400 to-pink-500',     badge: 'bg-rose-50 text-rose-600 border-rose-100'   },
-    family:     { name: 'Gia đình', emoji: '👨‍👩‍👧', grad: 'from-sky-400 to-blue-500',     badge: 'bg-sky-50 text-sky-600 border-sky-100'       },
-    birthday:   { name: 'Sinh nhật', emoji: '🎂', grad: 'from-amber-400 to-orange-500', badge: 'bg-amber-50 text-amber-600 border-amber-100'  },
+    love: { name: 'Tình yêu', emoji: '💕', grad: 'from-rose-400 to-pink-500', badge: 'bg-rose-50 text-rose-600 border-rose-100' },
+    romantic: { name: 'Tình yêu', emoji: '💕', grad: 'from-rose-400 to-pink-500', badge: 'bg-rose-50 text-rose-600 border-rose-100' },
+    family: { name: 'Gia đình', emoji: '👨‍👩‍👧', grad: 'from-sky-400 to-blue-500', badge: 'bg-sky-50 text-sky-600 border-sky-100' },
+    birthday: { name: 'Sinh nhật', emoji: '🎂', grad: 'from-amber-400 to-orange-500', badge: 'bg-amber-50 text-amber-600 border-amber-100' },
     friendship: { name: 'Tình bạn', emoji: '🤝', grad: 'from-emerald-400 to-teal-500', badge: 'bg-emerald-50 text-emerald-600 border-emerald-100' },
-    travel:     { name: 'Du lịch',   emoji: '✈️', grad: 'from-cyan-400 to-blue-500',     badge: 'bg-cyan-50 text-cyan-600 border-cyan-100'     },
-    wedding:    { name: 'Đám cưới',  emoji: '💍', grad: 'from-purple-400 to-indigo-500', badge: 'bg-purple-50 text-purple-600 border-purple-100' },
-    kids:       { name: 'Trẻ em',    emoji: '👶', grad: 'from-yellow-300 to-amber-500',  badge: 'bg-yellow-50 text-yellow-600 border-yellow-100' },
+    travel: { name: 'Du lịch', emoji: '✈️', grad: 'from-cyan-400 to-blue-500', badge: 'bg-cyan-50 text-cyan-600 border-cyan-100' },
+    wedding: { name: 'Đám cưới', emoji: '💍', grad: 'from-purple-400 to-indigo-500', badge: 'bg-purple-50 text-purple-600 border-purple-100' },
+    kids: { name: 'Trẻ em', emoji: '👶', grad: 'from-yellow-300 to-amber-500', badge: 'bg-yellow-50 text-yellow-600 border-yellow-100' },
   };
 
   const formatDate = (dateString: string) =>
@@ -455,15 +456,15 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
               themeKey === 'love' || themeKey === 'romantic' || themeKey === 'wedding'
                 ? sampleBook1
                 : themeKey === 'family' || themeKey === 'kids'
-                ? sampleBook2
-                : themeKey === 'friendship' || themeKey === 'travel'
-                ? '/ban-be/vintage-style/aatbio_com_image_export_May_21_2026%20(1).png'
-                : '/ca-nhan/dust-soul/aatbio_com_image_export_May_23_2026%20(1).png'
+                  ? sampleBook2
+                  : themeKey === 'friendship' || themeKey === 'travel'
+                    ? '/ban-be/vintage-style/aatbio_com_image_export_May_21_2026%20(1).png'
+                    : '/ca-nhan/dust-soul/aatbio_com_image_export_May_23_2026%20(1).png'
             )}
             alt={tpl.name}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           />
-          
+
           {/* Badges */}
           <div className="absolute top-4 left-4 z-20">
             <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[11px] font-bold tracking-wide uppercase transition-all"
@@ -497,7 +498,7 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
               {tpl.description || 'Mẫu sách thiết kế cao cấp, lưu giữ những kỷ niệm vô giá.'}
             </p>
           </div>
-          
+
           <div className="flex items-center gap-3 text-[13px] font-medium mt-auto pb-5 border-b border-gray-100/80" style={{ color: '#888' }}>
             <div className="flex items-center gap-1.5 bg-gray-50 px-2.5 py-1.5 rounded-md">
               <FileText className="w-4 h-4 text-gray-400" />
@@ -553,10 +554,10 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
               title="Về trang chủ"
             >
               <div className="flex flex-col justify-center leading-none" style={{ height: '68px', overflow: 'visible' }}>
-                <img 
-                  src="/logo.png" 
-                  alt="dearmemories" 
-                  className="object-contain block transition-transform duration-300 group-hover:scale-105" 
+                <img
+                  src="/logo.png"
+                  alt="dearmemories"
+                  className="object-contain block transition-transform duration-300 group-hover:scale-105"
                   style={{ height: '160px', margin: '-46px 0' }}
                 />
               </div>
@@ -564,7 +565,7 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
 
             {/* User pill */}
             <div className="flex items-center gap-2">
-              <GoogleUserProfile user={user} onLogout={onLogout} onUpdateProfile={onUpdateProfile} />
+              <GoogleUserProfile user={user} onLogout={onLogout} onNavigateToProfile={onNavigateToProfile} />
             </div>
           </div>
         </div>
@@ -661,7 +662,7 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
                 color: '#333',
               }}
               onFocus={e => { e.currentTarget.style.borderColor = '#999'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(0,0,0,0.06)'; }}
-              onBlur={e  => { e.currentTarget.style.borderColor = '#e8e4de'; e.currentTarget.style.boxShadow = 'none'; }}
+              onBlur={e => { e.currentTarget.style.borderColor = '#e8e4de'; e.currentTarget.style.boxShadow = 'none'; }}
             />
           </div>
 
@@ -712,31 +713,31 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
           </div>
         </div>
 
-      {/* ── Template Section ─────────────────────────────────────────────── */}
-      <section className="space-y-6">
-        {/* Section header */}
-        <div className="flex items-start gap-3">
-          <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-            style={{ background: '#111' }}>
-            <Sparkles className="w-4 h-4" style={{ color: '#f3e9d7' }} />
+        {/* ── Template Section ─────────────────────────────────────────────── */}
+        <section className="space-y-6">
+          {/* Section header */}
+          <div className="flex items-start gap-3">
+            <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
+              style={{ background: '#111' }}>
+              <Sparkles className="w-4 h-4" style={{ color: '#f3e9d7' }} />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold leading-tight" style={{ color: '#111' }}>Mẫu Thiết Kế Cá Nhân Hóa</h3>
+              <p className="text-sm mt-0.5" style={{ color: '#aaa' }}>
+                Các mẫu thiết kế quà tặng độc đáo, được cá nhân hóa trọn vẹn dành cho bạn
+              </p>
+            </div>
           </div>
-          <div>
-            <h3 className="text-xl font-bold leading-tight" style={{ color: '#111' }}>Mẫu Thiết Kế Cá Nhân Hóa</h3>
-            <p className="text-sm mt-0.5" style={{ color: '#aaa' }}>
-              Các mẫu thiết kế quà tặng độc đáo, được cá nhân hóa trọn vẹn dành cho bạn
-            </p>
-          </div>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          <div className="overflow-hidden rounded-3xl shadow-lg border border-[#eeece9] bg-white p-2">
-            <img src={templateHenryTran} alt="Kỷ niệm dáng hình yêu dấu" className="w-full h-auto object-cover rounded-2xl" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <div className="overflow-hidden rounded-3xl shadow-lg border border-[#eeece9] bg-white p-2">
+              <img src={templateHenryTran} alt="Kỷ niệm dáng hình yêu dấu" className="w-full h-auto object-cover rounded-2xl" />
+            </div>
+            <div className="overflow-hidden rounded-3xl shadow-lg border border-[#eeece9] bg-white p-2">
+              <img src={templateYouthArchive} alt="Gói lại thanh xuân" className="w-full h-auto object-cover rounded-2xl" />
+            </div>
           </div>
-          <div className="overflow-hidden rounded-3xl shadow-lg border border-[#eeece9] bg-white p-2">
-            <img src={templateYouthArchive} alt="Gói lại thanh xuân" className="w-full h-auto object-cover rounded-2xl" />
-          </div>
-        </div>
-      </section>
+        </section>
 
         {/* ── User Books Section ───────────────────────────────────────────── */}
         <section ref={userBooksSectionRef} className="space-y-6">
@@ -785,8 +786,8 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
               viewMode === 'masonry'
                 ? 'columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6'
                 : viewMode === 'grid'
-                ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'
-                : 'space-y-4'
+                  ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'
+                  : 'space-y-4'
             }>
               {filteredBooks.map(book => (
                 <div key={book.id} className={viewMode === 'masonry' ? 'break-inside-avoid' : ''}>
