@@ -43,7 +43,7 @@ app:
     secret: your-256-bit-secret-your-256-bit-secret-for-local-dev-only
     expiration-ms: 86400000
   supabase:
-    url: ${SUPABASE_URL:}
+    url: ${SUPABASE_URL:${VITE_SUPABASE_URL:}}
     service-role-key: ${SUPABASE_SERVICE_ROLE_KEY:}
     storage:
       bucket: ${SUPABASE_STORAGE_BUCKET:template-pdfs}

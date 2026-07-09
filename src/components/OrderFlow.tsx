@@ -420,7 +420,7 @@ export function OrderFlow({ user, book, onBack, onComplete }: OrderFlowProps) {
       }
 
       toast.error(
-        `Không thể gửi đơn hàng.${errorDetail ? `\nLỗi: ${errorDetail}` : ''}\nKiểm tra: Backend đã chạy chưa? (port 8080)`,
+        `Không thể gửi đơn hàng.${errorDetail ? `\nLỗi: ${errorDetail}` : ''}\nKiểm tra: Backend đã chạy chưa? (port 8081)`,
         { duration: 10000 }
       );
       // Không chuyển sang confirmation — giữ user ở bước payment để thử lại

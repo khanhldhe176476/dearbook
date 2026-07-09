@@ -32,6 +32,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -354,6 +355,80 @@ public class OrderService {
             }
         }
         log.info("Bulk deleted {} orders", ids.size());
+    }
+
+    @Transactional
+    public Map<String, Object> migrateExistingLocalOrderPdfsToSupabase(boolean apply) {
+        if (!supabaseStorageService.isConfigured()) {
+            throw new IllegalStateException("Supabase Storage is not configured");
+        }
+
+        List<Map<String, Object>> migrated = new ArrayList<>();
+        List<Map<String, Object>> ready = new ArrayList<>();
+        List<Map<String, Object>> skippedRemote = new ArrayList<>();
+        List<Map<String, Object>> missingLocalFile = new ArrayList<>();
+
+        for (Order order : orderRepo.findAll(Sort.by(Sort.Direction.ASC, "createdAt"))) {
+            String storedPath = order.getPdfFileData();
+            if (storedPath == null || storedPath.isBlank()) {
+                continue;
+            }
+
+            if (isRemoteUrl(storedPath)) {
+                skippedRemote.add(migrationItem(order, storedPath, null, null));
+                continue;
+            }
+
+            Path localPath = findExistingPdfFile(storedPath);
+            if (localPath == null) {
+                missingLocalFile.add(migrationItem(order, storedPath, null, null));
+                continue;
+            }
+
+            if (!apply) {
+                ready.add(migrationItem(order, storedPath, localPath, null));
+                continue;
+            }
+
+            String publicUrl = supabaseStorageService.uploadPdf(localPath, order.getPdfFileName());
+            order.setPdfFileData(publicUrl);
+            orderRepo.save(order);
+            migrated.add(migrationItem(order, storedPath, localPath, publicUrl));
+        }
+
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("mode", apply ? "APPLY" : "DRY_RUN");
+        result.put("migratedCount", migrated.size());
+        result.put("readyCount", ready.size());
+        result.put("skippedRemoteCount", skippedRemote.size());
+        result.put("missingLocalFileCount", missingLocalFile.size());
+        result.put("migrated", migrated);
+        result.put("ready", ready);
+        result.put("missingLocalFile", missingLocalFile);
+        return result;
+    }
+
+    private Map<String, Object> migrationItem(Order order, String previousPdfFileData, Path localPath, String publicUrl) {
+        Map<String, Object> item = new LinkedHashMap<>();
+        item.put("orderId", order.getId());
+        item.put("pdfFileName", order.getPdfFileName());
+        item.put("previousPdfFileData", previousPdfFileData);
+        item.put("localPath", localPath != null ? localPath.toString() : null);
+        item.put("publicUrl", publicUrl);
+        return item;
+    }
+
+    private Path findExistingPdfFile(String storedPath) {
+        try {
+            for (Path filePath : resolvePdfFileCandidates(storedPath)) {
+                if (Files.isRegularFile(filePath) && Files.isReadable(filePath)) {
+                    return filePath;
+                }
+            }
+        } catch (Exception e) {
+            log.warn("Could not resolve local PDF for storedPath={}: {}", storedPath, e.getMessage());
+        }
+        return null;
     }
 
     private AdminOrderResponse mapToAdminOrderResponse(Order o) {

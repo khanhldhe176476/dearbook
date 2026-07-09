@@ -125,6 +125,16 @@ public class AdminController {
         }
     }
 
+    @PostMapping("/orders/pdf/migrate-to-supabase")
+    public ResponseEntity<?> migrateOrderPdfsToSupabase(
+            @RequestParam(defaultValue = "false") boolean apply) {
+        try {
+            return ResponseEntity.ok(orderService.migrateExistingLocalOrderPdfsToSupabase(apply));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
+    }
+
     // -------------------------------------------------------------------------
     // Visitor / Page-view tracking
     // -------------------------------------------------------------------------
