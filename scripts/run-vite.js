@@ -8,7 +8,7 @@ const command = args[0] || 'dev';
 const extraArgs = args.slice(1);
 const majorVersion = Number(process.versions.node.split('.')[0]);
 
-if (majorVersion < 18 && process.platform === 'win32' && !process.env.DEARBOOK_NODE22_ACTIVE) {
+if (majorVersion < 20 && process.platform === 'win32' && !process.env.DEARBOOK_NODE22_ACTIVE) {
   const portableNode = path.join(rootDir, '.tools', 'node-v22.23.1-win-x64', 'node.exe');
   if (fs.existsSync(portableNode)) {
     const result = spawnSync(portableNode, [__filename, ...args], {
@@ -23,8 +23,8 @@ if (majorVersion < 18 && process.platform === 'win32' && !process.env.DEARBOOK_N
   }
 }
 
-if (majorVersion < 18) {
-  console.error(`Node ${process.version} is not supported by Vite 6. Please use Node 18 or newer.`);
+if (majorVersion < 20) {
+  console.error(`Node ${process.version} is not supported by current dependencies. Please use Node 20 or newer.`);
   process.exit(1);
 }
 
