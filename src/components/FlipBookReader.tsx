@@ -121,8 +121,8 @@ const PageRenderer = ({ page, debugMode = false }: { page: ViewerPage | null; de
       )}
 
       {/* Elements */}
-      <div className="relative w-full h-full p-8">
-        {(!page.elements || page.elements.length === 0) && !isCoverPage && (
+      <div className="relative w-full h-full">
+        {(!page.elements || page.elements.length === 0) && !isCoverPage && !page.backgroundImage && (
           <div className="w-full h-full flex items-center justify-center">
             <div className="text-center text-gray-300">
               <div className="text-6xl mb-4">📄</div>
@@ -159,8 +159,9 @@ const PageRenderer = ({ page, debugMode = false }: { page: ViewerPage | null; de
                   wordWrap: 'break-word',
                   overflowWrap: 'break-word',
                   whiteSpace: 'pre-wrap',
+                  padding: '8px',
                 }}
-                className="w-full h-full overflow-hidden flex items-center justify-center px-2"
+                className="w-full h-full overflow-hidden"
               >
                 {el.content || ''}
               </div>
@@ -260,6 +261,8 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
 
   // ── Derived data (memoized) ──
   const totalPages = viewerData.pages.length;
+  const pageW = viewerData.pageWidth || 400;
+  const pageH = viewerData.pageHeight || 600;
   // Front cover (spread 0) + content + back cover (last spread)
   const totalSpreads = 1 + Math.ceil(totalPages / 2);
 
@@ -687,7 +690,7 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
         <div className="relative" style={{ transform: `scale(${zoom}) rotateX(5deg)`, transformStyle: 'preserve-3d', transition: 'transform 0.3s ease-out', willChange: 'transform' }}>
           <div ref={pageRef} className="relative bg-white rounded-lg overflow-visible"
             style={{
-              width: isSinglePage ? '400px' : '800px', height: '600px',
+              width: isSinglePage ? `${pageW}px` : `${pageW * 2}px`, height: `${pageH}px`,
               transformStyle: 'preserve-3d',
               boxShadow: '0 30px 90px rgba(0,0,0,0.25), 0 15px 40px rgba(0,0,0,0.15), 0 5px 15px rgba(0,0,0,0.1), inset 0 0 0 1px rgba(255,255,255,0.1)',
               filter: 'drop-shadow(0 25px 50px rgba(0,0,0,0.2))',
@@ -700,8 +703,8 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
               const m = mouseRef.current;
 
               if (isFrontCover && activeCurl && curlState.curlSide === 'right') {
-                const dx = 400 - m.x;
-                const dy = 600 - m.y;
+                const dx = pageW - m.x;
+                const dy = pageH - m.y;
                 const angle = Math.atan2(dy, dx) * (180 / Math.PI);
                 const clampedAngle = Math.max(-45, Math.min(45, 135 - angle));
                 const rotateY = curlState.curlAmount * 180;
@@ -709,7 +712,7 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
                 transform = `translateX(${curlState.curlAmount * 15}px) translateY(${(m.y - m.dragStartY) * curlState.curlAmount * 0.3}px) translateZ(${curlState.curlAmount * 40}px) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`;
               } else if (!isFrontCover && activeCurl && curlState.curlSide === 'left') {
                 const dx = m.x;
-                const dy = 600 - m.y;
+                const dy = pageH - m.y;
                 const angle = Math.atan2(dy, dx) * (180 / Math.PI);
                 const clampedAngle = Math.max(-45, Math.min(45, angle - 45));
                 const rotateY = -curlState.curlAmount * 180;
@@ -724,7 +727,7 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
               return (
                 <div className="absolute top-0 left-0"
                   style={{
-                    width: '400px', height: '600px', transformStyle: 'preserve-3d',
+                    width: `${pageW}px`, height: `${pageH}px`, transformStyle: 'preserve-3d',
                     transformOrigin: 'right bottom', transform,
                     transition: activeCurl ? 'none' : 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                     willChange: 'transform',
@@ -777,9 +780,9 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
               const m = mouseRef.current;
 
               if (activeCurl && curlState.curlSide === 'right') {
-                const adjustedMouseX = isSinglePage ? m.x : m.x - 400;
-                const dx = 400 - adjustedMouseX;
-                const dy = 600 - m.y;
+                const adjustedMouseX = isSinglePage ? m.x : m.x - pageW;
+                const dx = pageW - adjustedMouseX;
+                const dy = pageH - m.y;
                 const angle = Math.atan2(dy, dx) * (180 / Math.PI);
                 const clampedAngle = Math.max(-45, Math.min(45, 135 - angle));
                 const rotateY = curlState.curlAmount * 180;
@@ -792,7 +795,7 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
               return (
                 <div className="absolute top-0 right-0"
                   style={{
-                    width: '400px', height: '600px', transformStyle: 'preserve-3d',
+                    width: `${pageW}px`, height: `${pageH}px`, transformStyle: 'preserve-3d',
                     transformOrigin: isSinglePage ? 'center bottom' : 'left bottom', transform,
                     transition: activeCurl ? 'none' : 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                     willChange: 'transform',
@@ -845,7 +848,7 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
 
             {/* ── 3D Curled Page Effect ── */}
             {activeCurl && curlState.curlSide && curlState.curlAmount > 0.05 && (() => {
-              const pw = 400, ph = 560;
+              const pw = pageW, ph = pageH - 40;
               const m = mouseRef.current;
               let cornerX: number, cornerY: number;
               if (curlState.curlSide === 'right') {
@@ -858,7 +861,7 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
               const distFromCorner = Math.sqrt(
                 Math.pow(m.x - (curlState.curlSide === 'right' ? pw : 0), 2) + Math.pow(m.y - ph, 2),
               );
-              const curlSize = Math.min(400, 200 + distFromCorner * 0.5) * curlState.curlAmount;
+              const curlSize = Math.min(pageW, 200 + distFromCorner * 0.5) * curlState.curlAmount;
               const dx = curlState.curlSide === 'right' ? pw - m.x : m.x;
               const dy = ph - m.y;
               const angle = Math.atan2(dy, dx) * (180 / Math.PI);

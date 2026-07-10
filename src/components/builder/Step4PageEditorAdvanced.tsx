@@ -460,7 +460,7 @@ export function Step4PageEditorAdvanced({
                 theme,
                 templateId,
                 character,
-                cover: templates.find(t => t.id === templateId)?.cover || { id: 'cover', backgroundColor: '#fff', elements: [] },
+                cover: templates.find(t => t.id === templateId)?.cover,
                 pages: localPages,
                 status: 'draft',
                 createdAt: new Date().toISOString(),

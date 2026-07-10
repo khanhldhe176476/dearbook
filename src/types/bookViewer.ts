@@ -46,4 +46,6 @@ export interface BookViewerData {
   backCover: ViewerPage | null;
   pages: ViewerPage[];
   pageCount: number;
+  pageWidth: number;
+  pageHeight: number;
 }

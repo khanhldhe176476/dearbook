@@ -112,12 +112,20 @@ function convertPageDataToEditorPage(pageData: PageData, templateId: string): Ed
   };
 }
 
-/** Convert EditorPage to simplified ViewerPage */
-function editorPageToViewerPage(page: EditorPage): ViewerPage {
+/** Convert EditorPage to simplified ViewerPage, scaling to target dimensions */
+function editorPageToViewerPage(page: EditorPage, targetW: number, targetH: number): ViewerPage {
   // Handle both background formats:
   // 1. Template format: { backgroundColor: string, backgroundImage: string }
   // 2. Editor format: { background: { type, value } }
   const pageAny = page as any;
+
+  // Scale elements from source page dimensions to target viewer dimensions
+  const pageElements = page.elements || [];
+  const srcW = (page as any).width || targetW;
+  const srcH = (page as any).height || targetH;
+  const scaleX = targetW / srcW;
+  const scaleY = targetH / srcH;
+  const needsScaling = srcW !== targetW || srcH !== targetH;
 
   let backgroundColor: string | undefined;
   let backgroundImage: string | undefined;
@@ -138,23 +146,30 @@ function editorPageToViewerPage(page: EditorPage): ViewerPage {
     backgroundImage = pageAny.backgroundImage;
   }
 
+  // Filter out template-frame elements when the page already has a background image
+  // (avoids double-rendering the same template image in the viewer)
+  const hasBgImage = !!(backgroundImage);
+  const elements = hasBgImage
+    ? pageElements.filter((el: any) => !(el.id && el.id.startsWith('template-frame-')))
+    : pageElements;
+
   return {
     id: page.id,
     backgroundColor,
     backgroundImage,
-    elements: page.elements.map(el => ({
+    elements: elements.map(el => ({
       id: el.id,
       type: el.type as ViewerPage['elements'][0]['type'],
-      x: el.x,
-      y: el.y,
-      width: el.width,
-      height: el.height,
+      x: Math.round(el.x * scaleX),
+      y: Math.round(el.y * scaleY),
+      width: Math.round(el.width * scaleX),
+      height: Math.round(el.height * scaleY),
       rotation: el.rotation,
       opacity: el.opacity,
       zIndex: el.zIndex,
       content: (el as any).content,
       fontFamily: (el as any).fontFamily,
-      fontSize: (el as any).fontSize,
+      fontSize: needsScaling ? Math.round((el as any).fontSize * ((scaleX + scaleY) / 2)) : (el as any).fontSize,
       color: (el as any).color,
       fontWeight: String((el as any).fontWeight || 'normal'),
       fontStyle: (el as any).fontStyle,
@@ -183,14 +198,30 @@ export function toBookViewerData(book: BookData): BookViewerData {
   // Find the template this book was created from
   const template = templates.find(t => t.id === book.templateId);
 
+  // Detect target page dimensions from the first content page
+  let pageWidth = 400;
+  let pageHeight = 600;
+  for (const page of book.pages || []) {
+    if (isEditorPage(page)) {
+      pageWidth = (page as any).width || 400;
+      pageHeight = (page as any).height || 600;
+    } else {
+      // For PageData, infer from template or use defaults
+      const tpl = template?.pages.find(p => p.id === (page as PageData).templatePageId);
+      pageWidth = (tpl as any)?.width || 400;
+      pageHeight = (tpl as any)?.height || 600;
+    }
+    break; // Use first page's dimensions for the whole book
+  }
+
   // Convert all user pages
   const allPages: ViewerPage[] = [];
   for (const page of book.pages || []) {
     if (isEditorPage(page)) {
-      allPages.push(editorPageToViewerPage(page));
+      allPages.push(editorPageToViewerPage(page, pageWidth, pageHeight));
     } else {
       const editorPage = convertPageDataToEditorPage(page as PageData, book.templateId);
-      allPages.push(editorPageToViewerPage(editorPage));
+      allPages.push(editorPageToViewerPage(editorPage, pageWidth, pageHeight));
     }
   }
 
@@ -204,9 +235,9 @@ export function toBookViewerData(book: BookData): BookViewerData {
   if (book.cover) {
     // Use explicitly provided cover
     if (isEditorPage(book.cover)) {
-      cover = editorPageToViewerPage(book.cover);
+      cover = editorPageToViewerPage(book.cover, pageWidth, pageHeight);
     } else {
-      cover = editorPageToViewerPage(convertPageDataToEditorPage(book.cover as PageData, book.templateId));
+      cover = editorPageToViewerPage(convertPageDataToEditorPage(book.cover as PageData, book.templateId), pageWidth, pageHeight);
     }
     // Skip first page if it's the same as the cover (prevents duplicate)
     if (contentPages.length > 0 && contentPages[0].id === book.cover.id) {
@@ -216,14 +247,14 @@ export function toBookViewerData(book: BookData): BookViewerData {
     // Derive cover from first page
     cover = contentPages.shift()!;
   } else if (template?.pages && template.pages.length > 0) {
-    cover = editorPageToViewerPage(template.pages[0]);
+    cover = editorPageToViewerPage(template.pages[0], pageWidth, pageHeight);
   }
 
   // Back cover — use last content page or template fallback
   if (contentPages.length > 0) {
     backCover = contentPages.pop()!;
   } else if (template?.pages && template.pages.length > 1) {
-    backCover = editorPageToViewerPage(template.pages[template.pages.length - 1]);
+    backCover = editorPageToViewerPage(template.pages[template.pages.length - 1], pageWidth, pageHeight);
   }
 
   return {
@@ -234,5 +265,7 @@ export function toBookViewerData(book: BookData): BookViewerData {
     backCover,
     pages: contentPages,
     pageCount: contentPages.length,
+    pageWidth,
+    pageHeight,
   };
 }

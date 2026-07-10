@@ -147,15 +147,23 @@ async function renderCoverToCanvas(
 }
 
 // ── Book 3D Mesh (with useFrame for smooth animation) ──
-function BookMesh({ spineText, pageCount, coverPage }: {
+function BookMesh({ spineText, pageCount, coverPage, pageWidth, pageHeight }: {
   spineText: string;
   pageCount: number;
   coverPage: ViewerPage | null;
+  pageWidth: number;
+  pageHeight: number;
 }) {
   const groupRef = useRef<THREE.Group>(null);
   const thickness = Math.max(0.08, Math.min(0.4, (pageCount || 20) * 0.02));
   const coverTextureRef = useRef<THREE.CanvasTexture | null>(null);
   const [coverTexture, setCoverTexture] = useState<THREE.CanvasTexture | null>(null);
+
+  // Dynamic 3D geometry based on page aspect ratio
+  const coverW = 1.2;
+  const coverH = coverW * (pageHeight / pageWidth);
+  const blockW = coverW - 0.02;
+  const blockH = coverH - 0.04;
 
   // Generate cover texture asynchronously
   useEffect(() => {
@@ -174,7 +182,10 @@ function BookMesh({ spineText, pageCount, coverPage }: {
       }
 
       try {
-        const canvas = await renderCoverToCanvas(coverPage, 512, 726);
+        const texRatio = 1.28;
+        const texW = Math.round(pageWidth * texRatio);
+        const texH = Math.round(pageHeight * texRatio);
+        const canvas = await renderCoverToCanvas(coverPage, texW, texH);
         if (cancelled) return;
 
         const texture = new THREE.CanvasTexture(canvas);
@@ -254,7 +265,7 @@ function BookMesh({ spineText, pageCount, coverPage }: {
     <group ref={groupRef}>
       {/* Front Cover — uses generated texture, falls back to solid color */}
       <mesh position={[0, 0, thickness / 2]}>
-        <planeGeometry args={[1.2, 1.7]} />
+        <planeGeometry args={[coverW, coverH]} />
         <meshStandardMaterial
           map={coverTexture}
           color={coverTexture ? '#ffffff' : '#f5f0fa'}
@@ -265,33 +276,33 @@ function BookMesh({ spineText, pageCount, coverPage }: {
 
       {/* Back Cover */}
       <mesh position={[0, 0, -thickness / 2]} rotation={[0, Math.PI, 0]}>
-        <planeGeometry args={[1.2, 1.7]} />
+        <planeGeometry args={[coverW, coverH]} />
         <meshStandardMaterial color="#e8e5ec" roughness={0.5} metalness={0.02} />
       </mesh>
 
       {/* Page Block */}
       <mesh position={[0, 0, 0]}>
-        <boxGeometry args={[1.18, 1.66, thickness]} />
+        <boxGeometry args={[blockW, blockH, thickness]} />
         <meshStandardMaterial color="#fafaf5" roughness={0.75} metalness={0} />
       </mesh>
 
       {/* Spine */}
-      <mesh position={[-0.6, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
-        <planeGeometry args={[thickness, 1.7]} />
+      <mesh position={[-coverW / 2, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
+        <planeGeometry args={[thickness, coverH]} />
         <meshStandardMaterial map={spineTexture} roughness={0.3} metalness={0.2} />
       </mesh>
 
       {/* Page edges (top/bottom/right) */}
-      <mesh position={[0, -0.83, 0]} rotation={[Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[1.18, thickness]} />
+      <mesh position={[0, -coverH / 2, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[blockW, thickness]} />
         <meshStandardMaterial color="#f0f0e8" roughness={0.8} metalness={0} />
       </mesh>
-      <mesh position={[0, 0.83, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[1.18, thickness]} />
+      <mesh position={[0, coverH / 2, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[blockW, thickness]} />
         <meshStandardMaterial color="#f0f0e8" roughness={0.8} metalness={0} />
       </mesh>
-      <mesh position={[0.59, 0, 0]} rotation={[0, -Math.PI / 2, 0]}>
-        <planeGeometry args={[thickness, 1.66]} />
+      <mesh position={[blockW / 2, 0, 0]} rotation={[0, -Math.PI / 2, 0]}>
+        <planeGeometry args={[thickness, blockH]} />
         <meshStandardMaterial color="#f5f5f0" roughness={0.85} metalness={0} />
       </mesh>
     </group>
@@ -299,11 +310,13 @@ function BookMesh({ spineText, pageCount, coverPage }: {
 }
 
 // ── 3D Scene ──
-function BookScene({ autoRotate, spineText, pageCount, coverPage }: {
+function BookScene({ autoRotate, spineText, pageCount, coverPage, pageWidth, pageHeight }: {
   autoRotate: boolean;
   spineText: string;
   pageCount: number;
   coverPage: ViewerPage | null;
+  pageWidth: number;
+  pageHeight: number;
 }) {
   return (
     <>
@@ -322,7 +335,7 @@ function BookScene({ autoRotate, spineText, pageCount, coverPage }: {
         maxPolarAngle={2 * Math.PI / 3}
       />
       <Environment preset="studio" />
-      <BookMesh spineText={spineText} pageCount={pageCount} coverPage={coverPage} />
+      <BookMesh spineText={spineText} pageCount={pageCount} coverPage={coverPage} pageWidth={pageWidth} pageHeight={pageHeight} />
     </>
   );
 }
@@ -340,11 +353,13 @@ function CanvasLoading() {
 }
 
 // ── Canvas wrapper ──
-function Book3DCanvas({ autoRotate, spineText, pageCount, coverPage }: {
+function Book3DCanvas({ autoRotate, spineText, pageCount, coverPage, pageWidth, pageHeight }: {
   autoRotate: boolean;
   spineText: string;
   pageCount: number;
   coverPage: ViewerPage | null;
+  pageWidth: number;
+  pageHeight: number;
 }) {
   return (
     <div className="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center relative overflow-hidden">
@@ -358,7 +373,7 @@ function Book3DCanvas({ autoRotate, spineText, pageCount, coverPage }: {
             powerPreference: 'high-performance',
           }}
         >
-          <BookScene autoRotate={autoRotate} spineText={spineText} pageCount={pageCount} coverPage={coverPage} />
+          <BookScene autoRotate={autoRotate} spineText={spineText} pageCount={pageCount} coverPage={coverPage} pageWidth={pageWidth} pageHeight={pageHeight} />
         </Canvas>
       </Suspense>
     </div>
@@ -375,6 +390,8 @@ export function Book3DPreviewPanel({ book, className = '' }: Book3DPreviewPanelP
   const spineText = book.title || viewerData.title || 'DearBook';
   const pageCount = book.pages?.length || 20;
   const coverPage = viewerData.cover;
+  const pageWidth = viewerData.pageWidth || 400;
+  const pageHeight = viewerData.pageHeight || 600;
 
   return (
     <div className={`bg-white/80 backdrop-blur-sm p-6 ${className}`}>
@@ -403,7 +420,7 @@ export function Book3DPreviewPanel({ book, className = '' }: Book3DPreviewPanelP
         </div>
 
         {/* 3D Preview Canvas */}
-        <Book3DCanvas autoRotate={autoRotate} spineText={spineText} pageCount={pageCount} coverPage={coverPage} />
+        <Book3DCanvas autoRotate={autoRotate} spineText={spineText} pageCount={pageCount} coverPage={coverPage} pageWidth={pageWidth} pageHeight={pageHeight} />
 
         {/* Book Info */}
         <div className="p-4 bg-gradient-to-br from-rose-50 to-amber-50 rounded-xl text-sm space-y-2">
@@ -427,7 +444,7 @@ export function Book3DPreviewPanel({ book, className = '' }: Book3DPreviewPanelP
             ✕
           </button>
           <div className="max-w-4xl w-full aspect-[4/3] flex items-center justify-center">
-            <Book3DCanvas autoRotate={autoRotate} spineText={spineText} pageCount={pageCount} coverPage={coverPage} />
+            <Book3DCanvas autoRotate={autoRotate} spineText={spineText} pageCount={pageCount} coverPage={coverPage} pageWidth={pageWidth} pageHeight={pageHeight} />
           </div>
         </div>
       )}
