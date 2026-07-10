@@ -19,4 +19,4 @@ if exist ".env" (
 if not defined SUPABASE_URL if defined VITE_SUPABASE_URL set "SUPABASE_URL=%VITE_SUPABASE_URL%"
 
 set "SPRING_PROFILES_ACTIVE=prod"
-start "DearBook Backend 8081" cmd /c "java -jar target\backend-0.0.1-SNAPSHOT.jar --server.port=8081 --spring.profiles.active=prod > backend-run.log 2>&1"
+start "DearBook Backend 8081" cmd /c ".\mvnw.cmd package -DskipTests && java -jar target\backend-0.0.1-SNAPSHOT.jar --server.port=8081 --spring.profiles.active=prod > backend-run.log 2>&1"

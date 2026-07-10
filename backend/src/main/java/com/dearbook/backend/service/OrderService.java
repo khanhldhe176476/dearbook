@@ -64,6 +64,10 @@ public class OrderService {
         "PENDING", "CONFIRMED", "PRINTING", "COMPLETED", "CANCELLED"
     );
 
+    private static final Set<String> USER_CANCELLABLE_STATUSES = Set.of(
+        "PENDING", "CONFIRMED"
+    );
+
     private static final Set<String> VALID_PRODUCT_TYPES = Set.of(
         "softcover", "hardcover", "layflat", "spiral"
     );
@@ -274,6 +278,39 @@ public class OrderService {
                         o.getCreatedAt()
                 ))
                 .toList();
+    }
+
+    @Transactional
+    public OrderResponse cancelMyOrder(UUID userId, UUID orderId) {
+        if (userId == null) {
+            throw new SecurityException("Authentication is required");
+        }
+
+        Order order = orderRepo.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+
+        if (order.getUser() == null || !userId.equals(order.getUser().getId())) {
+            throw new SecurityException("You are not allowed to cancel this order");
+        }
+
+        String previousStatus = order.getStatus();
+        if (!USER_CANCELLABLE_STATUSES.contains(previousStatus)) {
+            throw new IllegalStateException(
+                "Only pending or confirmed orders can be cancelled. Current status: " + previousStatus);
+        }
+
+        order.setStatus("CANCELLED");
+        int updated = paymentRepo.updateStatusByOrderId(orderId, "FAILED");
+        Order savedOrder = orderRepo.save(order);
+        log.info("User {} cancelled order {} from {} | {} payment(s) updated to FAILED",
+                userId, orderId, previousStatus, updated);
+
+        return new OrderResponse(
+                savedOrder.getId(),
+                savedOrder.getTotalAmount(),
+                savedOrder.getStatus(),
+                savedOrder.getCreatedAt()
+        );
     }
 
     /**

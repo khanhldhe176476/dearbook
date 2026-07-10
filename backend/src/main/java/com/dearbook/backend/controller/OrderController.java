@@ -8,6 +8,7 @@ import com.dearbook.backend.service.OrderService;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -79,6 +80,26 @@ public class OrderController {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(orderService.getMyOrders(userId));
+    }
+
+    @PutMapping("/{id}/cancel")
+    public ResponseEntity<?> cancelOrder(
+            @PathVariable UUID id,
+            Authentication authentication) {
+        try {
+            UUID userId = getUserIdFromAuth(authentication);
+            return ResponseEntity.ok(orderService.cancelMyOrder(userId, id));
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", e.getMessage()));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", e.getMessage()));
+        } catch (IllegalArgumentException e) {
+            String message = e.getMessage();
+            HttpStatus status = message != null && message.contains("not found")
+                    ? HttpStatus.NOT_FOUND
+                    : HttpStatus.BAD_REQUEST;
+            return ResponseEntity.status(status).body(Map.of("message", message));
+        }
     }
 
     @PostMapping("/{id}/pdf")

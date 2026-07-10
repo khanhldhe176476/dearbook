@@ -24,8 +24,5 @@ if not defined SUPABASE_URL if defined VITE_SUPABASE_URL set "SUPABASE_URL=%VITE
 echo Starting Spring Boot backend on http://localhost:8081 ...
 set "SPRING_PROFILES_ACTIVE=prod"
 
-if exist "target\backend-0.0.1-SNAPSHOT.jar" (
-  java -jar target\backend-0.0.1-SNAPSHOT.jar --server.port=8081 --spring.profiles.active=prod
-) else (
-  .\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=prod" "-Dspring-boot.run.arguments=--server.port=8081"
-)
+.\mvnw.cmd package -DskipTests || exit /b 1
+java -jar target\backend-0.0.1-SNAPSHOT.jar --server.port=8081 --spring.profiles.active=prod

@@ -63,7 +63,7 @@
     "vite": "6.3.5"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "vite build"
+    "dev": ".tools\\with-node22.cmd vite",
+    "build": ".tools\\with-node22.cmd vite build"
   }
 }

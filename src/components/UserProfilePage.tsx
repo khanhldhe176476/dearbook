@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { 
   Camera, Loader2, MapPin, Phone, Save, UserRound, ArrowLeft, 
   BookOpen, ShoppingBag, Clock, Trash2, Edit, CheckCircle, 
-  AlertCircle, ChevronRight, X
+  AlertCircle, AlertTriangle, ChevronRight, X
 } from 'lucide-react';
 import { User, BookData } from '../App';
 import type { AuthUser } from '../lib/authApi';
@@ -23,6 +23,8 @@ export function UserProfilePage({ user, onBackToLibrary, onUpdateProfile, onEdit
   const [activeTab, setActiveTab] = useState<'profile' | 'designs' | 'orders'>('profile');
   const [isSaving, setIsSaving] = useState(false);
   const [loadingOrders, setLoadingOrders] = useState(false);
+  const [cancelingOrderId, setCancelingOrderId] = useState<string | null>(null);
+  const [orderToCancel, setOrderToCancel] = useState<OrderResponse | null>(null);
   const [orders, setOrders] = useState<OrderResponse[]>([]);
   const [books, setBooks] = useState<BookData[]>([]);
   const [loadingBooks, setLoadingBooks] = useState(false);
@@ -117,6 +119,41 @@ export function UserProfilePage({ user, onBackToLibrary, onUpdateProfile, onEdit
       console.error('Failed to load orders:', err);
     } finally {
       setLoadingOrders(false);
+    }
+  };
+
+  const canCancelOrder = (status: string) => {
+    const s = (status || '').toUpperCase();
+    return s === 'PENDING' || s === 'CONFIRMED';
+  };
+
+  const handleCancelOrder = (order: OrderResponse) => {
+    if (!user.id || !canCancelOrder(order.status)) return;
+    setOrderToCancel(order);
+  };
+
+  const closeCancelOrderDialog = () => {
+    if (cancelingOrderId) return;
+    setOrderToCancel(null);
+  };
+
+  const confirmCancelOrder = async () => {
+    if (!user.id || !orderToCancel || !canCancelOrder(orderToCancel.status)) return;
+
+    try {
+      setCancelingOrderId(orderToCancel.id);
+      const cancelledOrder = await orderApi.cancelOrder(user.id, orderToCancel.id);
+      setOrders(prev => prev.map(item => item.id === orderToCancel.id ? cancelledOrder : item));
+      setOrderToCancel(null);
+      toast.success('Đã hủy đơn hàng thành công.');
+    } catch (err) {
+      console.error('Cancel order failed:', err);
+      const message = err instanceof Error ? err.message : '';
+      const serverMessage = message.match(/"message"\s*:\s*"([^"]+)"/)?.[1];
+      toast.error(serverMessage || 'Không thể hủy đơn hàng. Vui lòng thử lại hoặc liên hệ hỗ trợ.');
+      loadOrders();
+    } finally {
+      setCancelingOrderId(null);
     }
   };
 
@@ -569,7 +606,9 @@ export function UserProfilePage({ user, onBackToLibrary, onUpdateProfile, onEdit
                   </div>
                 ) : (
                   <div className="divide-y divide-stone-100">
-                    {orders.map(order => (
+                    {orders.map(order => {
+                      const isCanceling = cancelingOrderId === order.id;
+                      return (
                       <div key={order.id} className="py-4 first:pt-0 last:pb-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div className="space-y-1.5 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
@@ -584,7 +623,7 @@ export function UserProfilePage({ user, onBackToLibrary, onUpdateProfile, onEdit
                           </div>
                         </div>
 
-                        <div className="flex items-center justify-between sm:justify-end gap-6">
+                        <div className="flex items-center justify-between sm:justify-end gap-4 sm:gap-6 flex-wrap">
                           <div className="text-right">
                             <p className="text-xs text-stone-400">Tổng cộng</p>
                             <p className="font-bold text-stone-950 text-sm mt-0.5">
@@ -592,6 +631,20 @@ export function UserProfilePage({ user, onBackToLibrary, onUpdateProfile, onEdit
                             </p>
                           </div>
                           
+                          <div className="flex items-center gap-2">
+                            {canCancelOrder(order.status) && (
+                              <button
+                                type="button"
+                                onClick={() => handleCancelOrder(order)}
+                                disabled={isCanceling}
+                                className="px-3.5 py-1.5 text-xs font-bold rounded-lg border border-red-200 text-red-600 bg-red-50 hover:bg-red-500 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                                title="Hủy đơn hàng"
+                              >
+                                {isCanceling ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <X className="h-3.5 w-3.5" />}
+                                Hủy đơn
+                              </button>
+                            )}
+
                           <a 
                             href={`${import.meta.env.VITE_API_URL || 'http://localhost:8081'}/api/orders/${order.id}/pdf/download`} 
                             target="_blank" 
@@ -600,9 +653,11 @@ export function UserProfilePage({ user, onBackToLibrary, onUpdateProfile, onEdit
                           >
                             Tải PDF
                           </a>
+                          </div>
                         </div>
                       </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -612,6 +667,82 @@ export function UserProfilePage({ user, onBackToLibrary, onUpdateProfile, onEdit
 
         </div>
       </main>
+
+      {orderToCancel && (
+        <div className="fixed inset-0 z-[80] flex items-center justify-center p-4">
+          <button
+            type="button"
+            aria-label="Đóng hộp thoại hủy đơn"
+            className="absolute inset-0 bg-stone-950/45 backdrop-blur-sm"
+            onClick={closeCancelOrderDialog}
+          />
+
+          <div className="relative w-full max-w-md overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-2xl">
+            <div className="flex items-start gap-4 border-b border-stone-100 px-6 py-5">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-red-50 text-red-600 ring-1 ring-red-100">
+                <AlertTriangle className="h-5 w-5" />
+              </div>
+
+              <div className="min-w-0 flex-1">
+                <h3 className="text-base font-bold text-stone-950">Hủy đơn hàng?</h3>
+                <p className="mt-1 text-sm leading-6 text-stone-500">
+                  Đơn hàng sẽ được chuyển sang trạng thái đã hủy và không tiếp tục xử lý in ấn.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={closeCancelOrderDialog}
+                disabled={cancelingOrderId === orderToCancel.id}
+                className="rounded-lg p-1.5 text-stone-400 transition hover:bg-stone-100 hover:text-stone-700 disabled:cursor-not-allowed disabled:opacity-50"
+                aria-label="Đóng"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="space-y-3 px-6 py-5">
+              <div className="rounded-xl border border-stone-200 bg-stone-50 px-4 py-3">
+                <div className="flex items-center justify-between gap-4">
+                  <span className="text-xs font-bold uppercase tracking-wide text-stone-400">Mã đơn</span>
+                  <span className="text-sm font-bold text-stone-950">#{orderToCancel.id.slice(0, 8).toUpperCase()}</span>
+                </div>
+                <div className="mt-2 flex items-center justify-between gap-4">
+                  <span className="text-xs font-bold uppercase tracking-wide text-stone-400">Tổng cộng</span>
+                  <span className="text-sm font-bold text-stone-950">
+                    {orderToCancel.totalAmount ? orderToCancel.totalAmount.toLocaleString('vi-VN') : '0'}đ
+                  </span>
+                </div>
+              </div>
+
+              <p className="text-xs leading-5 text-stone-500">
+                Bạn vẫn có thể xem lại đơn hàng trong lịch sử sau khi hủy.
+              </p>
+            </div>
+
+            <div className="flex flex-col-reverse gap-2 border-t border-stone-100 bg-stone-50/60 px-6 py-4 sm:flex-row sm:justify-end">
+              <button
+                type="button"
+                onClick={closeCancelOrderDialog}
+                disabled={cancelingOrderId === orderToCancel.id}
+                className="inline-flex items-center justify-center rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-sm font-bold text-stone-700 transition hover:bg-stone-100 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                Giữ đơn hàng
+              </button>
+
+              <button
+                type="button"
+                onClick={confirmCancelOrder}
+                disabled={cancelingOrderId === orderToCancel.id}
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm shadow-red-600/20 transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                {cancelingOrderId === orderToCancel.id && <Loader2 className="h-4 w-4 animate-spin" />}
+                {cancelingOrderId === orderToCancel.id ? 'Đang hủy...' : 'Xác nhận hủy'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { apiGet, apiPost, apiPostMultipart, API_BASE_URL } from './api';
+import { apiGet, apiPost, apiPostMultipart, apiPut, API_BASE_URL } from './api';
 
 const BACKEND_TOKEN_KEY = 'dearbook_backend_token';
 const BACKEND_TOKEN_USER_ID = 'dearbook_backend_token_user_id';
@@ -95,6 +95,9 @@ export const orderApi = {
 
   placeOrder: async (userId: string, data: OrderRequest) =>
     apiPost<OrderResponse>('/api/orders', data, { headers: await authHeaders(userId) }),
+
+  cancelOrder: async (userId: string, orderId: string) =>
+    apiPut<OrderResponse>(`/api/orders/${orderId}/cancel`, {}, { headers: await authHeaders(userId) }),
 
   validateCoupon: async (code: string, orderTotal: number): Promise<CouponValidationResult> => {
     const res = await fetch(`${API_BASE_URL}/api/orders/validate-coupon`, {
