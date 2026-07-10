@@ -2,6 +2,7 @@ import type { BookData, PageData } from '../App';
 import type { BookViewerData, ViewerPage } from '../types/bookViewer';
 import type { EditorPage, PageElement } from '../types/editor';
 import { templates } from '../data/templates';
+import autoData from '../data/autoTemplates.json';
 
 const BG_COLORS: Record<string, string> = {
   love: '#FFE4E1',
@@ -15,6 +16,37 @@ function isEditorPage(page: unknown): page is EditorPage {
   return Boolean(page && typeof page === 'object' && 'elements' in page && Array.isArray((page as EditorPage).elements));
 }
 
+function isImageBackedTemplate(templateId: string): boolean {
+  return templateId.startsWith('local-template-') || templateId.startsWith('auto-template-');
+}
+
+function getAutoTemplateAspectRatio(templateId: string): string | undefined {
+  const autoTemplate = autoData.themes
+    .flatMap(theme => theme.templates)
+    .find(template => template.id === templateId);
+
+  return autoTemplate?.aspectRatio;
+}
+
+function getPageImageUrl(page: unknown): string | undefined {
+  const pageAny = page as any;
+
+  if (pageAny?.background?.type === 'image' && typeof pageAny.background.value === 'string') {
+    return pageAny.background.value;
+  }
+  if (typeof pageAny?.backgroundImage === 'string') {
+    return pageAny.backgroundImage;
+  }
+  if (typeof pageAny?.imageUrl === 'string') {
+    return pageAny.imageUrl;
+  }
+  if (typeof pageAny?.images?.pageImage === 'string') {
+    return pageAny.images.pageImage;
+  }
+
+  return undefined;
+}
+
 /** Convert a PageData to EditorPage format using the template */
 function convertPageDataToEditorPage(pageData: PageData, templateId: string): EditorPage {
   const template = templates.find(t => t.id === templateId);
@@ -23,6 +55,12 @@ function convertPageDataToEditorPage(pageData: PageData, templateId: string): Ed
   if (!templatePage) {
     // Fallback: create basic page with user content
     const fallbackElements: PageElement[] = [];
+    const pageAny = pageData as any;
+    const backgroundImage = getPageImageUrl(pageData);
+    const shouldUseImageAsBackground = isImageBackedTemplate(templateId) && !!backgroundImage;
+    const aspectRatio = getAutoTemplateAspectRatio(templateId);
+    const fallbackW = pageAny.width || (aspectRatio === '1/1' ? 500 : 400);
+    const fallbackH = pageAny.height || (aspectRatio === '1/1' ? 500 : 600);
 
     for (const [key, value] of Object.entries(pageData.texts || {})) {
       if (value && typeof value === 'string') {
@@ -54,6 +92,10 @@ function convertPageDataToEditorPage(pageData: PageData, templateId: string): Ed
 
     for (const [key, value] of Object.entries(pageData.images || {})) {
       if (value && typeof value === 'string') {
+        if (shouldUseImageAsBackground && (key === 'pageImage' || value === backgroundImage)) {
+          continue;
+        }
+
         fallbackElements.push({
           id: `fallback-image-${key}`,
           type: 'image',
@@ -76,9 +118,11 @@ function convertPageDataToEditorPage(pageData: PageData, templateId: string): Ed
     return {
       id: pageData.id,
       elements: fallbackElements,
-      background: { type: 'color', value: '#ffffff' },
-      width: 400,
-      height: 600,
+      background: backgroundImage
+        ? { type: 'image', value: backgroundImage }
+        : { type: 'color', value: '#ffffff' },
+      width: fallbackW,
+      height: fallbackH,
     };
   }
 
@@ -197,10 +241,11 @@ export function toBookViewerData(book: BookData): BookViewerData {
 
   // Find the template this book was created from
   const template = templates.find(t => t.id === book.templateId);
+  const autoTemplateAspectRatio = getAutoTemplateAspectRatio(book.templateId);
 
   // Detect target page dimensions from the first content page
-  let pageWidth = 400;
-  let pageHeight = 600;
+  let pageWidth = autoTemplateAspectRatio === '1/1' ? 500 : 400;
+  let pageHeight = autoTemplateAspectRatio === '1/1' ? 500 : 600;
   for (const page of book.pages || []) {
     if (isEditorPage(page)) {
       pageWidth = (page as any).width || 400;
@@ -208,8 +253,8 @@ export function toBookViewerData(book: BookData): BookViewerData {
     } else {
       // For PageData, infer from template or use defaults
       const tpl = template?.pages.find(p => p.id === (page as PageData).templatePageId);
-      pageWidth = (tpl as any)?.width || 400;
-      pageHeight = (tpl as any)?.height || 600;
+      pageWidth = (tpl as any)?.width || pageWidth;
+      pageHeight = (tpl as any)?.height || pageHeight;
     }
     break; // Use first page's dimensions for the whole book
   }

@@ -213,6 +213,65 @@ const PageRenderer = ({ page, debugMode = false }: { page: ViewerPage | null; de
 
 // ── Main Component ──
 
+const PaperCurlOverlay = ({
+  side,
+  amount,
+  active,
+}: {
+  side: 'left' | 'right';
+  amount: number;
+  active: boolean;
+}) => {
+  if (!active || amount <= 0.01) return null;
+
+  const wave = Math.sin(amount * Math.PI);
+  const direction = side === 'right' ? 'left' : 'right';
+  const edgeWidth = 24 + wave * 62 + amount * 18;
+  const washWidth = Math.min(72, 24 + amount * 54);
+  const edgeShadow = 0.1 + amount * 0.16 + wave * 0.08;
+  const paperTone = 245 - Math.round(wave * 20);
+  const sideClass = side === 'right' ? 'right-0' : 'left-0';
+
+  return (
+    <>
+      <div
+        className={`absolute inset-y-0 ${sideClass} pointer-events-none`}
+        style={{
+          width: `${washWidth}%`,
+          background: `linear-gradient(to ${direction}, rgba(255,255,255,${0.24 + wave * 0.18}) 0%, rgba(255,255,255,0.12) 22%, rgba(0,0,0,${0.045 + amount * 0.08}) 58%, transparent 100%)`,
+          opacity: 0.35 + amount * 0.45,
+          mixBlendMode: 'multiply',
+          zIndex: 19,
+        }}
+      />
+      <div
+        className={`absolute inset-y-0 ${sideClass} pointer-events-none`}
+        style={{
+          width: `${edgeWidth}px`,
+          background: `linear-gradient(to ${direction}, rgba(255,255,255,0.98) 0%, rgb(${paperTone}, ${paperTone}, ${paperTone}) 28%, rgba(210,210,210,0.92) 48%, rgba(255,255,255,0.88) 72%, rgba(150,150,150,0.18) 100%)`,
+          boxShadow: side === 'right'
+            ? `-${10 + wave * 18}px 0 ${18 + wave * 24}px rgba(0,0,0,${edgeShadow})`
+            : `${10 + wave * 18}px 0 ${18 + wave * 24}px rgba(0,0,0,${edgeShadow})`,
+          transform: `translateZ(${8 + wave * 22}px) rotateY(${(side === 'right' ? -1 : 1) * (8 + wave * 18)}deg)`,
+          transformOrigin: side === 'right' ? 'right center' : 'left center',
+          opacity: 0.55 + wave * 0.4,
+          zIndex: 20,
+        }}
+      />
+      <div
+        className={`absolute inset-y-0 ${sideClass} pointer-events-none`}
+        style={{
+          width: `${2 + wave * 4}px`,
+          background: `linear-gradient(to ${direction}, rgba(255,255,255,0.95), rgba(70,70,70,${0.18 + amount * 0.18}))`,
+          filter: `blur(${0.3 + wave}px)`,
+          opacity: 0.65 + wave * 0.25,
+          zIndex: 21,
+        }}
+      />
+    </>
+  );
+};
+
 export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
   // ── Convert book data once (memoized) ──
   const viewerData: BookViewerData = useMemo(() => toBookViewerData(book), [book]);
@@ -220,6 +279,10 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
   // ── Core navigation state ──
   const [currentSpread, setCurrentSpread] = useState(0);
   const [zoom, setZoom] = useState(1);
+  const [viewportSize, setViewportSize] = useState(() => ({
+    width: typeof window === 'undefined' ? 1280 : window.innerWidth,
+    height: typeof window === 'undefined' ? 800 : window.innerHeight,
+  }));
 
   // ── Consolidated curl state (reduces 4 states → 1 object) ──
   const [curlState, setCurlState] = useState<{
@@ -298,8 +361,28 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
   }, [currentSpread, viewerData, totalSpreads, totalPages]);
 
   const { left, right, isSinglePage } = spreadData;
+  const bookW = isSinglePage ? pageW : pageW * 2;
+  const toolbarH = 64;
+  const stageSideReserve = viewportSize.width < 768 ? 32 : 224;
+  const stageVerticalReserve = viewportSize.height < 720 ? 112 : 160;
+  const availableBookW = Math.max(240, viewportSize.width - stageSideReserve);
+  const availableBookH = Math.max(240, viewportSize.height - toolbarH - stageVerticalReserve);
+  const fittedScale = Math.min(1, availableBookW / bookW, availableBookH / pageH);
+  const readerScale = Math.max(0.45, fittedScale * zoom);
 
   // ── Audio initialization ──
+  useEffect(() => {
+    const handleResize = () => {
+      setViewportSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   useEffect(() => {
     const { music, index: musicIdx } = getRandomThemeMusicWithInfo(book.theme);
     console.log('🎵 Initializing ambient music for theme:', book.theme);
@@ -514,6 +597,9 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
   // ── Navigation ──
   const handleNext = useCallback(() => {
     if (currentSpread >= totalSpreads || curlState.isFlipping) return;
+    const startX = isSinglePage ? pageW - 24 : pageW * 2 - 24;
+    const startY = pageH - 24;
+    mouseRef.current = { x: startX, y: startY, dragStartX: startX, dragStartY: startY };
     setCurlState(prev => ({ ...prev, isFlipping: true, curlSide: 'right' }));
     cancelAnimRef.current?.();
 
@@ -531,10 +617,13 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
         });
       },
     );
-  }, [currentSpread, totalSpreads, curlState.isFlipping]);
+  }, [currentSpread, totalSpreads, curlState.isFlipping, isSinglePage, pageW, pageH]);
 
   const handlePrev = useCallback(() => {
     if (currentSpread <= 0 || curlState.isFlipping) return;
+    const startX = 24;
+    const startY = pageH - 24;
+    mouseRef.current = { x: startX, y: startY, dragStartX: startX, dragStartY: startY };
     setCurlState(prev => ({ ...prev, isFlipping: true, curlSide: 'left' }));
     cancelAnimRef.current?.();
 
@@ -552,7 +641,7 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
         });
       },
     );
-  }, [currentSpread, curlState.isFlipping]);
+  }, [currentSpread, curlState.isFlipping, pageH]);
 
   // ── Keyboard navigation (stale-closure fix via refs) ──
   const handleNextRef = useRef(handleNext);
@@ -584,13 +673,13 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
   // ── Render ──
   return (
     <div
-      className="fixed inset-0 bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 z-50"
+      className="fixed inset-0 bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 z-50 flex flex-col overflow-hidden"
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
     >
       {/* ── Top Toolbar ── */}
-      <div className="absolute top-0 left-0 right-0 h-16 bg-white/95 backdrop-blur-sm border-b border-gray-200 z-20 shadow-sm">
+      <div className="relative h-16 flex-shrink-0 bg-white/95 backdrop-blur-sm border-b border-gray-200 z-20 shadow-sm">
         <div className="h-full max-w-7xl mx-auto px-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button onClick={onClose} className="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center transition-all" title="Close">
@@ -685,12 +774,12 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
       )}
 
       {/* ── Book Container ── */}
-      <div ref={containerRef} className="w-full h-full flex items-center justify-center pt-20 pb-8"
+      <div ref={containerRef} className="relative w-full flex-1 min-h-0 overflow-hidden flex items-center justify-center px-4 pt-8 pb-24 sm:px-20 lg:px-28"
         style={{ perspective: '3000px', perspectiveOrigin: '50% 50%' }}>
-        <div className="relative" style={{ transform: `scale(${zoom}) rotateX(5deg)`, transformStyle: 'preserve-3d', transition: 'transform 0.3s ease-out', willChange: 'transform' }}>
+        <div className="relative" style={{ transform: `scale(${readerScale}) rotateX(5deg)`, transformStyle: 'preserve-3d', transition: 'transform 0.3s ease-out', willChange: 'transform' }}>
           <div ref={pageRef} className="relative bg-white rounded-lg overflow-visible"
             style={{
-              width: isSinglePage ? `${pageW}px` : `${pageW * 2}px`, height: `${pageH}px`,
+              width: `${bookW}px`, height: `${pageH}px`,
               transformStyle: 'preserve-3d',
               boxShadow: '0 30px 90px rgba(0,0,0,0.25), 0 15px 40px rgba(0,0,0,0.15), 0 5px 15px rgba(0,0,0,0.1), inset 0 0 0 1px rgba(255,255,255,0.1)',
               filter: 'drop-shadow(0 25px 50px rgba(0,0,0,0.2))',
@@ -701,6 +790,9 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
               const isFrontCover = currentSpread === 0;
               let transform = '';
               const m = mouseRef.current;
+              const leftCurlSide = isFrontCover ? 'right' : 'left';
+              const leftIsTurning = activeCurl && ((isFrontCover && curlState.curlSide === 'right') || (!isFrontCover && curlState.curlSide === 'left'));
+              const curlBend = Math.sin(curlState.curlAmount * Math.PI);
 
               if (isFrontCover && activeCurl && curlState.curlSide === 'right') {
                 const dx = pageW - m.x;
@@ -709,7 +801,7 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
                 const clampedAngle = Math.max(-45, Math.min(45, 135 - angle));
                 const rotateY = curlState.curlAmount * 180;
                 const rotateZ = -clampedAngle * curlState.curlAmount * 0.3;
-                transform = `translateX(${curlState.curlAmount * 15}px) translateY(${(m.y - m.dragStartY) * curlState.curlAmount * 0.3}px) translateZ(${curlState.curlAmount * 40}px) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`;
+                transform = `translateX(${curlState.curlAmount * 16}px) translateY(${(m.y - m.dragStartY) * curlState.curlAmount * 0.28}px) translateZ(${curlState.curlAmount * 42 + curlBend * 28}px) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg) rotateX(${-curlBend * 4}deg)`;
               } else if (!isFrontCover && activeCurl && curlState.curlSide === 'left') {
                 const dx = m.x;
                 const dy = pageH - m.y;
@@ -717,7 +809,7 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
                 const clampedAngle = Math.max(-45, Math.min(45, angle - 45));
                 const rotateY = -curlState.curlAmount * 180;
                 const rotateZ = clampedAngle * curlState.curlAmount * 0.3;
-                transform = `translateX(${-curlState.curlAmount * 15}px) translateY(${(m.y - m.dragStartY) * curlState.curlAmount * 0.3}px) translateZ(${curlState.curlAmount * 40}px) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`;
+                transform = `translateX(${-curlState.curlAmount * 16}px) translateY(${(m.y - m.dragStartY) * curlState.curlAmount * 0.28}px) translateZ(${curlState.curlAmount * 42 + curlBend * 28}px) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg) rotateX(${curlBend * 4}deg)`;
               } else if (isFrontCover && isHovering === 'right') {
                 transform = 'rotateY(3deg) translateZ(8px)';
               } else if (!isFrontCover && isHovering === 'left') {
@@ -750,10 +842,12 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
                     <div className="absolute inset-y-0 right-0 w-16 pointer-events-none"
                       style={{ background: 'linear-gradient(to left, rgba(0,0,0,0.015) 0%, transparent 100%)', opacity: activeCurl ? 0 : 0.7, transition: 'opacity 0.2s ease-out' }} />
                     <PageRenderer page={left} debugMode={debugMode} />
+                    <PaperCurlOverlay side={leftCurlSide} amount={curlState.curlAmount} active={leftIsTurning} />
                   </div>
                   {/* Back face */}
                   <div className="absolute inset-0 bg-white overflow-hidden"
                     style={{ borderRadius: '0 8px 8px 0', transform: 'rotateY(180deg)', backfaceVisibility: 'hidden', boxShadow: '2px 0 15px rgba(0,0,0,0.05)' }}>
+                    <PaperCurlOverlay side={leftCurlSide === 'right' ? 'left' : 'right'} amount={curlState.curlAmount} active={leftIsTurning} />
                     <div className="w-full h-full flex items-center justify-center text-gray-200" />
                   </div>
                   {/* Curl indicator */}
@@ -778,6 +872,8 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
             {right && (() => {
               let transform = '';
               const m = mouseRef.current;
+              const rightIsTurning = activeCurl && curlState.curlSide === 'right';
+              const curlBend = Math.sin(curlState.curlAmount * Math.PI);
 
               if (activeCurl && curlState.curlSide === 'right') {
                 const adjustedMouseX = isSinglePage ? m.x : m.x - pageW;
@@ -787,7 +883,7 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
                 const clampedAngle = Math.max(-45, Math.min(45, 135 - angle));
                 const rotateY = curlState.curlAmount * 180;
                 const rotateZ = -clampedAngle * curlState.curlAmount * 0.3;
-                transform = `translateX(${curlState.curlAmount * 15}px) translateY(${(m.y - m.dragStartY) * curlState.curlAmount * 0.3}px) translateZ(${curlState.curlAmount * 40}px) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`;
+                transform = `translateX(${curlState.curlAmount * 16}px) translateY(${(m.y - m.dragStartY) * curlState.curlAmount * 0.28}px) translateZ(${curlState.curlAmount * 42 + curlBend * 28}px) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg) rotateX(${-curlBend * 4}deg)`;
               } else if (isHovering === 'right') {
                 transform = 'rotateY(3deg) translateZ(8px)';
               }
@@ -813,10 +909,12 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
                     <div className="absolute inset-y-0 left-0 w-16 pointer-events-none"
                       style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.015) 0%, transparent 100%)', opacity: activeCurl && curlState.curlSide === 'right' ? 0 : 0.7, transition: 'opacity 0.2s ease-out' }} />
                     <PageRenderer page={right} debugMode={debugMode} />
+                    <PaperCurlOverlay side="right" amount={curlState.curlAmount} active={rightIsTurning} />
                   </div>
                   {/* Back face */}
                   <div className="absolute inset-0 bg-white overflow-hidden"
                     style={{ borderRadius: '8px 0 0 8px', transform: 'rotateY(180deg)', backfaceVisibility: 'hidden', boxShadow: '-2px 0 15px rgba(0,0,0,0.05)' }}>
+                    <PaperCurlOverlay side="left" amount={curlState.curlAmount} active={rightIsTurning} />
                     <div className="w-full h-full flex items-center justify-center text-gray-200" />
                   </div>
                   {/* Curl indicator */}
@@ -839,7 +937,7 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
             {!isSinglePage && (
               <div className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none z-10 transition-all duration-300"
                 style={{
-                  width: activeCurl ? `${4 - curlState.curlAmount * 1.5}px` : '4px', height: '700px',
+                  width: activeCurl ? `${4 - curlState.curlAmount * 1.5}px` : '4px', height: `${pageH}px`,
                   background: 'linear-gradient(to right, rgba(0,0,0,0.04), rgba(0,0,0,0.02), rgba(0,0,0,0.04))',
                   filter: `blur(${activeCurl ? 1 : 2}px)`,
                   opacity: activeCurl ? 1 - curlState.curlAmount * 0.6 : 0.5,
@@ -848,24 +946,27 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
 
             {/* ── 3D Curled Page Effect ── */}
             {activeCurl && curlState.curlSide && curlState.curlAmount > 0.05 && (() => {
-              const pw = pageW, ph = pageH - 40;
+              const pw = pageW, ph = pageH;
               const m = mouseRef.current;
+              const isRight = curlState.curlSide === 'right';
+              const localX = isRight && !isSinglePage ? m.x - pageW : m.x;
+              const localY = m.y;
+              const bend = Math.sin(curlState.curlAmount * Math.PI);
               let cornerX: number, cornerY: number;
-              if (curlState.curlSide === 'right') {
-                cornerX = pw - (pw - m.x) * curlState.curlAmount;
-                cornerY = ph - (ph - m.y) * curlState.curlAmount;
+              if (isRight) {
+                cornerX = pw - (pw - localX) * curlState.curlAmount;
+                cornerY = ph - (ph - localY) * curlState.curlAmount;
               } else {
-                cornerX = m.x * curlState.curlAmount;
-                cornerY = ph - (ph - m.y) * curlState.curlAmount;
+                cornerX = localX * curlState.curlAmount;
+                cornerY = ph - (ph - localY) * curlState.curlAmount;
               }
               const distFromCorner = Math.sqrt(
-                Math.pow(m.x - (curlState.curlSide === 'right' ? pw : 0), 2) + Math.pow(m.y - ph, 2),
+                Math.pow(localX - (isRight ? pw : 0), 2) + Math.pow(localY - ph, 2),
               );
-              const curlSize = Math.min(pageW, 200 + distFromCorner * 0.5) * curlState.curlAmount;
-              const dx = curlState.curlSide === 'right' ? pw - m.x : m.x;
-              const dy = ph - m.y;
+              const curlSize = Math.min(pageW * 0.92, 190 + distFromCorner * 0.5 + bend * 90) * curlState.curlAmount;
+              const dx = isRight ? pw - localX : localX;
+              const dy = ph - localY;
               const angle = Math.atan2(dy, dx) * (180 / Math.PI);
-              const isRight = curlState.curlSide === 'right';
 
               return (
                 <>
@@ -935,36 +1036,35 @@ export function FlipBookReader({ book, onClose }: FlipBookReaderProps) {
             })()}
           </div>
         </div>
-      </div>
+        {/* ── Navigation Arrows ── */}
+        <button onClick={handlePrev} disabled={currentSpread === 0}
+          className="absolute left-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-xl transition-all hover:scale-110 hover:shadow-2xl disabled:cursor-not-allowed disabled:opacity-30 sm:left-8 sm:h-14 sm:w-14"
+          style={{ opacity: currentSpread === 0 ? 0.3 : 1 }}>
+          <ChevronLeft className="h-6 w-6 text-gray-700 sm:h-7 sm:w-7" />
+        </button>
+        <button onClick={handleNext} disabled={currentSpread >= totalSpreads}
+          className="absolute right-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-xl transition-all hover:scale-110 hover:shadow-2xl disabled:cursor-not-allowed disabled:opacity-30 sm:right-8 sm:h-14 sm:w-14"
+          style={{ opacity: currentSpread >= totalSpreads ? 0.3 : 1 }}>
+          <ChevronRight className="h-6 w-6 text-gray-700 sm:h-7 sm:w-7" />
+        </button>
 
-      {/* ── Navigation Arrows ── */}
-      <button onClick={handlePrev} disabled={currentSpread === 0}
-        className="fixed left-8 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-white shadow-xl hover:shadow-2xl disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition-all hover:scale-110 z-10"
-        style={{ opacity: currentSpread === 0 ? 0.3 : 1 }}>
-        <ChevronLeft className="w-7 h-7 text-gray-700" />
-      </button>
-      <button onClick={handleNext} disabled={currentSpread >= totalSpreads}
-        className="fixed right-8 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-white shadow-xl hover:shadow-2xl disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition-all hover:scale-110 z-10"
-        style={{ opacity: currentSpread >= totalSpreads ? 0.3 : 1 }}>
-        <ChevronRight className="w-7 h-7 text-gray-700" />
-      </button>
-
-      {/* ── Bottom Progress ── */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 px-6 py-3 bg-white/95 backdrop-blur-sm rounded-full shadow-lg z-10">
-        <div className="flex items-center gap-2">
-          {Array.from({ length: totalSpreads + 1 }).map((_, i) => (
-            <button key={i} onClick={() => {
-              if (!curlState.isFlipping) {
-                setCurlState(prev => ({ ...prev, isFlipping: true }));
-                setTimeout(() => {
-                  setCurrentSpread(i);
-                  setCurlState(prev => ({ ...prev, isFlipping: false }));
-                }, 300);
-              }
-            }}
-            className={`w-2 h-2 rounded-full transition-all ${i === currentSpread ? 'bg-blue-500 w-8' : 'bg-gray-300 hover:bg-gray-400'}`}
-            title={`Spread ${i + 1}`} />
-          ))}
+        {/* ── Bottom Progress ── */}
+        <div className="absolute bottom-5 left-1/2 z-10 -translate-x-1/2 rounded-full bg-white/95 px-6 py-3 shadow-lg backdrop-blur-sm">
+          <div className="flex items-center gap-2">
+            {Array.from({ length: totalSpreads + 1 }).map((_, i) => (
+              <button key={i} onClick={() => {
+                if (!curlState.isFlipping) {
+                  setCurlState(prev => ({ ...prev, isFlipping: true }));
+                  setTimeout(() => {
+                    setCurrentSpread(i);
+                    setCurlState(prev => ({ ...prev, isFlipping: false }));
+                  }, 300);
+                }
+              }}
+              className={`h-2 rounded-full transition-all ${i === currentSpread ? 'w-8 bg-blue-500' : 'w-2 bg-gray-300 hover:bg-gray-400'}`}
+              title={`Spread ${i + 1}`} />
+            ))}
+          </div>
         </div>
       </div>
     </div>
