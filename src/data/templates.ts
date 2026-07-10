@@ -9,6 +9,7 @@ export interface Template {
   theme: 'family' | 'friendship' | 'love' | 'birthday';
   thumbnail: string;
   cover: BookPage;
+  backCover?: BookPage;
   pages: BookPage[];
   badge?: 'new' | 'bestseller' | 'popular';
 }
@@ -179,6 +180,133 @@ function createMagazineCover(
         zIndex: 8
       }
     ]
+  };
+}
+
+// Helper function to create template back cover
+function createTemplateBackCover(
+  theme: 'family' | 'friendship' | 'love' | 'birthday',
+  brandName: string = 'DearMemories',
+  tagline: string = 'Thiết kế sách cá nhân hóa',
+  backgroundImage?: string
+): BookPage {
+  const themeConfig = {
+    love: { gradient: 'linear-gradient(135deg, rgba(255,182,193,0.85) 0%, rgba(255,105,180,0.85) 100%)', quote: '"Tình yêu là điều đẹp đẽ nhất\ntrong cuộc sống"', emoji: '💕' },
+    family: { gradient: 'linear-gradient(135deg, rgba(147,197,253,0.85) 0%, rgba(59,130,246,0.85) 100%)', quote: '"Gia đình là nơi\ntình yêu bắt đầu"', emoji: '👨‍👩‍👧' },
+    birthday: { gradient: 'linear-gradient(135deg, rgba(216,180,254,0.85) 0%, rgba(168,85,247,0.85) 100%)', quote: '"Mỗi khoảnh khắc\nđều đáng trân trọng"', emoji: '🎂' },
+    friendship: { gradient: 'linear-gradient(135deg, rgba(253,224,71,0.85) 0%, rgba(251,191,36,0.85) 100%)', quote: '"Tình bạn là món quà\nvô giá của cuộc đời"', emoji: '🤝' },
+  };
+  const config = themeConfig[theme];
+
+  return {
+    id: 'back-cover',
+    backgroundColor: '#ffffff',
+    backgroundImage: backgroundImage || '',
+    elements: [
+      ...(backgroundImage ? [{
+        id: 'bc-bg',
+        type: 'image' as const,
+        src: backgroundImage,
+        x: 0, y: 0, width: 500, height: 700,
+        objectFit: 'cover' as const,
+        opacity: 0.35,
+        zIndex: 0,
+      }] : []),
+      {
+        id: 'bc-overlay',
+        type: 'shape' as const,
+        fill: config.gradient,
+        x: 0, y: 0, width: 500, height: 700,
+        zIndex: 1,
+      },
+      {
+        id: 'bc-circle-1',
+        type: 'shape' as const,
+        fill: 'rgba(255,255,255,0.1)',
+        x: 0, y: 0, width: 200, height: 200,
+        borderRadius: 100,
+        zIndex: 2,
+      },
+      {
+        id: 'bc-circle-2',
+        type: 'shape' as const,
+        fill: 'rgba(255,255,255,0.08)',
+        x: 350, y: 580, width: 250, height: 250,
+        borderRadius: 125,
+        zIndex: 2,
+      },
+      {
+        id: 'bc-emoji',
+        type: 'text' as const,
+        content: config.emoji,
+        x: 200, y: 110, width: 100, height: 100,
+        fontSize: 64,
+        fontFamily: 'Arial',
+        color: '#ffffff',
+        textAlign: 'center' as const,
+        opacity: 1,
+        zIndex: 3,
+      },
+      {
+        id: 'bc-brand',
+        type: 'text' as const,
+        content: brandName,
+        x: 80, y: 230, width: 340, height: 80,
+        fontSize: 48,
+        fontFamily: 'Dancing Script',
+        color: '#ffffff',
+        fontWeight: 'bold' as const,
+        textAlign: 'center' as const,
+        opacity: 1,
+        zIndex: 3,
+      },
+      {
+        id: 'bc-tagline',
+        type: 'text' as const,
+        content: tagline,
+        x: 80, y: 320, width: 340, height: 50,
+        fontSize: 18,
+        fontFamily: 'Poppins',
+        color: '#ffffff',
+        textAlign: 'center' as const,
+        opacity: 0.95,
+        zIndex: 3,
+      },
+      {
+        id: 'bc-divider',
+        type: 'shape' as const,
+        fill: 'rgba(255,255,255,0.4)',
+        x: 180, y: 395, width: 140, height: 2,
+        borderRadius: 2,
+        zIndex: 3,
+      },
+      {
+        id: 'bc-quote',
+        type: 'text' as const,
+        content: config.quote,
+        x: 60, y: 430, width: 380, height: 100,
+        fontSize: 20,
+        fontFamily: 'Cormorant',
+        color: '#ffffff',
+        fontStyle: 'italic' as const,
+        textAlign: 'center' as const,
+        lineHeight: 1.6,
+        opacity: 0.95,
+        zIndex: 3,
+      },
+      {
+        id: 'bc-footer',
+        type: 'text' as const,
+        content: 'Made with love ❤️',
+        x: 80, y: 620, width: 340, height: 40,
+        fontSize: 14,
+        fontFamily: 'Poppins',
+        color: '#ffffff',
+        textAlign: 'center' as const,
+        opacity: 0.85,
+        zIndex: 3,
+      },
+    ],
   };
 }
 

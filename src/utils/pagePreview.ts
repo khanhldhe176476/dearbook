@@ -94,8 +94,9 @@ export function isEditorPage(page: any): boolean {
 
 /**
  * Resolve image URL: IndexedDB key, data URL, HTTP URL, hoặc relative path.
+ * Exported for reuse across all preview/viewer components.
  */
-function resolveImageUrl(src: string): string | null {
+export function resolveImageUrl(src: string): string | null {
   if (!src) return null;
   if (src.startsWith('dearbook_image_')) {
     const resolved = dbGetImageSync(src);

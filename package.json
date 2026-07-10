@@ -52,12 +52,13 @@
     "recharts": "^2.15.2",
     "sonner": "^2.0.3",
     "tailwind-merge": "*",
-    "three": "*",
+    "three": "0.170.0",
     "vaul": "^1.1.2",
     "windows-1252": "^3.0.4"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
+    "@types/three": "^0.170.0",
     "@vitejs/plugin-react-swc": "^3.10.2",
     "vite": "6.3.5"
   },

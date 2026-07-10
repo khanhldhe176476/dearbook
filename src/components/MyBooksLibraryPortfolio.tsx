@@ -7,7 +7,6 @@ import {
 import { BookData, User } from '../App';
 import { GoogleUserProfile } from './GoogleUserProfile';
 import type { AuthUser } from '../lib/authApi';
-import { Test3DButton } from './Test3DButton';
 import { FlipBookReader } from './FlipBookReader';
 import { DeleteConfirmDialog } from './DeleteConfirmDialog';
 import { PhotobookNoticeDialog } from './PhotobookNoticeDialog';
@@ -826,8 +825,6 @@ export function MyBooksLibraryPortfolio({ user, onLogout, onCreateNew, onEditBoo
         )}
       </div>
 
-      {/* Floating elements */}
-      <Test3DButton />
 
       {show3DBook && (
         <FlipBookReader book={show3DBook} onClose={() => setShow3DBook(null)} />
